@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "68129686634",
+    "firebase_url": "https://feasturent-16886.firebaseio.com",
+    "project_id": "feasturent-16886",
+    "storage_bucket": "feasturent-16886.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68129686634:android:e6ef02b4ac3210aa727613",
+        "android_client_info": {
+          "package_name": "com.app.feasturent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68129686634-3ce45is993ktossk7qlknd839ic15e7t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.feasturent",
+            "certificate_hash": "a8415e563cb19d4e45d7076cef04e07e22f46108"
+          }
+        },
+        {
+          "client_id": "68129686634-ncs3env49t6aa26oc0d0csneb8m30smd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRzHDZ9zB0WRBBs6mEYVvfbGYpBjUKhKs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68129686634-ncs3env49t6aa26oc0d0csneb8m30smd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
