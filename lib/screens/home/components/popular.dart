@@ -1,10 +1,10 @@
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/components/popularItem.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/screens/details/details-screen.dart';
-import 'package:feasturent_costomer_app/screens/home/components/item_card.dart';
 
-class ItemList extends StatelessWidget {
-  const ItemList({
+class PopularList extends StatelessWidget {
+  const PopularList({
     Key key,
   }) : super(key: key);
 
@@ -14,12 +14,13 @@ class ItemList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          margin: EdgeInsets.only(top: 10, bottom: 10),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Categories",
+                "Popular on feasturent",
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
               ),
@@ -42,10 +43,10 @@ class ItemList extends StatelessWidget {
           ),
         ),
         SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
+          scrollDirection: Axis.vertical,
+          child: Column(
             children: <Widget>[
-              ItemCard(
+              PopularItem(
                 svgSrc: "assets/icons/burger_beer.svg",
                 title: "Burger & Beer",
                 shopName: "MacDonald's",
@@ -60,19 +61,19 @@ class ItemList extends StatelessWidget {
                   );
                 },
               ),
-              ItemCard(
+              PopularItem(
                 svgSrc: "assets/icons/chinese_noodles.svg",
                 title: "Chinese & Noodles",
                 shopName: "Wendys",
                 press: () {},
               ),
-              ItemCard(
+              PopularItem(
                 svgSrc: "assets/icons/burger_beer.svg",
                 title: "Burger & Beer",
                 shopName: "MacDonald's",
                 press: () {},
               ),
-              ItemCard(
+              PopularItem(
                 svgSrc: "assets/icons/chinese_noodles.svg",
                 title: "Maggie",
                 shopName: "Wendys",

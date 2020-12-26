@@ -34,8 +34,8 @@ class DiscountCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xFFFF961F).withOpacity(0.7),
-                    kPrimaryColor.withOpacity(0.7),
+                    Color(0xFFFF961F).withOpacity(0.4),
+                    kPrimaryColor.withOpacity(0.3),
                   ],
                 ),
               ),

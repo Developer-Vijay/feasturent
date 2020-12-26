@@ -18,9 +18,9 @@ class ItemCard extends StatelessWidget {
     // This size provide you the total height and width of the screen
     Size size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 15, top: 20, bottom: 20),
+      margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kPrimaryColor.withOpacity(0.7),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -35,28 +35,32 @@ class ItemCard extends StatelessWidget {
         child: InkWell(
           onTap: press,
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  padding: EdgeInsets.all(25),
+                  margin: EdgeInsets.only(bottom: 0),
+                  padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: kPrimaryColor.withOpacity(0.13),
                     shape: BoxShape.circle,
                   ),
                   child: SvgPicture.asset(
                     svgSrc,
-                    width: size.width * 0.18,
+                    width: size.width * 0.13,
+                    height: size.height * 0.04,
                     // size.width * 0.18 means it use 18% of total width
                   ),
                 ),
-                Text(title),
-                SizedBox(height: 10),
                 Text(
-                  shopName,
-                  style: TextStyle(fontSize: 12),
+                  title,
+                  style: TextStyle(color: Colors.white),
                 ),
+                SizedBox(height: 10),
+                // Text(
+                //   shopName,
+                //   style: TextStyle(fontSize: 12),
+                // ),
               ],
             ),
           ),

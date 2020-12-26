@@ -15,7 +15,7 @@ class CategoryList extends StatelessWidget {
         children: <Widget>[
           CategoryItem(
             title: "Combo Meal",
-            isActive: true,
+            // isActive: true,
             press: () {},
           ),
           CategoryItem(
@@ -24,6 +24,10 @@ class CategoryList extends StatelessWidget {
           ),
           CategoryItem(
             title: "Beverages",
+            press: () {},
+          ),
+          CategoryItem(
+            title: "Snacks & Sides",
             press: () {},
           ),
           CategoryItem(
