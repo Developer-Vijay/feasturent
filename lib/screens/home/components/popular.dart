@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/components/popularItem.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/screens/details/details-screen.dart';
+import 'package:http/http.dart' as http;
 
 class PopularList extends StatelessWidget {
   const PopularList({
     Key key,
   }) : super(key: key);
+
+  Future<List<dynamic>> fetchPopularMenues() async {
+    var result = await http.get(VENDOR_API + 'menues?key=ALL&id=5');
+    return json.decode(result.body)['data'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,45 +50,43 @@ class PopularList extends StatelessWidget {
             ],
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: <Widget>[
-              PopularItem(
-                svgSrc: "assets/icons/burger_beer.svg",
-                title: "Burger & Beer",
-                shopName: "MacDonald's",
-                press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return DetailsScreen();
-                      },
-                    ),
+        Container(
+          height: 150,
+          child: FutureBuilder<List<dynamic>>(
+              future: fetchPopularMenues(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  print(snapshot.data);
+                  print("HEY");
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return PopularItem(
+                          menuId: snapshot.data[index]['id'],
+                          menuIcon: snapshot.data[index]['image1'],
+                          title: snapshot.data[index]['title'],
+                          shopName: "Feasturent",
+                          price: snapshot.data[index]['price'],
+                          press: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return DetailsScreen();
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      });
+                } else {
+                  return Container(
+                    child: Text('Adam'),
                   );
-                },
-              ),
-              PopularItem(
-                svgSrc: "assets/icons/chinese_noodles.svg",
-                title: "Chinese & Noodles",
-                shopName: "Wendys",
-                press: () {},
-              ),
-              PopularItem(
-                svgSrc: "assets/icons/burger_beer.svg",
-                title: "Burger & Beer",
-                shopName: "MacDonald's",
-                press: () {},
-              ),
-              PopularItem(
-                svgSrc: "assets/icons/chinese_noodles.svg",
-                title: "Maggie",
-                shopName: "Wendys",
-                press: () {},
-              ),
-            ],
-          ),
+                }
+              }),
         ),
       ],
     );

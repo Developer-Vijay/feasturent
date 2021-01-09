@@ -18,7 +18,7 @@ class _HomePageBodyState extends State<HomePageBody> {
         children: <Widget>[
           DiscountCard(),
           CategoryList(),
-          ItemList(),
+          CategoriesList(),
           PopularList(),
         ],
       ),

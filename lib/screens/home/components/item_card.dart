@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 
 class ItemCard extends StatelessWidget {
-  final String title, shopName, svgSrc;
+  final String title, shopName, categoryIcon;
   final Function press;
   const ItemCard({
     Key key,
     this.title,
     this.shopName,
-    this.svgSrc,
+    this.categoryIcon,
     this.press,
   }) : super(key: key);
 
@@ -45,12 +44,17 @@ class ItemCard extends StatelessWidget {
                     color: kPrimaryColor.withOpacity(0.13),
                     shape: BoxShape.circle,
                   ),
-                  child: SvgPicture.asset(
-                    svgSrc,
-                    width: size.width * 0.13,
-                    height: size.height * 0.04,
-                    // size.width * 0.18 means it use 18% of total width
-                  ),
+                  child: categoryIcon == null
+                      ? Image.asset(
+                          'assets/icons/foodnotfound.png',
+                          width: size.width * 0.13,
+                          height: size.height * 0.04,
+                        )
+                      : Image.network(
+                          S3_BASE_PATH + categoryIcon,
+                          width: size.width * 0.13,
+                          height: size.height * 0.04,
+                        ),
                 ),
                 Text(
                   title,
