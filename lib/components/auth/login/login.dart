@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart';
 import 'package:feasturent_costomer_app/components/auth/login/loginWithGoolge.dart';
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
-import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -281,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
     //localStorage
     final prefs = await SharedPreferences.getInstance();
     var response = await http.post(USER_API + 'signupBysocial', body: {
-      'phone': user.displayName,
+      'phone': user.phoneNumber,
       'email': user.email,
       'profile': user.photoUrl,
       'displayName': user.displayName,
@@ -293,6 +292,7 @@ class _LoginPageState extends State<LoginPage> {
       prefs.setString("refreshToken", responseData['data']['refreshToken']);
       prefs.setString("userNumber", responseData['data']['user']['phone']);
       prefs.setString("userProfile", user.photoUrl);
+      prefs.setString("customerName", user.displayName);
       prefs.setInt("userId", responseData['data']['user']['userId']);
       prefs.setInt("loginId", responseData['data']['user']['loginId']);
       prefs.setString("userEmail", responseData['data']['user']['email']);

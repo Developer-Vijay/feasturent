@@ -1,19 +1,18 @@
 import 'dart:convert';
 
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/components/popularItem.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/screens/details/details-screen.dart';
-import 'package:feasturent_costomer_app/screens/home/components/item_card.dart';
 import 'package:http/http.dart' as http;
 
-class CategoriesList extends StatelessWidget {
-  const CategoriesList({
+class PopularList extends StatelessWidget {
+  const PopularList({
     Key key,
   }) : super(key: key);
 
-  Future<List<dynamic>> fetchCategories() async {
-    var result =
-        await http.get(ADMIN_API + 'category?key=STATUS&id=2&status=1');
+  Future<List<dynamic>> fetchPopularMenues() async {
+    var result = await http.get(VENDOR_API + 'menues?key=ALL&id=5');
     return json.decode(result.body)['data'];
   }
 
@@ -23,12 +22,13 @@ class CategoriesList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          margin: EdgeInsets.only(top: 10, bottom: 10),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Categories",
+                "Popular on feasturent",
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
               ),
@@ -53,7 +53,7 @@ class CategoriesList extends StatelessWidget {
         Container(
           height: 150,
           child: FutureBuilder<List<dynamic>>(
-              future: fetchCategories(),
+              future: fetchPopularMenues(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   print(snapshot.data);
@@ -63,10 +63,12 @@ class CategoriesList extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return ItemCard(
-                          categoryIcon: snapshot.data[index]['iconImage'],
-                          title: snapshot.data[index]['name'],
-                          shopName: "",
+                        return PopularItem(
+                          menuId: snapshot.data[index]['id'],
+                          menuIcon: snapshot.data[index]['image1'],
+                          title: snapshot.data[index]['title'],
+                          shopName: "Feasturent",
+                          price: snapshot.data[index]['price'],
                           press: () {
                             Navigator.push(
                               context,
