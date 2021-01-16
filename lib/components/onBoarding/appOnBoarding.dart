@@ -61,26 +61,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: true,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.1, 0.4, 0.7, 0.9],
-              colors: [
-                Color(0xFFF8F9FE),
-                Color(0xFFF8F9FE),
-                Color(0xFFF8F9FE),
-                Color(0xFF3498E5),
-              ],
+    Size size = MediaQuery.of(context).size;
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.1, 0.4, 0.7, 0.9],
+                colors: [
+                  Color(0xFFF8F9FE),
+                  Color(0xFFF8F9FE),
+                  Color(0xFFF8F9FE),
+                  Color(0xFF3498E5),
+                ],
+              ),
             ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 40.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -99,7 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
                 Container(
-                  height: 550.0,
+                  height: size.height * 0.775,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageController,
@@ -121,7 +122,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 ),
                                 height:
                                     MediaQuery.of(context).size.height * 0.4,
-                                width: MediaQuery.of(context).size.height * 0.5,
+                                width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
                             SizedBox(height: 20.0),
@@ -149,7 +150,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 ),
                                 height:
                                     MediaQuery.of(context).size.height * 0.4,
-                                width: MediaQuery.of(context).size.height * 0.5,
+                                width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
                             // SizedBox(height: 30.0),
@@ -226,7 +227,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     fontSize: 22.0,
                                   ),
                                 ),
-                                // SizedBox(width: 10.0),
                                 Icon(
                                   Icons.arrow_forward,
                                   color: Colors.white,
@@ -242,31 +242,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
         ),
-      ),
-      bottomSheet: _currentPage == _numPages - 1
-          ? Container(
-              height: MediaQuery.of(context).size.height * 0.08,
-              width: double.infinity,
-              color: Colors.white,
-              child: GestureDetector(
-                onTap: () =>
-                    Navigator.of(context).pushReplacementNamed('/loginPage'),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      'Get started',
-                      style: TextStyle(
-                        color: Color(0xFF5B16D0),
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+        bottomSheet: _currentPage == _numPages - 1
+            ? Container(
+                height: MediaQuery.of(context).size.height * 0.08,
+                width: double.infinity,
+                color: Colors.white,
+                child: GestureDetector(
+                  onTap: () =>
+                      Navigator.of(context).pushReplacementNamed('/loginPage'),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        'Get started',
+                        style: TextStyle(
+                          color: Color(0xFF5e72e4),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            )
-          : Text(''),
+              )
+            : Text(''),
+      ),
     );
   }
 }

@@ -1,4 +1,9 @@
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/otp.dart';
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/resetpassword.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
+
+
 import 'package:feasturent_costomer_app/components/splashScreen/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
@@ -28,6 +33,7 @@ class MyApp extends StatelessWidget {
           body2: TextStyle(color: ksecondaryColor),
         ),
       ),
+      
       home: SplashScreenApp(),
     );
   }

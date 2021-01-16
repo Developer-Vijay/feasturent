@@ -21,7 +21,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         builder: (context) {
           return Scaffold(
             body: ProfileScreen(),
-            bottomNavigationBar: BottomNavBar(),
+           // bottomNavigationBar:bottomnavbar(),
           );
         },
       ),

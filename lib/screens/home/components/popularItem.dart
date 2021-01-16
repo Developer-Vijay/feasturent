@@ -148,10 +148,6 @@ class PopularItem extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 10),
-                // Text(
-                //   shopName,
-                //   style: TextStyle(fontSize: 12),
-                // ),
               ],
             ),
           ),

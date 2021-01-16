@@ -1,3 +1,4 @@
+import 'package:feasturent_costomer_app/screens/home/components/homeAppBar.dart';
 import 'package:feasturent_costomer_app/screens/home/components/popular.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/screens/home/components/category_list.dart';
@@ -12,16 +13,32 @@ class HomePageBody extends StatefulWidget {
 class _HomePageBodyState extends State<HomePageBody> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          DiscountCard(),
-          CategoryList(),
-          CategoriesList(),
-          PopularList(),
-        ],
-      ),
+    return 
+    Column(
+      children: [Expanded(flex: 2,child:  HomeAppBar1(),),
+        Expanded(flex: 18,
+          child: ListView(
+            
+            children:[ 
+             
+              
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+              
+              children: <Widget>[
+
+                
+                DiscountCard(),
+                CategoryList(),
+                CategoriesList(),
+                PopularList(),
+               
+                
+              ],
+            ),
+          ]),
+        ),
+      ],
     );
   }
 }

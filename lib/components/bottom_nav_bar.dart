@@ -1,75 +1,50 @@
-import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
+import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
+import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:feasturent_costomer_app/screens/profile/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({
-    Key key,
-  }) : super(key: key);
+class Bottomnavbar extends StatefulWidget {
+  @override
+  _BottomnavbarState createState() => _BottomnavbarState();
+}
 
+class _BottomnavbarState extends State<Bottomnavbar> {
+  int _page = 0;
+  List<Widget> tabPages = [HomePageBody(), ForgotPassword(), UserProfilePage(),TopbrandsSlider()];
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 35),
-      height: 75,
-      width: double.infinity,
-      // double.infinity means it cove the available width
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, -7),
-            blurRadius: 33,
-            color: Color(0xFF6DAED9).withOpacity(0.11),
+    return Scaffold(
+      bottomNavigationBar: CurvedNavigationBar(
+        animationDuration: Duration(milliseconds: 200),
+       
+        index: 0,
+        height: 60,
+
+        items: <Widget>[
+          Icon(
+            Icons.home_outlined,
+            size: 30,
+          ),
+          SvgPicture.asset(
+            "assets/icons/offer_bn_outline.svg",
+            height: 30,
+          ),
+          SvgPicture.asset("assets/icons/person.svg"),
+          SvgPicture.asset(
+            "assets/icons/dineout_bn_outline.svg",
+            height: 30,
           ),
         ],
+        onTap: (index) {
+          setState(() {
+            _page = index;
+          });
+        },
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          IconButton(
-            tooltip: 'Home',
-            icon: SvgPicture.asset("assets/icons/home.svg"),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return HomeScreen();
-                  },
-                ),
-              );
-            },
-          ),
-          IconButton(
-            tooltip: 'Dineout',
-            icon: SvgPicture.asset("assets/icons/dineout_bn_outline.svg"),
-            onPressed: () {},
-          ),
-          IconButton(
-            tooltip: 'Offers',
-            icon: SvgPicture.asset("assets/icons/offer_bn_outline.svg"),
-            onPressed: () {},
-          ),
-          IconButton(
-            tooltip: 'Profile',
-            icon: SvgPicture.asset("assets/icons/person.svg"),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return UserProfilePage();
-                  },
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+      body: tabPages[_page],
     );
   }
 }
