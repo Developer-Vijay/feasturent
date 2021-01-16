@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:feasturent_costomer_app/components/common/validator.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/messageWrapper.dart';
@@ -41,199 +42,211 @@ class _SignupPageState extends State<SignupPage> {
       //   title: Text('Signin'),
       //   elevation: 0,
       // ),
-      body: Container(
-        // padding: EdgeInsets.only(top:60),
-        color: Colors.white,
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 40),
-              Image.asset(
-                'assets/icons/feasturent.png',
-                height: 170,
-                width: 170,
-              ),
-              Text('Signup',
-                  style: GoogleFonts.pacifico(
-                      textStyle: TextStyle(
-                          color: kPrimaryColor,
-                          letterSpacing: .5,
-                          fontSize: 40))),
-              SizedBox(height: 10),
-              //Login Form
-              Container(
-                padding:
-                    EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
-                child: Column(
-                  children: [
-                    //Username
-                    TextField(
-                      obscureText: false,
-                      readOnly: _isOtpSend,
-                      maxLength: 12,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                          ),
-                          labelText: 'Username',
-                          counterText: "",
-                          errorText: _isUserNameValidate == true
-                              ? null
-                              : 'Please enter valid username'),
-                      controller: _userNameController,
-                    ),
-                    SizedBox(height: 15),
-                    //Phone Number
-                    TextField(
-                      obscureText: false,
-                      readOnly: _isOtpSend,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                      ],
-                      maxLength: 10,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                          ),
-                          labelText: 'Phone Number',
-                          counterText: "",
-                          errorText: _isPhoneValidate == true
-                              ? null
-                              : 'Please enter valid phone number'),
-                      controller: _phoneNumberController,
-                    ),
-                    SizedBox(height: 15),
-                    //Email Address
-                    TextField(
-                      obscureText: false,
-                      readOnly: _isOtpSend,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                          ),
-                          labelText: 'Email Address',
-                          errorText: _isEmailValidate == true
-                              ? null
-                              : 'Please enter valid email address'),
-                      controller: _emailController,
-                    ),
-                    SizedBox(height: 15),
-                    //Password
-                    TextField(
-                      obscureText: true,
-                      readOnly: _isOtpSend,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                          ),
-                          labelText: 'Password',
-                          errorText: _isPasswordValidate == true
-                              ? null
-                              : 'Please enter valid password'),
-                      controller: _passwordController,
-                    ),
-                    SizedBox(height: 15),
-                    //Otp
-                    _isOtpSend == true
-                        ? TextField(
-                            obscureText: false,
-                            keyboardType:
-                                TextInputType.numberWithOptions(decimal: true),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp('[0-9.,]')),
-                            ],
-                            maxLength: 10,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(20.0),
-                                ),
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
+      body: SingleChildScrollView(
+        child: Container(
+          // padding: EdgeInsets.only(top:60),
+          color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 40),
+                Image.asset(
+                  'assets/icons/feasturent.png',
+                  height: 170,
+                  width: 170,
+                ),
+                Text('Signup',
+                    style: GoogleFonts.pacifico(
+                        textStyle: TextStyle(
+                            color: kPrimaryColor,
+                            letterSpacing: .5,
+                            fontSize: 40))),
+                SizedBox(height: 10),
+                //Login Form
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
+                  child: Column(
+                    children: [
+                      //Username
+                      TextField(
+                        obscureText: false,
+                        readOnly: _isOtpSend,
+                        maxLength: 12,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(20.0),
                               ),
-                              labelText: 'Otp',
-                              counterText: "",
                             ),
-                            controller: _otpController,
-                          )
-                        : Container(),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20),
-                child: Row(
-                  children: [
-                    //Checkbox for accept T&C
-                    Checkbox(
-                      value: this.tncValue,
-                      onChanged: (bool value) {
-                        setState(() {
-                          this.tncValue = value;
-                        });
-                      },
-                    ),
-                    //Term & Condition
-                    FlatButton(
-                      onPressed: () {
-                        _launchURL();
-                      },
-                      child: Text(
-                        "Accept our term & condition",
-                        style: TextStyle(fontWeight: FontWeight.w800),
+                            labelText: 'Username',
+                            prefixIcon: Icon(Icons.person),
+                            counterText: "",
+                            errorText: _isUserNameValidate == true
+                                ? null
+                                : 'Please enter valid username'),
+                        controller: _userNameController,
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 15),
+                      //Phone Number
+                      TextField(
+                        obscureText: false,
+                        readOnly: _isOtpSend,
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                        ],
+                        maxLength: 10,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(20.0),
+                              ),
+                            ),
+                            labelText: 'Phone Number',
+                            prefixIcon: Icon(Icons.phone),
+                            counterText: "",
+                            errorText: _isPhoneValidate == true
+                                ? null
+                                : 'Please enter valid phone number'),
+                        controller: _phoneNumberController,
+                      ),
+                      SizedBox(height: 15),
+                      //Email Address
+                      TextField(
+                        obscureText: false,
+                        readOnly: _isOtpSend,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(20.0),
+                              ),
+                            ),
+                            labelText: 'Email Address',
+                            prefixIcon: Icon(Icons.email),
+                            errorText: _isEmailValidate == true
+                                ? null
+                                : 'Please enter valid email address'),
+                        controller: _emailController,
+                      ),
+                      SizedBox(height: 15),
+                      //Password
+                      TextField(
+                        obscureText: true,
+                        readOnly: _isOtpSend,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(20.0),
+                              ),
+                            ),
+                            labelText: 'Password',
+                            prefixIcon: Icon(Icons.lock),
+                            errorText: _isPasswordValidate == true
+                                ? null
+                                : 'Please enter valid password'),
+                        controller: _passwordController,
+                      ),
+                      SizedBox(height: 15),
+                      //Otp
+                      _isOtpSend == true
+                          ? TextField(
+
+                              // obscureText: false,
+                              // keyboardType:
+                              //     TextInputType.numberWithOptions(decimal: true),
+                              // inputFormatters: [
+                              //   FilteringTextInputFormatter.allow(
+                              //       RegExp('[0-9.,]')),
+                              // ],
+                              // maxLength: 10,
+                              // decoration: InputDecoration(
+                              //   border: OutlineInputBorder(
+                              //     borderRadius: const BorderRadius.all(
+                              //       const Radius.circular(20.0),
+                              //     ),
+                              //   ),
+                              //   labelText: 'Otp',
+                              //   counterText: "",
+                              // ),
+                              // controller: _otpController,
+                              )
+                          : Container(),
+                    ],
+                  ),
                 ),
-              ),
-              //Login Button
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 50,
-                child: RaisedButton(
-                  padding: EdgeInsets.all(5),
+                Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Row(
+                    children: [
+                      //Checkbox for accept T&C
+                      Checkbox(
+                        value: this.tncValue,
+                        onChanged: (bool value) {
+                          setState(() {
+                            this.tncValue = value;
+                          });
+                        },
+                      ),
+                      //Term & Condition
+                      FlatButton(
+                        onPressed: () {
+                          _launchURL();
+                        },
+                        child: Text(
+                          "Accept our term & condition",
+                          style: TextStyle(fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                //Login Button
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 50,
+                  child: RaisedButton(
+                    padding: EdgeInsets.all(5),
+                    onPressed: () {
+                      // Navigator.push(context,
+                      // MaterialPageRoute(builder: (context) => OtpCheck())
+                      // );
+                      _isOtpSend == false ? _signupBymobile() : _verifyOtp();
+                    },
+                    child: _isOtpSend == false
+                        ? Text('Signup',
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))
+                        : Text('Verify',
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                    color: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                  ),
+                ),
+                SizedBox(height: 10),
+                FlatButton(
                   onPressed: () {
-                    _isOtpSend == false ? _signupBymobile() : _verifyOtp();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
                   },
-                  child: _isOtpSend == false
-                      ? Text('Signup',
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold))
-                      : Text('Verify',
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                  color: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
+                  child: Text(
+                    "Have an account, Login",
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              FlatButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
-                },
-                child: Text(
-                  "Have an account, Login",
-                  style: TextStyle(fontWeight: FontWeight.w800),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

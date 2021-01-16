@@ -11,6 +11,9 @@ class SplashScreenApp extends StatefulWidget {
 
 class _SplashScreenAppState extends State<SplashScreenApp> {
   bool _isOnboadingSeen = false;
+  
+  
+  
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
 
   @override
   Widget build(BuildContext context) {
+      
     return new SplashScreen(
       seconds: 2,
       navigateAfterSeconds:

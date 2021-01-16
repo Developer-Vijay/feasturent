@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 
+
 class CategoryItem extends StatelessWidget {
   final String title;
   final bool isActive;

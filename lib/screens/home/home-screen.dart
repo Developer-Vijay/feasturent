@@ -5,7 +5,6 @@ import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
 import 'package:feasturent_costomer_app/components/appDrawer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -65,43 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/menu.svg"),
-          onPressed: () => _scaffoldKey.currentState.openDrawer(),
-        ),
-        title: RichText(
-          text: TextSpan(
-            style: Theme.of(context)
-                .textTheme
-                .title
-                .copyWith(fontWeight: FontWeight.bold),
-            children: [
-              TextSpan(
-                text: "Feas",
-                style: TextStyle(color: ksecondaryColor),
-              ),
-              TextSpan(
-                text: "Turent",
-                style: TextStyle(color: kPrimaryColor),
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: SvgPicture.asset("assets/icons/search.svg"),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: SvgPicture.asset("assets/icons/notification.svg"),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: Bottomnavbar(),
       drawer: AppDrawer(
           cName: _customerName,
           cProfile: _customerProfile,

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
+
 import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart';
 import 'package:feasturent_costomer_app/components/auth/login/loginWithGoolge.dart';
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
@@ -29,176 +31,191 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // appBar: AppBar(
       //   title: Text('Signin'),
       //   elevation: 0,
       // ),
-      body: Container(
-        // padding: EdgeInsets.only(top:60),
-        color: Colors.white,
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 80),
-              Image.asset(
-                'assets/icons/feasturent.png',
-                height: 170,
-                width: 170,
-              ),
-              Text('Login',
-                  style: GoogleFonts.pacifico(
-                      textStyle: TextStyle(
-                          color: kPrimaryColor,
-                          letterSpacing: .5,
-                          fontSize: 40))),
-              SizedBox(height: 10),
-              //Login Form
-              Container(
-                padding:
-                    EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
-                child: Column(
-                  children: [
-                    TextField(
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                          ),
-                          labelText: 'Username',
-                          errorText: _isUserNameValidate == false
-                              ? 'Please enter your username'
-                              : null),
-                      controller: _userNameController,
-                    ),
-                    SizedBox(height: 15),
-                    //Password
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                          ),
-                          labelText: 'Password',
-                          errorText: _isPasswordValidate == false
-                              ? 'Please enter your password'
-                              : null),
-                      controller: _passwordController,
-                    ),
-                  ],
+      body: SingleChildScrollView(
+        child: Container(
+          // padding: EdgeInsets.only(top:60),
+          color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 80),
+                Image.asset(
+                  'assets/icons/feasturent.png',
+                  height: 170,
+                  width: 170,
                 ),
-              ),
-              //Forget Password
-              FlatButton(
-                onPressed: () {
-                  /*...*/
-                },
-                child: Text(
-                  "Forget Password",
-                  style: TextStyle(fontWeight: FontWeight.w800),
-                ),
-              ),
-              //Login Button
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 50,
-                child: RaisedButton(
-                  padding: EdgeInsets.all(5),
-                  onPressed: () {
-                    _loginUser();
-                  },
-                  child: _isProcessing == true
-                      ? Text('Loading...',
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold))
-                      : Text('Login',
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                  color: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 20.0),
-                      height: 2.0,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3.0),
-                    child: Text("OR",
-                        style: TextStyle(color: Colors.black, fontSize: 20)),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 20.0),
-                      height: 2.0,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-              //Login With Social
-              Container(
-                margin: const EdgeInsets.only(left: 140.0),
-                child: Center(
-                  child: Row(
+                Text('Login',
+                    style: GoogleFonts.pacifico(
+                        textStyle: TextStyle(
+                            color: kPrimaryColor,
+                            letterSpacing: .5,
+                            fontSize: 40))),
+                SizedBox(height: 10),
+                //Login Form
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
+                  child: Column(
                     children: [
-                      //Login With Google
-                      IconButton(
-                        icon: SvgPicture.asset('assets/icons/google.svg'),
-                        tooltip: 'Login With Goolge',
-                        iconSize: 40,
-                        onPressed: () {
-                          setState(() => {
-                                signInWithGoogle().whenComplete(() => {
-                                      _signUpBySocial()
-                                      // FirebaseUser user;
-                                    })
-                              });
-                        },
+                      TextField(
+                        obscureText: false,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(20.0),
+                              ),
+                            ),
+                            prefixIcon: Icon(Icons.person),
+                            labelText: 'Username',
+                            errorText: _isUserNameValidate == false
+                                ? 'Please enter your username'
+                                : null),
+                        controller: _userNameController,
                       ),
-                      //Login With FaceBook
-                      IconButton(
-                        icon: SvgPicture.asset('assets/icons/facebook.svg'),
-                        tooltip: 'Login With Facebook',
-                        iconSize: 40,
-                        onPressed: () {
-                          setState(() {});
-                        },
+                      SizedBox(height: 15),
+                      //Password
+                      TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(20.0),
+                              ),
+                            ),
+                            labelText: 'Password',
+                            prefixIcon: Icon(Icons.lock_outline),
+                            errorText: _isPasswordValidate == false
+                                ? 'Please enter your password'
+                                : null),
+                        controller: _passwordController,
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignupPage()));
-                },
-                child: Text(
-                  "Not yet account, Signup",
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    //Forget Password
+                    Container(
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Forgot()),
+                          );
+                        },
+                        child: Text(
+                          "Forget Password ?",
+                          style: TextStyle(fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                //Login Button
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 50,
+                  child: RaisedButton(
+                    padding: EdgeInsets.all(5),
+                    onPressed: () {
+                      _loginUser();
+                    },
+                    child: _isProcessing == true
+                        ? Text('Loading...',
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))
+                        : Text('Login',
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                    color: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 20.0),
+                        height: 2.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 3.0),
+                      child: Text("OR",
+                          style: TextStyle(color: Colors.black, fontSize: 20)),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 20.0),
+                        height: 2.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                //Login With Social
+                Container(
+                  margin: const EdgeInsets.only(left: 140.0),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        //Login With Google
+                        IconButton(
+                          icon: SvgPicture.asset('assets/icons/google.svg'),
+                          tooltip: 'Login With Goolge',
+                          iconSize: 40,
+                          onPressed: () {
+                            setState(() => {
+                                  signInWithGoogle().whenComplete(() => {
+                                        _signUpBySocial()
+                                        // FirebaseUser user;
+                                      })
+                                });
+                          },
+                        ),
+                        //Login With FaceBook
+                        IconButton(
+                          icon: SvgPicture.asset('assets/icons/facebook.svg'),
+                          tooltip: 'Login With Facebook',
+                          iconSize: 40,
+                          onPressed: () {
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                FlatButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignupPage()));
+                  },
+                  child: Text(
+                    "Not yet account, Signup",
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
