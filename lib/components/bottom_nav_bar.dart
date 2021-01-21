@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
 import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
+import 'package:feasturent_costomer_app/screens/profile/cake.dart';
 import 'package:feasturent_costomer_app/screens/profile/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,7 +14,7 @@ class Bottomnavbar extends StatefulWidget {
 
 class _BottomnavbarState extends State<Bottomnavbar> {
   int _page = 0;
-  List<Widget> tabPages = [HomePageBody(), ForgotPassword(), UserProfilePage(),TopbrandsSlider()];
+  List<Widget> tabPages = [HomePageBody(), ForgotPassword(), UserProfilePage(),List1()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +22,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
         animationDuration: Duration(milliseconds: 200),
        
         index: 0,
-        height: 60,
+        height: 55,
 
         items: <Widget>[
           Icon(

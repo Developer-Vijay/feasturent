@@ -157,24 +157,24 @@ class _SignupPageState extends State<SignupPage> {
                       _isOtpSend == true
                           ? TextField(
 
-                              // obscureText: false,
-                              // keyboardType:
-                              //     TextInputType.numberWithOptions(decimal: true),
-                              // inputFormatters: [
-                              //   FilteringTextInputFormatter.allow(
-                              //       RegExp('[0-9.,]')),
-                              // ],
-                              // maxLength: 10,
-                              // decoration: InputDecoration(
-                              //   border: OutlineInputBorder(
-                              //     borderRadius: const BorderRadius.all(
-                              //       const Radius.circular(20.0),
-                              //     ),
-                              //   ),
-                              //   labelText: 'Otp',
-                              //   counterText: "",
-                              // ),
-                              // controller: _otpController,
+                              obscureText: false,
+                              keyboardType:
+                                  TextInputType.numberWithOptions(decimal: true),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp('[0-9.,]')),
+                              ],
+                              maxLength: 10,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(20.0),
+                                  ),
+                                ),
+                                labelText: 'Otp',
+                                counterText: "",
+                              ),
+                              controller: _otpController,
                               )
                           : Container(),
                     ],
@@ -349,6 +349,7 @@ class _SignupPageState extends State<SignupPage> {
         'otp': _otpController.text,
         'userId': _registeredUserId.toString()
       });
+      print(_otpController.text);
       print(response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {

@@ -2,6 +2,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/profileItemList.dart';
+import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -21,7 +22,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         builder: (context) {
           return Scaffold(
             body: ProfileScreen(),
-           // bottomNavigationBar:bottomnavbar(),
+            // bottomNavigationBar:bottomnavbar(),
           );
         },
       ),
@@ -46,26 +47,6 @@ class ProfileScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: kSpacingUnit.w * 5,
                   backgroundImage: AssetImage('assets/images/avatar.png'),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: kSpacingUnit.w * 2.5,
-                    width: kSpacingUnit.w * 2.5,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      heightFactor: kSpacingUnit.w * 1.5,
-                      widthFactor: kSpacingUnit.w * 1.5,
-                      child: Icon(
-                        LineAwesomeIcons.pen,
-                        color: Colors.white,
-                        size: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -107,8 +88,13 @@ class ProfileScreen extends StatelessWidget {
                   child: ListView(
                     children: <Widget>[
                       ProfileListItem(
-                        icon: LineAwesomeIcons.user_shield,
-                        text: 'Edit Profile',
+                          icon: LineAwesomeIcons.user_shield,
+                          text: 'Edit Profile',
+                          hasNavigation: true),
+                      ProfileListItem(
+                        icon: LineAwesomeIcons.address_card,
+                        text: 'Addresses',
+                        hasNavigation: true,
                       ),
                       ProfileListItem(
                         icon: LineAwesomeIcons.history,

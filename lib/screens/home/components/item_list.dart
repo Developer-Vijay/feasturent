@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -221,7 +222,13 @@ class CategoriesList extends StatelessWidget {
                         backgroundColor: Colors.white,
                         radius: 80,
                         child: FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                               Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Practice()),
+                            );
+                          },
                           child: ClipOval(
                             child: Image.asset(
                               "assets/images/Burger.jpg",
