@@ -1,3 +1,5 @@
+import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
+import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -5,10 +7,21 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 class Practice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Scaffold(body: Detail());
+  }
+}
+
+class Detail extends StatefulWidget {
+  @override
+  _DetailState createState() => _DetailState();
+}
+
+class _DetailState extends State<Detail> {
+  @override
+  Widget build(BuildContext context) {
     var rating = 3.0;
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        body: Stack(
+    return Stack(
       children: <Widget>[
         Flex(
           direction: Axis.vertical,
@@ -31,7 +44,10 @@ class Practice extends StatelessWidget {
               horizontal: size.width * 0.01, vertical: size.height * 0.03),
           child: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => FoodSlider()));
+            },
             color: Colors.white,
             iconSize: 30,
           ),
@@ -94,7 +110,11 @@ class Practice extends StatelessWidget {
                         padding: const EdgeInsets.all(3.0),
                         child: InkWell(
                           onTap: () {
-                            print("tapped");
+                              Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FoodSlider()),
+                            );
                           },
                           child: Container(
                             width: size.width - 20,
@@ -103,18 +123,14 @@ class Practice extends StatelessWidget {
                                 right: size.width * 0.01),
                             decoration: BoxDecoration(
                               boxShadow: [BoxShadow(blurRadius: 5)],
-                              // shape: BoxShape.rectangle,
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
-                              // boxShadow: [BoxShadow(blurRadius: 1,color: Colors.red),]
                             ),
                             child: Row(
                               children: [
                                 Padding(
                                     padding: const EdgeInsets.all(6),
-                                    child:
-                                        // I have to get back in it
-                                        ClipRRect(
+                                    child: ClipRRect(
                                       borderRadius: BorderRadius.circular(20),
                                       child: Image.network(
                                         "https://image.shutterstock.com/z/stock-photo-taking-slice-of-tasty-pepperoni-pizza-on-black-table-closeup-1686772804.jpg",
@@ -257,6 +273,6 @@ class Practice extends StatelessWidget {
           ),
         ),
       ],
-    ));
+    );
   }
 }

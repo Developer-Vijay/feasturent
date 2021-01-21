@@ -5,6 +5,12 @@ import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 
 
 import 'package:feasturent_costomer_app/components/splashScreen/splashScreen.dart';
+import 'package:feasturent_costomer_app/screens/home/components/item_card.dart';
+import 'package:feasturent_costomer_app/screens/home/components/popularItem.dart';
+import 'package:feasturent_costomer_app/screens/home/slider.dart';
+import 'package:feasturent_costomer_app/screens/profile/cake.dart';
+import 'package:feasturent_costomer_app/screens/profile/components/rating.dart';
+import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
@@ -33,8 +39,9 @@ class MyApp extends StatelessWidget {
           body2: TextStyle(color: ksecondaryColor),
         ),
       ),
-      
-      home: SplashScreenApp(),
+     
+       home: SplashScreenApp(),
+      //  home:RatingPage(),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,18 +8,19 @@ class ProfileListItem extends StatelessWidget {
   final IconData icon;
   final String text;
   final bool hasNavigation;
-
   const ProfileListItem({
     Key key,
     this.icon,
     this.text,
-    this.hasNavigation = true,
+    this.hasNavigation = true
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {print('CLicked')},
+      onTap: () => {
+        Navigator.push(context,MaterialPageRoute(builder: (context) => EditProfile()))
+      },
       child: Container(
         height: kSpacingUnit.w * 5.5,
         margin: EdgeInsets.symmetric(

@@ -165,7 +165,6 @@ class PopularList extends StatelessWidget {
                 )
               ],
             ),
-
             Column(
               children: [
                 Padding(
@@ -211,7 +210,6 @@ class PopularList extends StatelessWidget {
                 )
               ],
             ),
-
             Column(
               children: [
                 Padding(
@@ -388,8 +386,6 @@ class PopularList extends StatelessWidget {
                 )
               ],
             ),
-
-           
           ]),
         ),
         SizedBox(
@@ -462,6 +458,7 @@ class PopularList extends StatelessWidget {
                   ),
                 ),
               ),
+              // Second Image
               Container(
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -519,6 +516,7 @@ class PopularList extends StatelessWidget {
                   ),
                 ),
               ),
+              // Third Image
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -590,11 +588,90 @@ class PopularList extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        SingleChildScrollView(
-            child: Row(
-          children: [
-            Column(
-              children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: SingleChildScrollView(
+              child: Row(
+            children: [
+              Column(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 3,
+                              color: Colors.blueGrey,
+                              spreadRadius: 2)
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 4),
+                      height: size.height * 0.08,
+                      width: size.width * 0.24,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 80,
+                        child: FlatButton(
+                          onPressed: () {},
+                          child: ClipOval(
+                            child: Image.asset("assets/images/M3.png",
+                                fit: BoxFit.cover,
+                                width: size.width * 0.14,
+                                height: size.height * 0.2),
+                          ),
+                        ),
+                      )),
+                  SizedBox(
+                    height: 7,
+                  ),
+                  Text(
+                    "McDonalds",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10),
+                  )
+                ],
+              ),
+              Column(children: [
+                Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 3,
+                            color: Colors.blueGrey,
+                            spreadRadius: 2)
+                      ],
+                    ),
+                    margin: EdgeInsets.only(left: 4),
+                    height: size.height * 0.08,
+                    width: size.width * 0.24,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 0,
+                      child: FlatButton(
+                        onPressed: () {},
+                        child: ClipOval(
+                          child: Image.asset("assets/images/king.png",
+                              fit: BoxFit.cover,
+                              width: size.width * 0.14,
+                              height: size.height * 0.2),
+                        ),
+                      ),
+                    )),
+                SizedBox(
+                  height: 7,
+                ),
+                Text(
+                  "Burger King",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 10),
+                ),
+              ]),
+              Column(children: [
                 Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -614,7 +691,7 @@ class PopularList extends StatelessWidget {
                       child: FlatButton(
                         onPressed: () {},
                         child: ClipOval(
-                          child: Image.asset("assets/images/M3.png",
+                          child: Image.asset("assets/images/K.png",
                               fit: BoxFit.cover,
                               width: size.width * 0.14,
                               height: size.height * 0.2),
@@ -624,91 +701,15 @@ class PopularList extends StatelessWidget {
                 SizedBox(
                   height: 7,
                 ),
-                Text(
-                  "McDonalds",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 10),
-                )
-              ],
-            ),
-            Column(children: [
-              Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 3,
-                          color: Colors.blueGrey,
-                          spreadRadius: 2)
-                    ],
-                  ),
-                  margin: EdgeInsets.only(left: 4),
-                  height: size.height * 0.08,
-                  width: size.width * 0.24,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 0,
-                    child: FlatButton(
-                      onPressed: () {},
-                      child: ClipOval(
-                        child: Image.asset("assets/images/king.png",
-                            fit: BoxFit.cover,
-                            width: size.width * 0.14,
-                            height: size.height * 0.2),
-                      ),
-                    ),
-                  )),
-              SizedBox(
-                height: 7,
-              ),
-              Text(
-                "Burger King",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10),
-              ),
-            ]),
-            Column(children: [
-              Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 3,
-                          color: Colors.blueGrey,
-                          spreadRadius: 2)
-                    ],
-                  ),
-                  margin: EdgeInsets.only(left: 4),
-                  height: size.height * 0.08,
-                  width: size.width * 0.24,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 80,
-                    child: FlatButton(
-                      onPressed: () {},
-                      child: ClipOval(
-                        child: Image.asset("assets/images/K.png",
-                            fit: BoxFit.cover,
-                            width: size.width * 0.14,
-                            height: size.height * 0.2),
-                      ),
-                    ),
-                  )),
-              SizedBox(
-                height: 7,
-              ),
-              Text("KFC",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 10)),
-            ])
-          ],
-        )),
+                Text("KFC",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10)),
+              ])
+            ],
+          )),
+        ),
       ],
     );
   }
