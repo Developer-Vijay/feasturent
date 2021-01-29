@@ -49,7 +49,14 @@ dependencies:
   flutter_countdown_timer: ^2.1.0
   curved_navigation_bar: ^0.3.7
   carousel_slider: ^2.3.1
+  cache_image: ^1.0.5
   dotted_line: ^2.0.2
+  dotted_border: ^1.0.7
+  clipboard: ^0.1.2+8
+  image_picker: ^0.6.7+21
+  
+  
+  
   
 
 dev_dependencies:

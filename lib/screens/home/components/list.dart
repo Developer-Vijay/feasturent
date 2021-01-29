@@ -1,4 +1,4 @@
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -110,7 +110,7 @@ class _DetailState extends State<Detail> {
                         padding: const EdgeInsets.all(3.0),
                         child: InkWell(
                           onTap: () {
-                              Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => FoodSlider()),
@@ -132,9 +132,10 @@ class _DetailState extends State<Detail> {
                                     padding: const EdgeInsets.all(6),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(20),
-                                      child: Image.network(
-                                        "https://image.shutterstock.com/z/stock-photo-taking-slice-of-tasty-pepperoni-pizza-on-black-table-closeup-1686772804.jpg",
-                                        fit: BoxFit.cover,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "https://image.shutterstock.com/z/stock-photo-taking-slice-of-tasty-pepperoni-pizza-on-black-table-closeup-1686772804.jpg",
+                                        fit: BoxFit.fill,
                                         height: size.height * 0.12,
                                         width: size.width * 0.2,
                                       ),

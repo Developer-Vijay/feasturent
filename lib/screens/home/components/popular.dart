@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,7 +100,8 @@ class PopularList extends StatelessWidget {
                             );
                           },
                           child: ClipOval(
-                            child: Image.network(
+                            child:  CachedNetworkImage(
+                               imageUrl:
                               "https://image.shutterstock.com/z/stock-photo-chole-bhature-or-chick-pea-curry-and-fried-puri-served-in-terracotta-crockery-over-white-1072270610.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.16,
@@ -144,7 +146,8 @@ class PopularList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.network(
+                            child: CachedNetworkImage(
+                               imageUrl:
                                 "https://image.shutterstock.com/z/stock-photo-traditional-dumpling-vegetarian-momos-food-from-nepal-served-with-tomato-chutney-over-moody-plate-1719536887.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
@@ -188,7 +191,8 @@ class PopularList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.network(
+                            child: CachedNetworkImage(
+                               imageUrl:
                               "https://image.shutterstock.com/image-photo/arabian-spicy-food-concept-homemade-600w-1199926645.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.16,
@@ -233,7 +237,8 @@ class PopularList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.network(
+                            child: CachedNetworkImage(
+                               imageUrl:
                                 "https://image.shutterstock.com/z/stock-photo-big-cheeseburger-with-lots-of-cheese-stock-photo-side-view-of-a-cheeseburger-on-a-black-brick-wall-1680415567.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
@@ -277,7 +282,8 @@ class PopularList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.network(
+                            child: CachedNetworkImage(
+                               imageUrl:
                                 "https://image.shutterstock.com/z/stock-photo-chicken-kabsa-homemade-arabian-biryani-overhead-view-1048188121.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
@@ -321,7 +327,8 @@ class PopularList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.network(
+                            child: CachedNetworkImage(
+                              imageUrl:
                                 "https://image.shutterstock.com/z/stock-photo-palak-paneer-curry-made-up-of-spinach-and-cottage-cheese-popular-indian-healthy-lunch-dinner-food-620862170.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
@@ -365,7 +372,8 @@ class PopularList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.network(
+                            child: CachedNetworkImage(
+                               imageUrl:
                                 "https://image.shutterstock.com/z/stock-photo-masala-dosa-indian-savory-crepes-with-potato-filling-top-down-view-783911236.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
