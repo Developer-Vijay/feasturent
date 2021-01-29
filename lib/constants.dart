@@ -69,3 +69,37 @@ final kLightTheme = ThemeData(
         displayColor: kDarkSecondaryColor,
       ),
 );
+
+// offer List Design
+
+const OffTextColor = Colors.grey;
+
+final offerCommonStyle = TextStyle(
+  fontWeight: FontWeight.w400,
+  fontSize: 12,
+  color: OffTextColor,
+);
+
+final offerRowHeadingStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+
+final offerRecommendStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 18,
+  color: Colors.black,
+);
+
+final offerSheetStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 14,
+  color: Colors.black,
+);
+
+// Wallet Design
+
+final walletProfileName =
+    TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold);
+
+final walletIconStyle = TextStyle(fontSize: 10, color: Colors.blueGrey);

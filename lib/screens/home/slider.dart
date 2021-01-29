@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:feasturent_costomer_app/Bottomsheet/bottomsheet.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/rating.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class FoodSlider extends StatefulWidget {
@@ -29,157 +29,6 @@ class _FoodSliderState extends State<FoodSlider> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    bool _checked = false;
-
-// Function For Bottom Sheet
-    void _onButtonPressed() {
-      showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Column(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            child: (IconButton(
-                              icon: Icon(
-                                Icons.clear,
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FoodSlider()),
-                                );
-                              },
-                            )),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 16,
-                  child: ListView(
-                    children: [
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Choose Your Bun",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("Please Select Any Option"),
-                              )
-                            ],
-                          ),
-                          RadioListTile(
-                            title: Text("Regular"),
-                            groupValue: selectedRadioTile,
-                            value: 1,
-                            selected: true,
-                            activeColor: Colors.blue,
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            onChanged: (val) {
-                              print("Pressed");
-                              setSelectedRadioTile(val);
-                            },
-                          ),
-                          RadioListTile(
-                            title: Text("Wheat"),
-                            subtitle: Text(
-                              "₹ 10",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            groupValue: selectedRadioTile,
-                            value: 2,
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            selected: false,
-                            activeColor: Colors.blue,
-                            onChanged: (val) {
-                              print("Hello2 ");
-                              setSelectedRadioTile(val);
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Extra",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
-                                )),
-                          ),
-                          CheckboxListTile(
-                            value: _checked,
-                            onChanged: (bool value) {
-                              setState(() {
-                                print(value);
-                                _checked = value;
-                              });
-                            },
-                            title: Text("Barbeque Mayonese"),
-                            subtitle: Text("₹ 10"),
-                            checkColor: Colors.black,
-                          ),
-                          CheckboxListTile(
-                            value: _checked,
-                            onChanged: (value) {
-                              setState(() {
-                                print(value);
-                                _checked = !value;
-                              });
-                            },
-                            title: Text("Cheese"),
-                            subtitle: Text("₹ 17"),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 20),
-                  child: MaterialButton(
-                    onPressed: () {
-                      Fluttertoast.showToast(msg: "Add to Cart");
-                    },
-                    child: Text(
-                      "Add",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    elevation: 4,
-                    minWidth: 365,
-                  ),
-                )
-              ],
-            );
-          });
-    }
 
     return SafeArea(
       child: Scaffold(
@@ -362,7 +211,9 @@ class _FoodSliderState extends State<FoodSlider> {
                               right: size.width * 0.11),
                           child: MaterialButton(
                             onPressed: () {
-                              _onButtonPressed();
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => Sheet());
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
@@ -399,5 +250,35 @@ class _FoodSliderState extends State<FoodSlider> {
         ),
       ),
     );
+  }
+}
+
+class MaterialButtonWidget extends StatefulWidget {
+  @override
+  _MaterialButtonWidgetState createState() => _MaterialButtonWidgetState();
+}
+
+class _MaterialButtonWidgetState extends State<MaterialButtonWidget> {
+  bool _show = true;
+  @override
+  Widget build(BuildContext context) {
+    return _show
+        ? MaterialButton(
+            onPressed: () {
+              var sheetController = showBottomSheet(
+                  context: context, builder: (context) => Bottomsheetwidget());
+              _showButton(false);
+              sheetController.closed.then((value) {
+                _showButton(true);
+              });
+            },
+          )
+        : Container();
+  }
+
+  void _showButton(bool value) {
+    setState(() {
+      _show = value;
+    });
   }
 }

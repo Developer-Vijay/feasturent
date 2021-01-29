@@ -229,6 +229,7 @@ class _List1State extends State<List1> {
                           SizedBox(
                             height: 20,
                           ),
+                          
                           Padding(
                             padding: const EdgeInsets.only(left: 8, right: 8),
                             child: Container(

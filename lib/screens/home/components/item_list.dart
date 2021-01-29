@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:flutter/material.dart';
@@ -92,8 +93,8 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.asset(
-                              "assets/images/thali.jpg",
+                            child:CachedNetworkImage(imageUrl:
+                              "https://image.shutterstock.com/z/stock-photo-typical-indian-food-from-jaipur-thali-rajasthani-1010465743.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -134,8 +135,9 @@ class CategoriesList extends StatelessWidget {
                     child: FlatButton(
                       onPressed: () {},
                       child: ClipOval(
-                        child: Image.asset(
-                          "assets/images/SouthIndian.jpg",
+                        child: CachedNetworkImage(
+                          imageUrl:
+                          "https://image.shutterstock.com/z/stock-photo-group-of-south-indian-food-like-masala-dosa-uttapam-idli-idly-wada-vada-sambar-appam-semolina-1153818823.jpg",
                           fit: BoxFit.cover,
                           width: size.width * 0.2,
                           height: size.height * 0.2,
@@ -179,8 +181,8 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.asset(
-                              "assets/images/Cake.jpg",
+                            child: CachedNetworkImage(imageUrl:
+                              "https://image.shutterstock.com/z/stock-photo-board-with-delicious-caramel-cake-on-table-768814738.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -230,8 +232,9 @@ class CategoriesList extends StatelessWidget {
                             );
                           },
                           child: ClipOval(
-                            child: Image.asset(
-                              "assets/images/Burger.jpg",
+                            child: CachedNetworkImage(
+                              imageUrl:
+                              "https://image.shutterstock.com/z/stock-photo-classic-hamburger-with-cheese-bacon-tomato-and-lettuce-on-dark-wooden-background-1677795556.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -275,8 +278,8 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.asset(
-                              "assets/images/Chinese.jpg",
+                            child: CachedNetworkImage(imageUrl:
+                              "https://image.shutterstock.com/z/stock-photo-schezwan-noodles-or-vegetable-hakka-noodles-or-chow-mein-is-a-popular-indo-chinese-recipes-served-1251390421.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -320,8 +323,9 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.asset(
-                              "assets/images/rajmaChawal.jpg",
+                            child: CachedNetworkImage(
+                              imageUrl:
+                              "https://image.shutterstock.com/z/stock-photo-murgh-makhani-butter-chicken-tikka-masala-served-with-roti-paratha-and-plain-rice-along-with-1210314505.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -365,8 +369,8 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: Image.asset(
-                              "assets/images/Tea.jpg",
+                            child: CachedNetworkImage(imageUrl:
+                              "https://image.shutterstock.com/z/stock-photo-punjabi-aloo-samosa-or-potato-samosa-recipe-or-indian-traditional-aloo-samosa-indian-chat-recipe-1508653862.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,

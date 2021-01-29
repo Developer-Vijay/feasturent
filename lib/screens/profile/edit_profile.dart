@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/components/common/common.dart';
-import 'package:feasturent_costomer_app/screens/profile/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class EditProfile extends StatefulWidget {
@@ -12,6 +14,24 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  File _image;
+
+  Future getImageFromGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future getImageFromCamera() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
@@ -72,8 +92,7 @@ class _EditProfileState extends State<EditProfile> {
                                   Navigator.pop(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            Bottomnavbar()),
+                                        builder: (context) => Bottomnavbar()),
                                   );
                                 },
                               )),
@@ -96,9 +115,27 @@ class _EditProfileState extends State<EditProfile> {
                         Align(
                           heightFactor: size.height * 0.0032,
                           alignment: Alignment.bottomCenter,
-                          child: CircleAvatar(
-                            radius: 55,
-                            child: Image.asset("assets/images/avatar.png"),
+                          child: InkWell(
+                            onTap: () {},
+                            child: CircleAvatar(
+                              radius: 55,
+                              child: _image == null
+                                  ? Container(
+                                      width: size.width * 0.4,
+                                      height: size.height * 0.4,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: AssetImage(
+                                                  "assets/images/avatar.png"))),
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: Image.file(_image,
+                                          fit: BoxFit.fill,
+                                          width: size.width * 0.4)),
+                            ),
                           ),
                         ),
                         Align(
@@ -107,9 +144,32 @@ class _EditProfileState extends State<EditProfile> {
                             widthFactor: size.width * 0.0173,
                             child: CircleAvatar(
                                 backgroundColor: Theme.of(context).accentColor,
-                                child: Icon(
-                                  LineAwesomeIcons.user_edit,
-                                  color: Colors.white,
+                                child: IconButton(
+                                  icon: Icon(
+                                    LineAwesomeIcons.user_edit,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) => Container(
+                                                child: Row(
+                                              children: [
+                                                IconButton(
+                                                  icon: Icon(Icons.photo),
+                                                  onPressed: () {
+                                                    getImageFromGallery();
+                                                  },
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.camera),
+                                                  onPressed: () {
+                                                    getImageFromCamera();
+                                                  },
+                                                ),
+                                              ],
+                                            )));
+                                  },
                                 )))
                       ],
                     ),
@@ -130,7 +190,7 @@ class _EditProfileState extends State<EditProfile> {
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         LineAwesomeIcons.user,
-                        size: iconSize,
+                        size: 16,
                       ),
                       labelText: "Name",
                       labelStyle: TextStyle(fontSize: labelSize),
