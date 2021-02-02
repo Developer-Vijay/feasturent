@@ -61,10 +61,7 @@ class ItemCard extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 SizedBox(height: 10),
-                // Text(
-                //   shopName,
-                //   style: TextStyle(fontSize: 12),
-                // ),
+               
               ],
             ),
           ),

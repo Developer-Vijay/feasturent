@@ -1,53 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/appDrawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:feasturent_costomer_app/constants.dart';
+import 'package:flutter_svg/svg.dart';
 
-// class HomeAppBar extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return AppBar(
-//       backgroundColor: Colors.white,
-//       elevation: 0,
-//       leading: IconButton(
-//         icon: SvgPicture.asset("assets/icons/menu.svg"),
-//         onPressed: () {},
-//       ),
-//       title: RichText(
-//         text: TextSpan(
-//           style: Theme.of(context)
-//               .textTheme
-//               .title
-//               .copyWith(fontWeight: FontWeight.bold),
-//           children: [
-//             TextSpan(
-//               text: "Feas",
-//               style: TextStyle(color: ksecondaryColor),
-//             ),
-//             TextSpan(
-//               text: "Turent",
-//               style: TextStyle(color: kPrimaryColor),
-//             ),
-//           ],
-//         ),
-//       ),
-//       actions: <Widget>[
-//         IconButton(
-//           icon: SvgPicture.asset("assets/icons/notification.svg"),
-//           onPressed: () {},
-//         ),
-//       ],
-//     );
-//   }
-// }
+import '../constants.dart';
 
-class HomeAppBar1 extends StatefulWidget {
+class DineoutHomeAppBar1 extends StatefulWidget {
   @override
   _HomeAppBar1State createState() => _HomeAppBar1State();
 }
 
-class _HomeAppBar1State extends State<HomeAppBar1> {
+class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -85,7 +47,7 @@ class _HomeAppBar1State extends State<HomeAppBar1> {
             IconButton(
               icon: SvgPicture.asset("assets/icons/search.svg"),
               onPressed: () {
-                showSearch(context: context, delegate: Searchbar(), query: "");
+                showSearch(context: context, delegate: DineoutSearchbar(), query: "");
               },
             ),
             IconButton(
@@ -99,8 +61,8 @@ class _HomeAppBar1State extends State<HomeAppBar1> {
   }
 }
 
-class Searchbar extends SearchDelegate<String> {
-  Searchbar({
+class DineoutSearchbar extends SearchDelegate<String> {
+  DineoutSearchbar({
     String hintText,
   }) : super(
           keyboardType: TextInputType.text,

@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:feasturent_costomer_app/Dineout/dineouthome.dart';
 import 'package:feasturent_costomer_app/OfferPageScreen/offerpage.dart';
 import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
-import 'package:feasturent_costomer_app/screens/profile/cake.dart';
 import 'package:feasturent_costomer_app/screens/profile/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,7 +13,7 @@ class Bottomnavbar extends StatefulWidget {
 
 class _BottomnavbarState extends State<Bottomnavbar> {
   int _page = 0;
-  List<Widget> tabPages = [HomePageBody(), OfferPageScreen(), List1(), UserProfilePage()];
+  List<Widget> tabPages = [HomePageBody(), OfferPageScreen(), DineoutHomePage(), UserProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
