@@ -7,7 +7,7 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 class Practice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Detail());
+    return (Scaffold(body: Detail()));
   }
 }
 
@@ -70,208 +70,227 @@ class _DetailState extends State<Detail> {
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.all(0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30))),
-            height: 800,
-            margin: EdgeInsets.only(top: 250),
-            child: ListView(
-              children: [
-                Column(
+        Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(0),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30))),
+                height: 800,
+                margin: EdgeInsets.only(top: 250),
+                child: ListView(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Container(
+                                margin: EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "100 Items",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.red[700],
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        Positioned(
                           child: Container(
-                            margin: EdgeInsets.only(left: 20),
-                            child: Text(
-                              "100 Items",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.red[700],
-                                  fontWeight: FontWeight.bold),
+                            child: Row(
+                              children: [],
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    // Decoration of List Started
-                    Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FoodSlider()),
-                            );
-                          },
-                          child: Container(
-                            width: size.width - 20,
-                            margin: EdgeInsets.only(
-                                left: size.width * 0.02,
-                                right: size.width * 0.01),
-                            decoration: BoxDecoration(
-                              boxShadow: [BoxShadow(blurRadius: 5)],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            "https://image.shutterstock.com/z/stock-photo-taking-slice-of-tasty-pepperoni-pizza-on-black-table-closeup-1686772804.jpg",
-                                        fit: BoxFit.fill,
-                                        height: size.height * 0.12,
-                                        width: size.width * 0.2,
-                                      ),
-                                    )),
-                                SizedBox(
-                                  width: 10,
+
+                        Positioned(
+                          child: Container(),
+                        ),
+                        // Decoration of List Started
+                        Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FoodSlider()),
+                                );
+                              },
+                              child: Container(
+                                width: size.width - 20,
+                                margin: EdgeInsets.only(
+                                    left: size.width * 0.02,
+                                    right: size.width * 0.01),
+                                decoration: BoxDecoration(
+                                  boxShadow: [BoxShadow(blurRadius: 5)],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                Column(
+                                child: Row(
                                   children: [
-                                    SizedBox(
-                                      width: size.width * 0.02,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          child: Text(
-                                            "Peppy Paneer",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
+                                    Padding(
+                                        padding: const EdgeInsets.all(6),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "https://image.shutterstock.com/z/stock-photo-taking-slice-of-tasty-pepperoni-pizza-on-black-table-closeup-1686772804.jpg",
+                                            fit: BoxFit.fill,
+                                            height: size.height * 0.12,
+                                            width: size.width * 0.2,
                                           ),
-                                        ),
+                                        )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      children: [
                                         SizedBox(
-                                          width: size.width * 0.2,
+                                          width: size.width * 0.02,
                                         ),
-                                        Container(
-                                          //color: Colors.deepOrange,
-                                          alignment: Alignment.center,
-                                          margin: EdgeInsets.only(
-                                              left: size.width * 0.01,
-                                              right: size.width * 0.03),
-                                          child: IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              child: Text(
+                                                "Peppy Paneer",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-
-                                    Container(
-                                      //color: Colors.cyan,
-                                      margin: EdgeInsets.only(
-                                          right: size.width * 0.4),
-                                      child: Text(
-                                        "Vijay Da Dhaba",
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-
-                                    SizedBox(
-                                      width: size.width * 0.09,
-                                    ),
-
-                                    // Star rating
-
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            child: SmoothStarRating(
-                                                allowHalfRating: false,
-                                                onRated: (v) {
-                                                  Text("23");
-                                                },
-                                                starCount: 1,
-                                                rating: rating,
-                                                size: 23.0,
-                                                isReadOnly: false,
-                                                defaultIconData:
-                                                    Icons.star_border_outlined,
-                                                filledIconData: Icons.star,
-                                                halfFilledIconData:
-                                                    Icons.star_border,
-                                                color: Colors.red,
-                                                borderColor: Colors.red,
-                                                spacing: 0.0)),
-
-                                        SizedBox(
-                                          width: size.width * 0.02,
+                                            SizedBox(
+                                              width: size.width * 0.2,
+                                            ),
+                                            Container(
+                                              //color: Colors.deepOrange,
+                                              alignment: Alignment.center,
+                                              margin: EdgeInsets.only(
+                                                  left: size.width * 0.01,
+                                                  right: size.width * 0.03),
+                                              child: IconButton(
+                                                onPressed: () {},
+                                                icon: Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
 
                                         Container(
-                                          margin: EdgeInsets.only(),
+                                          //color: Colors.cyan,
+                                          margin: EdgeInsets.only(
+                                              right: size.width * 0.4),
                                           child: Text(
-                                            "4.9",
+                                            "Vijay Da Dhaba",
                                             style: TextStyle(
-                                                color: Colors.red,
+                                                color: Colors.grey,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
+
                                         SizedBox(
-                                          width: size.width * 0.02,
+                                          width: size.width * 0.09,
                                         ),
 
-                                        // Money
+                                        // Star rating
 
-                                        Container(
-                                            child: SvgPicture.asset(
-                                                "assets/icons/rupee.svg",
-                                                height: 14)),
-                                        SizedBox(
-                                          width: size.width * 0.01,
-                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                                child: SmoothStarRating(
+                                                    allowHalfRating: false,
+                                                    onRated: (v) {
+                                                      Text("23");
+                                                    },
+                                                    starCount: 1,
+                                                    rating: rating,
+                                                    size: 23.0,
+                                                    isReadOnly: false,
+                                                    defaultIconData: Icons
+                                                        .star_border_outlined,
+                                                    filledIconData: Icons.star,
+                                                    halfFilledIconData:
+                                                        Icons.star_border,
+                                                    color: Colors.red,
+                                                    borderColor: Colors.red,
+                                                    spacing: 0.0)),
 
-                                        Container(
-                                          margin: EdgeInsets.only(right: 140),
-                                          child: Text(
-                                            "250",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                            SizedBox(
+                                              width: size.width * 0.02,
+                                            ),
+
+                                            Container(
+                                              margin: EdgeInsets.only(),
+                                              child: Text(
+                                                "4.9",
+                                                style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: size.width * 0.02,
+                                            ),
+
+                                            // Money
+
+                                            Container(
+                                                child: SvgPicture.asset(
+                                                    "assets/icons/rupee.svg",
+                                                    height: 14)),
+                                            SizedBox(
+                                              width: size.width * 0.01,
+                                            ),
+
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(right: 140),
+                                              child: Text(
+                                                "250",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 17,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        )),
+                              ),
+                            )),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );

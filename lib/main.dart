@@ -1,7 +1,13 @@
 
+import 'package:feasturent_costomer_app/AddressBook/address.dart';
+import 'package:feasturent_costomer_app/Dineout/dineoutPopular.dart';
+import 'package:feasturent_costomer_app/Dineout/dineouthome.dart';
+import 'package:feasturent_costomer_app/Filter/sortAndFilter.dart';
+import 'package:feasturent_costomer_app/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
+import 'package:feasturent_costomer_app/components/onBoarding/appOnBoarding.dart';
 import 'package:feasturent_costomer_app/components/splashScreen/splashScreen.dart';
-import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
+import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
@@ -32,7 +38,10 @@ class MyApp extends StatelessWidget {
       ),
 
          home: SplashScreenApp(),
-      //  home: EditProfile(),
+      //  home: Adreesbook(),
+      // home: FilterandSort(),
+      // home: DineoutHomePage(),
+      // home: PopularDininingLists(),
     );
   }
 }
