@@ -1,25 +1,56 @@
+import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.dart';
+import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileListItem extends StatelessWidget {
   final IconData icon;
   final String text;
+  final index;
   final bool hasNavigation;
-  const ProfileListItem({
-    Key key,
-    this.icon,
-    this.text,
-    this.hasNavigation = true
-  }) : super(key: key);
+  const ProfileListItem(
+      {Key key, this.icon, this.text, this.hasNavigation = true, this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {
-        Navigator.push(context,MaterialPageRoute(builder: (context) => EditProfile()))
+      onTap: () async {
+        if (index == 0)
+          {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => EditProfile()));
+          }
+        else if (index == 1)
+          {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddressList()));
+          }
+        else if (index == 2)
+          {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Forgot()));
+          }
+        else if (index == 3)
+          {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => WalletDesign()));
+          }
+           else if (index == 6) 
+          { SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.remove('name');
+
+          
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => LoginPage()));
+          }
+          
       },
       child: Container(
         height: kSpacingUnit.w * 5.5,

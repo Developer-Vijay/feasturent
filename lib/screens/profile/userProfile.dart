@@ -1,11 +1,11 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/profileItemList.dart';
-import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -15,14 +15,12 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(bottomNavigationBar: BottomNavBar(), body: ProfileScreen());
     return ThemeProvider(
       initTheme: kLightTheme,
       child: Builder(
         builder: (context) {
           return Scaffold(
             body: ProfileScreen(),
-            // bottomNavigationBar:bottomnavbar(),
           );
         },
       ),
@@ -30,7 +28,129 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 }
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getSession();
+  }
+
+  String finalUser;
+  int temp;
+  Future getSession() async {
+    print("hello");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var takeUser = prefs.getString('name');
+
+    finalUser = takeUser;
+    if (finalUser != null) {
+      setState(() {
+        temp = 1;
+      });
+    } else {
+      setState(() {
+        temp = 0;
+      });
+    }
+  }
+
+  Widget _buildloginCheck() {
+    if (temp == 1) {
+      return ListView(
+        children: <Widget>[
+          ProfileListItem(
+              icon: LineAwesomeIcons.user_shield,
+              text: 'Edit Profile',
+              index: 0,
+              hasNavigation: true),
+          ProfileListItem(
+            icon: LineAwesomeIcons.address_card,
+            text: 'Addresses',
+            index: 1,
+            hasNavigation: true,
+          ),
+          ProfileListItem(
+            icon: LineAwesomeIcons.history,
+            text: 'Change Password',
+            index: 2,
+          ),
+          ProfileListItem(
+            icon: LineAwesomeIcons.question_circle,
+            text: 'Wallet',
+            index: 3,
+          ),
+          ProfileListItem(
+            icon: LineAwesomeIcons.cog,
+            text: 'Settings',
+            index: 4,
+          ),
+          ProfileListItem(
+            icon: LineAwesomeIcons.user_plus,
+            text: 'Invite a Friend',
+            index: 5,
+          ),
+          ProfileListItem(
+            icon: LineAwesomeIcons.alternate_sign_out,
+            text: 'Logout',
+            index: 6,
+            hasNavigation: true,
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 15),
+            alignment: Alignment.topLeft,
+            child: Text(
+              "ACCOUNT",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+          ),
+          Container(
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.only(left: 15),
+              child: Text(
+                "Login/Create Account",
+                style: TextStyle(fontSize: 10),
+              )),
+          SizedBox(
+            height: 15,
+          ),
+          MaterialButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            },
+            child: Text("Login"),
+            color: Colors.blue,
+            textColor: Colors.white,
+            minWidth: 345,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            height: 50,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Divider(
+            color: Colors.black,
+          ),
+          ProfileListItem(
+            icon: LineAwesomeIcons.cog,
+            text: 'Settings',
+          ),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
@@ -85,40 +205,7 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(height: kSpacingUnit.w * 5),
                 header,
                 Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      ProfileListItem(
-                          icon: LineAwesomeIcons.user_shield,
-                          text: 'Edit Profile',
-                          hasNavigation: true),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.address_card,
-                        text: 'Addresses',
-                        hasNavigation: true,
-                      ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.history,
-                        text: 'Change Password',
-                      ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.question_circle,
-                        text: 'Wallet',
-                      ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.cog,
-                        text: 'Settings',
-                      ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.user_plus,
-                        text: 'Invite a Friend',
-                      ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.alternate_sign_out,
-                        text: 'Logout',
-                        hasNavigation: false,
-                      ),
-                    ],
-                  ),
+                  child: Container(child: _buildloginCheck()),
                 )
               ],
             ),

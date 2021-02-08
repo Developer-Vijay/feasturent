@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
 
 class DineoutHomeAppBar1 extends StatefulWidget {
   @override
@@ -47,7 +47,8 @@ class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
             IconButton(
               icon: SvgPicture.asset("assets/icons/search.svg"),
               onPressed: () {
-                showSearch(context: context, delegate: DineoutSearchbar(), query: "");
+                showSearch(
+                    context: context, delegate: DineoutSearchbar(), query: "");
               },
             ),
             IconButton(
@@ -69,8 +70,7 @@ class DineoutSearchbar extends SearchDelegate<String> {
           searchFieldLabel: hintText,
           textInputAction: TextInputAction.search,
         );
-  final foodlist = [
-    "Chole Bhature", "Rajma Chawal", "Noodles", "Soup"];
+  final foodlist = ["Chole Bhature", "Rajma Chawal", "Noodles", "Soup"];
   final foodsubtitle = [
     "Dhaba da Shaba",
     "Punjabi tadka",
@@ -137,10 +137,8 @@ class DineoutSearchbar extends SearchDelegate<String> {
         : foodlist.where((p) => p.startsWith(query)).toList();
     return Container(
         child: ListView.builder(
-      itemBuilder: (context, index) => 
-      Column(
+      itemBuilder: (context, index) => Column(
         children: [
-         
           ListTile(
             leading: Container(
               decoration: BoxDecoration(

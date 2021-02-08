@@ -1,7 +1,6 @@
-import 'package:feasturent_costomer_app/Bottomsheet/addRatingBottom.dart';
+import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.dart';
 import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -425,13 +424,14 @@ class _RatingPageState extends State<RatingPage> {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.only(bottom:8.0),
+                padding: const EdgeInsets.only(bottom: 8.0),
                 child: Container(
                   alignment: Alignment.centerRight,
                   margin: EdgeInsets.only(right: 20),
                   child: FloatingActionButton(
                     onPressed: () {
-                      showModalBottomSheet(context: context,builder: (context)=>AddRating());
+                      showModalBottomSheet(
+                          context: context, builder: (context) => AddRating());
                     },
                     child: Icon(Icons.add),
                   ),
@@ -529,7 +529,5 @@ class _RatingPageState extends State<RatingPage> {
   //           ),
   //         ),
   //       ]);
-      
-    
-  }
 
+}

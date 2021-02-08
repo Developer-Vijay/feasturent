@@ -1,5 +1,6 @@
 import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart';
 import 'package:feasturent_costomer_app/components/onBoarding/appOnBoarding.dart';
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
@@ -41,7 +42,7 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
     return new SplashScreen(
       seconds: 2,
       navigateAfterSeconds:
-          _isOnboadingSeen ? UserAuthenticate(context) : OnboardingScreen(),
+          _isOnboadingSeen ? HomeScreen() : OnboardingScreen(),
       title: new Text(
         'Feasturent',
         style: new TextStyle(

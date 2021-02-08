@@ -89,7 +89,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   alignment: Alignment.centerRight,
                   child: FlatButton(
                     onPressed: () => Navigator.of(context)
-                        .pushReplacementNamed('/loginPage'),
+                        .pushReplacementNamed('/homePage'),
                     child: Text(
                       'Skip',
                       style: TextStyle(
@@ -249,7 +249,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 color: Colors.white,
                 child: GestureDetector(
                   onTap: () =>
-                      Navigator.of(context).pushReplacementNamed('/loginPage'),
+                      Navigator.of(context).pushReplacementNamed('/homePage'),
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 8.0),

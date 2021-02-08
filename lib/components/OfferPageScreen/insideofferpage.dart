@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_line/dotted_line.dart';
-import 'package:feasturent_costomer_app/Bottomsheet/offerBottomsheet.dart';
-import 'package:feasturent_costomer_app/OfferPageScreen/offerpage.dart';
+import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +13,17 @@ class OfferListPage extends StatefulWidget {
 }
 
 class _OfferListPageState extends State<OfferListPage> {
+  final _containerDecoration = BoxDecoration(
+    boxShadow: [
+      BoxShadow(
+          blurRadius: 2,
+          offset: Offset(3, 3),
+          color: Colors.grey[300],
+          spreadRadius: 2)
+    ],
+    borderRadius: BorderRadius.circular(5),
+    color: Colors.white,
+  );
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -134,33 +144,30 @@ class _OfferListPageState extends State<OfferListPage> {
               ),
               DottedLine(),
               SizedBox(
-                height: 20,
+                height: 15,
               ),
 
-              // slider
+              // List of Discounts
 
               Container(
+                height: size.height * 0.1,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CarouselSlider(
-                      options: CarouselOptions(
-                          height: size.height * 0.07,
-                          viewportFraction: 0.6,
-                          aspectRatio: 2,
-
-                          autoPlay: false),
-                      items: [
+                  padding: const EdgeInsets.all(8),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
                         InkWell(
                           onTap: () {
-                            showModalBottomSheet(context: context,builder: (context)=>OnOfferBottomSheet());
-                           
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) => OnOfferBottomSheet());
                           },
                           child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: OffTextColor),
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.white,
-                            ),
+                            padding: EdgeInsets.all(4),
+                            height: size.height * 0.064,
+                            width: size.width * 0.4,
+                            decoration: _containerDecoration,
                             child: Column(children: [
                               Row(
                                 children: [
@@ -197,17 +204,22 @@ class _OfferListPageState extends State<OfferListPage> {
                             ]),
                           ),
                         ),
-                        
-                        // Another List
+                        // Second List
+                        SizedBox(
+                          width: 12,
+                        ),
+
                         InkWell(
                           onTap: () {
-                             showModalBottomSheet(context: context,builder: (context)=>OnOfferBottomSheet());
-                            },
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) => OnOfferBottomSheet());
+                          },
                           child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: OffTextColor),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                            padding: EdgeInsets.all(4),
+                            height: size.height * 0.064,
+                            width: size.width * 0.4,
+                            decoration: _containerDecoration,
                             child: Column(children: [
                               Row(
                                 children: [
@@ -244,18 +256,22 @@ class _OfferListPageState extends State<OfferListPage> {
                             ]),
                           ),
                         ),
-                        // Third List
+                        SizedBox(
+                          width: 12,
+                        ),
 
+                        // Third List
                         InkWell(
                           onTap: () {
-                             showModalBottomSheet(context: context,builder: (context)=>OnOfferBottomSheet());
-                           
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) => OnOfferBottomSheet());
                           },
                           child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: OffTextColor),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                            padding: EdgeInsets.all(4),
+                            height: size.height * 0.064,
+                            width: size.width * 0.4,
+                            decoration: _containerDecoration,
                             child: Column(children: [
                               Row(
                                 children: [
@@ -292,7 +308,9 @@ class _OfferListPageState extends State<OfferListPage> {
                             ]),
                           ),
                         ),
-                      ]),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
@@ -359,7 +377,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                     borderRadius: BorderRadius.circular(20),
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          "https://image.shutterstock.com/z/stock-photo-chole-tikki-aaloo-tikki-is-a-snack-originating-from-the-indian-subcontinent-in-north-indian-1133202113.jpg",
+                                          "https://media.gettyimages.com/photos/aloo-tikki-chaat-picture-id159801149?k=6&m=159801149&s=612x612&w=0&h=96ZMbIqHXuhaJepXw_xfls7wxs8CgqKOUHkbKFdgwqE=",
                                       fit: BoxFit.cover,
                                       height: size.height * 0.12,
                                       width: size.width * 0.26,
@@ -399,7 +417,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                           )
                                         ],
                                       ),
-                                      
                                       Container(
                                         child: Row(
                                           children: [
@@ -409,7 +426,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                               child: Text(
                                                 "North Indian ",
                                                 style: TextStyle(
-                                                  fontSize: 13,
+                                                    fontSize: 13,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
@@ -417,7 +434,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                           ],
                                         ),
                                       ),
-                                      
                                       Container(
                                         child: Row(
                                           children: [
@@ -481,8 +497,9 @@ class _OfferListPageState extends State<OfferListPage> {
                                               left: size.width * 0.01),
                                           child: Row(
                                             children: [
-                                              CachedNetworkImage(imageUrl:
-                                                "https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg",
+                                              CachedNetworkImage(
+                                                imageUrl:
+                                                    "https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg",
                                                 height: size.height * 0.026,
                                               ),
                                               SizedBox(
@@ -491,12 +508,11 @@ class _OfferListPageState extends State<OfferListPage> {
                                               Text(
                                                 "20 % | Use Code SW100",
                                                 style: TextStyle(
-                                                  fontSize: 12,
+                                                    fontSize: 12,
                                                     color: kTextColor),
                                               )
                                             ],
-                                          )
-                                          )
+                                          ))
                                     ],
                                   ),
                                 ),
@@ -509,13 +525,15 @@ class _OfferListPageState extends State<OfferListPage> {
                                   child: MaterialButton(
                                     onPressed: () {},
                                     color: Colors.blue,
-                                    
                                     minWidth: 30,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(14)),
                                     textColor: Colors.white,
-                                    child: Text("Add",style: TextStyle(fontSize: 12),),
+                                    child: Text(
+                                      "Add",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                   ),
                                 ),
                               )
@@ -532,312 +550,388 @@ class _OfferListPageState extends State<OfferListPage> {
               // List 2
 
               Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Container(
                     margin: EdgeInsets.only(
                         left: size.width * 0.02, right: size.width * 0.02),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [BoxShadow(blurRadius: 1)]),
-                    height: size.height * 0.15,
-                    child: Row(
+                        boxShadow: [BoxShadow(blurRadius: 2)]),
+                    height: size.height * 0.138,
+                    child: Column(
                       children: [
-                        Expanded(
-                          flex: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    "https://image.shutterstock.com/image-photo/sev-puri-indian-snack-type-600w-1433273378.jpg",
-                                fit: BoxFit.cover,
-                                height: size.height * 0.13,
-                                width: size.width * 0.246,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
+                        Container(
+                          child: Row(
                             children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 10, top: 5),
-                                    child: Text(
-                                      "Pani Puri",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontSize: 18),
+                              Expanded(
+                                flex: 0,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: size.width * 0.02,
+                                      top: size.height * 0.01),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "https://media.gettyimages.com/photos/pani-puri-picture-id1140993688?k=6&m=1140993688&s=612x612&w=0&h=uHU55pv3ECgx9yQtwHUwOKS5DgNk3S_cS9DCILvLqU4=",
+                                      fit: BoxFit.cover,
+                                      height: size.height * 0.12,
+                                      width: size.width * 0.26,
                                     ),
                                   ),
-                                  SizedBox(
-                                      height: size.height * 0.023,
-                                      width: size.width * 0.3,
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            "https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png",
-                                      )),
-                                ],
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 12, top: 2),
-                                    child: Text(
-                                      "Spicy",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                ],
+                              Container(
+                                margin:
+                                    EdgeInsets.only(left: size.width * 0.001),
+                                child: Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                left: size.width * 0.02),
+                                            child: Text(
+                                              "Gol Gappey",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 50,
+                                          ),
+                                          Container(
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png",
+                                              height: 18,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  right: size.width * 0.11),
+                                              child: Text(
+                                                "North Indian ",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              child: SmoothStarRating(
+                                                  allowHalfRating: false,
+                                                  onRated: (v) {
+                                                    Text("23");
+                                                  },
+                                                  starCount: 1,
+                                                  rating: 3,
+                                                  size: 20.0,
+                                                  isReadOnly: false,
+                                                  defaultIconData: Icons
+                                                      .star_border_outlined,
+                                                  filledIconData: Icons.star,
+                                                  halfFilledIconData:
+                                                      Icons.star_border,
+                                                  color: Colors.red,
+                                                  borderColor: Colors.red,
+                                                  spacing: 0.0),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  right: size.width * 0.1),
+                                              child: Text(
+                                                "3.0",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            SvgPicture.asset(
+                                                "assets/icons/rupee.svg",
+                                                height: 12),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(right: 15),
+                                              child: Text(
+                                                "100",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(
+                                              left: size.width * 0.01),
+                                          child: Row(
+                                            children: [
+                                              CachedNetworkImage(
+                                                imageUrl:
+                                                    "https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg",
+                                                height: size.height * 0.026,
+                                              ),
+                                              SizedBox(
+                                                width: size.width * 0.013,
+                                              ),
+                                              Text(
+                                                "20 % | Use Code SW100",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: kTextColor),
+                                              )
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, bottom: 24),
-                                    child: SmoothStarRating(
-                                        allowHalfRating: false,
-                                        onRated: (v) {
-                                          Text("23");
-                                        },
-                                        starCount: 1,
-                                        rating: 5,
-                                        size: 23.0,
-                                        isReadOnly: false,
-                                        defaultIconData:
-                                            Icons.star_border_outlined,
-                                        filledIconData: Icons.star,
-                                        halfFilledIconData: Icons.star_border,
-                                        color: Colors.red,
-                                        borderColor: Colors.red,
-                                        spacing: 0.0),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3, bottom: 24),
-                                    child: Text(
-                                      "5",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 13, bottom: 20),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/rupee.svg",
-                                        height: 14),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4, bottom: 20),
-                                    child: Text(
-                                      "40",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 38,
-                                  ),
-                                 
-                                  MaterialButton(
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      top: size.height * 0.01,
+                                      right: size.width * 0.04),
+                                  child: MaterialButton(
                                     onPressed: () {},
-                                    color: Colors.red,
-                                    textColor: Colors.white,
+                                    color: Colors.blue,
                                     minWidth: 30,
-                                    height: 32,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(14)),
+                                    textColor: Colors.white,
                                     child: Text(
                                       "Add",
-                                      style: TextStyle(fontSize: 15),
+                                      style: TextStyle(fontSize: 12),
                                     ),
-                                  )
-                                ],
-                              ),
-                              //  Container(
-                              //             margin: EdgeInsets.only(
-                              //                 left: size.width * 0.01,bottom: 0),
-                              //             child: Row(
-                              //               children: [
-                              //                 CachedNetworkImage(imageUrl:
-                              //                   "https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg",
-                              //                   height: size.height * 0.016,
-                              //                 ),
-                              //                 SizedBox(
-                              //                   width: size.width * 0.013,
-                              //                 ),
-                              //                 Text(
-                              //                   "20 % | Use Code SW100",
-                              //                   style: TextStyle(
-                              //                     fontSize: 10,
-                              //                       color: kTextColor),
-                              //                 )
-                              //               ],
-                              //             )
-                              //             ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
                       ],
                     )),
               ),
+
               SizedBox(
                 height: 20,
               ),
 
               // List 3
+
               Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Container(
                     margin: EdgeInsets.only(
                         left: size.width * 0.02, right: size.width * 0.02),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [BoxShadow(blurRadius: 1)]),
-                    height: size.height * 0.16,
-                    child: Row(
+                        boxShadow: [BoxShadow(blurRadius: 2)]),
+                    height: size.height * 0.138,
+                    child: Column(
                       children: [
-                        Expanded(
-                          flex: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    "https://image.shutterstock.com/z/stock-photo-kolkata-fast-food-and-street-food-snacks-papdi-chaat-1215136753.jpg",
-                                fit: BoxFit.cover,
-                                height: size.height * 0.2,
-                                width: size.width * 0.246,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
+                        Container(
+                          child: Row(
                             children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 10, top: 5),
-                                    child: Text(
-                                      "Dahi Papdi",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontSize: 20),
+                              Expanded(
+                                flex: 0,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: size.width * 0.02,
+                                      top: size.height * 0.01),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "https://media.gettyimages.com/photos/delhi-dahi-papdi-from-the-indigo-restaurant-in-lindfield-3-february-picture-id539729151?s=2048x2048",
+                                      fit: BoxFit.cover,
+                                      height: size.height * 0.12,
+                                      width: size.width * 0.26,
                                     ),
                                   ),
-                                  SizedBox(
-                                      height: size.height * 0.023,
-                                      width: size.width * 0.3,
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            "https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png",
-                                      )),
-                                ],
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 12, top: 7),
-                                    child: Text(
-                                      "Spicy",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                ],
+                              Container(
+                                margin:
+                                    EdgeInsets.only(left: size.width * 0.001),
+                                child: Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                left: size.width * 0.02),
+                                            child: Text(
+                                              "Dahi Papdi",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 50,
+                                          ),
+                                          Container(
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png",
+                                              height: 18,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  right: size.width * 0.11),
+                                              child: Text(
+                                                "North Indian ",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              child: SmoothStarRating(
+                                                  allowHalfRating: false,
+                                                  onRated: (v) {
+                                                    Text("23");
+                                                  },
+                                                  starCount: 1,
+                                                  rating: 3,
+                                                  size: 20.0,
+                                                  isReadOnly: false,
+                                                  defaultIconData: Icons
+                                                      .star_border_outlined,
+                                                  filledIconData: Icons.star,
+                                                  halfFilledIconData:
+                                                      Icons.star_border,
+                                                  color: Colors.red,
+                                                  borderColor: Colors.red,
+                                                  spacing: 0.0),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  right: size.width * 0.1),
+                                              child: Text(
+                                                "3.0",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            SvgPicture.asset(
+                                                "assets/icons/rupee.svg",
+                                                height: 12),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(right: 15),
+                                              child: Text(
+                                                "100",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(
+                                              left: size.width * 0.01),
+                                          child: Row(
+                                            children: [
+                                              CachedNetworkImage(
+                                                imageUrl:
+                                                    "https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg",
+                                                height: size.height * 0.026,
+                                              ),
+                                              SizedBox(
+                                                width: size.width * 0.013,
+                                              ),
+                                              Text(
+                                                "20 % | Use Code SW100",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: kTextColor),
+                                              )
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, bottom: 24),
-                                    child: SmoothStarRating(
-                                        allowHalfRating: false,
-                                        onRated: (v) {
-                                          Text("23");
-                                        },
-                                        starCount: 1,
-                                        rating: 4.0,
-                                        size: 23.0,
-                                        isReadOnly: false,
-                                        defaultIconData:
-                                            Icons.star_border_outlined,
-                                        filledIconData: Icons.star,
-                                        halfFilledIconData: Icons.star_border,
-                                        color: Colors.red,
-                                        borderColor: Colors.red,
-                                        spacing: 0.0),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3, bottom: 24),
-                                    child: Text(
-                                      "3",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 13, bottom: 20),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/rupee.svg",
-                                        height: 14),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4, bottom: 20),
-                                    child: Text(
-                                      "90",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 38,
-                                  ),
-                                  MaterialButton(
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      top: size.height * 0.01,
+                                      right: size.width * 0.04),
+                                  child: MaterialButton(
                                     onPressed: () {},
-                                    color: Colors.red,
-                                    textColor: Colors.white,
+                                    color: Colors.blue,
                                     minWidth: 30,
-                                    height: 32,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(14)),
+                                    textColor: Colors.white,
                                     child: Text(
                                       "Add",
-                                      style: TextStyle(fontSize: 15),
+                                      style: TextStyle(fontSize: 12),
                                     ),
-                                  )
-                                ],
-                              ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -850,7 +944,4 @@ class _OfferListPageState extends State<OfferListPage> {
       )),
     );
   }
-
-
- 
 }

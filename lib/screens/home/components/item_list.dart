@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/components/list.dart';
@@ -38,33 +37,30 @@ class CategoriesList extends StatelessWidget {
                     TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
               ),
             ),
-            Row(
-              children: [
-                Container(
-                    margin: EdgeInsets.only(left: size.width * 0.4),
-                    child: FlatButton(
-                        onPressed: () => {print('View All')},
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 15),
-                              child: Text(
-                                "View All",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: kPrimaryColor),
-                              ),
-                            ),
-                            Container(
-                                margin: EdgeInsets.zero,
-                                child: Icon(
-                                  Icons.arrow_right_rounded,
-                                  color: kSecondaryTextColor,
-                                )),
-                          ],
-                        ))),
-              ],
-            )
+            Spacer(),
+            Container(
+                margin: EdgeInsets.only(left: 0),
+                child: FlatButton(
+                    onPressed: () => {print('View All')},
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 15),
+                          child: Text(
+                            "View All",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: kPrimaryColor),
+                          ),
+                        ),
+                        Container(
+                            margin: EdgeInsets.zero,
+                            child: Icon(
+                              Icons.arrow_right_rounded,
+                              color: kSecondaryTextColor,
+                            )),
+                      ],
+                    )))
           ],
         ),
         SingleChildScrollView(
@@ -93,8 +89,9 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child:CachedNetworkImage(imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-typical-indian-food-from-jaipur-thali-rajasthani-1010465743.jpg",
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "https://image.shutterstock.com/z/stock-photo-typical-indian-food-from-jaipur-thali-rajasthani-1010465743.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -137,7 +134,7 @@ class CategoriesList extends StatelessWidget {
                       child: ClipOval(
                         child: CachedNetworkImage(
                           imageUrl:
-                          "https://image.shutterstock.com/z/stock-photo-group-of-south-indian-food-like-masala-dosa-uttapam-idli-idly-wada-vada-sambar-appam-semolina-1153818823.jpg",
+                              "https://image.shutterstock.com/z/stock-photo-group-of-south-indian-food-like-masala-dosa-uttapam-idli-idly-wada-vada-sambar-appam-semolina-1153818823.jpg",
                           fit: BoxFit.cover,
                           width: size.width * 0.2,
                           height: size.height * 0.2,
@@ -181,8 +178,9 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: CachedNetworkImage(imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-board-with-delicious-caramel-cake-on-table-768814738.jpg",
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "https://image.shutterstock.com/z/stock-photo-board-with-delicious-caramel-cake-on-table-768814738.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -225,16 +223,16 @@ class CategoriesList extends StatelessWidget {
                         radius: 80,
                         child: FlatButton(
                           onPressed: () {
-                               Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Practice()),
+                                  builder: (context) => PizzaList()),
                             );
                           },
                           child: ClipOval(
                             child: CachedNetworkImage(
                               imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-classic-hamburger-with-cheese-bacon-tomato-and-lettuce-on-dark-wooden-background-1677795556.jpg",
+                                  "https://image.shutterstock.com/z/stock-photo-classic-hamburger-with-cheese-bacon-tomato-and-lettuce-on-dark-wooden-background-1677795556.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -278,8 +276,9 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: CachedNetworkImage(imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-schezwan-noodles-or-vegetable-hakka-noodles-or-chow-mein-is-a-popular-indo-chinese-recipes-served-1251390421.jpg",
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "https://image.shutterstock.com/z/stock-photo-schezwan-noodles-or-vegetable-hakka-noodles-or-chow-mein-is-a-popular-indo-chinese-recipes-served-1251390421.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -325,7 +324,7 @@ class CategoriesList extends StatelessWidget {
                           child: ClipOval(
                             child: CachedNetworkImage(
                               imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-murgh-makhani-butter-chicken-tikka-masala-served-with-roti-paratha-and-plain-rice-along-with-1210314505.jpg",
+                                  "https://image.shutterstock.com/z/stock-photo-murgh-makhani-butter-chicken-tikka-masala-served-with-roti-paratha-and-plain-rice-along-with-1210314505.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -369,8 +368,9 @@ class CategoriesList extends StatelessWidget {
                         child: FlatButton(
                           onPressed: () {},
                           child: ClipOval(
-                            child: CachedNetworkImage(imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-punjabi-aloo-samosa-or-potato-samosa-recipe-or-indian-traditional-aloo-samosa-indian-chat-recipe-1508653862.jpg",
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "https://image.shutterstock.com/z/stock-photo-punjabi-aloo-samosa-or-potato-samosa-recipe-or-indian-traditional-aloo-samosa-indian-chat-recipe-1508653862.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,

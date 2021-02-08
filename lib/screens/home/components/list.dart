@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
+import 'package:feasturent_costomer_app/screens/home/components/detail_item.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class Practice extends StatelessWidget {
+class PizzaList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return (Scaffold(body: Detail()));
@@ -45,8 +47,8 @@ class _DetailState extends State<Detail> {
           child: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => FoodSlider()));
+              Navigator.pop(context,
+                  MaterialPageRoute(builder: (context) => Bottomnavbar()));
             },
             color: Colors.white,
             iconSize: 30,
@@ -126,7 +128,7 @@ class _DetailState extends State<Detail> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => FoodSlider()),
+                                      builder: (context) => ItemDetailPage()),
                                 );
                               },
                               child: Container(

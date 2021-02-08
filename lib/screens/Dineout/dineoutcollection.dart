@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class Collections extends StatefulWidget {
@@ -13,27 +12,29 @@ class _CollectionsState extends State<Collections> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: Text(
-              "Best Collections",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Text(
+                "Best Collections",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700),
+              ),
             ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Container(
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
                         left: size.width * 0.04,
@@ -52,8 +53,7 @@ class _CollectionsState extends State<Collections> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin:
-                                EdgeInsets.only(top: size.height * 0.143),
+                            margin: EdgeInsets.only(top: size.height * 0.143),
                             alignment: Alignment.bottomLeft,
                             child: RichText(
                               text: TextSpan(
@@ -63,22 +63,27 @@ class _CollectionsState extends State<Collections> {
                                   children: [
                                     TextSpan(
                                       text: " Raising the Bar \n",
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                         fontWeight: FontWeight.w600
+                                      ),
                                     ),
                                     TextSpan(
                                         text: " 168 Places",
-                                        style: TextStyle(fontSize: 12)),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600
+                                        )),
                                   ]),
                             ),
                           ),
                         ],
                       ),
-                      ),
-                ),
-
-                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Container(
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
                         left: size.width * 0.04,
@@ -97,8 +102,7 @@ class _CollectionsState extends State<Collections> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin:
-                                EdgeInsets.only(top: size.height * 0.143),
+                            margin: EdgeInsets.only(top: size.height * 0.143),
                             alignment: Alignment.bottomLeft,
                             child: RichText(
                               text: TextSpan(
@@ -108,22 +112,21 @@ class _CollectionsState extends State<Collections> {
                                   children: [
                                     TextSpan(
                                       text: " Raising the Bar \n",
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                                     ),
                                     TextSpan(
                                         text: " 168 Places",
-                                        style: TextStyle(fontSize: 12)),
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                                   ]),
                             ),
                           ),
                         ],
                       ),
-                      ),
-                ),
-
-                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Container(
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
                         left: size.width * 0.04,
@@ -142,8 +145,7 @@ class _CollectionsState extends State<Collections> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin:
-                                EdgeInsets.only(top: size.height * 0.143),
+                            margin: EdgeInsets.only(top: size.height * 0.143),
                             alignment: Alignment.bottomLeft,
                             child: RichText(
                               text: TextSpan(
@@ -153,22 +155,21 @@ class _CollectionsState extends State<Collections> {
                                   children: [
                                     TextSpan(
                                       text: " Raising the Bar \n",
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                                     ),
                                     TextSpan(
                                         text: " 168 Places",
-                                        style: TextStyle(fontSize: 12)),
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                                   ]),
                             ),
                           ),
                         ],
                       ),
-                      ),
-                ),
-
-                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Container(
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
                         left: size.width * 0.04,
@@ -187,8 +188,7 @@ class _CollectionsState extends State<Collections> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin:
-                                EdgeInsets.only(top: size.height * 0.143),
+                            margin: EdgeInsets.only(top: size.height * 0.143),
                             alignment: Alignment.bottomLeft,
                             child: RichText(
                               text: TextSpan(
@@ -198,22 +198,23 @@ class _CollectionsState extends State<Collections> {
                                   children: [
                                     TextSpan(
                                       text: " Raising the Bar \n",
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                                     ),
                                     TextSpan(
                                         text: " 168 Places",
-                                        style: TextStyle(fontSize: 12)),
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                                   ]),
                             ),
                           ),
                         ],
                       ),
-                      ),
-                ),
-              ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

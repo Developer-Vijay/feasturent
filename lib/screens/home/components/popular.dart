@@ -30,42 +30,37 @@ class PopularList extends StatelessWidget {
         Row(
           children: [
             Container(
-              margin: EdgeInsets.only(left: size.width * 0.05),
+              margin: EdgeInsets.only(left: size.width * 0.04),
               child: Text(
                 "Popular on Feasturent",
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                    alignment: Alignment.topRight,
-                    margin: EdgeInsets.only(left: size.width * 0.23),
-                    child: FlatButton(
-                      onPressed: () => {print('View All')},
-                      child: Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "View All",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: kPrimaryColor),
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.zero,
-                              child: Icon(
-                                Icons.arrow_right_rounded,
-                                color: kSecondaryTextColor,
-                              )),
-                        ],
+            Spacer(),
+            Container(
+                alignment: Alignment.topRight,
+                child: FlatButton(
+                  onPressed: () => {print('View All')},
+                  child: Row(
+                    children: [
+                      Container(
+                        child: Text(
+                          "View All",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: kPrimaryColor),
+                        ),
                       ),
-                    ))
-              ],
-            )
+                      Container(
+                          margin: EdgeInsets.zero,
+                          child: Icon(
+                            Icons.arrow_right_rounded,
+                            color: kSecondaryTextColor,
+                          )),
+                    ],
+                  ),
+                ))
           ],
         ),
         SingleChildScrollView(
@@ -96,13 +91,13 @@ class PopularList extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Practice()),
+                                  builder: (context) => PizzaList()),
                             );
                           },
                           child: ClipOval(
-                            child:  CachedNetworkImage(
-                               imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-chole-bhature-or-chick-pea-curry-and-fried-puri-served-in-terracotta-crockery-over-white-1072270610.jpg",
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "https://image.shutterstock.com/z/stock-photo-chole-bhature-or-chick-pea-curry-and-fried-puri-served-in-terracotta-crockery-over-white-1072270610.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.16,
                               height: size.height * 0.2,
@@ -147,8 +142,8 @@ class PopularList extends StatelessWidget {
                           onPressed: () {},
                           child: ClipOval(
                             child: CachedNetworkImage(
-                               imageUrl:
-                                "https://image.shutterstock.com/z/stock-photo-traditional-dumpling-vegetarian-momos-food-from-nepal-served-with-tomato-chutney-over-moody-plate-1719536887.jpg",
+                                imageUrl:
+                                    "https://image.shutterstock.com/z/stock-photo-traditional-dumpling-vegetarian-momos-food-from-nepal-served-with-tomato-chutney-over-moody-plate-1719536887.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
                                 height: size.height * 0.2),
@@ -192,8 +187,8 @@ class PopularList extends StatelessWidget {
                           onPressed: () {},
                           child: ClipOval(
                             child: CachedNetworkImage(
-                               imageUrl:
-                              "https://image.shutterstock.com/image-photo/arabian-spicy-food-concept-homemade-600w-1199926645.jpg",
+                              imageUrl:
+                                  "https://image.shutterstock.com/image-photo/arabian-spicy-food-concept-homemade-600w-1199926645.jpg",
                               fit: BoxFit.cover,
                               width: size.width * 0.16,
                               height: size.height * 0.2,
@@ -238,8 +233,8 @@ class PopularList extends StatelessWidget {
                           onPressed: () {},
                           child: ClipOval(
                             child: CachedNetworkImage(
-                               imageUrl:
-                                "https://image.shutterstock.com/z/stock-photo-big-cheeseburger-with-lots-of-cheese-stock-photo-side-view-of-a-cheeseburger-on-a-black-brick-wall-1680415567.jpg",
+                                imageUrl:
+                                    "https://image.shutterstock.com/z/stock-photo-big-cheeseburger-with-lots-of-cheese-stock-photo-side-view-of-a-cheeseburger-on-a-black-brick-wall-1680415567.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
                                 height: size.height * 0.2),
@@ -283,8 +278,8 @@ class PopularList extends StatelessWidget {
                           onPressed: () {},
                           child: ClipOval(
                             child: CachedNetworkImage(
-                               imageUrl:
-                                "https://image.shutterstock.com/z/stock-photo-chicken-kabsa-homemade-arabian-biryani-overhead-view-1048188121.jpg",
+                                imageUrl:
+                                    "https://image.shutterstock.com/z/stock-photo-chicken-kabsa-homemade-arabian-biryani-overhead-view-1048188121.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
                                 height: size.height * 0.2),
@@ -328,8 +323,8 @@ class PopularList extends StatelessWidget {
                           onPressed: () {},
                           child: ClipOval(
                             child: CachedNetworkImage(
-                              imageUrl:
-                                "https://image.shutterstock.com/z/stock-photo-palak-paneer-curry-made-up-of-spinach-and-cottage-cheese-popular-indian-healthy-lunch-dinner-food-620862170.jpg",
+                                imageUrl:
+                                    "https://image.shutterstock.com/z/stock-photo-palak-paneer-curry-made-up-of-spinach-and-cottage-cheese-popular-indian-healthy-lunch-dinner-food-620862170.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
                                 height: size.height * 0.2),
@@ -373,8 +368,8 @@ class PopularList extends StatelessWidget {
                           onPressed: () {},
                           child: ClipOval(
                             child: CachedNetworkImage(
-                               imageUrl:
-                                "https://image.shutterstock.com/z/stock-photo-masala-dosa-indian-savory-crepes-with-potato-filling-top-down-view-783911236.jpg",
+                                imageUrl:
+                                    "https://image.shutterstock.com/z/stock-photo-masala-dosa-indian-savory-crepes-with-potato-filling-top-down-view-783911236.jpg",
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
                                 height: size.height * 0.2),

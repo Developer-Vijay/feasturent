@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
-
 import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart';
 import 'package:feasturent_costomer_app/components/auth/login/loginWithGoolge.dart';
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
@@ -31,19 +30,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   title: Text('Signin'),
-      //   elevation: 0,
-      // ),
-      body: SingleChildScrollView(
-        child: Container(
-          // padding: EdgeInsets.only(top:60),
+      body: ListView(children: [
+        Container(
           color: Colors.white,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 80),
                 Image.asset(
@@ -218,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
+      ]),
     );
   }
 
@@ -273,6 +265,7 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString("userEmail", responseData['data']['user']['email']);
         prefs.setString("loginBy", "userName");
         prefs.setBool("_isAuthenticate", true);
+        prefs.setString('name',_userNameController.text);
         UserAuthenticate(context);
         setState(() {
           _isProcessing = false;

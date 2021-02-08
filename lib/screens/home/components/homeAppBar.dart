@@ -1,43 +1,61 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/appDrawer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 
-// class HomeAppBar extends StatelessWidget {
+// class HomeAppBar extends StatefulWidget {
+//   @override
+//   _HomeAppBarState createState() => _HomeAppBarState();
+// }
+
+// class _HomeAppBarState extends State<HomeAppBar> {
+//   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 //   @override
 //   Widget build(BuildContext context) {
-//     return AppBar(
-//       backgroundColor: Colors.white,
-//       elevation: 0,
-//       leading: IconButton(
-//         icon: SvgPicture.asset("assets/icons/menu.svg"),
-//         onPressed: () {},
-//       ),
-//       title: RichText(
-//         text: TextSpan(
-//           style: Theme.of(context)
-//               .textTheme
-//               .title
-//               .copyWith(fontWeight: FontWeight.bold),
-//           children: [
-//             TextSpan(
-//               text: "Feas",
-//               style: TextStyle(color: ksecondaryColor),
-//             ),
-//             TextSpan(
-//               text: "Turent",
-//               style: TextStyle(color: kPrimaryColor),
-//             ),
-//           ],
+//     return Padding(
+//       padding: const EdgeInsets.only(top: 30.0),
+//       child: AppBar(
+//         key: _scaffoldKey,
+//         backgroundColor: Colors.white,
+//         elevation: 0,
+//         leading: IconButton(
+//           icon: SvgPicture.asset("assets/icons/menu.svg"),
+//           onPressed: () {
+//             Scaffold.of(context).openDrawer();
+//           },
 //         ),
-//       ),
-//       actions: <Widget>[
-//         IconButton(
-//           icon: SvgPicture.asset("assets/icons/notification.svg"),
-//           onPressed: () {},
+//         title: RichText(
+//           text: TextSpan(
+//             style: Theme.of(context)
+//                 .textTheme
+//                 .title
+//                 .copyWith(fontWeight: FontWeight.bold),
+//             children: [
+//               TextSpan(
+//                 text: "Feas",
+//                 style: TextStyle(color: ksecondaryColor),
+//               ),
+//               TextSpan(
+//                 text: "Turent",
+//                 style: TextStyle(color: kPrimaryColor),
+//               ),
+//             ],
+//           ),
 //         ),
-//       ],
+//         actions: <Widget>[
+//           IconButton(
+//             icon: SvgPicture.asset("assets/icons/search.svg"),
+//             onPressed: () {
+//               showSearch(context: context, delegate: Searchbar(), query: "");
+//             },
+//           ),
+//           IconButton(
+//             icon: SvgPicture.asset("assets/icons/notification.svg"),
+//             onPressed: () {},
+//           ),
+//         ],
+//       ),
 //     );
 //   }
 // }
@@ -107,8 +125,7 @@ class Searchbar extends SearchDelegate<String> {
           searchFieldLabel: hintText,
           textInputAction: TextInputAction.search,
         );
-  final foodlist = [
-    "Chole Bhature", "Rajma Chawal", "Noodles", "Soup"];
+  final foodlist = ["Chole Bhature", "Rajma Chawal", "Noodles", "Soup"];
   final foodsubtitle = [
     "Dhaba da Shaba",
     "Punjabi tadka",
@@ -175,10 +192,8 @@ class Searchbar extends SearchDelegate<String> {
         : foodlist.where((p) => p.startsWith(query)).toList();
     return Container(
         child: ListView.builder(
-      itemBuilder: (context, index) => 
-      Column(
+      itemBuilder: (context, index) => Column(
         children: [
-         
           ListTile(
             leading: Container(
               decoration: BoxDecoration(
