@@ -1,9 +1,16 @@
 import 'dart:convert';
 
+import 'package:feasturent_costomer_app/screens/home/components/category_list.dart';
+import 'package:feasturent_costomer_app/screens/home/components/discount_card.dart';
+import 'package:feasturent_costomer_app/screens/home/components/homeAppBar.dart';
+import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
+import 'package:feasturent_costomer_app/screens/home/components/item_list.dart';
+import 'package:feasturent_costomer_app/screens/home/components/popular.dart';
+
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:http/http.dart' as http;
-import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
+
 import 'package:feasturent_costomer_app/components/appDrawer.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,12 +71,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+    
       bottomNavigationBar: Bottomnavbar(),
       drawer: AppDrawer(
           cName: _customerName,
           cProfile: _customerProfile,
           cEmail: _customerEmail),
-      body: HomePageBody(),
+          body: HomePageBody(),
+     
     );
   }
 }

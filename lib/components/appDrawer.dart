@@ -1,4 +1,5 @@
-import 'package:feasturent_costomer_app/WalletScreen/walletscreen.dart';
+import 'package:feasturent_costomer_app/components/Filter/sortAndFilter.dart';
+import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -13,8 +14,8 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  bool isenabled = false;
 
-  final _styletext=TextStyle(color: Colors.black,fontWeight: FontWeight.w700);
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -113,6 +114,11 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('History'),
             dense: true,
             onTap: () {
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Filter()),
+              );
+              
               // Update the state of the app.
               // ...
             },
@@ -121,7 +127,9 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.account_balance_wallet),
             title: Text('Wallet'),
             dense: true,
+            
             onTap: () {
+             
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => WalletDesign()),

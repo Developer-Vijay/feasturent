@@ -102,4 +102,28 @@ final offerSheetStyle = TextStyle(
 final walletProfileName =
     TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold);
 
-final walletIconStyle = TextStyle(fontSize: 10, color: Colors.blueGrey);
+final walletIconStyle = TextStyle(fontSize: 12, color: Colors.blueGrey);
+
+class Addresses {
+  String fullnameHolder;
+  String phonenumberHolder;
+  String pincodeHolder;
+  String cityholder;
+  String housenoholder;
+  String stateholder;
+  String roadholder;
+  String landmarkholder;
+
+  Addresses(
+      {this.fullnameHolder,
+      this.phonenumberHolder,
+      this.cityholder,
+      this.landmarkholder,
+      this.stateholder,
+      this.roadholder,
+      this.housenoholder,
+      this.pincodeHolder});
+}
+List<Addresses> temp = [
+
+];

@@ -26,7 +26,7 @@ class _BottomsheetwidgetState extends State<Bottomsheetwidget> {
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         height: 500,
         margin: EdgeInsets.all(6),
         child: Column(

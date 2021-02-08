@@ -1,3 +1,4 @@
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/otp.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -18,6 +19,19 @@ class ResetPassword extends StatelessWidget {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Otprecieve()));
+                        },
+                        color: Colors.white,
+                      ),
+                    ),
                     Container(
                       child: Image.asset(
                         "assets/images/password.png",

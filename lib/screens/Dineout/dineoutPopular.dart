@@ -9,7 +9,7 @@ class PopularDininingLists extends StatefulWidget {
 
 class _PopularDininingListsState extends State<PopularDininingLists> {
   final _textstyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14);
+      TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 10);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -23,7 +23,7 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
               "Popular Dineout Areas",
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18,
+                  fontSize: 14,
                   fontWeight: FontWeight.w700),
             ),
           ),
@@ -83,6 +83,7 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                     SizedBox(
                       height: 7,
                     ),
+                    
                     Text("Great Indian Place", style: _textstyle)
                   ],
                 ),

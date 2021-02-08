@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
+
+
 
 class AddRating extends StatelessWidget {
   @override

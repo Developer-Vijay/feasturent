@@ -42,10 +42,9 @@ class _SignupPageState extends State<SignupPage> {
       //   title: Text('Signin'),
       //   elevation: 0,
       // ),
-      resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
-      body: SingleChildScrollView(
-        child: Container(
+      
+      body: ListView(
+        children:[ Container(
           // padding: EdgeInsets.only(top:60),
           color: Colors.white,
           child: Center(
@@ -74,6 +73,7 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       //Username
                       TextField(
+                        textInputAction: TextInputAction.next,
                         obscureText: false,
                         readOnly: _isOtpSend,
                         maxLength: 12,
@@ -94,6 +94,7 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 15),
                       //Phone Number
                       TextField(
+                        textInputAction: TextInputAction.next,
                         obscureText: false,
                         readOnly: _isOtpSend,
                         keyboardType:
@@ -119,6 +120,7 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 15),
                       //Email Address
                       TextField(
+                        textInputAction: TextInputAction.next,
                         obscureText: false,
                         readOnly: _isOtpSend,
                         decoration: InputDecoration(
@@ -156,10 +158,9 @@ class _SignupPageState extends State<SignupPage> {
                       //Otp
                       _isOtpSend == true
                           ? TextField(
-
                               obscureText: false,
-                              keyboardType:
-                                  TextInputType.numberWithOptions(decimal: true),
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
                                     RegExp('[0-9.,]')),
@@ -175,7 +176,7 @@ class _SignupPageState extends State<SignupPage> {
                                 counterText: "",
                               ),
                               controller: _otpController,
-                              )
+                            )
                           : Container(),
                     ],
                   ),
@@ -249,7 +250,7 @@ class _SignupPageState extends State<SignupPage> {
             ),
           ),
         ),
-      ),
+        ]),
     );
   }
 
