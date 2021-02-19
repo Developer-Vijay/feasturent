@@ -18,10 +18,10 @@ class _DineoutHomePageState extends State<DineoutHomePage> {
       child: Scaffold(
         body: Column(
           children: [
-            Expanded(
-              flex: 2,
-              child: DineoutHomeAppBar1(),
-            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: DineoutHomeAppBar1(),
+            // ),
             Expanded(
               flex: 18,
               child: ListView(children: [

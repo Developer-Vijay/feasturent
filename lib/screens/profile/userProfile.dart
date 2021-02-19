@@ -161,7 +161,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Container(
             height: kSpacingUnit.w * 10,
             width: kSpacingUnit.w * 10,
-            margin: EdgeInsets.only(top: kSpacingUnit.w * 3),
             child: Stack(
               children: <Widget>[
                 CircleAvatar(

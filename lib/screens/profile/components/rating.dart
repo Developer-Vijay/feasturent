@@ -38,8 +38,8 @@ class _RatingPageState extends State<RatingPage> {
                         onPressed: () {
                           Navigator.pop(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => Bottomnavbar()),
+                            // MaterialPageRoute(
+                            //     builder: (context) => Bottomnavbar()),
                           );
                         },
                       ),
