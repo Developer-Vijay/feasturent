@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/components/list.dart';
+import 'package:feasturent_costomer_app/screens/home/components/viewAllCategory.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,11 +23,6 @@ class CategoriesList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          margin: EdgeInsets.only(
-              top: size.height * 0.01, bottom: size.height * 0.01),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-        ),
         Row(
           children: [
             Container(
@@ -39,9 +35,14 @@ class CategoriesList extends StatelessWidget {
             ),
             Spacer(),
             Container(
-                margin: EdgeInsets.only(left: 0),
                 child: FlatButton(
-                    onPressed: () => {print('View All')},
+                    onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewAllCategory())),
+                          print('View All')
+                        },
                     child: Row(
                       children: [
                         Container(
@@ -53,12 +54,10 @@ class CategoriesList extends StatelessWidget {
                                 color: kPrimaryColor),
                           ),
                         ),
-                        Container(
-                            margin: EdgeInsets.zero,
-                            child: Icon(
-                              Icons.arrow_right_rounded,
-                              color: kSecondaryTextColor,
-                            )),
+                        Icon(
+                          Icons.arrow_right_rounded,
+                          color: kSecondaryTextColor,
+                        ),
                       ],
                     )))
           ],
@@ -90,8 +89,7 @@ class CategoriesList extends StatelessWidget {
                           onPressed: () {},
                           child: ClipOval(
                             child: CachedNetworkImage(
-                              imageUrl:
-                                  "https://image.shutterstock.com/z/stock-photo-typical-indian-food-from-jaipur-thali-rajasthani-1010465743.jpg",
+                              imageUrl: category[0].categoryImage,
                               fit: BoxFit.cover,
                               width: size.width * 0.2,
                               height: size.height * 0.2,
@@ -101,14 +99,14 @@ class CategoriesList extends StatelessWidget {
                       )),
                 ),
                 SizedBox(
-                  height: 7,
+                  height: size.height * 0.01,
                 ),
                 Text(
                   "Thali",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10),
+                      fontSize: size.height * 0.013),
                 )
               ],
             ),
@@ -144,14 +142,14 @@ class CategoriesList extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 7,
+                  height: size.height * 0.01,
                 ),
                 Text(
                   "South Indian",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10),
+                      fontSize: size.height * 0.013),
                 )
               ],
             ),
@@ -190,14 +188,14 @@ class CategoriesList extends StatelessWidget {
                       )),
                 ),
                 SizedBox(
-                  height: 7,
+                  height: size.height * 0.01,
                 ),
                 Text(
                   "Cake & Desserts",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10),
+                      fontSize: size.height * 0.013),
                 )
               ],
             ),
@@ -242,14 +240,14 @@ class CategoriesList extends StatelessWidget {
                       )),
                 ),
                 SizedBox(
-                  height: 7,
+                  height: size.height * 0.01,
                 ),
                 Text(
                   "Burger",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10),
+                      fontSize: size.height * 0.013),
                 )
               ],
             ),
@@ -288,14 +286,14 @@ class CategoriesList extends StatelessWidget {
                       )),
                 ),
                 SizedBox(
-                  height: 7,
+                  height: size.height * 0.01,
                 ),
                 Text(
                   "Chinese",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10),
+                      fontSize: size.height * 0.013),
                 )
               ],
             ),
@@ -334,14 +332,14 @@ class CategoriesList extends StatelessWidget {
                       )),
                 ),
                 SizedBox(
-                  height: 7,
+                  height: size.height * 0.01,
                 ),
                 Text(
                   "North Indian",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10),
+                      fontSize: size.height * 0.013),
                 )
               ],
             ),
@@ -380,14 +378,14 @@ class CategoriesList extends StatelessWidget {
                       )),
                 ),
                 SizedBox(
-                  height: 7,
+                  height: size.height * 0.01,
                 ),
                 Text(
                   "Snacks and Beverages",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10),
+                      fontSize: size.height * 0.013),
                 )
               ],
             ),

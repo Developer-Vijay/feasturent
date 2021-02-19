@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'ViewAllPopular.dart';
+
 class PopularList extends StatelessWidget {
   const PopularList({
     Key key,
@@ -41,7 +43,13 @@ class PopularList extends StatelessWidget {
             Container(
                 alignment: Alignment.topRight,
                 child: FlatButton(
-                  onPressed: () => {print('View All')},
+                  onPressed: () => {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ViewAllPopular())),
+                    print('View All')
+                  },
                   child: Row(
                     children: [
                       Container(

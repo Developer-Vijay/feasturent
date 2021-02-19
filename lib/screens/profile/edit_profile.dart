@@ -89,11 +89,9 @@ class _EditProfileState extends State<EditProfile> {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  Navigator.pop(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Bottomnavbar()),
-                                  );
+                                  Navigator.pop(context);
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => Bottomnavbar()),
                                 },
                               )),
                           SizedBox(
