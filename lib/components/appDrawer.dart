@@ -1,3 +1,6 @@
+import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/wishlist.dart';
 import 'package:feasturent_costomer_app/components/Filter/sortAndFilter.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +99,9 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Wishlist'),
             dense: true,
             onTap: () {
+               Navigator.push(context,
+              MaterialPageRoute(builder: (context)=>Wishlist())
+              );
               // Update the state of the app.
               // ...
             },
@@ -105,6 +111,9 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Cart'),
             dense: true,
             onTap: () {
+              Navigator.push(context,
+              MaterialPageRoute(builder: (context)=>CartScreen())
+              );
               // Update the state of the app.
               // ...
             },
@@ -149,6 +158,10 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Settings'),
             dense: true,
             onTap: () {
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsScreen()),
+              );
               // Update the state of the app.
               // ...
             },

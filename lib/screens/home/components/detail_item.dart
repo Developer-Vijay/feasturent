@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/addbar.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/rating.dart';
-import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+
+import 'list.dart';
 
 class ItemDetailPage extends StatefulWidget {
   @override
@@ -49,7 +50,8 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
             )),
           ),
           SliverList(
-            delegate: SliverChildListDelegate([
+            delegate: SliverChildListDelegate(
+              [
               Column(children: [
                 Container(
                     child: Row(
@@ -152,7 +154,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   padding: const EdgeInsets.only(left: 24, top: 30, right: 20),
                   child: Container(
                     child: Text(
-                      "Nowadays,making printed materials have become fast, easy and simple.if you want your promotional material to be an eye catching object you should make it colored by way of using inkjet printer this is not hard to make . we will Provise the Edges of all The Content and anything which is their to here listen each and everthing this food is very tasty and healthy in  gsjhbdhbshbdhjsbdhjvdhusvhvshcvhsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvc",
+                      "Nowadays,making printed materials have become fast, easy and simple.if you want your promotional material to be an eye catching object you should make it colored by way of using inkjet printer this is not hard to make . we will Provise the Edges of all The Content and anything which is their to here listen each and everthing this food is very tasty and healthy in  gsjhbdhbshbdhjsbdhjvdhusvhvshcvhsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvcsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdavsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdavsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdavsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdavsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdavsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdavsavchjvshcjvhjavchjvchjavchjvschjvsahcvhjsvchjsvchjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdavhjvashjcvashjcvhjavcjhasvcjhasvchjvschjvhjcvasjcvsavchsavchgsvugcuagcuagcgcggcyugcuygauyfafghaavdgyfaghvaghdvasghdvghavdgavghavshgvcgvchgasvcghavchgavcasygcvasgcvaghcvhgavcacvahgcvhgcvhgavchgavghvchgavcgvacgvchjdsachjscjhshjcvcjhvcvcjhvcjhavcjhvchjvacvhjacvhjcvjhjhcjhvajh jhv hjvjhvcjhvcvcshvcasvcjhvdcjhvsjchsjcvhjasvchchashcvhjasvchjcvjhascvavdav",
                       style: TextStyle(wordSpacing: 2, fontSize: 14),
                     ),
                   ),
@@ -217,7 +219,7 @@ class _MaterialButtonWidgetState extends State<MaterialButtonWidget> {
         ? MaterialButton(
             onPressed: () {
               var sheetController = showBottomSheet(
-                  context: context, builder: (context) => Bottomsheetwidget());
+                  context: context, builder: (context) => Sheet());
               _showButton(false);
               sheetController.closed.then((value) {
                 _showButton(true);

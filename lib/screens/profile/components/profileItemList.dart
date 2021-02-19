@@ -1,3 +1,4 @@
+import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
@@ -22,35 +23,49 @@ class ProfileListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        if (index == 0)
-          {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => EditProfile()));
-          }
-        else if (index == 1)
-          {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => AddressList()));
-          }
-        else if (index == 2)
-          {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Forgot()));
-          }
-        else if (index == 3)
-          {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => WalletDesign()));
-          }
-           else if (index == 6) 
-          { SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.remove('name');
+        if (index == 0) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => EditProfile()));
+        } else if (index == 1) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddressList()));
+        } else if (index == 2) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Forgot()));
+        } else if (index == 3) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => WalletDesign()));
+        } else if (index == 4) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SettingsScreen()));
+        } else if (index == 6) {
+          return showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Do you really want to logout"),
+                    actions: [
+                      FlatButton(
+                        child: Text("Yes"),
+                        onPressed: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.remove('name');
 
-          
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => LoginPage()));
-          }
-          
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("No"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  ));
+        }
       },
       child: Container(
         height: kSpacingUnit.w * 5.5,

@@ -1,4 +1,3 @@
-import 'package:dropdownfield/dropdownfield.dart';
 import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ class AddAdress extends StatefulWidget {
 
 class _AddAdressState extends State<AddAdress> {
   TextEditingController citiesSelected = TextEditingController();
-
   TextEditingController _fullnamecontroller = TextEditingController();
   TextEditingController _phonenumbercontroller = TextEditingController();
   TextEditingController _pincodecontroller = TextEditingController();
@@ -47,63 +45,54 @@ class _AddAdressState extends State<AddAdress> {
   bool isSelected = false;
   bool isSelected1 = false;
 
-  double add1;
-  double add2;
-
-  String postalcode = "";
-  String city = "";
-  String states = "";
-  String colony = "";
-  String landmark = "";
-  String roadname = "";
-  String houseno = "";
-
-  bool isLoading = false;
-
   @override
   void initState() {
     super.initState();
     getCurrentLocation();
-    getAddressBasedonLocation();
   }
 
-  getCurrentLocation() async {
+  double latadd;
+  double longadd;
+
+  String postalcode = "";
+  String city = "";
+  String states = "";
+  String locality = "";
+  String colony = "";
+  String landmark = "";
+  String roadname = "";
+  String houseno = "";
+  var location = "Error";
+
+  bool isLoading = false;
+  Coordinates coordinates;
+  Future<void> getCurrentLocation() async {
     final geopostion = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
-      add1 = geopostion.latitude;
-      add2 = geopostion.longitude;
-      print(add1);
-      print(add2);
+      latadd = geopostion.latitude;
+      longadd = geopostion.longitude;
+      print(latadd);
+      print(longadd);
+      coordinates = Coordinates(latadd, longadd);
+      print(coordinates);
     });
-  }
-
-  getAddressBasedonLocation() async {
-    final coordinates = Coordinates(28.6882745, 76.9595292);
-    print(add1);
-    var address =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var locate = await Geocoder.local.findAddressesFromCoordinates(coordinates);
 
     setState(() {
-      postalcode = address.first.postalCode;
-      city = address.first.locality;
-      states = address.first.adminArea;
-      houseno = address.first.countryCode;
-      roadname = address.first.subAdminArea;
-      colony = address.first.countryName;
-      landmark = address.first.featureName;
-
-      print(landmark);
+      postalcode = locate.first.postalCode;
+      states = locate.first.locality;
+      roadname = locate.first.adminArea;
+      city = locate.first.subLocality;
+      landmark = locate.first.addressLine;
     });
   }
 
   Future<void> getlocation() async {
     print("working");
     setState(() {
-      isLoading = true;
-
+      _roadnamecontroller.text = roadname;
       _pincodecontroller.text = postalcode;
-      _roadnamecontroller.text = city;
       _housenocontroller.text = houseno;
       citiesSelected.text = city;
       stateSelected.text = states;
@@ -141,8 +130,7 @@ class _AddAdressState extends State<AddAdress> {
                       onPressed: () {
                         Navigator.pop(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => Bottomnavbar()));
+                          );
                       },
                     ),
                     SizedBox(
