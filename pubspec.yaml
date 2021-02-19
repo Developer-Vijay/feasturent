@@ -56,8 +56,9 @@ dependencies:
   dropdownfield: ^1.0.3
   geolocator: ^6.2.0
   geocoder: ^0.2.1
-  
   flutter_swiper: ^1.1.6  
+  
+  
       
   
   

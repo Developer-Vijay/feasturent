@@ -64,17 +64,7 @@ class _AddressListState extends State<AddressList> {
               ),
             ),),
             
-            // SizedBox(
-            //   height: 12,
-            // ),
             
-            // SizedBox(
-            //   height: 10,
-            // ),
-           
-            // Divider(
-            //   thickness: 1.1,1
-            // ),
             Expanded(flex: 18,child:ListView.builder(
                 itemCount: temp.length,
                 itemBuilder: (context, index) {

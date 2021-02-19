@@ -5,6 +5,7 @@ import 'package:feasturent_costomer_app/components/auth/login/loginWithGoolge.da
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,190 +28,218 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _userNameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
 
+  Future<bool> _onbackPressed() async {
+    return showDialog(
+        context: context,
+        builder: (contex) => AlertDialog(
+              title: Text("Do you Really want to exit"),
+              actions: [
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                  },
+                ),
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                ),
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(children: [
-        Container(
-          color: Colors.white,
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                SizedBox(height: 80),
-                Image.asset(
-                  'assets/icons/feasturent.png',
-                  height: 170,
-                  width: 170,
-                ),
-                Text('Login',
-                    style: GoogleFonts.pacifico(
-                        textStyle: TextStyle(
-                            color: kPrimaryColor,
-                            letterSpacing: .5,
-                            fontSize: 40))),
-                SizedBox(height: 10),
-                //Login Form
-                Container(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
-                  child: Column(
-                    children: [
-                      TextField(
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(20.0),
-                              ),
-                            ),
-                            prefixIcon: Icon(Icons.person),
-                            labelText: 'Username',
-                            errorText: _isUserNameValidate == false
-                                ? 'Please enter your username'
-                                : null),
-                        controller: _userNameController,
-                      ),
-                      SizedBox(height: 15),
-                      //Password
-                      TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(20.0),
-                              ),
-                            ),
-                            labelText: 'Password',
-                            prefixIcon: Icon(Icons.lock_outline),
-                            errorText: _isPasswordValidate == false
-                                ? 'Please enter your password'
-                                : null),
-                        controller: _passwordController,
-                      ),
-                    ],
+      body: WillPopScope(
+        onWillPop: _onbackPressed,
+        child: ListView(children: [
+          Container(
+            color: Colors.white,
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  SizedBox(height: 80),
+                  Image.asset(
+                    'assets/icons/feasturent.png',
+                    height: 170,
+                    width: 170,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    //Forget Password
-                    Container(
-                      child: FlatButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Forgot()),
-                          );
-                        },
-                        child: Text(
-                          "Forget Password ?",
-                          style: TextStyle(fontWeight: FontWeight.w800),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                //Login Button
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 50,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(5),
-                    onPressed: () {
-                      _loginUser();
-                    },
-                    child: _isProcessing == true
-                        ? Text('Loading...',
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold))
-                        : Text('Login',
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                    color: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 20.0),
-                        height: 2.0,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 3.0),
-                      child: Text("OR",
-                          style: TextStyle(color: Colors.black, fontSize: 20)),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 20.0),
-                        height: 2.0,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                //Login With Social
-                Container(
-                  margin: const EdgeInsets.only(left: 140.0),
-                  child: Center(
-                    child: Row(
+                  Text('Login',
+                      style: GoogleFonts.pacifico(
+                          textStyle: TextStyle(
+                              color: kPrimaryColor,
+                              letterSpacing: .5,
+                              fontSize: 40))),
+                  SizedBox(height: 10),
+                  //Login Form
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: 20, left: 20, right: 20, bottom: 0),
+                    child: Column(
                       children: [
-                        //Login With Google
-                        IconButton(
-                          icon: SvgPicture.asset('assets/icons/google.svg'),
-                          tooltip: 'Login With Goolge',
-                          iconSize: 40,
-                          onPressed: () {
-                            setState(() => {
-                                  signInWithGoogle().whenComplete(() => {
-                                        _signUpBySocial()
-                                        // FirebaseUser user;
-                                      })
-                                });
-                          },
+                        TextField(
+                          obscureText: false,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(20.0),
+                                ),
+                              ),
+                              prefixIcon: Icon(Icons.person),
+                              labelText: 'Username',
+                              errorText: _isUserNameValidate == false
+                                  ? 'Please enter your username'
+                                  : null),
+                          controller: _userNameController,
                         ),
-                        //Login With FaceBook
-                        IconButton(
-                          icon: SvgPicture.asset('assets/icons/facebook.svg'),
-                          tooltip: 'Login With Facebook',
-                          iconSize: 40,
-                          onPressed: () {
-                            setState(() {});
-                          },
+                        SizedBox(height: 15),
+                        //Password
+                        TextField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(20.0),
+                                ),
+                              ),
+                              labelText: 'Password',
+                              prefixIcon: Icon(Icons.lock_outline),
+                              errorText: _isPasswordValidate == false
+                                  ? 'Please enter your password'
+                                  : null),
+                          controller: _passwordController,
                         ),
                       ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                FlatButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignupPage()));
-                  },
-                  child: Text(
-                    "Not yet account, Signup",
-                    style: TextStyle(fontWeight: FontWeight.w800),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      //Forget Password
+                      Container(
+                        child: FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Forgot()),
+                            );
+                          },
+                          child: Text(
+                            "Forget Password ?",
+                            style: TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  //Login Button
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 50,
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(5),
+                      onPressed: () {
+                        _loginUser();
+                      },
+                      child: _isProcessing == true
+                          ? Text('Loading...',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))
+                          : Text('Login',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                      color: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 20.0),
+                          height: 2.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 3.0),
+                        child: Text("OR",
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 20)),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 20.0),
+                          height: 2.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  //Login With Social
+                  Container(
+                    margin: const EdgeInsets.only(left: 140.0),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          //Login With Google
+                          IconButton(
+                            icon: SvgPicture.asset('assets/icons/google.svg'),
+                            tooltip: 'Login With Goolge',
+                            iconSize: 40,
+                            onPressed: () {
+                              setState(() => {
+                                    signInWithGoogle().whenComplete(() => {
+                                          _signUpBySocial()
+                                          // FirebaseUser user;
+                                        })
+                                  });
+                            },
+                          ),
+                          //Login With FaceBook
+                          IconButton(
+                            icon: SvgPicture.asset('assets/icons/facebook.svg'),
+                            tooltip: 'Login With Facebook',
+                            iconSize: 40,
+                            onPressed: () {},
+                            // onPressed: () {Navigator.push(context , MaterialPageRoute(builder: (context)=>LoginWithFacebook()));
+                            // setState(() {});
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignupPage()));
+                    },
+                    child: Text(
+                      "Not yet account, Signup",
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 
@@ -265,7 +294,7 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString("userEmail", responseData['data']['user']['email']);
         prefs.setString("loginBy", "userName");
         prefs.setBool("_isAuthenticate", true);
-        prefs.setString('name',_userNameController.text);
+        prefs.setString('name', _userNameController.text);
         UserAuthenticate(context);
         setState(() {
           _isProcessing = false;

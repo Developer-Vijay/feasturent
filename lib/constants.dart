@@ -1,3 +1,4 @@
+import 'package:feasturent_costomer_app/components/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -124,6 +125,126 @@ class Addresses {
       this.housenoholder,
       this.pincodeHolder});
 }
-List<Addresses> temp = [
 
+List<Addresses> temp = [];
+
+class Productmodel {
+  final foodtitle;
+  final titleprice;
+  Productmodel({this.foodtitle, this.titleprice});
+}
+
+List<Productmodel> add1 = [];
+List<Productmodel> addon = [
+  Productmodel(foodtitle: "Regular", titleprice: "₹ 0"),
+  Productmodel(foodtitle: "Wheat", titleprice: "₹ 10"),
+  Productmodel(foodtitle: "Barbeque Mayonese", titleprice: "₹ 10"),
+  Productmodel(foodtitle: "Cheese", titleprice: "₹ 17"),
+];
+
+class Review {
+  final icon;
+
+  final text;
+
+  Review({this.icon, this.text});
+}
+
+List<Review> policy = [
+  Review(
+      icon: Icon(Icons.paste_outlined),
+      text: "Review Your order and address details to avoid\n cancellation"),
+  Review(
+      icon: Icon(
+        Icons.timer,
+        color: Colors.blue,
+      ),
+      text:
+          "if you choose to cancel you can do it within 60 \n seconds after placing the order"),
+  Review(
+      icon: Icon(
+        Icons.monetization_on_outlined,
+        color: Colors.blue,
+      ),
+      text: "Review Your order and address details to avoid\n cancellation"),
+  Review(
+      icon: Icon(
+        Icons.clean_hands,
+        color: Colors.blue,
+      ),
+      text: "Review Your order and address details to avoid\n cancellation"),
+  Review(
+      icon: Icon(
+        Icons.wash,
+        color: Colors.blue,
+      ),
+      text: "Review Your order and address details to avoid\n cancellation"),
+  Review(
+      icon: Icon(Icons.paste_outlined),
+      text: "Review Your order and address details to avoid\n cancellation"),
+];
+
+class SearchList {
+  String title;
+  String subtitle;
+
+  SearchList({
+    this.title,
+    this.subtitle,
+  });
+}
+
+List<SearchList> searchedlist = [
+  SearchList(title: "Chole Bhature", subtitle: "Pandi ji Paratha Wala"),
+  SearchList(title: "Rajma Chawal", subtitle: "Dhaba da Shaba"),
+  SearchList(title: "Noodles", subtitle: "Foodie Cafe"),
+  SearchList(title: "Soup", subtitle: "Samrat Restaurant")
+];
+
+class FilterList {
+  var name;
+  int pagecount;
+  FilterList({this.name, this.pagecount});
+}
+
+List<FilterList> filtered = [
+  FilterList(name: "Quick Filters", pagecount: 0),
+  FilterList(name: "Cuisines", pagecount: 1),
+  FilterList(name: "Tags", pagecount: 2),
+  FilterList(name: "Features", pagecount: 3),
+  FilterList(name: "Dineout Passport", pagecount: 4),
+  FilterList(name: "Sort By", pagecount: 5),
+];
+
+class SettingsList {
+  var title;
+  var subtitle;
+  var icon;
+  int number;
+
+  SettingsList({this.title, this.subtitle, this.icon,this.number});
+}
+
+List<SettingsList> settingpanel = [
+  SettingsList(
+    number: 0,
+      title: "Add a Place",
+      subtitle: "In Case we're missing Something",
+      icon: Icon(Icons.place)),
+  SettingsList(
+    number: 1,
+      title: "Places you've added",
+      subtitle: "See all the places you've added so far",
+      icon: Icon(Icons.stay_primary_landscape_outlined)),
+  SettingsList(
+    number: 2,
+    title: "Settings",
+    subtitle: "Define what ALerts You want to see",
+    icon: Icon(Icons.settings),
+  ),
+  SettingsList(
+    number: 3,
+      title: "Notifications Settings",
+      subtitle: "Change your email or delete your account",
+      icon: Icon(Icons.notifications))
 ];

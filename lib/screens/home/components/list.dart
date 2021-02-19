@@ -1,10 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/screens/home/components/detail_item.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+
+import '../../../constants.dart';
 
 class PizzaList extends StatelessWidget {
   @override
@@ -19,6 +23,14 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
+  int _index1 = 0;
+  final ScrollController _scrollController = new ScrollController();
+
+  final imageList = [
+    "https://media.gettyimages.com/photos/lamb-greek-burger-picture-id637790866?k=6&m=637790866&s=612x612&w=0&h=-VCta3l64UbGq8kJ2Y5rSJJL7-3dSiy-F7wQ6qBKssk=",
+    "https://media.gettyimages.com/photos/tasty-hamburger-with-french-fries-on-wooden-table-picture-id872841180?k=6&m=872841180&s=612x612&w=0&h=wQ5og6yidpAUqYq4__09lwh7311vLh2SGXuSG9UeYxQ=",
+    "https://media.gettyimages.com/photos/cheeseburger-with-french-fries-picture-id922684138?k=6&m=922684138&s=612x612&w=0&h=-YJjzZ3M99r4luEeryvGXpJnS2VA5mgc4oayeN04Oys="
+  ];
   @override
   Widget build(BuildContext context) {
     var rating = 3.0;
@@ -40,20 +52,8 @@ class _DetailState extends State<Detail> {
             ),
           ],
         ),
-        // Container For Back button
-        Container(
-          margin: EdgeInsets.symmetric(
-              horizontal: size.width * 0.01, vertical: size.height * 0.03),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context,
-                  MaterialPageRoute(builder: (context) => Bottomnavbar()));
-            },
-            color: Colors.white,
-            iconSize: 30,
-          ),
-        ),
+        
+
         Container(
           alignment: Alignment.topLeft,
           margin: EdgeInsets.symmetric(vertical: 200, horizontal: 10),
@@ -84,211 +84,258 @@ class _DetailState extends State<Detail> {
                         topRight: Radius.circular(30))),
                 height: 800,
                 margin: EdgeInsets.only(top: 250),
-                child: ListView(
-                  children: [
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Container(
-                                margin: EdgeInsets.only(left: 20),
-                                child: Text(
-                                  "100 Items",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.red[700],
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: size.height * 0.02,
-                        ),
-                        Positioned(
-                          child: Container(
-                            child: Row(
-                              children: [],
-                            ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: burgerlist.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 14),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 2,
+                                    color: Colors.blue[50],
+                                    offset: Offset(1, 3),
+                                    spreadRadius: 2)
+                              ]),
+                          margin: EdgeInsets.only(
+                            left: size.width * 0.02,
+                            right: size.width * 0.02,
                           ),
-                        ),
-
-                        Positioned(
-                          child: Container(),
-                        ),
-                        // Decoration of List Started
-                        Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ItemDetailPage()),
-                                );
-                              },
-                              child: Container(
-                                width: size.width - 20,
-                                margin: EdgeInsets.only(
-                                    left: size.width * 0.02,
-                                    right: size.width * 0.01),
-                                decoration: BoxDecoration(
-                                  boxShadow: [BoxShadow(blurRadius: 5)],
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                        padding: const EdgeInsets.all(6),
+                          height: size.height * 0.14,
+                          child: Row(children: [
+                            Expanded(
+                                flex: 0,
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  height: size.height * 0.2,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 4, right: 4, top: 4),
                                         child: ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(20),
+                                              BorderRadius.circular(10),
                                           child: CachedNetworkImage(
                                             imageUrl:
-                                                "https://image.shutterstock.com/z/stock-photo-taking-slice-of-tasty-pepperoni-pizza-on-black-table-closeup-1686772804.jpg",
-                                            fit: BoxFit.fill,
-                                            height: size.height * 0.12,
-                                            width: size.width * 0.2,
+                                                burgerlist[index].foodImage,
+                                            height: size.height * 0.1,
+                                            fit: BoxFit.contain,
                                           ),
-                                        )),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      children: [
-                                        SizedBox(
-                                          width: size.width * 0.02,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              child: Text(
-                                                "Peppy Paneer",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
+                                      ),
+                                      // For Add Button
+                                      Align(
+                                          widthFactor: 1.42,
+                                          alignment: Alignment.bottomCenter,
+                                          heightFactor: 2.2,
+                                          child: Container(
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                print(burgerlist[index].index0);
+
+                                                setState(() {
+                                                  _index1 =
+                                                      burgerlist[index].index0;
+                                                });
+                                                print(_index1);
+
+                                                getItemandNavigateToCart(
+                                                    _index1);
+
+                                                // showModalBottomSheet(
+                                                //     context: context,
+                                                //     builder: (context) =>
+                                                //         Sheet());
+                                              },
+                                              color: Colors.white,
+                                              minWidth: size.width * 0.16,
+                                              height: size.height * 0.033,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          14)),
+                                              textColor: Colors.white,
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.add,
+                                                    size: size.height * 0.02,
+                                                    color: Colors.blueGrey,
+                                                  ),
+                                                  Text(
+                                                    "ADD",
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.blueGrey),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            SizedBox(
-                                              width: size.width * 0.2,
+                                          ))
+                                    ],
+                                  ),
+                                )),
+                            Expanded(
+                                flex: 6,
+                                child: Container(
+                                  height: size.height * 0.2,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            top: size.height * 0.01),
+                                        padding: EdgeInsets.zero,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              burgerlist[index].title,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize: 16),
                                             ),
-                                            Container(
-                                              //color: Colors.deepOrange,
-                                              alignment: Alignment.center,
-                                              margin: EdgeInsets.only(
-                                                  left: size.width * 0.01,
-                                                  right: size.width * 0.03),
-                                              child: IconButton(
-                                                onPressed: () {},
-                                                icon: Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 0),
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    burgerlist[index].vegsymbol,
+                                                height: size.height * 0.015,
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 8.0),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  if (burgerlist[index]
+                                                          .isPressed ==
+                                                      false) {
+                                                    setState(() {
+                                                      _index1 =
+                                                          burgerlist[index]
+                                                              .index0;
+
+                                                      burgerlist[index]
+                                                          .isPressed = true;
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Item Added to wishlist");
+                                                    });
+                                                    getItemandNavigateToFavourites(
+                                                        _index1);
+                                                  } else if (burgerlist[index]
+                                                          .isPressed ==
+                                                      true) {
+                                                    setState(() {
+                                                      burgerlist[index]
+                                                          .isPressed = false;
+                                                      _index1 =
+                                                          burgerlist[index]
+                                                              .index0;
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Item removed From Wishlist");
+                                                    });
+                                                    removeItemFromFavourites(
+                                                        _index1);
+                                                  }
+                                                },
+                                                child: Icon(
+                                                  (Icons.favorite),
+                                                  color: (burgerlist[index]
+                                                          .isPressed)
+                                                      ? Colors.red
+                                                      : Colors.grey,
+                                                  size: 18,
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
-
-                                        Container(
-                                          //color: Colors.cyan,
-                                          margin: EdgeInsets.only(
-                                              right: size.width * 0.4),
-                                          child: Text(
-                                            "Vijay Da Dhaba",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-
-                                        SizedBox(
-                                          width: size.width * 0.09,
-                                        ),
-
-                                        // Star rating
-
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        burgerlist[index].subtitle,
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Container(
+                                        child: Row(
                                           children: [
                                             Container(
-                                                child: SmoothStarRating(
-                                                    allowHalfRating: false,
-                                                    onRated: (v) {
-                                                      Text("23");
-                                                    },
-                                                    starCount: 1,
-                                                    rating: rating,
-                                                    size: 23.0,
-                                                    isReadOnly: false,
-                                                    defaultIconData: Icons
-                                                        .star_border_outlined,
-                                                    filledIconData: Icons.star,
-                                                    halfFilledIconData:
-                                                        Icons.star_border,
-                                                    color: Colors.red,
-                                                    borderColor: Colors.red,
-                                                    spacing: 0.0)),
-
-                                            SizedBox(
-                                              width: size.width * 0.02,
+                                              child:
+                                                  burgerlist[index].starRating,
                                             ),
-
+                                            Text(
+                                              "$rating",
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Spacer(),
                                             Container(
-                                              margin: EdgeInsets.only(),
+                                              margin: EdgeInsets.only(
+                                                  right: size.width * 0.1),
                                               child: Text(
-                                                "4.9",
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: size.width * 0.02,
-                                            ),
-
-                                            // Money
-
-                                            Container(
-                                                child: SvgPicture.asset(
-                                                    "assets/icons/rupee.svg",
-                                                    height: 14)),
-                                            SizedBox(
-                                              width: size.width * 0.01,
-                                            ),
-
-                                            Container(
-                                              margin:
-                                                  EdgeInsets.only(right: 140),
-                                              child: Text(
-                                                "250",
+                                                "₹${burgerlist[index].foodPrice}",
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 17,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )),
-                      ],
-                    )
-                  ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            CachedNetworkImage(
+                                              imageUrl: burgerlist[index]
+                                                  .discountImage,
+                                              height: size.height * 0.026,
+                                            ),
+                                            SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              burgerlist[index].discountText,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: kTextColor),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                          ])),
+                    );
+                  },
                 ),
               ),
             ),
@@ -296,5 +343,47 @@ class _DetailState extends State<Detail> {
         ),
       ],
     );
+  }
+
+  getItemandNavigateToCart(_index1) async {
+    // print(index1);
+    print("add item");
+    add2.add(addto(
+        isSelected: false,
+        counter: 0,
+        quantity: 0,
+        id: burgerlist[_index1].id,
+        subtitle: burgerlist[_index1].subtitle,
+        foodPrice: burgerlist[_index1].foodPrice,
+        title: burgerlist[_index1].title.toString(),
+        starRating: burgerlist[_index1].starRating,
+        name: burgerlist[_index1].name.toString(),
+        discountText: burgerlist[_index1].discountText,
+        vegsymbol: burgerlist[_index1].vegsymbol,
+        discountImage: burgerlist[_index1].discountImage,
+        foodImage: burgerlist[_index1].foodImage));
+
+    Fluttertoast.showToast(msg: "Items Added TO the Cart $_index1");
+  }
+
+  getItemandNavigateToFavourites(_index1) async {
+    favourite.add(addto(
+        isSelected: false,
+        counter: 0,
+        quantity: 0,
+        id: burgerlist[_index1].id,
+        subtitle: burgerlist[_index1].subtitle,
+        foodPrice: burgerlist[_index1].foodPrice,
+        title: burgerlist[_index1].title.toString(),
+        starRating: burgerlist[_index1].starRating,
+        name: burgerlist[_index1].name.toString(),
+        discountText: burgerlist[_index1].discountText,
+        vegsymbol: burgerlist[_index1].vegsymbol,
+        discountImage: burgerlist[_index1].discountImage,
+        foodImage: burgerlist[_index1].foodImage));
+  }
+
+  removeItemFromFavourites(_index1) async {
+    favourite.clear();
   }
 }
