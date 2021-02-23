@@ -1,5 +1,4 @@
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/otp.dart';
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';

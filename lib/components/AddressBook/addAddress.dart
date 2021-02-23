@@ -1,4 +1,3 @@
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -129,8 +128,8 @@ class _AddAdressState extends State<AddAdress> {
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
                         Navigator.pop(
-                            context,
-                          );
+                          context,
+                        );
                       },
                     ),
                     SizedBox(
