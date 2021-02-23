@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:feasturent_costomer_app/components/auth/signup/otpcheck.dart';
 import 'package:feasturent_costomer_app/components/common/validator.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/messageWrapper.dart';
@@ -27,6 +27,12 @@ class _SignupPageState extends State<SignupPage> {
   bool _isPhoneValidate = true;
   bool _isPasswordValidate = true;
   bool _isValidate = true;
+  bool _obscureText = true;
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   //Controllers
   TextEditingController _userNameController = new TextEditingController();
@@ -38,19 +44,12 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Signin'),
-      //   elevation: 0,
-      // ),
-      
-      body: ListView(
-        children:[ Container(
-          // padding: EdgeInsets.only(top:60),
+      body: ListView(children: [
+        Container(
           color: Colors.white,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 40),
                 Image.asset(
@@ -139,7 +138,7 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 15),
                       //Password
                       TextField(
-                        obscureText: true,
+                        obscureText: _obscureText,
                         readOnly: _isOtpSend,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -149,6 +148,14 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             labelText: 'Password',
                             prefixIcon: Icon(Icons.lock),
+                            suffixIcon: InkWell(
+                                onTap: _toggle,
+                                child: new Icon(
+                                  (_obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
+                                  size: 17,
+                                )),
                             errorText: _isPasswordValidate == true
                                 ? null
                                 : 'Please enter valid password'),
@@ -236,21 +243,38 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                FlatButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
-                  },
-                  child: Text(
-                    "Have an account, Login",
-                    style: TextStyle(fontWeight: FontWeight.w800),
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Have an account",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800, color: Colors.black),
+                    ),
+                    FlatButton(
+                      padding: EdgeInsets.zero,
+                      minWidth: 60,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()));
+                      },
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),
           ),
         ),
-        ]),
+      ]),
     );
   }
 
@@ -293,6 +317,11 @@ class _SignupPageState extends State<SignupPage> {
         _isUserNameValidate = false;
         _isValidate = false;
       });
+    } else if (_userNameController.text.contains(" ")) {
+      setState(() {
+        _isUserNameValidate = false;
+        _isValidate = true;
+      });
     } else {
       setState(() {
         _isUserNameValidate = true;
@@ -301,7 +330,14 @@ class _SignupPageState extends State<SignupPage> {
     }
     //Phone Validation
     if (_passwordController.text.isEmpty &&
-        _passwordController.text.length < 3) {
+        _passwordController.text.length < 8) {
+      setState(() {
+        _isPasswordValidate = false;
+        _isValidate = false;
+      });
+    } else if (!RegExp(
+            r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$")
+        .hasMatch(_passwordController.text)) {
       setState(() {
         _isPasswordValidate = false;
         _isValidate = false;
@@ -329,6 +365,9 @@ class _SignupPageState extends State<SignupPage> {
           _registeredUserId = responseData['data']['userId'];
           _isProcessing = false;
         });
+
+       
+
       } else {
         _stoastMessage(responseData['message']);
         setState(() {
@@ -356,7 +395,9 @@ class _SignupPageState extends State<SignupPage> {
       if (response.statusCode == 200) {
         _stoastMessage(responseData['message']);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
       } else {
         _stoastMessage(responseData['message']);
       }
