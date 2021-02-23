@@ -18,30 +18,12 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
   int sum = 0;
   @override
   Widget build(BuildContext context) {
-    // print(_index1);
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         body: ListView(
           children: [
             Column(children: [
-              Container(
-                margin: EdgeInsets.only(top: size.height * 0.04),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: Text(
-                          "offer",
-                          style: TextStyle(fontSize: 24, color: kTextColor),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
               Container(
                   alignment: Alignment.topLeft,
                   margin: EdgeInsets.only(left: size.width * 0.03),
@@ -340,15 +322,21 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
               ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: foodlist.length,
                 itemBuilder: (context, index) {
                   print(foodlist[index].discountText);
                   return InkWell(
                     onTap: () {
+                      print(foodlist[index].index0);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OfferListPage()));
+                            builder: (context) => OfferListPage(),
+                            settings: RouteSettings(
+                              arguments: foodlist[index],
+                            ),
+                          ));
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 14),
@@ -385,7 +373,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                           child: CachedNetworkImage(
                                             imageUrl: foodlist[index].foodImage,
                                             height: size.height * 0.1,
-                                            fit: BoxFit.contain,
+                                            width: size.width * 0.25,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),

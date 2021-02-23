@@ -19,7 +19,7 @@ class PizzaList extends StatelessWidget {
 
 class Detail extends StatefulWidget {
   @override
-  _DetailState createState() => _DetailState();
+  DetailState createState() => DetailState();
 }
 
 final imageList = [

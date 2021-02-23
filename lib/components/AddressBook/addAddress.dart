@@ -128,8 +128,8 @@ class _AddAdressState extends State<AddAdress> {
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
                         Navigator.pop(
-                            context,
-                          );
+                          context,
+                        );
                       },
                     ),
                     SizedBox(

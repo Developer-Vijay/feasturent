@@ -4,8 +4,6 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import '../../constants.dart';
 
-
-
 class AddRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -114,12 +112,12 @@ class _AddRatingPageState extends State<AddRatingPage> {
     );
   }
 
-  
   Future<void> _AddComment() async {
     // for name
     if (_commentController.text.isEmpty) {
       setState(() {
-        _commentvalidate = "Please Enter The Comment and Star Rating Before Posting It";
+        _commentvalidate =
+            "Please Enter The Comment and Star Rating Before Posting It";
       });
     } else {
       setState(() {
