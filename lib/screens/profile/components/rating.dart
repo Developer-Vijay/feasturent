@@ -1,5 +1,4 @@
 import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.dart';
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';

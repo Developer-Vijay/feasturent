@@ -222,17 +222,17 @@ class SettingsList {
   var icon;
   int number;
 
-  SettingsList({this.title, this.subtitle, this.icon,this.number});
+  SettingsList({this.title, this.subtitle, this.icon, this.number});
 }
 
 List<SettingsList> settingpanel = [
   SettingsList(
-    number: 0,
+      number: 0,
       title: "Add a Place",
       subtitle: "In Case we're missing Something",
       icon: Icon(Icons.place)),
   SettingsList(
-    number: 1,
+      number: 1,
       title: "Places you've added",
       subtitle: "See all the places you've added so far",
       icon: Icon(Icons.stay_primary_landscape_outlined)),
@@ -243,7 +243,7 @@ List<SettingsList> settingpanel = [
     icon: Icon(Icons.settings),
   ),
   SettingsList(
-    number: 3,
+      number: 3,
       title: "Notifications Settings",
       subtitle: "Change your email or delete your account",
       icon: Icon(Icons.notifications))
