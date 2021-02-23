@@ -1,5 +1,4 @@
 import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.dart';
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -38,8 +37,6 @@ class _RatingPageState extends State<RatingPage> {
                         onPressed: () {
                           Navigator.pop(
                             context,
-                            // MaterialPageRoute(
-                            //     builder: (context) => Bottomnavbar()),
                           );
                         },
                       ),
@@ -443,91 +440,4 @@ class _RatingPageState extends State<RatingPage> {
       ),
     );
   }
-
-  // void _onBottombar() {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       Size size = MediaQuery.of(context).size;
-  //       double rating = 4.0;
-  //       return Column(children: [
-  //         Container(
-  //             alignment: Alignment.topRight,
-  //             child: FlatButton(
-  //               onPressed: () {},
-  //               child: Text(
-  //                 "Post",
-  //                 style: TextStyle(fontSize: 18),
-  //               ),
-  //             )),
-  //         Container(
-  //           child: Column(
-  //             children: [
-  //               Row(
-  //                 children: [
-  //                   Padding(
-  //                     padding: const EdgeInsets.symmetric(horizontal: 8),
-  //                     child: Container(
-  //                         height: size.height * 0.2,
-  //                         width: size.width - 20,
-  //                         child: Column(
-  //                           children: [
-  //                             Padding(
-  //                               padding: const EdgeInsets.only(
-  //                                 left: 10,
-  //                               ),
-  //                               child: SmoothStarRating(
-  //                                   allowHalfRating: true,
-  //                                   onRated: (value) {
-  //                                     setState(() {
-  //                                       rating = value;
-  //                                     });
-  //                                   },
-  //                                   starCount: 5,
-  //                                   rating: rating,
-  //                                   size: 45.0,
-  //                                   isReadOnly: false,
-  //                                   defaultIconData: Icons.star_border_outlined,
-  //                                   filledIconData: Icons.star,
-  //                                   halfFilledIconData: Icons.star_border,
-  //                                   color: Colors.amber,
-  //                                   borderColor: Colors.amber,
-  //                                   spacing: 0.0),
-  //                             ),
-  //                             Padding(
-  //                               padding:
-  //                                   const EdgeInsets.only(left: 8, bottom: 6),
-  //                               child: Text(
-  //                                 "$rating",
-  //                                 style: TextStyle(color: kTextColor),
-  //                               ),
-  //                             ),
-  //                           ],
-  //                         )),
-  //                   )
-  //                 ],
-  //               ),
-  //               Container(
-  //                 margin: EdgeInsets.only(
-  //                     left: size.width * 0.01, right: size.width * 0.01),
-  //                 child: TextField(
-  //                   autocorrect: false,
-  //                   maxLength: 500,
-  //                   maxLines: 4,
-  //                   style: TextStyle(fontSize: 15),
-  //                   decoration: InputDecoration(
-  //                     border: OutlineInputBorder(
-  //                       borderRadius: const BorderRadius.all(
-  //                         const Radius.circular(20.0),
-  //                       ),
-  //                     ),
-  //                     hintText: "Add an Comment",
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ]);
-
 }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/addbar.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -20,6 +21,7 @@ class _FoodSliderState extends State<FoodSlider> {
   ];
   var rating = 3.0;
   int _current = 0;
+  int _index = 0;
   int selectedRadioTile;
 
   var pad = 34;
@@ -78,12 +80,14 @@ class _FoodSliderState extends State<FoodSlider> {
                                 if (isSelected == false) {
                                   setState(() {
                                     isSelected = true;
+                                    getItemandNavigateToFavourites(_index);
                                     Fluttertoast.showToast(
                                         msg: "Item Added to favourites");
                                   });
                                 } else if (isSelected == true) {
                                   setState(() {
                                     isSelected = false;
+                                    removeItemFromFavourites(_index);
                                     Fluttertoast.showToast(
                                         msg: "Item removed from Favourites");
                                   });
@@ -116,7 +120,7 @@ class _FoodSliderState extends State<FoodSlider> {
                             Padding(
                               padding: const EdgeInsets.only(left: 34, top: 20),
                               child: Icon(
-                                Icons.location_on,
+                                Icons.restaurant,
                                 color: Colors.grey,
                                 size: 20,
                               ),
@@ -135,7 +139,7 @@ class _FoodSliderState extends State<FoodSlider> {
                               child: CachedNetworkImage(
                                 imageUrl:
                                     "https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png",
-                                height: 18,
+                                height: size.height * 0.018,
                               ),
                             ),
                           ],
@@ -161,16 +165,6 @@ class _FoodSliderState extends State<FoodSlider> {
                                 ),
                               ),
                             ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 30.0),
-                              child: Text(
-                                "15 min prep",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )
                           ]),
                         ),
 
@@ -234,9 +228,10 @@ class _FoodSliderState extends State<FoodSlider> {
                           ),
                         ),
                         SizedBox(
-                          height: 40,
+                          height: size.height * 0.16,
                         ),
                         Container(
+                          alignment: Alignment.bottomCenter,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20)),
                           margin: EdgeInsets.only(
@@ -250,7 +245,7 @@ class _FoodSliderState extends State<FoodSlider> {
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
-                            height: 60,
+                            height: size.height * 0.08,
                             textColor: Colors.white,
                             color: Colors.blue,
                             child: Row(
@@ -268,7 +263,7 @@ class _FoodSliderState extends State<FoodSlider> {
                                     "Order Now",
                                     style: TextStyle(fontSize: 18),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -283,6 +278,27 @@ class _FoodSliderState extends State<FoodSlider> {
         ),
       ),
     );
+  }
+
+  getItemandNavigateToFavourites(_index1) async {
+    favourite.add(addto(
+        isSelected: false,
+        counter: 0,
+        quantity: 0,
+        id: burgerlist[_index1].id,
+        subtitle: burgerlist[_index1].subtitle,
+        foodPrice: burgerlist[_index1].foodPrice,
+        title: burgerlist[_index1].title.toString(),
+        starRating: burgerlist[_index1].starRating,
+        name: burgerlist[_index1].name.toString(),
+        discountText: burgerlist[_index1].discountText,
+        vegsymbol: burgerlist[_index1].vegsymbol,
+        discountImage: burgerlist[_index1].discountImage,
+        foodImage: burgerlist[_index1].foodImage));
+  }
+
+  removeItemFromFavourites(_index1) async {
+    favourite.clear();
   }
 }
 

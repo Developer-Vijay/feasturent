@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/components/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -90,8 +89,7 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) => Bottomnavbar()),
+                                  
                                 },
                               )),
                           SizedBox(

@@ -3,6 +3,7 @@ import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.da
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
+import 'package:feasturent_costomer_app/components/common/common.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,19 @@ class ProfileListItem extends StatelessWidget {
                         onPressed: () async {
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
-                          prefs.remove('name');
+                          prefs.remove(
+                            'name',
+                          );
+                          prefs.remove('sessionToken');
+                          prefs.remove('refreshToken');
+                          prefs.remove('userNumber');
+                          prefs.remove('userProfile');
+                          prefs.remove('userId');
+                          prefs.remove('loginId');
+                          prefs.remove('userEmail');
+                          prefs.remove("loginBy");
+
+                          prefs.setBool("_isAuthenticate", false);
 
                           Navigator.push(
                               context,
