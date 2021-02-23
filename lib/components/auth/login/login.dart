@@ -20,9 +20,16 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isValidate = true;
+  bool _obscureText = true;
   bool _isProcessing = false;
   bool _isUserNameValidate = true;
   bool _isPasswordValidate = true;
+
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   //Controllers
   TextEditingController _userNameController = new TextEditingController();
@@ -99,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: 15),
                         //Password
                         TextField(
-                          obscureText: true,
+                          obscureText: _obscureText,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
@@ -107,6 +114,14 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                               labelText: 'Password',
+                              suffixIcon: InkWell(
+                                  onTap: _toggle,
+                                  child: new Icon(
+                                    (_obscureText
+                                        ? Icons.visibility_off
+                                        : Icons.visibility),
+                                    size: 17,
+                                  )),
                               prefixIcon: Icon(Icons.lock_outline),
                               errorText: _isPasswordValidate == false
                                   ? 'Please enter your password'
@@ -130,7 +145,9 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: Text(
                             "Forget Password ?",
-                            style: TextStyle(fontWeight: FontWeight.w800),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: Colors.blue[900]),
                           ),
                         ),
                       ),
@@ -145,17 +162,11 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         _loginUser();
                       },
-                      child: _isProcessing == true
-                          ? Text('Loading...',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold))
-                          : Text('Login',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+                      child: Text('Login',
+                          style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                       color: Colors.blue,
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0)),
@@ -221,17 +232,31 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignupPage()));
-                    },
-                    child: Text(
-                      "Not yet account, Signup",
-                      style: TextStyle(fontWeight: FontWeight.w800),
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Not yet account",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800, color: Colors.black),
+                      ),
+                      FlatButton(
+                        padding: EdgeInsets.zero,
+                        minWidth: 60,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignupPage()));
+                        },
+                        child: Text(
+                          "Signup",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: Colors.blue[700]),
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
@@ -256,6 +281,11 @@ class _LoginPageState extends State<LoginPage> {
         _isUserNameValidate = false;
         _isValidate = false;
       });
+    } else if (_userNameController.text.contains(" ")) {
+      setState(() {
+        _isUserNameValidate = false;
+        _isValidate = false;
+      });
     } else {
       setState(() {
         _isUserNameValidate = true;
@@ -275,8 +305,21 @@ class _LoginPageState extends State<LoginPage> {
         _isValidate = true;
       });
     }
-    //Post request id
+
     if (_isValidate) {
+      showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (_) => new AlertDialog(
+                  content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text("Loading"),
+                  ),
+                ],
+              )));
       var response = await http.post(AUTH_API + 'login', body: {
         'userName': _userNameController.text,
         'password': _passwordController.text,
@@ -302,6 +345,7 @@ class _LoginPageState extends State<LoginPage> {
         _stoastMessage(responseData['message'], ERRORSTATUS);
         setState(() {
           _isProcessing = false;
+          Navigator.pop(context);
         });
       }
     } else {

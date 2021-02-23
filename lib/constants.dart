@@ -248,3 +248,24 @@ List<SettingsList> settingpanel = [
       subtitle: "Change your email or delete your account",
       icon: Icon(Icons.notifications))
 ];
+
+class MenuList {
+  var title;
+  int number;
+  MenuList({this.title, this.number});
+}
+
+List<MenuList> menu = [
+  MenuList(title: "Recomended", number: 0),
+  MenuList(title: "Tandoori", number: 1),
+  MenuList(title: "Bread", number: 2),
+  MenuList(title: "Snacks and Beverages", number: 3),
+  MenuList(title: "Gravy", number: 4),
+  MenuList(title: "Chinese", number: 5),
+  MenuList(title: "Recomended", number: 6),
+  MenuList(title: "Recomended", number: 7),
+  MenuList(title: "Recomended", number: 8),
+  MenuList(title: "Recomended", number: 9),
+  MenuList(title: "Recomended", number: 10),
+  MenuList(title: "Recomended", number: 11),
+];

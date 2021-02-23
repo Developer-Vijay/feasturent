@@ -69,7 +69,7 @@ class _CartScreenState extends State<CartScreen> {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
-                              onLongPress: () {
+                              onTap: () {
                                 if (add2[index].isSelected == false) {
                                   setState(() {
                                     add2[index].isSelected = true;
@@ -77,7 +77,7 @@ class _CartScreenState extends State<CartScreen> {
                                     _index++;
                                     product1 = add2[index].counter;
                                     totalPrice =
-                                        totalPrice + add2[index].foodPrice;
+                                        add2[index].foodPrice * product1;
                                     sum = sum + add2[index].counter;
                                   });
                                 } else if (add2[index].isSelected = true) {
@@ -87,8 +87,8 @@ class _CartScreenState extends State<CartScreen> {
                                     product1 = 0;
 
                                     if (totalPrice > 0) {
-                                      totalPrice =
-                                          totalPrice - add2[index].foodPrice;
+                                      totalPrice = 0;
+                                      sum = 0;
                                     }
 
                                     if (sum > 0) {
@@ -355,7 +355,7 @@ class _CartScreenState extends State<CartScreen> {
                                             InkWell(
                                                 onTap: () {
                                                   setState(() {
-                                                    if (add2[index].counter <
+                                                    if (add2[index].counter >
                                                         0) {
                                                       add2[index].counter--;
                                                       _sum = _sum -

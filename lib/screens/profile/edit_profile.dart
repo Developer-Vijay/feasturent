@@ -88,8 +88,7 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) => Bottomnavbar()),
+                                  
                                 },
                               )),
                           SizedBox(
