@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
+// import 'package:feasturent_costomer_app/components/bottom_nav_bar.dart';
 import 'package:feasturent_costomer_app/screens/home/components/detail_item.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
@@ -58,8 +58,6 @@ class _DetailState extends State<Detail> {
             ),
           ],
         ),
-        
-
         Container(
           alignment: Alignment.topLeft,
           margin: EdgeInsets.symmetric(vertical: 200, horizontal: 10),
@@ -77,7 +75,6 @@ class _DetailState extends State<Detail> {
                 ]),
           ),
         ),
-
         Stack(
           children: [
             Padding(

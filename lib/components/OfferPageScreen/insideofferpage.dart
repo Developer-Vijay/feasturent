@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo/resturentDetail.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/tandooriScreen.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,9 @@ class OfferListPage extends StatefulWidget {
 
 class _OfferListPageState extends State<OfferListPage> {
   int _index1 = 0;
+  int isSelect = 0;
+  var tempIndex;
+
   final _containerDecoration = BoxDecoration(
     boxShadow: [
       BoxShadow(
@@ -30,15 +35,112 @@ class _OfferListPageState extends State<OfferListPage> {
   );
   @override
   Widget build(BuildContext context) {
+    final ListofFood resturentIndex = ModalRoute.of(context).settings.arguments;
+
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+          floatingActionButton: MaterialButton(
+            onPressed: () {},
+            child: PopupMenuButton(
+                child: Container(
+                    height: size.height * 0.06,
+                    width: size.width * 0.12,
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(24)),
+                    child: Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                    )),
+                offset: Offset(-1.0, -220.0),
+                elevation: 0,
+                color: Colors.grey[100],
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                itemBuilder: (context) {
+                  return <PopupMenuEntry<Widget>>[
+                    PopupMenuItem<Widget>(
+                      enabled: true,
+                      child: Container(
+                        decoration: ShapeDecoration(
+                            color: Colors.grey[100],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                        child: Scrollbar(
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(top: 20),
+                            itemCount: menu.length,
+                            itemBuilder: (context, index) {
+                              final trans = menu[index].title;
+                              return ListTile(
+                                enabled: true,
+                                selected: index == isSelect,
+                                title: Text(
+                                  trans.toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                onTap: () {
+                                  if (menu[index].number == 0) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TandooriPage()));
+                                  }
+                                  index = isSelect;
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        height: size.height * 0.2,
+                        width: size.width * 0.8,
+                      ),
+                    ),
+                  ];
+                }),
+          ),
           appBar: AppBar(
               backgroundColor: Colors.white,
+              actions: [
+                FlatButton(
+                  child: Text(
+                    "More Info..",
+                    style: TextStyle(
+                        color: kTextColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      tempIndex = resturentIndex.index0;
+                    });
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ResturentDetail(),
+                          settings: RouteSettings(
+                            arguments: foodlist[tempIndex],
+                          ),
+                        ));
+                  },
+                )
+              ],
+              title: Text(
+                resturentIndex.title,
+                style: TextStyle(
+                    color: kTextColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15),
+              ),
               shadowColor: Colors.white,
               leading: IconButton(
                   icon: Icon(Icons.arrow_back),
-                  iconSize: 25,
+                  iconSize: size.height * 0.03,
                   color: Colors.black,
                   onPressed: () {
                     Navigator.pop(
@@ -53,29 +155,40 @@ class _OfferListPageState extends State<OfferListPage> {
                 children: [
                   Container(
                       alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(
-                          top: size.height * 0.02, left: size.width * 0.036),
-                      child: Text(
-                        "Gupta Chat Bhandar",
-                        style: TextStyle(
-                            color: kTextColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      )),
-                  Container(
-                      alignment: Alignment.topLeft,
                       margin: EdgeInsets.only(top: 5, left: 15),
                       child: Text(
                         "Indian",
-                        style: offerCommonStyle,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
                       )),
-                  Container(
-                      alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(top: 5, left: 15),
-                      child: Text(
-                        "Burari | 17km",
-                        style: offerCommonStyle,
-                      )),
+                  Row(
+                    children: [
+                      Container(
+                          alignment: Alignment.topLeft,
+                          margin: EdgeInsets.only(
+                              top: size.height * 0.01,
+                              left: size.width * 0.033),
+                          child: Text(
+                            "Burari | 17km",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
+                          )),
+                      Spacer(),
+                      Container(
+                        alignment: Alignment.topRight,
+                        margin: EdgeInsets.only(
+                            top: size.height * 0.01, right: size.width * 0.033),
+                        child: Text(
+                          "Mobile No- +91 9818069709",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    ],
+                  ),
                   SizedBox(
                     height: 24,
                   ),
@@ -424,29 +537,15 @@ class _OfferListPageState extends State<OfferListPage> {
                                           ),
                                           // For Add Button
                                           Align(
-                                              widthFactor: 1.42,
-                                              alignment: Alignment.bottomCenter,
-                                              heightFactor: 2.2,
-                                              child: Container(
-                                                child: MaterialButton(
+                                            widthFactor: size.width * 0.00368,
+                                            alignment: Alignment.bottomCenter,
+                                            heightFactor: size.height * 0.00276,
+                                            child: Container(
+                                              child: MaterialButton(
                                                   onPressed: () {
-                                                    print(insideOfferPage[index]
-                                                        .index0);
-
-                                                    setState(() {
-                                                      _index1 =
-                                                          insideOfferPage[index]
-                                                              .index0;
-                                                    });
-                                                    print(_index1);
-
-                                                    getItemandNavigateToCart(
-                                                        _index1);
-
-                                                    // showModalBottomSheet(
-                                                    //     context: context,
-                                                    //     builder: (context) =>
-                                                    //         Sheet());
+                                                    addBottonFunction(
+                                                        insideOfferPage[index]
+                                                            .index0);
                                                   },
                                                   color: Colors.white,
                                                   minWidth: size.width * 0.16,
@@ -456,25 +555,11 @@ class _OfferListPageState extends State<OfferListPage> {
                                                           BorderRadius.circular(
                                                               14)),
                                                   textColor: Colors.white,
-                                                  child: Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.add,
-                                                        size:
-                                                            size.height * 0.02,
-                                                        color: Colors.blueGrey,
-                                                      ),
-                                                      Text(
-                                                        "ADD",
-                                                        style: TextStyle(
-                                                            fontSize: 10,
-                                                            color: Colors
-                                                                .blueGrey),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ))
+                                                  child: buttonText(
+                                                      insideOfferPage[index]
+                                                          .index0)),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     )),
@@ -586,7 +671,7 @@ class _OfferListPageState extends State<OfferListPage> {
                         ),
                       );
                     },
-                  )
+                  ),
                 ],
               )
             ],
@@ -594,23 +679,65 @@ class _OfferListPageState extends State<OfferListPage> {
     );
   }
 
-  getItemandNavigateToCart(_index1) async {
+  addBottonFunction(index) {
+    if (insideOfferPage[index].addedStatus == "Add") {
+      print(insideOfferPage[index].index0);
+      Fluttertoast.showToast(msg: "${insideOfferPage[index].title} is added");
+
+      print(_index1);
+
+      getItemandNavigateToCart(index);
+      setState(() {
+        insideOfferPage[index].addedStatus = "Added";
+      });
+    } else if (insideOfferPage[index].addedStatus == "Added") {
+      Fluttertoast.showToast(
+          msg: "${insideOfferPage[index].title} is already added");
+    }
+  }
+
+  buttonText(index) {
+    if (insideOfferPage[index].addedStatus == "Add") {
+      return Row(
+        children: [
+          Icon(
+            Icons.add,
+            size: 15,
+            color: Colors.blueGrey,
+          ),
+          Text(
+            insideOfferPage[index].addedStatus,
+            style: TextStyle(fontSize: 10, color: Colors.blueGrey),
+          ),
+        ],
+      );
+    } else if (insideOfferPage[index].addedStatus == "Added") {
+      return Row(
+        children: [
+          Text(
+            insideOfferPage[index].addedStatus,
+            style: TextStyle(fontSize: 10, color: Colors.blueGrey),
+          ),
+        ],
+      );
+    }
+  }
+
+  getItemandNavigateToCart(index) async {
     // print(index1);
     print("add item");
     add2.add(addto(
         isSelected: false,
-        counter: 0,
+        counter: 1,
         quantity: 0,
-        id: insideOfferPage[_index1].id,
-        foodPrice: insideOfferPage[_index1].foodPrice,
-        title: insideOfferPage[_index1].title.toString(),
-        starRating: insideOfferPage[_index1].starRating,
-        name: insideOfferPage[_index1].name.toString(),
-        discountText: insideOfferPage[_index1].discountText,
-        vegsymbol: insideOfferPage[_index1].vegsymbol,
-        discountImage: insideOfferPage[_index1].discountImage,
-        foodImage: insideOfferPage[_index1].foodImage));
-
-    Fluttertoast.showToast(msg: "Items Added TO the Cart $_index1");
+        id: insideOfferPage[index].id,
+        foodPrice: insideOfferPage[index].foodPrice,
+        title: insideOfferPage[index].title.toString(),
+        starRating: insideOfferPage[index].starRating,
+        name: insideOfferPage[index].name.toString(),
+        discountText: insideOfferPage[index].discountText,
+        vegsymbol: insideOfferPage[index].vegsymbol,
+        discountImage: insideOfferPage[index].discountImage,
+        foodImage: insideOfferPage[index].foodImage));
   }
 }

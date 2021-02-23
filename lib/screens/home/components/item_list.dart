@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo/resturentDetail.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:feasturent_costomer_app/screens/home/components/viewAllCategory.dart';
@@ -36,13 +37,7 @@ class CategoriesList extends StatelessWidget {
             Spacer(),
             Container(
                 child: FlatButton(
-                    onPressed: () => {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewAllCategory())),
-                          print('View All')
-                        },
+                    onPressed: () => {print('View All')},
                     child: Row(
                       children: [
                         Container(
@@ -113,33 +108,35 @@ class CategoriesList extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 8.0),
                   child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 3,
-                            color: Colors.blueGrey,
-                            spreadRadius: 1)
-                      ],
-                    ),
-                    margin: EdgeInsets.only(left: size.width * 0.01),
-                    height: size.height * 0.08,
-                    width: size.width * 0.24,
-                    child: FlatButton(
-                      onPressed: () {},
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              "https://image.shutterstock.com/z/stock-photo-group-of-south-indian-food-like-masala-dosa-uttapam-idli-idly-wada-vada-sambar-appam-semolina-1153818823.jpg",
-                          fit: BoxFit.cover,
-                          width: size.width * 0.2,
-                          height: size.height * 0.2,
-                        ),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 3,
+                              color: Colors.blueGrey,
+                              spreadRadius: 1)
+                        ],
                       ),
-                    ),
-                  ),
+                      margin: EdgeInsets.only(left: size.width * 0.011),
+                      height: size.height * 0.08,
+                      width: size.width * 0.24,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 80,
+                        child: FlatButton(
+                          onPressed: () {},
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: category[1].categoryImage,
+                              fit: BoxFit.cover,
+                              width: size.width * 0.2,
+                              height: size.height * 0.2,
+                            ),
+                          ),
+                        ),
+                      )),
                 ),
                 SizedBox(
                   height: size.height * 0.01,

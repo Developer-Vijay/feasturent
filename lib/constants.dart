@@ -222,17 +222,17 @@ class SettingsList {
   var icon;
   int number;
 
-  SettingsList({this.title, this.subtitle, this.icon,this.number});
+  SettingsList({this.title, this.subtitle, this.icon, this.number});
 }
 
 List<SettingsList> settingpanel = [
   SettingsList(
-    number: 0,
+      number: 0,
       title: "Add a Place",
       subtitle: "In Case we're missing Something",
       icon: Icon(Icons.place)),
   SettingsList(
-    number: 1,
+      number: 1,
       title: "Places you've added",
       subtitle: "See all the places you've added so far",
       icon: Icon(Icons.stay_primary_landscape_outlined)),
@@ -243,8 +243,29 @@ List<SettingsList> settingpanel = [
     icon: Icon(Icons.settings),
   ),
   SettingsList(
-    number: 3,
+      number: 3,
       title: "Notifications Settings",
       subtitle: "Change your email or delete your account",
       icon: Icon(Icons.notifications))
+];
+
+class MenuList {
+  var title;
+  int number;
+  MenuList({this.title, this.number});
+}
+
+List<MenuList> menu = [
+  MenuList(title: "Recomended", number: 0),
+  MenuList(title: "Tandoori", number: 1),
+  MenuList(title: "Bread", number: 2),
+  MenuList(title: "Snacks and Beverages", number: 3),
+  MenuList(title: "Gravy", number: 4),
+  MenuList(title: "Chinese", number: 5),
+  MenuList(title: "Recomended", number: 6),
+  MenuList(title: "Recomended", number: 7),
+  MenuList(title: "Recomended", number: 8),
+  MenuList(title: "Recomended", number: 9),
+  MenuList(title: "Recomended", number: 10),
+  MenuList(title: "Recomended", number: 11),
 ];
