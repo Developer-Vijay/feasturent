@@ -9,7 +9,7 @@ class Wishlist extends StatefulWidget {
 }
 
 class _WishlistState extends State<Wishlist> {
-  int _index1 =0;
+  int _index1 = 0;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -230,7 +230,6 @@ class _WishlistState extends State<Wishlist> {
                                           style: TextStyle(color: Colors.red),
                                         ),
                                         onPressed: () {
-                                         
                                           setState(() {
                                             favourite.removeAt(index);
                                           });
@@ -242,14 +241,13 @@ class _WishlistState extends State<Wishlist> {
                                 });
 
                             return res;
-                          } else if (direction ==
-                              DismissDirection.startToEnd) {
-                                if(favourite[index].counter==0){
-                                   moveItemFromFavaouriteToCart(_index1);
-                                }
-                               
-                                Fluttertoast.showToast(msg:"Item added to Cart" );
-                              }
+                          } else if (direction == DismissDirection.startToEnd) {
+                            if (favourite[index].counter == 0) {
+                              moveItemFromFavaouriteToCart(_index1);
+                            }
+
+                            Fluttertoast.showToast(msg: "Item added to Cart");
+                          }
                         },
                       ),
                     )),
@@ -272,9 +270,5 @@ class _WishlistState extends State<Wishlist> {
         vegsymbol: burgerlist[_index1].vegsymbol,
         discountImage: burgerlist[_index1].discountImage,
         foodImage: burgerlist[_index1].foodImage));
-
-        
-
-        
   }
 }

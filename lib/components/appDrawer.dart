@@ -87,7 +87,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.article),
-            title: Text('Orders'),
+            title: Text('MyOrders'),
             dense: true,
             onTap: () {
               // Update the state of the app.
@@ -99,9 +99,8 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Wishlist'),
             dense: true,
             onTap: () {
-               Navigator.push(context,
-              MaterialPageRoute(builder: (context)=>Wishlist())
-              );
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Wishlist()));
               // Update the state of the app.
               // ...
             },
@@ -112,22 +111,7 @@ class _AppDrawerState extends State<AppDrawer> {
             dense: true,
             onTap: () {
               Navigator.push(context,
-              MaterialPageRoute(builder: (context)=>CartScreen())
-              );
-              // Update the state of the app.
-              // ...
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.history),
-            title: Text('History'),
-            dense: true,
-            onTap: () {
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Filter()),
-              );
-              
+                  MaterialPageRoute(builder: (context) => CartScreen()));
               // Update the state of the app.
               // ...
             },
@@ -136,9 +120,7 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.account_balance_wallet),
             title: Text('Wallet'),
             dense: true,
-            
             onTap: () {
-             
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => WalletDesign()),
@@ -158,7 +140,7 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Settings'),
             dense: true,
             onTap: () {
-               Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SettingsScreen()),
               );
