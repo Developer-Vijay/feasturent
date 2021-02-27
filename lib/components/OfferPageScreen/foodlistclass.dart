@@ -1,5 +1,19 @@
+import 'dart:async';
+
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:flutter/material.dart';
+
+String paymentMode = "Online Mode";
+int sumtotal = 0;
+int countSum = 0;
+int totalPrice = 0;
+String addAddress = " ";
+String userNameWithNumber = "Select Delivery Address";
+Timer circluatimer, placeTimer;
+double placeValue = 0.0;
+double placePrecent = 0.0;
+double circluarValue = 0.0;
+double circularPrecent = 0.0;
 
 class ListofFood {
   String timing;
@@ -57,15 +71,17 @@ class addto {
   String discountText;
   String ratingText;
   String name;
-  var id;
+  int id;
   int sum2 = 0;
   int counter;
   var postion;
   var isSelected;
+  int sum1;
 
   addto(
       {this.foodImage,
       this.vegsymbol,
+      this.sum1,
       this.id,
       this.sum2,
       this.counter,
@@ -529,13 +545,13 @@ List<ListofFood> foodlist = [
 
 class InsideListofFood {
   var addedStatus;
-  var index0;
+  int index0;
   var foodImage;
   int counter;
   String vegsymbol;
   var starRating;
   String title;
-  var id;
+  int id;
   int quantity;
   var addButton;
   int foodPrice;
@@ -563,8 +579,6 @@ class InsideListofFood {
       this.discountImage,
       this.discountText});
 }
-
-List<InsideListofFood> addtocart = [];
 
 List<InsideListofFood> insideOfferPage = [
   InsideListofFood(
