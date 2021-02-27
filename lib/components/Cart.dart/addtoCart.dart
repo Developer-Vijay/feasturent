@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/Place_Order/place_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key key}) : super(key: key);
@@ -20,15 +22,10 @@ class _CartScreenState extends State<CartScreen> {
   int _counter = 0;
 
   int product1;
-  int sum = 0;
-  int totalPrice = 0;
 
   int counter1 = 1;
 
-  // ignore: unused_field
   int _index = 1;
-
-  int _sum = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -62,38 +59,42 @@ class _CartScreenState extends State<CartScreen> {
                           context,
                           index,
                         ) {
-                          // ignore: unused_local_variable
-                          int product = product1;
-                          // ignore: unused_local_variable
-                          int counter = _counter;
+                          print(add2[index].id);
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
                               onTap: () {
                                 if (add2[index].isSelected == false) {
+                                  print("1");
                                   setState(() {
                                     add2[index].isSelected = true;
-
-                                    _index++;
-                                    product1 = add2[index].counter;
-                                    totalPrice =
-                                        add2[index].foodPrice * product1;
-                                    sum = sum + add2[index].counter;
+                                    countSum = countSum + add2[index].counter;
+                                    totalPrice = totalPrice +
+                                        (add2[index].foodPrice *
+                                            add2[index].counter);
+                                    //     sum = sum + add2[index].counter;
                                   });
                                 } else if (add2[index].isSelected = true) {
+                                  print("2");
                                   setState(() {
                                     add2[index].isSelected = false;
-                                    _index--;
-                                    product1 = 0;
 
-                                    if (totalPrice > 0) {
-                                      totalPrice = 0;
-                                      sum = 0;
-                                    }
+                                    countSum = countSum - add2[index].counter;
+                                    totalPrice = totalPrice -
+                                        (add2[index].foodPrice *
+                                            add2[index].counter);
 
-                                    if (sum > 0) {
-                                      sum = sum - add2[index].counter;
-                                    }
+                                    //     _index--;
+                                    //     product1 = 0;
+
+                                    //     if (totalPrice > 0) {
+                                    //       totalPrice = 0;
+                                    //       sum = 0;
+                                    // }
+
+                                    //     if (sum > 0) {
+                                    //       sum = sum - add2[index].counter;
+                                    //     }
                                   });
                                 }
                               },
@@ -142,6 +143,12 @@ class _CartScreenState extends State<CartScreen> {
                                                   onPressed: () {
                                                     // TODO: Delete the item from DB etc..
                                                     setState(() {
+                                                      insideOfferPage[index]
+                                                          .addedStatus = "Add";
+                                                      sumtotal = sumtotal -
+                                                          (add2[index].counter *
+                                                              add2[index]
+                                                                  .foodPrice);
                                                       add2.removeAt(index);
                                                     });
                                                     Navigator.of(context).pop();
@@ -333,16 +340,148 @@ class _CartScreenState extends State<CartScreen> {
                                           buttonPadding: EdgeInsets.all(3),
                                           children: [
                                             InkWell(
-                                              child: Icon(Icons.add),
-                                              onTap: () {
-                                                setState(() {
-                                                  add2[index].counter++;
+                                                onTap: () {
+                                                  if (add2[index].isSelected ==
+                                                      true) {
+                                                    if (add2[index].counter >
+                                                        1) {
+                                                      setState(() {
+                                                        countSum--;
+                                                        add2[index].counter--;
+                                                        sumtotal = sumtotal -
+                                                            add2[index]
+                                                                .foodPrice;
+                                                        totalPrice =
+                                                            totalPrice -
+                                                                add2[index]
+                                                                    .foodPrice;
+                                                      });
 
-                                                  _sum = _sum +
-                                                      add2[index].foodPrice;
-                                                });
-                                              },
-                                            ),
+                                                      print("Decrease");
+                                                    } else if (add2[index]
+                                                            .counter ==
+                                                        1) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AlertDialog(
+                                                              content: Text(
+                                                                  "Are you sure you want to delete ${add2[index].title}?"),
+                                                              actions: <Widget>[
+                                                                FlatButton(
+                                                                  child: Text(
+                                                                    "Cancel",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black),
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                                FlatButton(
+                                                                  child: Text(
+                                                                    "Delete",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .red),
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    // TODO: Delete the item from DB etc..
+
+                                                                    insideOfferPage[
+                                                                            index]
+                                                                        .addedStatus = "Add";
+                                                                    sumtotal = sumtotal -
+                                                                        (add2[index].counter *
+                                                                            add2[index].foodPrice);
+                                                                    add2.removeAt(
+                                                                        index);
+
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            );
+                                                          });
+                                                    }
+                                                  } else {
+                                                    if (add2[index].counter >
+                                                        1) {
+                                                      setState(() {
+                                                        add2[index].counter--;
+                                                        sumtotal = sumtotal -
+                                                            add2[index]
+                                                                .foodPrice;
+                                                      });
+
+                                                      print("Decrease");
+                                                    } else if (add2[index]
+                                                            .counter ==
+                                                        1) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AlertDialog(
+                                                              content: Text(
+                                                                  "Are you sure you want to delete ${add2[index].title}?"),
+                                                              actions: <Widget>[
+                                                                FlatButton(
+                                                                  child: Text(
+                                                                    "Cancel",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black),
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                                FlatButton(
+                                                                  child: Text(
+                                                                    "Delete",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .red),
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    // TODO: Delete the item from DB etc..
+                                                                    setState(
+                                                                        () {
+                                                                      insideOfferPage[index]
+                                                                              .addedStatus =
+                                                                          "Add";
+                                                                      sumtotal =
+                                                                          sumtotal -
+                                                                              (add2[index].counter * add2[index].foodPrice);
+                                                                      add2.removeAt(
+                                                                          index);
+                                                                    });
+
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            );
+                                                          });
+                                                    }
+                                                  }
+                                                },
+                                                child: Icon(Icons.remove)),
                                             SizedBox(
                                               width: 5,
                                             ),
@@ -353,24 +492,30 @@ class _CartScreenState extends State<CartScreen> {
                                               width: 5,
                                             ),
                                             InkWell(
-                                                onTap: () {
+                                              child: Icon(Icons.add),
+                                              onTap: () {
+                                                if (add2[index].isSelected ==
+                                                    true) {
                                                   setState(() {
-                                                    if (add2[index].counter >
-                                                        0) {
-                                                      add2[index].counter--;
-                                                      _sum = _sum -
-                                                          add2[index].foodPrice;
-                                                    } else if (add2[index]
-                                                            .counter ==
-                                                        1) {
-                                                      add2[index].counter = 0;
-                                                      _sum = 0;
-                                                    }
-                                                  });
+                                                    countSum++;
 
-                                                  print("Decrease");
-                                                },
-                                                child: Icon(Icons.remove))
+                                                    add2[index].counter++;
+
+                                                    sumtotal = sumtotal +
+                                                        add2[index].foodPrice;
+                                                    totalPrice = totalPrice +
+                                                        add2[index].foodPrice;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    add2[index].counter++;
+
+                                                    sumtotal = sumtotal +
+                                                        add2[index].foodPrice;
+                                                  });
+                                                }
+                                              },
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -417,7 +562,7 @@ class _CartScreenState extends State<CartScreen> {
                           Padding(
                             padding: const EdgeInsets.only(right: 18.0),
                             child: Text(
-                              "₹$_sum",
+                              "₹$sumtotal",
                               style: _textstyle,
                               textDirection: TextDirection.ltr,
                             ),
@@ -457,12 +602,23 @@ class _CartScreenState extends State<CartScreen> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 12.0),
-                            child: Text(
-                              "Total Price ($sum)",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Total Price ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                                Text(
+                                  "(Selected Items)",
+                                  style: TextStyle(
+                                      fontSize: 8,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ],
                             ),
                           ),
                           Spacer(),
@@ -510,7 +666,7 @@ class _CartScreenState extends State<CartScreen> {
                         height: 10,
                       ),
                       Text(
-                        "$sum",
+                        "$countSum",
                         style: TextStyle(color: Colors.black),
                       )
                     ],
@@ -519,7 +675,18 @@ class _CartScreenState extends State<CartScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 15.0),
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (totalPrice != 0) {
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context) => PlaceOrder());
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Please select any item to place order");
+                        }
+                      },
                       child: Text("Place Order  ₹ $totalPrice"),
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(

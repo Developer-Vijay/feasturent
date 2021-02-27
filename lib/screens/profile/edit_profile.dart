@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:feasturent_costomer_app/components/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';

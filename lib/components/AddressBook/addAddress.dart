@@ -1,6 +1,7 @@
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -47,7 +48,6 @@ class _AddAdressState extends State<AddAdress> {
   @override
   void initState() {
     super.initState();
-    getCurrentLocation();
   }
 
   double latadd;
@@ -65,38 +65,62 @@ class _AddAdressState extends State<AddAdress> {
 
   bool isLoading = false;
   Coordinates coordinates;
-  Future<void> getCurrentLocation() async {
-    final geopostion = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      latadd = geopostion.latitude;
-      longadd = geopostion.longitude;
-      print(latadd);
-      print(longadd);
-      coordinates = Coordinates(latadd, longadd);
-      print(coordinates);
-    });
-    var locate = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+  // Future<void> getCurrentLocation() async {
+  //   showDialog(
+  //       // barrierDismissible: false,
+  //       context: context,
+  //       builder: (_) => new AlertDialog(
+  //               content: Row(
+  //             children: [
+  //               CircularProgressIndicator(),
+  //               Padding(
+  //                 padding: const EdgeInsets.symmetric(horizontal: 12),
+  //                 child: Text("Loading"),
+  //               )
+  //             ],
+  //           )));
 
-    setState(() {
-      postalcode = locate.first.postalCode;
-      states = locate.first.locality;
-      roadname = locate.first.adminArea;
-      city = locate.first.subLocality;
-      landmark = locate.first.addressLine;
-    });
-  }
+  // }
 
   Future<void> getlocation() async {
-    print("working");
-    setState(() {
-      _roadnamecontroller.text = roadname;
-      _pincodecontroller.text = postalcode;
-      _housenocontroller.text = houseno;
-      citiesSelected.text = city;
-      stateSelected.text = states;
-      _landmarkcontroller.text = landmark;
-    });
+    try {
+      final geopostion = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        latadd = geopostion.latitude;
+        longadd = geopostion.longitude;
+        print(latadd);
+        print(longadd);
+        coordinates = Coordinates(latadd, longadd);
+        print(coordinates);
+      });
+      print("working");
+      try {
+        var locate =
+            await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+        setState(() {
+          postalcode = locate.first.postalCode;
+          states = locate.first.locality;
+          roadname = locate.first.adminArea;
+          city = locate.first.subLocality;
+          landmark = locate.first.addressLine;
+        });
+        setState(() {
+          _roadnamecontroller.text = roadname;
+          _pincodecontroller.text = postalcode;
+          _housenocontroller.text = houseno;
+          citiesSelected.text = city;
+          stateSelected.text = states;
+          _landmarkcontroller.text = landmark;
+        });
+      } catch (error) {
+        Fluttertoast.showToast(msg: "Unable to load your location");
+      }
+    } catch (error) {
+      Fluttertoast.showToast(msg: "Please check your location is ON");
+    }
+    Navigator.pop(context);
   }
 
   @override
@@ -237,6 +261,20 @@ class _AddAdressState extends State<AddAdress> {
                           ],
                         ),
                         onPressed: () {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) => new AlertDialog(
+                                      content: Row(
+                                    children: [
+                                      CircularProgressIndicator(),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12),
+                                        child: Text("Loading"),
+                                      )
+                                    ],
+                                  )));
                           getlocation();
                         },
                         color: Colors.blue,
@@ -379,35 +417,75 @@ class _AddAdressState extends State<AddAdress> {
                     Padding(
                       padding: const EdgeInsets.only(left: 22),
                       child: InputChip(
-                        label: Text("home"),
-                        selectedColor: Colors.white,
+                        label: Text(
+                          "Home",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        selectedColor: Colors.blue,
+                        disabledColor: Colors.grey[200],
                         elevation: 2,
                         isEnabled: true,
                         selected: isSelected,
                         showCheckmark: false,
                         onSelected: (value) {
-                          setState(() {
-                            isSelected = value;
-                          });
+                          if (isSelected1 == true) {
+                            Fluttertoast.showToast(msg: "office is Selected");
+                          } else {
+                            if (isSelected == true) {
+                              setState(() {
+                                isSelected = false;
+                              });
+                            } else {
+                              print("selected");
+                              setState(() {
+                                isSelected = true;
+                              });
+                            }
+                          }
                         },
-                        avatar: Icon(Icons.home),
+                        avatar: Icon(
+                          Icons.home,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 12),
                       child: InputChip(
-                        label: Text("Office"),
-                        selectedColor: Colors.white,
+                        label: Text(
+                          "Office",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        selectedColor: Colors.blue,
+                        disabledColor: Colors.grey[200],
                         elevation: 2,
                         isEnabled: true,
                         selected: isSelected1,
                         showCheckmark: false,
                         onSelected: (value) {
-                          setState(() {
-                            isSelected1 = value;
-                          });
+                          if (isSelected == true) {
+                            Fluttertoast.showToast(msg: "Home is Selected");
+                          } else {
+                            if (isSelected1 == true) {
+                              setState(() {
+                                isSelected1 = false;
+                              });
+                            } else {
+                              print("selected");
+                              setState(() {
+                                isSelected1 = true;
+                              });
+                            }
+                          }
                         },
-                        avatar: Icon(Icons.house),
+                        avatar: Icon(
+                          Icons.house,
+                          color: Colors.white,
+                        ),
                       ),
                     )
                   ],

@@ -3,6 +3,7 @@ import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpas
 import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart';
 import 'package:feasturent_costomer_app/components/auth/login/loginWithGoolge.dart';
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
+import 'package:feasturent_costomer_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -210,10 +210,8 @@ class _LoginPageState extends State<LoginPage> {
                             iconSize: 40,
                             onPressed: () {
                               setState(() => {
-                                    signInWithGoogle().whenComplete(() => {
-                                          _signUpBySocial()
-                                          // FirebaseUser user;
-                                        })
+                                    signInWithGoogle()
+                                        .whenComplete(() => {_signUpBySocial()})
                                   });
                             },
                           ),
@@ -222,9 +220,10 @@ class _LoginPageState extends State<LoginPage> {
                             icon: SvgPicture.asset('assets/icons/facebook.svg'),
                             tooltip: 'Login With Facebook',
                             iconSize: 40,
-                            onPressed: () {},
-                            // onPressed: () {Navigator.push(context , MaterialPageRoute(builder: (context)=>LoginWithFacebook()));
-                            // setState(() {});
+                            onPressed: () {
+                              print("FACEBOOKS");
+                              // loginWithFacebook();
+                            },
                           ),
                         ],
                       ),
@@ -359,11 +358,10 @@ class _LoginPageState extends State<LoginPage> {
   //Signup By social media
   Future<void> _signUpBySocial() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
     //localStorage
     final prefs = await SharedPreferences.getInstance();
     var response = await http.post(USER_API + 'signupBysocial', body: {
-      'phone': user.phoneNumber,
+      'phone': user.phoneNumber == null ? '' : user.phoneNumber,
       'email': user.email,
       'profile': user.photoUrl,
       'displayName': user.displayName,
