@@ -16,3 +16,17 @@ List<Dineoutlist> dineoutlist=[
 
 
 ];
+
+class PopularList{
+  var name;
+  var image;
+
+  PopularList({this.image,this.name});
+}
+
+List<PopularList> popular=[
+  PopularList(image: "https://media.gettyimages.com/photos/elegant-shopping-mall-picture-id182408547?s=2048x2048",name: "V3S mall"),
+  PopularList(image: "https://media.gettyimages.com/photos/cafebar-in-moscow-picture-id1158221681?s=2048x2048",name: "The Great Indian Place"),
+   PopularList(image: "https://media.gettyimages.com/photos/cafebar-in-moscow-picture-id1158221681?s=2048x2048",name: "M3s"),
+     PopularList(image: "https://media.gettyimages.com/photos/cafebar-in-moscow-picture-id1158221681?s=2048x2048",name: "M3s"),
+];

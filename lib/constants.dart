@@ -269,3 +269,101 @@ List<MenuList> menu = [
   MenuList(title: "Recomended", number: 10),
   MenuList(title: "Recomended", number: 11),
 ];
+
+var barimages = [
+  "https://media.gettyimages.com/photos/wooden-table-in-front-of-abstract-blurred-restaurant-lights-of-bar-picture-id1250327071?k=6&m=1250327071&s=612x612&w=0&h=z_gcxwIlFxPxrPh3XX3maljIx7Nqg4Ct2hA6LKjgYqM=",
+  "https://media.gettyimages.com/photos/waiter-serves-beers-at-a-bar-on-the-eve-of-the-mandatory-closure-of-picture-id1228945616?k=6&m=1228945616&s=612x612&w=0&h=d-qVLDUFwS5hZzJuXKGosaY6O0TYEL09T9EXAVyjLJ4="
+];
+
+final imageList = [
+  "https://media.gettyimages.com/photos/nightclub-picture-id157532720?k=6&m=157532720&s=612x612&w=0&h=oan-SIIOcol4NRhRWpJ_Vd2k6FzFE24Ub4zmK4SjNzM=",
+  "https://media.gettyimages.com/photos/interior-of-empty-bar-at-night-picture-id826837298?k=6&m=826837298&s=612x612&w=0&h=-hIbnJFk265RDKqfykcNmKXlge91c0ynk3hDAGvjESI=",
+  "https://media.gettyimages.com/photos/empty-nightclub-dance-floor-picture-id1053940970?k=6&m=1053940970&s=612x612&w=0&h=2VsbM5AKs7sLlklQ7m0iN6lTg_7ulDB4jZfdrG5t36M=",
+  "https://media.gettyimages.com/photos/bartender-making-cocktails-at-retro-bar-for-mature-couple-picture-id991839156?k=6&m=991839156&s=612x612&w=0&h=nXyZjg1b9XlVeNQUJp3wy3WkiAirt0ZkocsPmBrQe00=",
+];
+
+class CategoriesItem {
+  String categoryName = '';
+  String categoryImage;
+  CategoriesItem({
+    this.categoryName,
+    this.categoryImage,
+  });
+}
+
+List<CategoriesItem> category = [
+  CategoriesItem(
+      categoryName: 'Thali',
+      categoryImage:
+          'https://image.shutterstock.com/z/stock-photo-typical-indian-food-from-jaipur-thali-rajasthani-1010465743.jpg'),
+  CategoriesItem(
+    categoryName: 'South Indian',
+    categoryImage:
+        "https://image.shutterstock.com/z/stock-photo-group-of-south-indian-food-like-masala-dosa-uttapam-idli-idly-wada-vada-sambar-appam-semolina-1153818823.jpg",
+  ),
+  CategoriesItem(
+    categoryName: 'Cake & Desserts',
+    categoryImage:
+        "https://image.shutterstock.com/z/stock-photo-board-with-delicious-caramel-cake-on-table-768814738.jpg",
+  ),
+  CategoriesItem(
+    categoryName: 'Burger',
+    categoryImage:
+        "https://image.shutterstock.com/z/stock-photo-classic-hamburger-with-cheese-bacon-tomato-and-lettuce-on-dark-wooden-background-1677795556.jpg",
+  ),
+  CategoriesItem(
+    categoryName: 'Chinese',
+    categoryImage:
+        "https://image.shutterstock.com/z/stock-photo-schezwan-noodles-or-vegetable-hakka-noodles-or-chow-mein-is-a-popular-indo-chinese-recipes-served-1251390421.jpg",
+  ),
+  CategoriesItem(
+    categoryName: 'North Indian',
+    categoryImage:
+        "https://image.shutterstock.com/z/stock-photo-murgh-makhani-butter-chicken-tikka-masala-served-with-roti-paratha-and-plain-rice-along-with-1210314505.jpg",
+  ),
+  CategoriesItem(
+    categoryName: 'Snacks and Beverages',
+    categoryImage:
+        "https://image.shutterstock.com/z/stock-photo-punjabi-aloo-samosa-or-potato-samosa-recipe-or-indian-traditional-aloo-samosa-indian-chat-recipe-1508653862.jpg",
+  ),
+];
+
+class PopularOnFeasturent {
+  String categoryName = '';
+  String categoryImage;
+  PopularOnFeasturent({
+    this.categoryName,
+    this.categoryImage,
+  });
+}
+
+List<PopularOnFeasturent> popularonfeast = [
+  PopularOnFeasturent(
+      categoryImage:
+          "https://image.shutterstock.com/z/stock-photo-chole-bhature-or-chick-pea-curry-and-fried-puri-served-in-terracotta-crockery-over-white-1072270610.jpg",
+      categoryName: "Chole Bhature"),
+  PopularOnFeasturent(
+      categoryImage:
+          "https://image.shutterstock.com/z/stock-photo-traditional-dumpling-vegetarian-momos-food-from-nepal-served-with-tomato-chutney-over-moody-plate-1719536887.jpg",
+      categoryName: "Specail Momos"),
+  PopularOnFeasturent(
+      categoryImage:
+          "https://image.shutterstock.com/image-photo/arabian-spicy-food-concept-homemade-600w-1199926645.jpg",
+      categoryName: "Tandoori Chicken"),
+  PopularOnFeasturent(
+      categoryImage:
+          "https://image.shutterstock.com/z/stock-photo-big-cheeseburger-with-lots-of-cheese-stock-photo-side-view-of-a-cheeseburger-on-a-black-brick-wall-1680415567.jpg",
+      categoryName: "Cheese Burger"),
+  PopularOnFeasturent(
+      categoryImage:
+          "https://image.shutterstock.com/z/stock-photo-chicken-kabsa-homemade-arabian-biryani-overhead-view-1048188121.jpg",
+      categoryName: "Chicken Biryani"),
+  PopularOnFeasturent(
+      categoryImage:
+          "https://image.shutterstock.com/z/stock-photo-palak-paneer-curry-made-up-of-spinach-and-cottage-cheese-popular-indian-healthy-lunch-dinner-food-620862170.jpg",
+      categoryName: "Palak Paneer"),
+  PopularOnFeasturent(
+      categoryImage:
+          "https://image.shutterstock.com/z/stock-photo-masala-dosa-indian-savory-crepes-with-potato-filling-top-down-view-783911236.jpg",
+      categoryName: "Masala Dosa"),
+];

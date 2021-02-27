@@ -1,6 +1,5 @@
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutSlideList.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutSweeper.dart';
-import 'package:feasturent_costomer_app/screens/Dineout/dineoutappbar.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutcollection.dart';
 import 'package:flutter/material.dart';
 
@@ -18,13 +17,11 @@ class _DineoutHomePageState extends State<DineoutHomePage> {
       child: Scaffold(
         body: Column(
           children: [
-            // Expanded(
-            //   flex: 2,
-            //   child: DineoutHomeAppBar1(),
-            // ),
             Expanded(
               flex: 18,
-              child: ListView(children: [
+              child: ListView(
+                shrinkWrap: true,
+                children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

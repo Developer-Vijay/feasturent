@@ -33,19 +33,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     prefs.setBool('isOnboadingSeen', true);
   }
 
-  final kTitleStyle = TextStyle(
-      color: Colors.black,
-      fontFamily: 'CM Sans Serif',
-      fontSize: 25.0,
-      height: 1.5,
-      fontWeight: FontWeight.w500);
-
-  final kSubtitleStyle = TextStyle(
-    color: Colors.black,
-    fontSize: 17.0,
-    height: 1.2,
-  );
-
   Widget _indicator(bool isActive) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
@@ -62,6 +49,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final kTitleStyle = TextStyle(
+        color: Colors.black,
+        fontFamily: 'CM Sans Serif',
+        fontSize: size.height * 0.038,
+        height: size.height * 0.002,
+        fontWeight: FontWeight.w500);
+
+    final kSubtitleStyle = TextStyle(
+      color: Colors.black,
+      fontSize: size.height * 0.0288,
+      height: size.height * 0.002,
+    );
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -88,13 +87,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Container(
                   alignment: Alignment.centerRight,
                   child: FlatButton(
-                    onPressed: () => Navigator.of(context)
-                        .pushReplacementNamed('/homePage'),
+                    onPressed: () =>
+                        Navigator.of(context).pushReplacementNamed('/homePage'),
                     child: Text(
                       'Skip',
                       style: TextStyle(
                         color: Color(0xFF3498E5),
-                        fontSize: 20.0,
+                        fontSize: size.height * 0.03,
                       ),
                     ),
                   ),
@@ -125,12 +124,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: size.height * 0.03),
                             Text(
                               'Order',
                               style: kTitleStyle,
                             ),
-                            SizedBox(height: 15.0),
+                            SizedBox(height: size.height * 0.02),
                             Text(
                               'Order all you want from your favourite stores.',
                               style: kSubtitleStyle,
@@ -158,7 +157,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               'Delivery On Time',
                               style: kTitleStyle,
                             ),
-                            SizedBox(height: 15.0),
+                            SizedBox(height: size.height * 0.02),
                             Text(
                               'Receive Your order in less than 1 hour or pick a specific delivery time',
                               style: kSubtitleStyle,
@@ -188,7 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 style: kTitleStyle,
                               ),
                             ),
-                            SizedBox(height: 15.0),
+                            SizedBox(height: size.height * 0.02),
                             Center(
                               child: Text(
                                 'Order food and get delivery in the fastest time Anytime Anywhere',
@@ -224,13 +223,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   'Next',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 22.0,
+                                    fontSize: size.height * 0.032,
                                   ),
                                 ),
                                 Icon(
                                   Icons.arrow_forward,
                                   color: Colors.white,
-                                  size: 30.0,
+                                  size: size.height * 0.034,
                                 ),
                               ],
                             ),
@@ -257,7 +256,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         'Get started',
                         style: TextStyle(
                           color: Color(0xFF5e72e4),
-                          fontSize: 20.0,
+                          fontSize: size.height * 0.032,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

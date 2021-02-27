@@ -53,9 +53,9 @@ class _EditProfileState extends State<EditProfile> {
     // TextField Varaible For Margin , style text , lable style
 
     var leftRightMargin = size.width * 0.05;
-    var labelSize = 15.0;
-    var fontSize = 18.0;
-    var iconSize = 12.0;
+    var labelSize =  size.height * 0.018;
+    var fontSize =  size.height * 0.018;
+    var iconSize =  size.height * 0.018;
 
     return SafeArea(
       child: Scaffold(
@@ -83,7 +83,7 @@ class _EditProfileState extends State<EditProfile> {
                               child: IconButton(
                                 icon: Icon(
                                   Icons.arrow_back_sharp,
-                                  size: 25,
+                                  size:  size.height * 0.034,
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
@@ -98,7 +98,7 @@ class _EditProfileState extends State<EditProfile> {
                               child: Text(
                             "Nicolas Adams",
                             style: TextStyle(
-                                fontSize: 28,
+                                fontSize:  size.height * 0.034,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ))
@@ -113,7 +113,7 @@ class _EditProfileState extends State<EditProfile> {
                           child: InkWell(
                             onTap: () {},
                             child: CircleAvatar(
-                              radius: 55,
+                              radius:  size.height * 0.078,
                               child: _image == null
                                   ? Container(
                                       width: size.width * 0.4,
@@ -128,7 +128,7 @@ class _EditProfileState extends State<EditProfile> {
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: Image.file(_image,
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.cover,
                                           width: size.width * 0.4)),
                             ),
                           ),
@@ -185,7 +185,7 @@ class _EditProfileState extends State<EditProfile> {
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         LineAwesomeIcons.user,
-                        size: 16,
+                        size:  size.height * 0.023,
                       ),
                       labelText: "Name",
                       labelStyle: TextStyle(fontSize: labelSize),
@@ -307,7 +307,7 @@ class _EditProfileState extends State<EditProfile> {
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.email_outlined,
-                        size: 22,
+                        size:  size.height * 0.022,
                       ),
                       labelText: "Email",
                       errorText: _emailvalidate,
@@ -344,7 +344,7 @@ class _EditProfileState extends State<EditProfile> {
                     },
                     child: Text("Edit Profile",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
+                            fontWeight: FontWeight.bold, fontSize:  size.height * 0.02)),
                     textColor: Colors.white,
                     padding: EdgeInsets.all(8),
                     minWidth: size.width * 0.8,

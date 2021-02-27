@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
   List<Widget> tabPages = [
     HomePageBody(),
-    OfferPageScreen(),
+    OfferPageScreen(null),
     DineoutHomePage(),
     UserProfilePage()
   ];
@@ -224,30 +224,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildChangeTextApp() {
     if (_page == 0) {
-      return RichText(
-        text: TextSpan(
-          style: Theme.of(context)
-              .textTheme
-              .title
-              .copyWith(fontWeight: FontWeight.bold),
-          children: [
-            TextSpan(
-              text: "Feas",
-              style: TextStyle(
-                color: ksecondaryColor,
-                fontSize: MediaQuery.of(context).size.height * 0.028,
-              ),
-            ),
-            TextSpan(
-              text: "Turent",
-              style: TextStyle(
-                color: kPrimaryColor,
-                fontSize: MediaQuery.of(context).size.height * 0.028,
-              ),
-            ),
-          ],
-        ),
-      );
+      return  Image.asset("assets/images/feasturent_app_logo.png",);
+      
     } else if (_page == 1) {
       return Text(
         "Offers",

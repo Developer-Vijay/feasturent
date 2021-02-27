@@ -1,9 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo/review_resturent.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 
 import 'detail_Resturent.dart';
 import 'menu_Resturent.dart';
@@ -38,13 +34,15 @@ class _ResturentDetailState extends State<ResturentDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final ListofFood resturentNameIndex =
-        ModalRoute.of(context).settings.arguments;
-    print(resturentNameIndex.index0);
+    // final ListofFood resturentNameIndex =
+    //     ModalRoute.of(context).settings.arguments;
+    // print(resturentNameIndex.index0);
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: appbarText()),
+        // appBar: AppBar(
+
+        //   title: appbarText()),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
