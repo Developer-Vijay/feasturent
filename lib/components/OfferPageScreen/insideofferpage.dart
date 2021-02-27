@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo/resturentDetail.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
@@ -25,10 +26,10 @@ class _OfferListPageState extends State<OfferListPage> {
   final _containerDecoration = BoxDecoration(
     boxShadow: [
       BoxShadow(
-          blurRadius: 2,
+          blurRadius: 3,
           offset: Offset(1, 3),
           color: Colors.blue[50],
-          spreadRadius: 2)
+          spreadRadius: 3)
     ],
     borderRadius: BorderRadius.circular(5),
     color: Colors.white,
@@ -73,30 +74,31 @@ class _OfferListPageState extends State<OfferListPage> {
                             itemCount: menu.length,
                             itemBuilder: (context, index) {
                               final trans = menu[index].title;
-                              return ListTile(
-                                enabled: true,
-                                selected: index == isSelect,
-                                title: Text(
-                                  trans.toString(),
-                                  style: TextStyle(
-                                    fontSize: 16,
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TandooriPage(),
+                                          settings: RouteSettings(
+                                              arguments: menu[index])));
+                                },
+                                child: ListTile(
+                                  enabled: true,
+                                  selected: index == isSelect,
+                                  title: Text(
+                                    menu[index].title,
+                                    style: TextStyle(
+                                      fontSize: size.height * 0.02,
+                                    ),
                                   ),
                                 ),
-                                onTap: () {
-                                  if (menu[index].number == 0) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TandooriPage()));
-                                  }
-                                  index = isSelect;
-                                },
                               );
                             },
                           ),
                         ),
-                        height: size.height * 0.2,
+                        height: size.height * 0.26,
                         width: size.width * 0.8,
                       ),
                     ),
@@ -112,7 +114,7 @@ class _OfferListPageState extends State<OfferListPage> {
                     style: TextStyle(
                         color: kTextColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14),
+                        fontSize: size.height * 0.017),
                   ),
                   onPressed: () {
                     setState(() {
@@ -146,7 +148,7 @@ class _OfferListPageState extends State<OfferListPage> {
                     Navigator.pop(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => OfferPageScreen()),
+                          builder: (context) => OfferPageScreen(null)),
                     );
                   })),
           body: ListView(
@@ -155,12 +157,13 @@ class _OfferListPageState extends State<OfferListPage> {
                 children: [
                   Container(
                       alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(top: 5, left: 15),
+                      margin: EdgeInsets.only(
+                          top: size.height * 0.01, left: size.width * 0.03),
                       child: Text(
                         "Indian",
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 14,
+                            fontSize: size.height * 0.02,
                             fontWeight: FontWeight.w700),
                       )),
                   Row(
@@ -184,17 +187,19 @@ class _OfferListPageState extends State<OfferListPage> {
                         child: Text(
                           "Mobile No- +91 9818069709",
                           style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.w600),
+                              fontSize: size.height * 0.016,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600),
                         ),
                       )
                     ],
                   ),
                   SizedBox(
-                    height: 24,
+                    height: size.height * 0.034,
                   ),
                   DottedLine(),
                   SizedBox(
-                    height: 20,
+                    height: size.height * 0.024,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +217,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                     },
                                     starCount: 1,
                                     rating: 3.0,
-                                    size: 23.0,
+                                    size: size.height * 0.025,
                                     isReadOnly: false,
                                     defaultIconData: Icons.star_border_outlined,
                                     filledIconData: Icons.star,
@@ -256,194 +261,78 @@ class _OfferListPageState extends State<OfferListPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 20,
+                    height: size.height * 0.03,
                   ),
                   DottedLine(),
                   SizedBox(
-                    height: 15,
+                    height: size.height * 0.02,
                   ),
 
                   // List of Discounts
 
                   Container(
-                    height: size.height * 0.1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => OnOfferBottomSheet());
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                height: size.height * 0.068,
-                                width: size.width * 0.42,
-                                decoration: _containerDecoration,
-                                child: Column(children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                          margin: EdgeInsets.only(
-                                              left: size.width * 0.02,
-                                              top: size.height * 0.01),
-                                          child: SvgPicture.asset(
-                                            "assets/icons/offer.svg",
-                                            width: 15,
-                                          )),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            left: size.width * 0.002,
-                                            top: size.height * 0.01),
-                                        child: Text(
-                                          "50%OFFUPTO100",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      )
-                                    ],
+                    height: size.height * 0.08,
+                    child: ListView.builder(
+                      itemCount: 3,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) => OnOfferBottomSheet());
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(4),
+                            height: size.height * 0.1,
+                            width: size.width * 0.42,
+                            decoration: _containerDecoration,
+                            child: Column(children: [
+                              Row(
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(
+                                          left: size.width * 0.02,
+                                          top: size.height * 0.01),
+                                      child: SvgPicture.asset(
+                                        "assets/icons/offer.svg",
+                                        width: size.width * 0.04,
+                                      )),
+                                  SizedBox(
+                                    width: size.width * 0.02,
                                   ),
                                   Container(
-                                      alignment: Alignment.topLeft,
-                                      margin: EdgeInsets.only(
-                                          left: size.width * 0.08,
-                                          top: size.height * 0.002),
-                                      child: Text(
-                                        "Use Welcome50",
-                                        style: TextStyle(fontSize: 12),
-                                      ))
-                                ]),
+                                    margin: EdgeInsets.only(
+                                        left: size.width * 0.002,
+                                        top: size.height * 0.01),
+                                    child: Text(
+                                      "50%OFFUPTO100",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.015,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                ],
                               ),
-                            ),
-                            // Second List
-                            SizedBox(
-                              width: 12,
-                            ),
-
-                            InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => OnOfferBottomSheet());
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                height: size.height * 0.068,
-                                width: size.width * 0.42,
-                                decoration: _containerDecoration,
-                                child: Column(children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                          margin: EdgeInsets.only(
-                                              left: size.width * 0.02,
-                                              top: size.height * 0.01),
-                                          child: SvgPicture.asset(
-                                            "assets/icons/offer.svg",
-                                            width: 15,
-                                          )),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            left: size.width * 0.002,
-                                            top: size.height * 0.01),
-                                        child: Text(
-                                          "30%OFFUPTO100",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                      alignment: Alignment.topLeft,
-                                      margin: EdgeInsets.only(
-                                          left: size.width * 0.08,
-                                          top: size.height * 0.002),
-                                      child: Text(
-                                        "Use Welcome50",
-                                        style: TextStyle(fontSize: 12),
-                                      ))
-                                ]),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-
-                            // Third List
-                            InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => OnOfferBottomSheet());
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                height: size.height * 0.068,
-                                width: size.width * 0.42,
-                                decoration: _containerDecoration,
-                                child: Column(children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                          margin: EdgeInsets.only(
-                                              left: size.width * 0.02,
-                                              top: size.height * 0.01),
-                                          child: SvgPicture.asset(
-                                            "assets/icons/offer.svg",
-                                            width: 15,
-                                          )),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            left: size.width * 0.002,
-                                            top: size.height * 0.01),
-                                        child: Text(
-                                          "20%OFFUPTO100",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                      alignment: Alignment.topLeft,
-                                      margin: EdgeInsets.only(
-                                          left: size.width * 0.08,
-                                          top: size.height * 0.002),
-                                      child: Text(
-                                        "Use Welcome50",
-                                        style: TextStyle(fontSize: 12),
-                                      ))
-                                ]),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                              Container(
+                                  alignment: Alignment.topLeft,
+                                  margin: EdgeInsets.only(
+                                      left: size.width * 0.08,
+                                      top: size.height * 0.002),
+                                  child: Text(
+                                    "Use Welcome50",
+                                    style: TextStyle(
+                                        fontSize: size.height * 0.014),
+                                  ))
+                            ]),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: size.height * 0.014,
                   ),
                   Container(
                       child: Row(
@@ -454,7 +343,7 @@ class _OfferListPageState extends State<OfferListPage> {
                           child: CachedNetworkImage(
                             imageUrl:
                                 "https://media.gettyimages.com/vectors/logo-of-two-green-leaves-in-a-yellow-background-vector-id186896873?k=6&m=186896873&s=612x612&w=0&h=nwQBGKYtsyeD4TlxoGtH6SSENQENlZGxmTXAwIWBJ5k=",
-                            height: 30,
+                            height: size.height * 0.03,
                           ),
                         ),
                       ),
@@ -518,12 +407,15 @@ class _OfferListPageState extends State<OfferListPage> {
                                     flex: 0,
                                     child: Container(
                                       alignment: Alignment.topCenter,
-                                      height: size.height * 0.2,
+                                      // height: size.height * 0.2,
+                                      // width: size.width * 0.3,
                                       child: Stack(
                                         children: [
                                           Container(
                                             margin: EdgeInsets.only(
-                                                left: 4, right: 4, top: 4),
+                                                left: size.width * 0.01,
+                                                right: size.width * 0.014,
+                                                top: size.height * 0.008),
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -531,7 +423,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 imageUrl: insideOfferPage[index]
                                                     .foodImage,
                                                 height: size.height * 0.1,
-                                                fit: BoxFit.contain,
+                                                width: size.width * 0.26,
+                                                fit: BoxFit.fill,
                                               ),
                                             ),
                                           ),
@@ -543,9 +436,54 @@ class _OfferListPageState extends State<OfferListPage> {
                                             child: Container(
                                               child: MaterialButton(
                                                   onPressed: () {
-                                                    addBottonFunction(
+                                                    if (insideOfferPage[index]
+                                                            .addedStatus ==
+                                                        "Add") {
+                                                      print(
+                                                          insideOfferPage[index]
+                                                              .index0);
+
+                                                      print(_index1);
+
+                                                      final snackBar = SnackBar(
+                                                        backgroundColor: Colors
+                                                                .lightBlueAccent[
+                                                            200],
+                                                        content: Text(
+                                                            "${insideOfferPage[index].title} is added to cart"),
+                                                        action: SnackBarAction(
+                                                          textColor:
+                                                              Colors.redAccent,
+                                                          label: "View Cart",
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            CartScreen()));
+                                                          },
+                                                        ),
+                                                      );
+
+                                                      Scaffold.of(context)
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                      getItemandNavigateToCart(
+                                                          index);
+                                                      setState(() {
                                                         insideOfferPage[index]
-                                                            .index0);
+                                                                .addedStatus =
+                                                            "Added";
+                                                      });
+                                                    } else if (insideOfferPage[
+                                                                index]
+                                                            .addedStatus ==
+                                                        "Added") {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "${insideOfferPage[index].title} is already added");
+                                                    }
                                                   },
                                                   color: Colors.white,
                                                   minWidth: size.width * 0.16,
@@ -573,7 +511,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Container(
-                                            margin: EdgeInsets.only(top: 6),
+                                            margin: EdgeInsets.only(
+                                                top: size.height * 0.01),
                                             child: Row(
                                               children: [
                                                 Text(
@@ -582,7 +521,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.black,
-                                                      fontSize: 16),
+                                                      fontSize:
+                                                          size.height * 0.019),
                                                 ),
                                                 Spacer(),
                                                 Padding(
@@ -593,21 +533,21 @@ class _OfferListPageState extends State<OfferListPage> {
                                                     imageUrl:
                                                         insideOfferPage[index]
                                                             .vegsymbol,
-                                                    height: size.height * 0.02,
+                                                    height: size.height * 0.016,
                                                   ),
                                                 )
                                               ],
                                             ),
                                           ),
-                                          SizedBox(height: 4),
+                                          SizedBox(height: size.height * 0.005),
                                           Text(
                                             insideOfferPage[index].subtitle,
                                             style: TextStyle(
-                                                fontSize: 13,
+                                                fontSize: size.height * 0.014,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           SizedBox(
-                                            height: 3,
+                                            height: size.height * 0.002,
                                           ),
                                           Container(
                                             child: Row(
@@ -619,7 +559,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 Text(
                                                   "3.0",
                                                   style: TextStyle(
-                                                      fontSize: 13,
+                                                      fontSize:
+                                                          size.height * 0.014,
                                                       color: Colors.red,
                                                       fontWeight:
                                                           FontWeight.bold),
@@ -631,6 +572,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   child: Text(
                                                     "₹${insideOfferPage[index].foodPrice}",
                                                     style: TextStyle(
+                                                        fontSize:
+                                                            size.height * 0.018,
                                                         color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -640,7 +583,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: size.height * 0.003,
                                           ),
                                           Container(
                                             child: Row(
@@ -649,16 +592,17 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   imageUrl:
                                                       insideOfferPage[index]
                                                           .discountImage,
-                                                  height: size.height * 0.026,
+                                                  height: size.height * 0.02,
                                                 ),
                                                 SizedBox(
-                                                  width: 2,
+                                                  width: size.width * 0.006,
                                                 ),
                                                 Text(
                                                   insideOfferPage[index]
                                                       .discountText,
                                                   style: TextStyle(
-                                                      fontSize: 12,
+                                                      fontSize:
+                                                          size.height * 0.015,
                                                       color: kTextColor),
                                                 ),
                                               ],
@@ -677,23 +621,6 @@ class _OfferListPageState extends State<OfferListPage> {
             ],
           )),
     );
-  }
-
-  addBottonFunction(index) {
-    if (insideOfferPage[index].addedStatus == "Add") {
-      print(insideOfferPage[index].index0);
-      Fluttertoast.showToast(msg: "${insideOfferPage[index].title} is added");
-
-      print(_index1);
-
-      getItemandNavigateToCart(index);
-      setState(() {
-        insideOfferPage[index].addedStatus = "Added";
-      });
-    } else if (insideOfferPage[index].addedStatus == "Added") {
-      Fluttertoast.showToast(
-          msg: "${insideOfferPage[index].title} is already added");
-    }
   }
 
   buttonText(index) {
@@ -724,13 +651,15 @@ class _OfferListPageState extends State<OfferListPage> {
   }
 
   getItemandNavigateToCart(index) async {
+    sumtotal = sumtotal + insideOfferPage[index].foodPrice;
     // print(index1);
     print("add item");
     add2.add(addto(
         isSelected: false,
         counter: 1,
         quantity: 0,
-        id: insideOfferPage[index].id,
+        sum1: 0,
+        id: insideOfferPage[index].index0,
         foodPrice: insideOfferPage[index].foodPrice,
         title: insideOfferPage[index].title.toString(),
         starRating: insideOfferPage[index].starRating,

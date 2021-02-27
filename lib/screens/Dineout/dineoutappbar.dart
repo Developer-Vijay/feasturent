@@ -13,6 +13,7 @@ class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: Scaffold(
@@ -63,6 +64,7 @@ class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
 }
 
 class DineoutSearchbar extends SearchDelegate<String> {
+  
   DineoutSearchbar({
     String hintText,
   }) : super(
@@ -134,7 +136,7 @@ class DineoutSearchbar extends SearchDelegate<String> {
 
     final mylist = query.isEmpty
         ? recentFoodsearched
-        : foodlist.where((p) => p.startsWith(query)).toList();
+        : foodlist.where((p) => p.startsWith(query.toLowerCase())).toList();
     return Container(
         child: ListView.builder(
       itemBuilder: (context, index) => Column(
@@ -160,8 +162,8 @@ class DineoutSearchbar extends SearchDelegate<String> {
                 ),
               ),
             ),
-            title: Text(foodlist[index]),
-            subtitle: Text(foodsubtitle[index]),
+            title: Text(mylist[index]),
+            subtitle: Text(mylist[index]),
             onTap: () {
               showResults(context);
             },

@@ -11,6 +11,7 @@ class SplashScreenApp extends StatefulWidget {
 }
 
 class _SplashScreenAppState extends State<SplashScreenApp> {
+  
   bool _isOnboadingSeen = false;
 
   @override
@@ -36,22 +37,16 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return new SplashScreen(
       seconds: 2,
       navigateAfterSeconds:
           _isOnboadingSeen ? HomeScreen() : OnboardingScreen(),
-      title: new Text(
-        'Feasturent',
-        style: new TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 40.0,
-            color: Color(0xff2549F3)),
-      ),
-      image: new Image.asset('assets/icons/feasturent.png'),
-      // backgroundGradient: new LinearGradient(colors: [Colors.cyan, Colors.blue], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      
+      image: new Image.asset('assets/images/feasturent_app_logo.png'),
       backgroundColor: Colors.white,
       styleTextUnderTheLoader: new TextStyle(),
-      photoSize: 100.0,
+      photoSize: size.height * 0.14,
       onClick: () => print("Feasturent"),
       loaderColor: Color(0xffFF1577),
     );

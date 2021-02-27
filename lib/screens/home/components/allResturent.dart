@@ -91,7 +91,7 @@ class _AllResturentState extends State<AllResturent> {
                                     borderRadius: BorderRadius.circular(10),
                                     child: CachedNetworkImage(
                                       imageUrl: foodlist[index].foodImage,
-                                      height: size.height * 0.2,
+                                      height: size.height * 0.18,
                                       width: size.width * 0.3,
                                       fit: BoxFit.fill,
                                     ),
@@ -109,7 +109,7 @@ class _AllResturentState extends State<AllResturent> {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(top: 6),
+                                  margin: EdgeInsets.only(top: size.height * 0.02),
                                   child: Row(
                                     children: [
                                       Text(
@@ -117,7 +117,7 @@ class _AllResturentState extends State<AllResturent> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
-                                            fontSize: 16),
+                                            fontSize: size.height * 0.02),
                                       ),
                                       Spacer(),
                                       Padding(
@@ -125,20 +125,20 @@ class _AllResturentState extends State<AllResturent> {
                                             const EdgeInsets.only(right: 12),
                                         child: CachedNetworkImage(
                                             imageUrl: foodlist[index].vegsymbol,
-                                            height: size.height * 0.02),
+                                            height: size.height * 0.016),
                                       )
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 6),
+                                SizedBox(height: size.height * 0.013,),
                                 Text(
                                   foodlist[index].subtitle,
                                   style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: size.height * 0.015,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
-                                  height: 6,
+                                  height: size.height * 0.01,
                                 ),
                                 Container(
                                   child: Row(
@@ -149,14 +149,14 @@ class _AllResturentState extends State<AllResturent> {
                                       Text(
                                         "3.0",
                                         style: TextStyle(
-                                            fontSize: 13,
+                                            fontSize: size.height * 0.016,
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
                                       CachedNetworkImage(
                                         imageUrl: foodlist[index].discountImage,
-                                        height: size.height * 0.026,
+                                        height: size.height * 0.022,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -166,31 +166,14 @@ class _AllResturentState extends State<AllResturent> {
                                           foodlist[index].discountText,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 12,
+                                              fontSize: size.height * 0.016,
                                               color: kTextColor),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                // Container(
-                                //   child: Row(
-                                //     children: [
-                                //       CachedNetworkImage(
-                                //         imageUrl: foodlist[index].discountImage,
-                                //         height: size.height * 0.026,
-                                //       ),
-                                //       SizedBox(
-                                //         width: 2,
-                                //       ),
-                                //       Text(
-                                //         foodlist[index].discountText,
-                                //         style: TextStyle(
-                                //             fontSize: 12, color: kTextColor),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
+                               
                               ],
                             ),
                           ))

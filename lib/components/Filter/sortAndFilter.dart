@@ -1,4 +1,4 @@
-import 'package:feasturent_costomer_app/components/ListForSearch/list_data2.dart';
+import 'package:feasturent_costomer_app/components/Filter/ListForSearch/list_data2.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +14,6 @@ class _FilterState extends State<Filter> {
   bool select1 = false;
   final pageController = PageController(initialPage: 0);
   bool _value = false;
-  final _style =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15);
   bool isSelected = false;
   bool isenabled = false;
 
@@ -46,7 +44,7 @@ class _FilterState extends State<Filter> {
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 18),
+                            fontSize: size.height * 0.024),
                       ),
                       Spacer(),
                       FlatButton(
@@ -54,7 +52,7 @@ class _FilterState extends State<Filter> {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18)),
+                                fontSize: size.height * 0.023)),
                         onPressed: () {},
                       )
                     ],
@@ -100,7 +98,7 @@ class _FilterState extends State<Filter> {
                                     context: context,
                                     delegate: FoodItemsSearch());
                               },
-                              style: TextStyle(fontSize: 18),
+                              style: TextStyle(fontSize: size.height * 0.024),
                               decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.search),
                                   hintText: "Search",

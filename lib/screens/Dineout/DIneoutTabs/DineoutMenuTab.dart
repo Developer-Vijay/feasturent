@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+import 'package:photo_view/photo_view.dart';
+
 class MenuDart extends StatefulWidget {
   @override
   _MenuDartState createState() => _MenuDartState();
@@ -20,16 +22,25 @@ class _MenuDartState extends State<MenuDart> {
   Widget build(BuildContext context) {
     return Container(
         child: Swiper(
-      itemCount: menubarImages.length,
-      controller: controller,
-      pagination: SwiperPagination(builder: SwiperPagination.fraction),
-      loop: true,
-      itemBuilder: (context, index) {
-        return CachedNetworkImage(
-          imageUrl: menubarImages[index],
-          fit: BoxFit.contain,
-        );
-      },
-    ));
+            itemCount: menubarImages.length,
+            controller: controller,
+            pagination: SwiperPagination(builder: SwiperPagination.fraction),
+            loop: true,
+            itemBuilder: (context, index) {
+              return CachedNetworkImage(
+                fit: BoxFit.fill,
+                imageUrl: menubarImages[index],
+                imageBuilder: (context, imageProvider) => PhotoView(
+                  backgroundDecoration: BoxDecoration(color: Colors.white),
+                  imageProvider: imageProvider,
+                ),
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(
+                    semanticsLabel: "Loading",
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              );
+            }));
   }
 }

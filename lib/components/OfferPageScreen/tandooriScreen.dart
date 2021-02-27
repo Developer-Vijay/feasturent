@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../constants.dart';
 import 'foodlistclass.dart';
 
 class TandooriPage extends StatefulWidget {
@@ -13,6 +14,7 @@ class _TandooriPageState extends State<TandooriPage> {
   int _index1 = 0;
   @override
   Widget build(BuildContext context) {
+     final MenuList menuIndex = ModalRoute.of(context).settings.arguments;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +29,7 @@ class _TandooriPageState extends State<TandooriPage> {
           },
         ),
         title: Text(
-          "Tandoori",
+          menuIndex.title,
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -62,24 +64,27 @@ class _TandooriPageState extends State<TandooriPage> {
                       left: size.width * 0.02,
                       right: size.width * 0.02,
                     ),
-                    height: size.height * 0.12,
+                    height: size.height * 0.136,
                     child: Row(children: [
                       Expanded(
                           flex: 0,
                           child: Container(
                             alignment: Alignment.topCenter,
-                            height: size.height * 0.2,
+                            height: size.height * 0.22,
                             child: Stack(
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(
-                                      left: 4, right: 4, top: 4),
+                                      left: size.width * 0.01,
+                                      right: size.width * 0.01,
+                                      top: size.height * 0.005),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: CachedNetworkImage(
                                       imageUrl: tandorilist[index].foodImage,
                                       height: size.height * 0.1,
-                                      fit: BoxFit.contain,
+                                      width: size.width * 0.26,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),
@@ -87,7 +92,7 @@ class _TandooriPageState extends State<TandooriPage> {
                                 Align(
                                     widthFactor: size.width * 0.00368,
                                     alignment: Alignment.bottomCenter,
-                                    heightFactor: size.height * 0.00276,
+                                    heightFactor: size.height * 0.003,
                                     child: Container(
                                       child: MaterialButton(
                                         onPressed: () {
@@ -122,7 +127,7 @@ class _TandooriPageState extends State<TandooriPage> {
                                             Text(
                                               "ADD",
                                               style: TextStyle(
-                                                  fontSize: 10,
+                                                  fontSize: size.height * 0.013,
                                                   color: Colors.blueGrey),
                                             ),
                                           ],
@@ -141,7 +146,9 @@ class _TandooriPageState extends State<TandooriPage> {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(top: 6),
+                                  margin: EdgeInsets.only(
+                                    top: size.height * 0.008,
+                                  ),
                                   child: Row(
                                     children: [
                                       Text(
@@ -149,7 +156,7 @@ class _TandooriPageState extends State<TandooriPage> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
-                                            fontSize: 16),
+                                            fontSize: size.height * 0.018),
                                       ),
                                       Spacer(),
                                       Padding(
@@ -168,11 +175,11 @@ class _TandooriPageState extends State<TandooriPage> {
                                 Text(
                                   tandorilist[index].subtitle,
                                   style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: size.height * 0.016,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
-                                  height: 3,
+                                  height: size.height * 0.006,
                                 ),
                                 Container(
                                   child: Row(
@@ -183,7 +190,7 @@ class _TandooriPageState extends State<TandooriPage> {
                                       Text(
                                         "3.0",
                                         style: TextStyle(
-                                            fontSize: 13,
+                                            fontSize: size.height * 0.016,
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -194,6 +201,7 @@ class _TandooriPageState extends State<TandooriPage> {
                                         child: Text(
                                           "₹${tandorilist[index].foodPrice}",
                                           style: TextStyle(
+                                              fontSize: size.height * 0.016,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -204,28 +212,6 @@ class _TandooriPageState extends State<TandooriPage> {
                                 SizedBox(
                                   height: 5,
                                 ),
-                                // Container(
-                                //   child: Row(
-                                //     children: [
-                                //       CachedNetworkImage(
-                                //         imageUrl:
-                                //             tandorilist[index]
-                                //                 .discountImage,
-                                //         height: size.height * 0.026,
-                                //       ),
-                                //       SizedBox(
-                                //         width: 2,
-                                //       ),
-                                //       Text(
-                                //         tandorilist[index]
-                                //             .discountText,
-                                //         style: TextStyle(
-                                //             fontSize: 12,
-                                //             color: kTextColor),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
                               ],
                             ),
                           ))

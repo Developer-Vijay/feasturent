@@ -3,7 +3,6 @@ import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.da
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
-import 'package:feasturent_costomer_app/components/common/common.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
 import 'package:flutter/material.dart';

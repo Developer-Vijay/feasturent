@@ -43,13 +43,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0"
-  carousel_slider:
-    dependency: "direct main"
-    description:
-      name: carousel_slider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.1"
   characters:
     dependency: transitive
     description:
@@ -127,13 +120,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  dropdownfield:
-    dependency: "direct main"
-    description:
-      name: dropdownfield
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -408,6 +394,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2"
+  lazy_load_scrollview:
+    dependency: "direct main"
+    description:
+      name: lazy_load_scrollview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   line_awesome_flutter:
     dependency: "direct main"
     description:
@@ -513,6 +506,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  photo_view:
+    dependency: "direct main"
+    description:
+      name: photo_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.3"
   platform:
     dependency: transitive
     description:

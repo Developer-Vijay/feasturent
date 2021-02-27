@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
 import 'package:flutter/material.dart';
 
@@ -9,31 +10,37 @@ class Collections extends StatefulWidget {
 class _CollectionsState extends State<Collections> {
   final _textstyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14);
-
+  List collectionImage = [
+    "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
+    "https://media.gettyimages.com/photos/enjoying-lunch-with-friends-picture-id1171787426?k=6&m=1171787426&s=612x612&w=0&h=cvdOLV4T-QGC60hZT4p8u7FHPHsUKA12FnswVCL2WB4=",
+    "https://media.gettyimages.com/photos/heres-to-tonight-picture-id868935172?k=6&m=868935172&s=612x612&w=0&h=MjBYXm7f229lyNXsWqcSnmlouGWrfsNDYhQCiPJ0V6g=",
+    "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
+  ];
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: Text(
                 "Best Collections",
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 14,
+                    fontSize: size.height * 0.018,
                     fontWeight: FontWeight.w700),
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Padding(
+            Container(
+              height: size.height * 0.22,
+              child: ListView.builder(
+                itemCount: collectionImage.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: InkWell(
                       onTap: () {
@@ -52,8 +59,8 @@ class _CollectionsState extends State<Collections> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           image: DecorationImage(
-                              image: NetworkImage(
-                                "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
+                              image: CachedNetworkImageProvider(
+                                collectionImage[index],
                               ),
                               fit: BoxFit.cover),
                         ),
@@ -71,14 +78,14 @@ class _CollectionsState extends State<Collections> {
                                     children: [
                                       TextSpan(
                                         text: " Raising the Bar \n",
-                                        style: TextStyle(
-                                            fontSize: 16,
+                                        style: TextStyle(shadows: [Shadow(color: Colors.black,offset: Offset(2,6),blurRadius: 3)],
+                                            fontSize: size.height * 0.02,
                                             fontWeight: FontWeight.w600),
                                       ),
                                       TextSpan(
                                           text: " 168 Places",
                                           style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: size.height * 0.018,
                                               fontWeight: FontWeight.w600)),
                                     ]),
                               ),
@@ -87,154 +94,11 @@ class _CollectionsState extends State<Collections> {
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(
-                        left: size.width * 0.04,
-                      ),
-                      height: size.height * 0.2,
-                      width: size.width * 0.34,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              "https://media.gettyimages.com/photos/enjoying-lunch-with-friends-picture-id1171787426?k=6&m=1171787426&s=612x612&w=0&h=cvdOLV4T-QGC60hZT4p8u7FHPHsUKA12FnswVCL2WB4=",
-                            ),
-                            fit: BoxFit.cover),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: size.height * 0.143),
-                            alignment: Alignment.bottomLeft,
-                            child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: " Raising the Bar \n",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    TextSpan(
-                                        text: " 168 Places",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600)),
-                                  ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(
-                        left: size.width * 0.04,
-                      ),
-                      height: size.height * 0.2,
-                      width: size.width * 0.34,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              "https://media.gettyimages.com/photos/heres-to-tonight-picture-id868935172?k=6&m=868935172&s=612x612&w=0&h=MjBYXm7f229lyNXsWqcSnmlouGWrfsNDYhQCiPJ0V6g=",
-                            ),
-                            fit: BoxFit.cover),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: size.height * 0.143),
-                            alignment: Alignment.bottomLeft,
-                            child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: " Raising the Bar \n",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    TextSpan(
-                                        text: " 168 Places",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600)),
-                                  ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(
-                        left: size.width * 0.04,
-                      ),
-                      height: size.height * 0.2,
-                      width: size.width * 0.34,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
-                            ),
-                            fit: BoxFit.cover),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: size.height * 0.143),
-                            alignment: Alignment.bottomLeft,
-                            child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: " Raising the Bar \n",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    TextSpan(
-                                        text: " 168 Places",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600)),
-                                  ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            )
+          ]),
+        ));
   }
 }

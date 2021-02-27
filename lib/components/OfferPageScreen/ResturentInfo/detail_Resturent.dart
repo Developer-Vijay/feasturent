@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -20,15 +21,14 @@ class DetailResturent extends StatelessWidget {
               flex: 7,
               child: Container(
                 child: Swiper(
-                  itemCount: foodlist.length,
+                  itemCount: imageList.length,
                   layout: SwiperLayout.DEFAULT,
-                  itemBuilder: (BuildContext context, int index) =>
+                  itemBuilder: (BuildContext context, index) =>
                       CachedNetworkImage(
-                    imageUrl: foodlist[index].foodImage,
+                    imageUrl: imageList[index],
                     fit: BoxFit.fill,
                   ),
-                  autoplayDelay: 2000,
-                  autoplay: true,
+                  autoplay: false,
                 ),
               ),
             ),
@@ -47,17 +47,17 @@ class DetailResturent extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
-                                fontSize: size.height * 0.03,
+                                fontSize: size.height * 0.028,
                               ),
                             ),
                           ),
                           Spacer(),
                           Container(
                             margin: EdgeInsets.only(right: 15, top: 10),
-                            height: 40,
-                            width: 40,
+                            height: size.height * 0.06,
+                            width: size.width * 0.09,
                             decoration: BoxDecoration(
-                              color: Colors.lightBlueAccent,
+                              color: Colors.blue[600],
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(10),
                                   bottomRight: Radius.circular(10)),
@@ -66,7 +66,7 @@ class DetailResturent extends StatelessWidget {
                                 child: Text(
                               "4.8",
                               style: TextStyle(
-                                  fontSize: size.height * 0.025,
+                                  fontSize: size.height * 0.017,
                                   color: Colors.white),
                             )),
                           ),
@@ -77,7 +77,7 @@ class DetailResturent extends StatelessWidget {
                           child: Text(
                             "Sweets, North Indian, South Indian",
                             style: TextStyle(
-                                fontSize: size.height * 0.018,
+                                fontSize: size.height * 0.016,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black),
                           )),
@@ -94,16 +94,16 @@ class DetailResturent extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Icon(
-                                    Icons.timer,
-                                    size: size.height * 0.045,
-                                    color: Colors.blue,
+                                    Icons.timer_outlined,
+                                    size: size.height * 0.036,
+                                    color: Colors.grey[600],
                                   ),
                                   SizedBox(
                                     height: 8,
                                   ),
                                   Text(
                                     foodlist[0].timing,
-                                    style: TextStyle(color: Colors.black54),
+                                    style: TextStyle(color: Colors.black54,fontSize:size.height * 0.016 )
                                   )
                                 ],
                               ),
@@ -116,15 +116,15 @@ class DetailResturent extends StatelessWidget {
                                 children: [
                                   Icon(
                                     Icons.location_on,
-                                    size: size.height * 0.045,
-                                    color: Colors.red,
+                                    size: size.height * 0.036,
+                                    color: Colors.grey[700],
                                   ),
                                   SizedBox(
                                     height: 5,
                                   ),
                                   Text(
                                     foodlist[0].distance,
-                                    style: TextStyle(color: Colors.black54),
+                                    style: TextStyle(color: Colors.black54,fontSize:size.height * 0.016 ),
                                   )
                                 ],
                               ),
@@ -137,15 +137,15 @@ class DetailResturent extends StatelessWidget {
                                 children: [
                                   Icon(
                                     Icons.delivery_dining,
-                                    size: size.height * 0.045,
-                                    color: Colors.green,
+                                    size: size.height * 0.036,
+                                    color: Colors.grey[600],
                                   ),
                                   SizedBox(
                                     height: 8,
                                   ),
                                   Text(
                                     foodlist[0].serviceType,
-                                    style: TextStyle(color: Colors.black54),
+                                    style: TextStyle(color: Colors.black54,fontSize:size.height * 0.016),
                                   )
                                 ],
                               ),
