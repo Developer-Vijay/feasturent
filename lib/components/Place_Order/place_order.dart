@@ -1,5 +1,7 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/order_confirm.dart';
@@ -7,6 +9,10 @@ import 'package:feasturent_costomer_app/components/Place_Order/select_address.da
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../constants.dart';
 
 class PlaceOrder extends StatefulWidget {
   @override
@@ -687,6 +693,10 @@ class PlaceOrderCheck extends StatefulWidget {
 }
 
 class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
+  Razorpay _razorpay;
+  String _authorization = '';
+  String _refreshtoken = '';
+
   Future<bool> onPlaceBack() {
     return showDialog(
         context: context,
@@ -715,6 +725,11 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
   @override
   void initState() {
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
     placeTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
       print('Percent Update');
       setState(() {
@@ -740,9 +755,12 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
             print("item not selected  ${add2[i].title}");
           }
         }
-
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+        // API hit will be from here
+        if (paymentMode == "Online Mode") {
+          _checkout();
+        } else if (paymentMode == "Cash On Delivery")
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
       } else {
         setState(() {
           placeValue = placePrecent / 100;
@@ -751,6 +769,104 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     });
 
     super.initState();
+  }
+
+  Future<void> _checkout() async {
+    var options = {
+      'key': 'rzp_test_7iDSklI4oMeTUd',
+      'amount': num.parse(totalPrice.toString()) * 100,
+      'name': 'Adams',
+      'description': 'Tasty',
+      'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'}
+    };
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    Fluttertoast.showToast(
+        msg: "Congrats Payment has been Succesfully Completed");
+ final prefs = await SharedPreferences.getInstance();
+      // _customerUserId = prefs.getInt('userId');
+      _authorization = prefs.getString('sessionToken');
+      _refreshtoken = prefs.getString('refreshToken');
+      print(_authorization);
+      print("AUTH TOKEN #######################################");
+    var responsed = await http.post(APP_ROUTES + 'itemOrder',
+      body: {
+        'menuId': 1,
+        'vendorId': 1,
+        'userId': 1,
+        'price': "300",
+        'discountPrice': "40",
+        'offerId': 1,
+        'paymentMode': "CASH"
+      },
+      headers: {
+            "authorization": _authorization,
+            "refreshtoken": _refreshtoken,
+      });
+
+      print("CODE RUNNING ............");
+      print(responsed.body);
+
+    var responseData = jsonDecode(responsed.body);
+    print("TEST ###############################");
+    print(responseData);
+    print(responsed.statusCode);
+    if (responsed.statusCode == 200) {
+      print("succes");
+      print(responseData);
+      Fluttertoast.showToast(msg: "Message Succesfuuly Sent");
+      setState(() {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+      });
+    } else {
+      print("error");
+      print(responseData);
+      Fluttertoast.showToast(msg: "Message  not Sent");
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CartScreen()));
+    showDialog(
+        context: context,
+        child: new AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          actions: [
+            FlatButton(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          title: new Text(
+            "Payment Failed",
+            style:
+                TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold),
+          ),
+          content: new Text(
+            "Something Went Wrong",
+          ),
+        ));
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
   }
 
   @override
@@ -872,4 +988,10 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       ),
     );
   }
+}
+
+@override
+Widget build(BuildContext context) {
+  // TODO: implement build
+  throw UnimplementedError();
 }

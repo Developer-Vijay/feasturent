@@ -27,6 +27,7 @@ class _AddAdressState extends State<AddAdress> {
   var _landmarkValidate;
 
   bool _isValidate = false;
+  var data;
 
   String selectedCity = "";
 
@@ -65,22 +66,6 @@ class _AddAdressState extends State<AddAdress> {
 
   bool isLoading = false;
   Coordinates coordinates;
-  // Future<void> getCurrentLocation() async {
-  //   showDialog(
-  //       // barrierDismissible: false,
-  //       context: context,
-  //       builder: (_) => new AlertDialog(
-  //               content: Row(
-  //             children: [
-  //               CircularProgressIndicator(),
-  //               Padding(
-  //                 padding: const EdgeInsets.symmetric(horizontal: 12),
-  //                 child: Text("Loading"),
-  //               )
-  //             ],
-  //           )));
-
-  // }
 
   Future<void> getlocation() async {
     try {
@@ -469,14 +454,16 @@ class _AddAdressState extends State<AddAdress> {
                         onSelected: (value) {
                           if (isSelected == true) {
                             Fluttertoast.showToast(msg: "Home is Selected");
+
+                            setState(() {});
                           } else {
                             if (isSelected1 == true) {
                               setState(() {
                                 isSelected1 = false;
                               });
                             } else {
-                              print("selected");
                               setState(() {
+                                data = "Home is Selected";
                                 isSelected1 = true;
                               });
                             }
@@ -595,18 +582,18 @@ class _AddAdressState extends State<AddAdress> {
     }
   }
 
-  getItemandNavigate(BuildContext context) async {
+  getItemandNavigate(BuildContext context) {
     temp.insertAll(0, [
       Addresses(
-        fullnameHolder: _fullnamecontroller.text.toString(),
-        phonenumberHolder: _phonenumbercontroller.text.toString(),
-        pincodeHolder: _pincodecontroller.text.toString(),
-        cityholder: selectedCity.toString(),
-        stateholder: stateSelected.text.toString(),
-        landmarkholder: _landmarkcontroller.text.toString(),
-        roadholder: _roadnamecontroller.text.toString(),
-        housenoholder: _housenocontroller.text.toString(),
-      )
+          fullnameHolder: _fullnamecontroller.text.toString(),
+          phonenumberHolder: _phonenumbercontroller.text.toString(),
+          pincodeHolder: _pincodecontroller.text.toString(),
+          cityholder: selectedCity.toString(),
+          stateholder: stateSelected.text.toString(),
+          landmarkholder: _landmarkcontroller.text.toString(),
+          roadholder: _roadnamecontroller.text.toString(),
+          housenoholder: _housenocontroller.text.toString(),
+          valueholder: data)
     ]);
     Navigator.pop(context);
   }

@@ -1,4 +1,3 @@
-import 'package:feasturent_costomer_app/components/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,6 +17,8 @@ const USER_API = API_BASE_URL + 'users/';
 const COMMON_API = API_BASE_URL + 'common/';
 const ADMIN_API = API_BASE_URL + 'admin/';
 const VENDOR_API = API_BASE_URL + 'vendor/';
+const APP_ROUTES = API_BASE_URL + 'appRoutes/';
+
 
 //Base path
 const S3_BASE_PATH = 'https://festurent.s3.amazonaws.com/';
@@ -114,6 +115,7 @@ class Addresses {
   String stateholder;
   String roadholder;
   String landmarkholder;
+  var valueholder;
 
   Addresses(
       {this.fullnameHolder,
@@ -121,6 +123,7 @@ class Addresses {
       this.cityholder,
       this.landmarkholder,
       this.stateholder,
+      this.valueholder,
       this.roadholder,
       this.housenoholder,
       this.pincodeHolder});

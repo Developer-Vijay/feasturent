@@ -90,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         TextField(
                           obscureText: false,
+                          textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
@@ -107,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                         //Password
                         TextField(
                           obscureText: _obscureText,
+                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(

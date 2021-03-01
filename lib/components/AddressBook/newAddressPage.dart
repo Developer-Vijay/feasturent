@@ -121,7 +121,7 @@ class _AddressListState extends State<AddressList> {
                               Row(
                                 children: [
                                   Text(
-                                    temp[index].fullnameHolder,
+                                    "${temp[index].fullnameHolder}",
                                     // "${widget.fullnameHolder}",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 20),
@@ -131,7 +131,7 @@ class _AddressListState extends State<AddressList> {
                               SizedBox(
                                 height: 6,
                               ),
-                              Text(temp[index].phonenumberHolder,
+                              Text("${temp[index].phonenumberHolder}",
                                   style: textstyle),
                               SizedBox(
                                 height: 3,
@@ -158,9 +158,7 @@ class _AddressListState extends State<AddressList> {
                                 temp[index].housenoholder,
                                 style: textstyle,
                               ),
-                              SizedBox(
-                                height: 3,
-                              ),
+                              Text("${temp[index].valueholder}"),
                               SizedBox(
                                 height: 3,
                               ),
