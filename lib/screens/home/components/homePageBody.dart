@@ -12,18 +12,14 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    refreshList();
-
   }
-   ScrollController _scrollController = ScrollController();
- var refreshKey = GlobalKey<RefreshIndicatorState>();
 
+  ScrollController _scrollController = ScrollController();
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
 
-   
   Future<Null> refreshList() async {
     refreshKey.currentState.show();
     await Future.delayed(Duration(seconds: 2));
@@ -38,11 +34,11 @@ class _HomePageBodyState extends State<HomePageBody> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: RefreshIndicator(
-            key: refreshKey,
-          onRefresh: refreshList,
-          child: ListView(
-            controller: _scrollController,
-      children: [
+      key: refreshKey,
+      onRefresh: refreshList,
+      child: ListView(
+        controller: _scrollController,
+        children: [
           DiscountCard(),
           CategoryList(),
           CategoriesList(),
@@ -74,8 +70,8 @@ class _HomePageBodyState extends State<HomePageBody> {
               ),
             ),
           )
-      ],
-    ),
-        ));
+        ],
+      ),
+    ));
   }
 }

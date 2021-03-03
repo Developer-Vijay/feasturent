@@ -65,22 +65,6 @@ class _AddAdressState extends State<AddAdress> {
 
   bool isLoading = false;
   Coordinates coordinates;
-  // Future<void> getCurrentLocation() async {
-  //   showDialog(
-  //       // barrierDismissible: false,
-  //       context: context,
-  //       builder: (_) => new AlertDialog(
-  //               content: Row(
-  //             children: [
-  //               CircularProgressIndicator(),
-  //               Padding(
-  //                 padding: const EdgeInsets.symmetric(horizontal: 12),
-  //                 child: Text("Loading"),
-  //               )
-  //             ],
-  //           )));
-
-  // }
 
   Future<void> getlocation() async {
     try {
@@ -94,7 +78,6 @@ class _AddAdressState extends State<AddAdress> {
         coordinates = Coordinates(latadd, longadd);
         print(coordinates);
       });
-      print("working");
       try {
         var locate =
             await Geocoder.local.findAddressesFromCoordinates(coordinates);

@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future getSession() async {
     print("hello");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var takeUser = prefs.getString('name');
+    var takeUser = prefs.getString('loginBy');
 
     finalUser = takeUser;
     if (finalUser != null) {
