@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/wishlist.dart';
+import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
@@ -121,6 +122,8 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('MyOrders'),
             dense: true,
             onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MyOrders()));
               // Update the state of the app.
               // ...
             },

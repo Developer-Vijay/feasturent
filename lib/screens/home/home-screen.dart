@@ -206,6 +206,10 @@ class _HomeScreenState extends State<HomeScreen> {
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         print(responseData['data'][0]['profile']);
+        print(responseData);
+        print(_authorization);
+        print(_refreshtoken);
+
         setState(() {
           _loginstatus = 1;
           _customerName = responseData['data'][0]['name'] +
