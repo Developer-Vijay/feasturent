@@ -19,13 +19,6 @@ class _CartScreenState extends State<CartScreen> {
 
   final _textstyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 15);
-  int _counter = 0;
-
-  int product1;
-
-  int counter1 = 1;
-
-  int _index = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -59,23 +52,19 @@ class _CartScreenState extends State<CartScreen> {
                           context,
                           index,
                         ) {
-                          print(add2[index].id);
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
                               onTap: () {
                                 if (add2[index].isSelected == false) {
-                                  print("1");
                                   setState(() {
                                     add2[index].isSelected = true;
                                     countSum = countSum + add2[index].counter;
                                     totalPrice = totalPrice +
                                         (add2[index].foodPrice *
                                             add2[index].counter);
-                                    //     sum = sum + add2[index].counter;
                                   });
                                 } else if (add2[index].isSelected = true) {
-                                  print("2");
                                   setState(() {
                                     add2[index].isSelected = false;
 
@@ -83,18 +72,6 @@ class _CartScreenState extends State<CartScreen> {
                                     totalPrice = totalPrice -
                                         (add2[index].foodPrice *
                                             add2[index].counter);
-
-                                    //     _index--;
-                                    //     product1 = 0;
-
-                                    //     if (totalPrice > 0) {
-                                    //       totalPrice = 0;
-                                    //       sum = 0;
-                                    // }
-
-                                    //     if (sum > 0) {
-                                    //       sum = sum - add2[index].counter;
-                                    //     }
                                   });
                                 }
                               },
@@ -113,7 +90,6 @@ class _CartScreenState extends State<CartScreen> {
                                     ]),
                                 child: Dismissible(
                                   direction: DismissDirection.endToStart,
-                                  // ignore: missing_return
                                   confirmDismiss: (direction) async {
                                     if (direction ==
                                         DismissDirection.endToStart) {
@@ -142,16 +118,50 @@ class _CartScreenState extends State<CartScreen> {
                                                   ),
                                                   onPressed: () {
                                                     // TODO: Delete the item from DB etc..
-                                                    setState(() {
-                                                      insideOfferPage[index]
-                                                          .addedStatus = "Add";
-                                                      sumtotal = sumtotal -
-                                                          (add2[index].counter *
-                                                              add2[index]
-                                                                  .foodPrice);
-                                                      add2.removeAt(index);
-                                                    });
-                                                    Navigator.of(context).pop();
+                                                    if (add2[index]
+                                                            .isSelected ==
+                                                        true) {
+                                                      setState(() {
+                                                        int temp =
+                                                            add2[index].id;
+                                                        insideOfferPage[temp]
+                                                                .addedStatus =
+                                                            "Add";
+                                                        sumtotal = sumtotal -
+                                                            (add2[index]
+                                                                    .counter *
+                                                                add2[index]
+                                                                    .foodPrice);
+                                                        countSum = countSum -
+                                                            add2[index].counter;
+                                                        totalPrice = totalPrice -
+                                                            (add2[index]
+                                                                    .counter *
+                                                                add2[index]
+                                                                    .foodPrice);
+
+                                                        add2.removeAt(index);
+                                                      });
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    } else {
+                                                      setState(() {
+                                                        int temp =
+                                                            add2[index].id;
+                                                        insideOfferPage[temp]
+                                                                .addedStatus =
+                                                            "Add";
+                                                        sumtotal = sumtotal -
+                                                            (add2[index]
+                                                                    .counter *
+                                                                add2[index]
+                                                                    .foodPrice);
+
+                                                        add2.removeAt(index);
+                                                      });
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    }
                                                   },
                                                 ),
                                               ],
@@ -160,9 +170,7 @@ class _CartScreenState extends State<CartScreen> {
                                       return res;
                                     }
                                   },
-
                                   key: ValueKey(index),
-
                                   background: Container(
                                     color: Colors.red,
                                     padding: EdgeInsets.only(right: 10),
@@ -172,7 +180,6 @@ class _CartScreenState extends State<CartScreen> {
                                       color: Colors.white,
                                     ),
                                   ),
-
                                   child: Row(
                                     children: [
                                       Column(
@@ -393,15 +400,26 @@ class _CartScreenState extends State<CartScreen> {
                                                                   onPressed:
                                                                       () {
                                                                     // TODO: Delete the item from DB etc..
-
-                                                                    insideOfferPage[
-                                                                            index]
-                                                                        .addedStatus = "Add";
-                                                                    sumtotal = sumtotal -
-                                                                        (add2[index].counter *
-                                                                            add2[index].foodPrice);
-                                                                    add2.removeAt(
-                                                                        index);
+                                                                    setState(
+                                                                        () {
+                                                                      int temp =
+                                                                          add2[index]
+                                                                              .id;
+                                                                      insideOfferPage[temp]
+                                                                              .addedStatus =
+                                                                          "Add";
+                                                                      sumtotal =
+                                                                          sumtotal -
+                                                                              add2[index].foodPrice;
+                                                                      countSum =
+                                                                          countSum -
+                                                                              add2[index].counter;
+                                                                      totalPrice =
+                                                                          totalPrice -
+                                                                              add2[index].foodPrice;
+                                                                      add2.removeAt(
+                                                                          index);
+                                                                    });
 
                                                                     Navigator.of(
                                                                             context)
@@ -460,12 +478,16 @@ class _CartScreenState extends State<CartScreen> {
                                                                     // TODO: Delete the item from DB etc..
                                                                     setState(
                                                                         () {
-                                                                      insideOfferPage[index]
+                                                                      int temp =
+                                                                          add2[index]
+                                                                              .id;
+                                                                      insideOfferPage[temp]
                                                                               .addedStatus =
                                                                           "Add";
                                                                       sumtotal =
                                                                           sumtotal -
-                                                                              (add2[index].counter * add2[index].foodPrice);
+                                                                              add2[index].foodPrice;
+
                                                                       add2.removeAt(
                                                                           index);
                                                                     });

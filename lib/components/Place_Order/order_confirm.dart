@@ -14,7 +14,6 @@ class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
   @override
   void initState() {
     circluatimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      print('Percent Update');
       setState(() {
         circularPrecent++;
       });

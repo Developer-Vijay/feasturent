@@ -56,6 +56,7 @@ class ProfileListItem extends StatelessWidget {
                           prefs.remove('refreshToken');
                           prefs.remove('userNumber');
                           prefs.remove('userProfile');
+                          prefs.remove('customerName');
                           prefs.remove('userId');
                           prefs.remove('loginId');
                           prefs.remove('userEmail');
