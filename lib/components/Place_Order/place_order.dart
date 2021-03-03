@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
+import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
@@ -787,80 +789,90 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    Fluttertoast.showToast(
-        msg: "Congrats Payment has been Succesfully Completed");
- final prefs = await SharedPreferences.getInstance();
-      // _customerUserId = prefs.getInt('userId');
-      _authorization = prefs.getString('sessionToken');
-      _refreshtoken = prefs.getString('refreshToken');
-      print(_authorization);
-      print("AUTH TOKEN #######################################");
-    var responsed = await http.post(APP_ROUTES + 'itemOrder',
-      body: {
-        'menuId': 1,
-        'vendorId': 1,
-        'userId': 1,
-        'price': "300",
-        'discountPrice': "40",
-        'offerId': 1,
-        'paymentMode': "CASH"
-      },
-      headers: {
-            "authorization": _authorization,
-            "refreshtoken": _refreshtoken,
-      });
+    Fluttertoast.showToast(msg: "Congrats payment Succesffully Paid");
+    final prefs = await SharedPreferences.getInstance();
+    _authorization = prefs.getString('sessionToken');
+    _refreshtoken = prefs.getString('refreshToken');
+    print(_authorization);
+    var response = await http.post(APP_ROUTES + 'itemOrder', body: {
+      "menuId": "1",
+      "vendorId": "1",
+      "userId": "1",
+      "price": "300",
+      "discountPrice": "40",
+      "offerId": "1",
+      "paymentMode": "CASH"
+    }, headers: {
+      "authorization": _authorization,
+      "refreshtoken": _refreshtoken
+    });
 
-      print("CODE RUNNING ............");
-      print(responsed.body);
+    var responseData = jsonDecode(response.body);
 
-    var responseData = jsonDecode(responsed.body);
-    print("TEST ###############################");
     print(responseData);
-    print(responsed.statusCode);
-    if (responsed.statusCode == 200) {
+    print(response.statusCode);
+    if (response.statusCode == 200) {
       print("succes");
       print(responseData);
-      Fluttertoast.showToast(msg: "Message Succesfuuly Sent");
       setState(() {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        showDialog(
+            context: context,
+            child: new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
+              actions: [
+                FlatButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+              title: new Text(
+                "Payment Successfull",
+                style: TextStyle(
+                    color: Colors.green[700], fontWeight: FontWeight.w600),
+              ),
+              content: new Text(
+                "Order has been  Placed Successfully",
+              ),
+            ));
+        // add2.clear();
       });
     } else {
       print("error");
       print(responseData);
-      Fluttertoast.showToast(msg: "Message  not Sent");
+      Fluttertoast.showToast(msg: "Something went Wrong");
     }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CartScreen()));
-    showDialog(
-        context: context,
-        child: new AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          actions: [
-            FlatButton(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-          title: new Text(
-            "Payment Failed",
-            style:
-                TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold),
-          ),
-          content: new Text(
-            "Something Went Wrong",
-          ),
-        ));
+    setState(() {
+      Navigator.pop(context, PlaceOrder());
+      showDialog(
+          context: context,
+          child: new AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            title: new Text(
+              "Payment Failed",
+              style: TextStyle(
+                  color: Colors.red[700], fontWeight: FontWeight.bold),
+            ),
+            content: new Text(
+              "Something Went Wrong",
+            ),
+          ));
+    });
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     Fluttertoast.showToast(
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
   }
 
   @override
