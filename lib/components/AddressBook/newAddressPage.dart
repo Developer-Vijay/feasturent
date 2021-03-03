@@ -121,8 +121,7 @@ class _AddressListState extends State<AddressList> {
                               Row(
                                 children: [
                                   Text(
-                                    "${temp[index].fullnameHolder}",
-                                    // "${widget.fullnameHolder}",
+                                    temp[index].fullnameHolder,
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 20),
                                   ),

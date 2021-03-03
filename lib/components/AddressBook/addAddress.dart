@@ -79,7 +79,6 @@ class _AddAdressState extends State<AddAdress> {
         coordinates = Coordinates(latadd, longadd);
         print(coordinates);
       });
-      print("working");
       try {
         var locate =
             await Geocoder.local.findAddressesFromCoordinates(coordinates);

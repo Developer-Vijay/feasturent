@@ -14,15 +14,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class OfferListPage extends StatefulWidget {
+  final restaurantDa;
+  const OfferListPage({Key key, this.restaurantDa}) : super(key: key);
+
   @override
   _OfferListPageState createState() => _OfferListPageState();
 }
 
 class _OfferListPageState extends State<OfferListPage> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      restaurantDataCopy = widget.restaurantDa;
+    });
+  }
+
   int _index1 = 0;
   int isSelect = 0;
-  var tempIndex;
-
+  var restaurantDataCopy;
   final _containerDecoration = BoxDecoration(
     boxShadow: [
       BoxShadow(
@@ -36,8 +46,6 @@ class _OfferListPageState extends State<OfferListPage> {
   );
   @override
   Widget build(BuildContext context) {
-    final ListofFood resturentIndex = ModalRoute.of(context).settings.arguments;
-
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -118,22 +126,23 @@ class _OfferListPageState extends State<OfferListPage> {
                   ),
                   onPressed: () {
                     setState(() {
-                      tempIndex = resturentIndex.index0;
+                      // tempIndex = resturentIndex.index0;
                     });
 
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ResturentDetail(),
-                          settings: RouteSettings(
-                            arguments: foodlist[tempIndex],
-                          ),
+                          // settings: RouteSettings(
+                          //   arguments: foodlist[tempIndex],
+                          // ),
                         ));
                   },
                 )
               ],
               title: Text(
-                resturentIndex.title,
+                restaurantDataCopy['name'],
+                // resturentIndex.title,
                 style: TextStyle(
                     color: kTextColor,
                     fontWeight: FontWeight.bold,
@@ -160,7 +169,7 @@ class _OfferListPageState extends State<OfferListPage> {
                       margin: EdgeInsets.only(
                           top: size.height * 0.01, left: size.width * 0.03),
                       child: Text(
-                        "Indian",
+                        "Restaurant Category",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: size.height * 0.02,
@@ -169,12 +178,14 @@ class _OfferListPageState extends State<OfferListPage> {
                   Row(
                     children: [
                       Container(
+                          width: size.height * 0.25,
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(
                               top: size.height * 0.01,
                               left: size.width * 0.033),
                           child: Text(
-                            "Burari | 17km",
+                            restaurantDataCopy['Address']['address'],
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600),
@@ -185,7 +196,7 @@ class _OfferListPageState extends State<OfferListPage> {
                         margin: EdgeInsets.only(
                             top: size.height * 0.01, right: size.width * 0.033),
                         child: Text(
-                          "Mobile No- +91 9818069709",
+                          "Mobile No- +91 ${restaurantDataCopy['contact']}",
                           style: TextStyle(
                               fontSize: size.height * 0.016,
                               color: Colors.black,
@@ -374,9 +385,9 @@ class _OfferListPageState extends State<OfferListPage> {
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: insideOfferPage.length,
+                    itemCount: restaurantDataCopy['Menus'].length,
                     itemBuilder: (context, index) {
-                      print(insideOfferPage[index].discountText);
+                      print(restaurantDataCopy['Menus'].length);
                       return InkWell(
                         onTap: () {
                           Navigator.push(
@@ -516,7 +527,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                             child: Row(
                                               children: [
                                                 Text(
-                                                  insideOfferPage[index].title,
+                                                  restaurantDataCopy['Menus']
+                                                      [index]['title'],
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -526,25 +538,83 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 ),
                                                 Spacer(),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 12),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        insideOfferPage[index]
-                                                            .vegsymbol,
-                                                    height: size.height * 0.016,
-                                                  ),
-                                                )
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 12),
+                                                    child: restaurantDataCopy[
+                                                                        'Menus']
+                                                                    [index]
+                                                                ['isNonVeg'] ==
+                                                            false
+                                                        ? restaurantDataCopy[
+                                                                            'Menus']
+                                                                        [index]
+                                                                    ['isEgg'] ==
+                                                                false
+                                                            ? Container(
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
+                                                                  height:
+                                                                      size.height *
+                                                                          0.016,
+                                                                ),
+                                                              )
+                                                            : Container(
+                                                                child:
+                                                                    Image.asset(
+                                                                "assets/images/eggeterian.png",
+                                                                height:
+                                                                    size.height *
+                                                                        0.016,
+                                                              ))
+                                                        : CachedNetworkImage(
+                                                            imageUrl:
+                                                                'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
+                                                            height:
+                                                                size.height *
+                                                                    0.016,
+                                                          ))
                                               ],
                                             ),
                                           ),
                                           SizedBox(height: size.height * 0.005),
-                                          Text(
-                                            insideOfferPage[index].subtitle,
-                                            style: TextStyle(
-                                                fontSize: size.height * 0.014,
-                                                fontWeight: FontWeight.bold),
+                                          Container(
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  child: restaurantDataCopy[
+                                                                          'Menus']
+                                                                      [index]
+                                                                  ['Category']
+                                                              ['iconImage'] ==
+                                                          "null"
+                                                      ? CachedNetworkImage(
+                                                          imageUrl:
+                                                              insideOfferPage[
+                                                                      index]
+                                                                  .discountImage,
+                                                          height: size.height *
+                                                              0.02,
+                                                        )
+                                                      : SizedBox(),
+                                                ),
+                                                SizedBox(
+                                                  width: size.width * 0.006,
+                                                ),
+                                                Text(
+                                                  restaurantDataCopy['Menus']
+                                                          [index]['Category']
+                                                      ['name'],
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          size.height * 0.014,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           SizedBox(
                                             height: size.height * 0.002,
@@ -570,7 +640,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   margin: EdgeInsets.only(
                                                       right: size.width * 0.1),
                                                   child: Text(
-                                                    "₹${insideOfferPage[index].foodPrice}",
+                                                    "₹${restaurantDataCopy['Menus'][index]['totalPrice']}",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.height * 0.018,
@@ -586,27 +656,67 @@ class _OfferListPageState extends State<OfferListPage> {
                                             height: size.height * 0.003,
                                           ),
                                           Container(
-                                            child: Row(
-                                              children: [
-                                                CachedNetworkImage(
-                                                  imageUrl:
-                                                      insideOfferPage[index]
-                                                          .discountImage,
-                                                  height: size.height * 0.02,
-                                                ),
-                                                SizedBox(
-                                                  width: size.width * 0.006,
-                                                ),
-                                                Text(
-                                                  insideOfferPage[index]
-                                                      .discountText,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          size.height * 0.015,
-                                                      color: kTextColor),
-                                                ),
-                                              ],
-                                            ),
+                                            child: Container(
+                                                child: restaurantDataCopy[
+                                                                        'Menus']
+                                                                    [index]
+                                                                ['MenuOffers']
+                                                            .length !=
+                                                        0
+                                                    ? Row(
+                                                        children: [
+                                                          CachedNetworkImage(
+                                                            imageUrl:
+                                                                insideOfferPage[
+                                                                        index]
+                                                                    .discountImage,
+                                                            height:
+                                                                size.height *
+                                                                    0.02,
+                                                          ),
+                                                          SizedBox(
+                                                            width: size.width *
+                                                                0.006,
+                                                          ),
+                                                          Container(
+                                                            child: restaurantDataCopy['Menus'][index]
+                                                                            [
+                                                                            'MenuOffers']
+                                                                        .length >=
+                                                                    2
+                                                                ? Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}, ",
+                                                                        style: TextStyle(
+                                                                            fontSize: size.height *
+                                                                                0.015,
+                                                                            color:
+                                                                                kTextColor),
+                                                                      ),
+                                                                      Text(
+                                                                        "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['offerId']}",
+                                                                        style: TextStyle(
+                                                                            fontSize: size.height *
+                                                                                0.015,
+                                                                            color:
+                                                                                kTextColor),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : Text(
+                                                                    "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.015,
+                                                                        color:
+                                                                            kTextColor),
+                                                                  ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : SizedBox()),
                                           ),
                                         ],
                                       ),

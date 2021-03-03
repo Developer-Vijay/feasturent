@@ -14,6 +14,8 @@ double placeValue = 0.0;
 double placePrecent = 0.0;
 double circluarValue = 0.0;
 double circularPrecent = 0.0;
+double latitude;
+double longitude;
 
 class ListofFood {
   String timing;

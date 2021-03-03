@@ -17,7 +17,7 @@ import 'package:feasturent_costomer_app/components/appDrawer.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'components/searchBarFunction.dart';
-
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 
@@ -32,14 +32,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _loginstatus = 0;
   int _customerUserId = 0;
-  String _customerName = '';
-  String _customerProfile = '';
-  String _customerEmail = '';
+  String _customerName;
+  String _customerProfile;
+  String _customerEmail;
   String _authorization = '';
   String _refreshtoken = '';
-  double add1;
-  double add2;
 
   Future<bool> _onbackpressed() {
     return showDialog(
@@ -112,11 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
       final geopostion = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       setState(() {
-        add1 = geopostion.latitude;
-        add2 = geopostion.longitude;
-        print(add1);
-        print(add2);
-        coordinates = Coordinates(add1, add2);
+        latitude = geopostion.latitude;
+        longitude = geopostion.longitude;
+
+        coordinates = Coordinates(latitude, longitude);
         print(coordinates);
       });
 
@@ -197,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _customerUserId = prefs.getInt('userId');
       _authorization = prefs.getString('sessionToken');
       _refreshtoken = prefs.getString('refreshToken');
+
       var response = await http.get(
           USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),
           headers: {
@@ -212,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print(_refreshtoken);
 
         setState(() {
+          _loginstatus = 1;
           _customerName = responseData['data'][0]['name'] +
               ' ' +
               responseData['data'][0]['lastName'];
@@ -219,7 +219,13 @@ class _HomeScreenState extends State<HomeScreen> {
           _customerProfile = responseData['data'][0]['profile'];
         });
       } else {
-        print('ERROR');
+        print('User not Login');
+        setState(() {
+          _loginstatus = 0;
+          _customerName = '';
+          _customerEmail = '';
+          _customerProfile = '';
+        });
       }
     } catch (error) {
       print(error);
@@ -228,8 +234,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildChangeTextApp() {
     if (_page == 0) {
-      return  Image.asset("assets/images/feasturent_app_logo.png",);
-      
+      return Image.asset(
+        "assets/images/feasturent_app_logo.png",
+      );
     } else if (_page == 1) {
       return Text(
         "Offers",
@@ -421,6 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           key: _scaffoldKey,
           drawer: AppDrawer(
+              cStatus: _loginstatus,
               cName: _customerName,
               cProfile: _customerProfile,
               cEmail: _customerEmail),

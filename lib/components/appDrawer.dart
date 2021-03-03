@@ -1,16 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/wishlist.dart';
-import 'package:feasturent_costomer_app/components/Filter/sortAndFilter.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatefulWidget {
+  final int cStatus;
   final String cName;
   final String cProfile;
   final String cEmail;
-  const AppDrawer({Key key, this.cName, this.cProfile, this.cEmail})
+  const AppDrawer(
+      {Key key, this.cStatus, this.cName, this.cProfile, this.cEmail})
       : super(key: key);
 
   @override
@@ -19,6 +22,74 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   bool isenabled = false;
+  loginCheckForData() {
+    if (widget.cStatus == 1) {
+      return Container(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 8),
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Color(0xffF8F9FE),
+                child: ClipOval(
+                    child: widget.cProfile == null
+                        ? Image.asset("assets/images/loginuser.png")
+                        : CachedNetworkImage(
+                            imageUrl: widget.cProfile,
+                            fit: BoxFit.cover,
+                          )),
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.03,
+            ),
+            Container(
+              padding: EdgeInsets.only(bottom: 2),
+              child: Column(
+                children: [
+                  Text(
+                    widget.cName,
+                    style: TextStyle(fontSize: 0, color: Colors.white),
+                  ),
+                  Text(widget.cEmail != null ? widget.cEmail : ' ',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.02,
+                          color: Colors.white)),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        child: Column(
+          children: [
+            Container(
+                padding: EdgeInsets.all(15),
+                height: MediaQuery.of(context).size.height * 0.125,
+                child: Image.asset("assets/images/feasturent_app_logo.png")),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.03,
+            ),
+            Container(
+                padding: EdgeInsets.only(bottom: 2),
+                child: FlatButton(
+                  child: Text("Login",
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.03,
+                          color: Colors.white)),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  },
+                ))
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,47 +103,7 @@ class _AppDrawerState extends State<AppDrawer> {
               decoration: BoxDecoration(
                 color: Color(0xFF3498E5),
               ),
-              child: Container(
-                margin: EdgeInsets.only(),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 0,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(0),
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Color(0xffF8F9FE),
-                        child: CircleAvatar(
-                          radius: 48,
-                          backgroundImage: widget.cProfile != null
-                              ? NetworkImage(widget.cProfile)
-                              : NetworkImage(
-                                  'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/batman_hero_avatar_comics-512.png'),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(bottom: 2),
-                      child: Column(
-                        children: [
-                          Text(
-                            widget.cName,
-                            style: TextStyle(fontSize: 0, color: Colors.white),
-                          ),
-                          Text(widget.cEmail != null ? widget.cEmail : '',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white)),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )),
+              child: loginCheckForData()),
           SizedBox(
             height: 10,
           ),

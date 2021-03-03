@@ -19,7 +19,6 @@ const ADMIN_API = API_BASE_URL + 'admin/';
 const VENDOR_API = API_BASE_URL + 'vendor/';
 const APP_ROUTES = API_BASE_URL + 'appRoutes/';
 
-
 //Base path
 const S3_BASE_PATH = 'https://festurent.s3.amazonaws.com/';
 
