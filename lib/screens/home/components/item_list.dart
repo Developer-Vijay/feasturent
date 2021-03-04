@@ -25,7 +25,6 @@ class _CategoriesListState extends State<CategoriesList> {
     var result =
         await http.get(ADMIN_API + 'category?key=STATUS&id=2&status=1');
     data = json.decode(result.body)['data'];
-    print(data);
     return data;
   }
 
@@ -119,7 +118,7 @@ class _CategoriesListState extends State<CategoriesList> {
                                                 height: size.height * 0.2,
                                               )
                                             : Image.asset(
-                                                "assets/images/loginuser.png",
+                                                "assets/images/chineseplatter.png",
                                                 fit: BoxFit.cover,
                                                 width: size.width * 0.2,
                                                 height: size.height * 0.2,

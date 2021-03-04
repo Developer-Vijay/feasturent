@@ -82,8 +82,7 @@ class _MyOrdersState extends State<MyOrders> {
               future: fetchOrders(),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasData) {
-                  print(snapshot.data);
-                  print("HEY");
+                
                   return ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -229,7 +228,6 @@ class _MyOrdersState extends State<MyOrders> {
                     child: Text("Error"),
                   ));
                 } else {
-                  print("No");
 
                   return Container(
                     margin: EdgeInsets.only(left: 18),

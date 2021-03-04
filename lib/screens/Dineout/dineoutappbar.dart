@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../constants.dart';
 
 class DineoutHomeAppBar1 extends StatefulWidget {
@@ -24,7 +23,6 @@ class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
           leading: IconButton(
               icon: SvgPicture.asset("assets/icons/menu.svg"),
               onPressed: () {
-                print("Test");
               }),
           title: RichText(
             text: TextSpan(

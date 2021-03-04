@@ -6,6 +6,7 @@ import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDrawer extends StatefulWidget {
   final int cStatus;
@@ -67,14 +68,14 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           children: [
             Container(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(8),
                 height: MediaQuery.of(context).size.height * 0.125,
                 child: Image.asset("assets/images/feasturent_app_logo.png")),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.03,
+              height: MediaQuery.of(context).size.height * 0.01,
             ),
             Container(
-                padding: EdgeInsets.only(bottom: 2),
+                padding: EdgeInsets.only(bottom: 0),
                 child: FlatButton(
                   child: Text("Login",
                       style: TextStyle(
@@ -213,7 +214,47 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.logout),
             title: Text('Logout'),
             dense: true,
-            onTap: () {
+            onTap: () async {
+              return showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: Text("Do you really want to logout"),
+                        actions: [
+                          FlatButton(
+                            child: Text("Yes"),
+                            onPressed: () async {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.remove(
+                                'name',
+                              );
+                              prefs.remove('sessionToken');
+                              prefs.remove('refreshToken');
+                              prefs.remove('userNumber');
+                              prefs.remove('userProfile');
+                              prefs.remove('customerName');
+                              prefs.remove('userId');
+                              prefs.remove('loginId');
+                              prefs.remove('userEmail');
+                              prefs.remove("loginBy");
+
+                              prefs.setBool("_isAuthenticate", false);
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ));
+
               // Update the state of the app.
               // ...
             },

@@ -5,6 +5,7 @@ import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpas
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,6 +48,7 @@ class ProfileListItem extends StatelessWidget {
                       FlatButton(
                         child: Text("Yes"),
                         onPressed: () async {
+                          Navigator.pop(context);
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           prefs.remove(

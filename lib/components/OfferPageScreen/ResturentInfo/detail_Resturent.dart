@@ -3,7 +3,6 @@ import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-
 import '../foodlistclass.dart';
 
 class DetailResturent extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +20,6 @@ class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
         circularPrecent = 0;
         circluarValue = 1;
         circluatimer.cancel();
-        print("order accepted");
       } else {
         setState(() {
           circluarValue = circularPrecent / 100;

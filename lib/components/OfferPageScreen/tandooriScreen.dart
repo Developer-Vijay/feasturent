@@ -14,7 +14,7 @@ class _TandooriPageState extends State<TandooriPage> {
   int _index1 = 0;
   @override
   Widget build(BuildContext context) {
-     final MenuList menuIndex = ModalRoute.of(context).settings.arguments;
+    final MenuList menuIndex = ModalRoute.of(context).settings.arguments;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +41,6 @@ class _TandooriPageState extends State<TandooriPage> {
           physics: NeverScrollableScrollPhysics(),
           itemCount: tandorilist.length,
           itemBuilder: (context, index) {
-            print(tandorilist[index].discountText);
             return InkWell(
               onTap: () {
                 Navigator.push(context,
@@ -96,19 +95,11 @@ class _TandooriPageState extends State<TandooriPage> {
                                     child: Container(
                                       child: MaterialButton(
                                         onPressed: () {
-                                          print(tandorilist[index].index0);
-
                                           setState(() {
                                             _index1 = tandorilist[index].index0;
                                           });
-                                          print(_index1);
 
                                           getItemandNavigateToCart(_index1);
-
-                                          // showModalBottomSheet(
-                                          //     context: context,
-                                          //     builder: (context) =>
-                                          //         Sheet());
                                         },
                                         color: Colors.white,
                                         minWidth: size.width * 0.16,
@@ -225,8 +216,6 @@ class _TandooriPageState extends State<TandooriPage> {
   }
 
   getItemandNavigateToCart(_index1) async {
-    // print(index1);
-    print("add item");
     add2.add(addto(
         isSelected: false,
         counter: 0,

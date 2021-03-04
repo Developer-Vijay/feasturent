@@ -2,7 +2,6 @@ import 'package:feasturent_costomer_app/screens/Dineout/dineoutSlideList.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutSweeper.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutcollection.dart';
 import 'package:flutter/material.dart';
-
 import 'dineoutPopular.dart';
 
 class DineoutHomePage extends StatefulWidget {

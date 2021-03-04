@@ -1,110 +1,36 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/insideofferpage.dart';
-import 'package:feasturent_costomer_app/screens/home/components/view_all_restaurant.dart';
 import 'package:flutter/material.dart';
-import '../../../constants.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class AllResturent extends StatefulWidget {
-  const AllResturent({
-    Key key,
-  }) : super(key: key);
+import '../../../constants.dart';
+
+class ViewallRestaurant extends StatefulWidget {
+  final restData;
+  const ViewallRestaurant({Key key , this.restData}): super(key: key);
   @override
-  _AllResturentState createState() => _AllResturentState();
+  _ViewallRestaurantState createState() => _ViewallRestaurantState();
 }
 
-class _AllResturentState extends State<AllResturent> {
-  var listlength = 0;
-  String _authorization = '';
-  String _refreshtoken = '';
-  void initState() {
+class _ViewallRestaurantState extends State<ViewallRestaurant> {
+  @override
+  void initState(){
     super.initState();
-  }
-
-  var restaurantData;
-  Future<List<dynamic>> fetchAllRestaurant() async {
-    final prefs = await SharedPreferences.getInstance();
-    _authorization = prefs.getString('sessionToken');
-    _refreshtoken = prefs.getString('refreshToken');
-    var result = await http.get(APP_ROUTES + 'getRestaurantInfos' + '?key=ALL',
-        headers: {
-          "authorization": _authorization,
-          "Content-Type": "application/json"
+    setState(() {
+          restaurantData=widget.restData;
         });
-    print(_authorization);
-    restaurantData = json.decode(result.body)['data'];
-    check();
-
-    return restaurantData;
   }
-
-  check() {
-    if (restaurantData.length >= 10) {
-      listlength = 10;
-    } else if (restaurantData.length <= 10) {
-      listlength = restaurantData.length;
-    }
-  }
-
+  var restaurantData;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(left: size.width * 0.05),
-                child: Text(
-                  "All Restaurant",
-                  style: TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
-                )),
-                Spacer(),
-                 Container(
-                child: FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ViewallRestaurant(restData:restaurantData ),
-                          ));
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 15),
-                          child: Text(
-                            "View All",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: kPrimaryColor),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_right_rounded,
-                          color: kSecondaryTextColor,
-                        ),
-                      ],
-                    )))
-          ],
-        ),
-        SizedBox(
-          height: size.height * 0.017,
-        ),
-        FutureBuilder<List<dynamic>>(
-          future: fetchAllRestaurant(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+    Size size =MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(title: Text("All Restaurant"),),
+      body:ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: listlength,
+                itemCount: restaurantData.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
@@ -112,7 +38,7 @@ class _AllResturentState extends State<AllResturent> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => OfferListPage(
-                                  restaurantDa: snapshot.data[index])));
+                                  restaurantDa: restaurantData[index])));
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 14),
@@ -171,7 +97,7 @@ class _AllResturentState extends State<AllResturent> {
                                         child: Row(
                                           children: [
                                             Text(
-                                              snapshot.data[index]['name'],
+                                              restaurantData[index]['name'],
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
@@ -243,15 +169,7 @@ class _AllResturentState extends State<AllResturent> {
                     ),
                   );
                 },
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        )
-      ],
-    );
+              ));
+    
   }
 }

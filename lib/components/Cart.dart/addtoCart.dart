@@ -35,7 +35,9 @@ class _CartScreenState extends State<CartScreen> {
             icon: Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, () {
+                setState(() {});
+              });
             },
           ),
         ),
@@ -90,6 +92,7 @@ class _CartScreenState extends State<CartScreen> {
                                     ]),
                                 child: Dismissible(
                                   direction: DismissDirection.endToStart,
+                                  // ignore: missing_return
                                   confirmDismiss: (direction) async {
                                     if (direction ==
                                         DismissDirection.endToStart) {
@@ -142,8 +145,10 @@ class _CartScreenState extends State<CartScreen> {
 
                                                         add2.removeAt(index);
                                                       });
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                      Navigator.pop(context,
+                                                          () {
+                                                        setState(() {});
+                                                      });
                                                     } else {
                                                       setState(() {
                                                         int temp =
@@ -159,8 +164,10 @@ class _CartScreenState extends State<CartScreen> {
 
                                                         add2.removeAt(index);
                                                       });
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                      Navigator.pop(context,
+                                                          () {
+                                                        setState(() {});
+                                                      });
                                                     }
                                                   },
                                                 ),
@@ -364,7 +371,6 @@ class _CartScreenState extends State<CartScreen> {
                                                                     .foodPrice;
                                                       });
 
-                                                      print("Decrease");
                                                     } else if (add2[index]
                                                             .counter ==
                                                         1) {
@@ -421,9 +427,12 @@ class _CartScreenState extends State<CartScreen> {
                                                                           index);
                                                                     });
 
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
+                                                                    Navigator.pop(
+                                                                        context,
+                                                                        () {
+                                                                      setState(
+                                                                          () {});
+                                                                    });
                                                                   },
                                                                 ),
                                                               ],
@@ -440,7 +449,6 @@ class _CartScreenState extends State<CartScreen> {
                                                                 .foodPrice;
                                                       });
 
-                                                      print("Decrease");
                                                     } else if (add2[index]
                                                             .counter ==
                                                         1) {
@@ -492,9 +500,12 @@ class _CartScreenState extends State<CartScreen> {
                                                                           index);
                                                                     });
 
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
+                                                                    Navigator.pop(
+                                                                        context,
+                                                                        () {
+                                                                      setState(
+                                                                          () {});
+                                                                    });
                                                                   },
                                                                 ),
                                                               ],

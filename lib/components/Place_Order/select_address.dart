@@ -1,6 +1,5 @@
 import 'package:feasturent_costomer_app/components/AddressBook/addAddress.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/Place_Order/place_order.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,6 @@ class _SelectAddressState extends State<SelectAddress> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      // padding: EdgeInsets.only(top: 7, left: 7, right: 7),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -37,7 +35,9 @@ class _SelectAddressState extends State<SelectAddress> {
                 Spacer(),
                 InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, () {
+                      setState(() {});
+                    });
                   },
                   child: Icon(
                     Icons.clear,
@@ -102,120 +102,147 @@ class _SelectAddressState extends State<SelectAddress> {
                 itemCount: temp.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {
-                      setState(() {
-                        userNameWithNumber =
-                            "${temp[index].fullnameHolder}, ${temp[index].phonenumberHolder}";
+                      onTap: () {
+                        setState(() {
+                          userNameWithNumber =
+                              "${temp[index].fullnameHolder}, ${temp[index].phonenumberHolder}";
 
-                        addAddress =
-                            "${temp[index].housenoholder},${temp[index].roadholder},${temp[index].stateholder}";
-                      });
-                      Navigator.pop(
-                        context,
-                        MaterialPageRoute(builder: (context) => PlaceOrder()),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(blurRadius: 2, color: Colors.grey[500])
-                          ]),
-                      width: size.width,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Address",
-                                  style: TextStyle(color: Colors.blueGrey),
-                                ),
-                                Spacer(),
-
-                                // ignore: non_constant_identifier_names
-                                PopupMenuButton(
-                                  onSelected: (value) {
-                                    temp.remove(temp[index]);
-                                  },
-                                  itemBuilder: (BuildContext) => [
-                                    PopupMenuItem(
-                                      child: Text("Edit"),
-                                      enabled: true,
-                                    ),
-                                    PopupMenuItem(
-                                      child: Text("Remove"),
-                                      enabled: true,
-                                      value: temp,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  temp[index].fullnameHolder,
-                                  // "${widget.fullnameHolder}",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 6,
-                            ),
-                            Text(temp[index].phonenumberHolder,
-                                style: textstyle),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              temp[index].pincodeHolder,
-                              style: textstyle,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              temp[index].cityholder,
-                              style: textstyle,
-                            ),
-                            Text(
-                              temp[index].stateholder,
-                              style: textstyle,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              temp[index].housenoholder,
-                              style: textstyle,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              temp[index].roadholder,
-                              style: textstyle,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              temp[index].landmarkholder,
-                              style: textstyle,
-                            )
-                          ],
+                          addAddress =
+                              "${temp[index].housenoholder},${temp[index].roadholder},${temp[index].stateholder}";
+                        });
+                        Navigator.pop(context, () {
+                          setState(() {});
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(blurRadius: 2, color: Colors.grey[500])
+                            ]),
+                        width: size.width,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Address",
+                                    style: TextStyle(color: Colors.blueGrey),
+                                  ),
+                                  Spacer(),
+                                  PopupMenuButton(
+                                    onSelected: (value) {
+                                      if (value == 0) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => AddAdress(
+                                                    fullName: temp[index]
+                                                        .fullnameHolder,
+                                                    phoneNumber: temp[index]
+                                                        .phonenumberHolder,
+                                                    pincode: temp[index]
+                                                        .pincodeHolder,
+                                                    houseno: temp[index]
+                                                        .housenoholder,
+                                                    roadname:
+                                                        temp[index].roadholder,
+                                                    city:
+                                                        temp[index].cityholder,
+                                                    state:
+                                                        temp[index].stateholder,
+                                                    landmark: temp[index]
+                                                        .landmarkholder,
+                                                    indexnumber: temp.indexOf(
+                                                        temp[index]))));
+                                      } else if (value == 1) {
+                                        if (userNameWithNumber ==
+                                            "${temp[index].fullnameHolder}, ${temp[index].phonenumberHolder}") {
+                                          userNameWithNumber =
+                                              "Select Delivery Address";
+                                          addAddress = null;
+                                        }
+                                        setState(() {
+                                          temp.remove(temp[index]);
+                                        });
+                                      }
+                                    },
+                                    itemBuilder: (BuildContext context) => [
+                                      PopupMenuItem(
+                                        child: Text("Edit"),
+                                        enabled: true,
+                                        value: 0,
+                                      ),
+                                      PopupMenuItem(
+                                        child: Text("Remove"),
+                                        enabled: true,
+                                        value: 1,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    temp[index].fullnameHolder,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              Text("${temp[index].phonenumberHolder}",
+                                  style: textstyle),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                temp[index].pincodeHolder,
+                                style: textstyle,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                temp[index].cityholder,
+                                style: textstyle,
+                              ),
+                              Text(
+                                temp[index].stateholder,
+                                style: textstyle,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                temp[index].housenoholder,
+                                style: textstyle,
+                              ),
+                              Text("${temp[index].valueholder}"),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                temp[index].roadholder,
+                                style: textstyle,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                temp[index].landmarkholder,
+                                style: textstyle,
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
+                      ));
                 }),
           )
         ],
@@ -223,3 +250,4 @@ class _SelectAddressState extends State<SelectAddress> {
     );
   }
 }
+

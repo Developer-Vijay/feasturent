@@ -42,11 +42,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String finalUser;
   int temp;
+  var email;
   Future getSession() async {
-    print("hello");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var takeUser = prefs.getString('loginBy');
-
+    email = prefs.getString('userEmail');
     finalUser = takeUser;
     if (finalUser != null) {
       setState(() {
@@ -63,6 +63,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (temp == 1) {
       return ListView(
         children: <Widget>[
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: kSpacingUnit.w * 8,),
+                Container(
+                  height: kSpacingUnit.w * 10,
+                  width: kSpacingUnit.w * 10,
+                  child: Stack(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: kSpacingUnit.w * 5,
+                        backgroundImage: AssetImage('assets/images/avatar.png'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: kSpacingUnit.w * 2),
+                Text(
+                  '$email',
+                  style: kTitleTextStyle,
+                ),
+                SizedBox(height: kSpacingUnit.w * 2),
+              ],
+            ),
+          ),
           ProfileListItem(
               icon: LineAwesomeIcons.user_shield,
               text: 'Edit Profile',
@@ -106,6 +131,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Column(
         children: [
           Container(
+            height: kSpacingUnit.w * 15,
+            width: kSpacingUnit.w * 22,
+            child: Image.asset(
+              "assets/images/feasturent_app_logo.png",
+              fit: BoxFit.contain,
+            ),
+          ),
+          Container(
             margin: EdgeInsets.only(left: 15),
             alignment: Alignment.topLeft,
             child: Text(
@@ -145,6 +178,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileListItem(
             icon: LineAwesomeIcons.cog,
             text: 'Settings',
+            hasNavigation: true,
+            index: 4,
           ),
         ],
       );
@@ -154,58 +189,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
-
-    var profileInfo = Expanded(
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: kSpacingUnit.w * 10,
-            width: kSpacingUnit.w * 10,
-            child: Stack(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: kSpacingUnit.w * 5,
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: kSpacingUnit.w * 2),
-          Text(
-            'Nicolas Adams',
-            style: kTitleTextStyle,
-          ),
-          SizedBox(height: kSpacingUnit.w * 0.5),
-          Text(
-            'nicolasadams@gmail.com',
-            style: kCaptionTextStyle,
-          ),
-          SizedBox(height: kSpacingUnit.w * 2),
-        ],
-      ),
-    );
-
-    var header = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(width: kSpacingUnit.w * 3),
-        profileInfo,
-        SizedBox(width: kSpacingUnit.w * 3),
-      ],
-    );
-
     return ThemeSwitchingArea(
       child: Builder(
         builder: (context) {
           return Scaffold(
             body: Column(
               children: <Widget>[
-                SizedBox(height: kSpacingUnit.w * 5),
-                header,
-                Expanded(
-                  child: Container(child: _buildloginCheck()),
-                )
+                Expanded(child: Container(child: _buildloginCheck()))
               ],
             ),
           );

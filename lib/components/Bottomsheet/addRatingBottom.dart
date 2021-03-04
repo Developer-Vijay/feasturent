@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-
 import '../../constants.dart';
 
 class AddRating extends StatelessWidget {
@@ -44,67 +43,74 @@ class _AddRatingPageState extends State<AddRatingPage> {
         Divider(
           thickness: 1,
         ),
-        Column(
+        ListView(
+          shrinkWrap: true,
           children: [
-            Row(
+            Column(
               children: [
+                Row(
+                  children: [
+                    Container(
+                        height: size.height * 0.09,
+                        width: size.width * 1,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              child: SmoothStarRating(
+                                  allowHalfRating: true,
+                                  onRated: (value) {
+                                    setState(() {
+                                      rating = value;
+                                    });
+                                  },
+                                  starCount: 5,
+                                  rating: rating,
+                                  size: 45.0,
+                                  isReadOnly: false,
+                                  defaultIconData: Icons.star_border_outlined,
+                                  filledIconData: Icons.star,
+                                  halfFilledIconData: Icons.star_border,
+                                  color: Colors.amber,
+                                  borderColor: Colors.amber,
+                                  spacing: 0.0),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 8, bottom: 2),
+                              child: Text(
+                                "$rating",
+                                style: TextStyle(color: kTextColor),
+                              ),
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 Container(
-                    height: size.height * 0.09,
-                    width: size.width * 1,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: SmoothStarRating(
-                              allowHalfRating: true,
-                              onRated: (value) {
-                                setState(() {
-                                  rating = value;
-                                });
-                              },
-                              starCount: 5,
-                              rating: rating,
-                              size: 45.0,
-                              isReadOnly: false,
-                              defaultIconData: Icons.star_border_outlined,
-                              filledIconData: Icons.star,
-                              halfFilledIconData: Icons.star_border,
-                              color: Colors.amber,
-                              borderColor: Colors.amber,
-                              spacing: 0.0),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8, bottom: 2),
-                          child: Text(
-                            "$rating",
-                            style: TextStyle(color: kTextColor),
+                  margin: EdgeInsets.only(
+                      left: size.width * 0.03, right: size.width * 0.03),
+                  child: TextField(
+                    autocorrect: false,
+                    controller: _commentController,
+                    maxLength: 500,
+                    maxLines: 7,
+                    style: TextStyle(fontSize: 15),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(10.0),
                           ),
                         ),
-                      ],
-                    ))
+                        hintText: "Add an Comment",
+                        errorText: _commentvalidate),
+                  ),
+                ),
               ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  left: size.width * 0.03, right: size.width * 0.03),
-              child: TextField(
-                autocorrect: false,
-                controller: _commentController,
-                maxLength: 500,
-                maxLines: 7,
-                style: TextStyle(fontSize: 15),
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(10.0),
-                      ),
-                    ),
-                    hintText: "Add an Comment",
-                    errorText: _commentvalidate),
-              ),
             ),
           ],
         ),

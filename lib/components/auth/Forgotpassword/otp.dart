@@ -1,6 +1,5 @@
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/resetpassword.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';

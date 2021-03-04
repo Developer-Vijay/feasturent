@@ -1,6 +1,5 @@
 import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo/review_resturent.dart';
 import 'package:flutter/material.dart';
-
 import 'detail_Resturent.dart';
 import 'menu_Resturent.dart';
 
@@ -34,9 +33,6 @@ class _ResturentDetailState extends State<ResturentDetail> {
 
   @override
   Widget build(BuildContext context) {
-    // final ListofFood resturentNameIndex =
-    //     ModalRoute.of(context).settings.arguments;
-    // print(resturentNameIndex.index0);
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(

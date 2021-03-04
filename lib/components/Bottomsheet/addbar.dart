@@ -1,5 +1,4 @@
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -55,9 +54,7 @@ class _BottomsheetwidgetState extends State<Bottomsheetwidget> {
                           ),
                           onPressed: () {
                             Navigator.pop(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FoodSlider()),
+                              context
                             );
                           },
                         )),
@@ -158,7 +155,6 @@ class _BottomsheetwidgetState extends State<Bottomsheetwidget> {
                           value: _checked,
                           onChanged: (bool value) {
                             setState(() {
-                              print(value);
                               _checked = value;
                             });
                           },
@@ -172,7 +168,6 @@ class _BottomsheetwidgetState extends State<Bottomsheetwidget> {
                           value: _checked2,
                           onChanged: (value) {
                             setState(() {
-                              print(value);
                               _checked2 = value;
                             });
                           },

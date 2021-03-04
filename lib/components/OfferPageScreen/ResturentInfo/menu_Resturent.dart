@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../../constants.dart';
 import '../foodlistclass.dart';
 
@@ -23,7 +22,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         itemCount: insideOfferPage.length,
         itemBuilder: (context, index) {
-          print(insideOfferPage[index].discountText);
           return InkWell(
             onTap: () {
               Navigator.push(context,
@@ -199,10 +197,8 @@ class _ResturentMenuState extends State<ResturentMenu> {
 
   addBottonFunction(index) {
     if (insideOfferPage[index].addedStatus == "Add") {
-      print(insideOfferPage[index].index0);
       Fluttertoast.showToast(msg: "${insideOfferPage[index].title} is added");
 
-      print(_index1);
 
       getItemandNavigateToCart(index);
       setState(() {
@@ -242,8 +238,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
   }
 
   getItemandNavigateToCart(index) async {
-    // print(index1);
-    print("add item");
     add2.add(addto(
         isSelected: false,
         counter: 1,

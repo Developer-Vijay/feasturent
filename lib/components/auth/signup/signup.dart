@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:feasturent_costomer_app/components/auth/signup/otpcheck.dart';
 import 'package:feasturent_costomer_app/components/common/validator.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/messageWrapper.dart';
@@ -22,10 +21,10 @@ class _SignupPageState extends State<SignupPage> {
   bool _isOtpSend = false;
   int _registeredUserId;
   bool _isProcessing = false;
-  bool _isEmailValidate = true;
-  bool _isUserNameValidate = true;
-  bool _isPhoneValidate = true;
-  bool _isPasswordValidate = true;
+  var _isEmailValidate;
+  var _isUserNameValidate;
+  var _isPhoneValidate;
+  var _isPasswordValidate;
   bool _isValidate = true;
   bool _obscureText = true;
   void _toggle() {
@@ -85,9 +84,7 @@ class _SignupPageState extends State<SignupPage> {
                             labelText: 'Username',
                             prefixIcon: Icon(Icons.person),
                             counterText: "",
-                            errorText: _isUserNameValidate == true
-                                ? null
-                                : 'Please enter valid username'),
+                            errorText: _isUserNameValidate),
                         controller: _userNameController,
                       ),
                       SizedBox(height: 15),
@@ -111,9 +108,7 @@ class _SignupPageState extends State<SignupPage> {
                             labelText: 'Phone Number',
                             prefixIcon: Icon(Icons.phone),
                             counterText: "",
-                            errorText: _isPhoneValidate == true
-                                ? null
-                                : 'Please enter valid phone number'),
+                            errorText: _isPhoneValidate),
                         controller: _phoneNumberController,
                       ),
                       SizedBox(height: 15),
@@ -130,9 +125,7 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             labelText: 'Email Address',
                             prefixIcon: Icon(Icons.email),
-                            errorText: _isEmailValidate == true
-                                ? null
-                                : 'Please enter valid email address'),
+                            errorText: _isEmailValidate ),
                         controller: _emailController,
                       ),
                       SizedBox(height: 15),
@@ -156,9 +149,8 @@ class _SignupPageState extends State<SignupPage> {
                                       : Icons.visibility),
                                   size: 17,
                                 )),
-                            errorText: _isPasswordValidate == true
-                                ? null
-                                : 'Please enter valid password'),
+                            errorText: _isPasswordValidate
+                                ),
                         controller: _passwordController,
                       ),
                       SizedBox(height: 15),
@@ -288,63 +280,74 @@ class _SignupPageState extends State<SignupPage> {
         isEmail(_emailController.text) &&
         _emailController.text.length < 7) {
       setState(() {
-        _isEmailValidate = false;
+        _isEmailValidate = "Email id cannot be Empty";
         _isValidate = false;
       });
     } else {
       setState(() {
-        _isEmailValidate = true;
+        _isEmailValidate = null;
         _isValidate = true;
       });
     }
     //Phone Validate
-    if (_phoneNumberController.text.isEmpty &&
-        _phoneNumberController.text.length < 10) {
+    if (_phoneNumberController.text.isEmpty) {
       setState(() {
-        _isPhoneValidate = false;
+        _isPhoneValidate = "Mobile number Cant be empty ";
         _isValidate = false;
       });
+    } else if (_phoneNumberController.text.length < 10) {
+      _isPhoneValidate = "Mobile number should be of 10 digit ";
+      _isValidate = false;
     } else {
       setState(() {
-        _isPhoneValidate = true;
+        _isPhoneValidate = null;
         _isValidate = true;
       });
     }
     //Username Validation
-    if ((_userNameController.text.isEmpty) &&
-        (_userNameController.text.length) <= 3) {
+    if ((_userNameController.text.isEmpty)) {
       setState(() {
-        _isUserNameValidate = false;
+        _isUserNameValidate = "Username cannot be empty ";
+        _isValidate = false;
+      });
+    } else if ((_userNameController.text.length) <= 3) {
+      setState(() {
+        _isUserNameValidate = "Username cannot be of three words ";
         _isValidate = false;
       });
     } else if (_userNameController.text.contains(" ")) {
       setState(() {
-        _isUserNameValidate = false;
-        _isValidate = true;
+        _isUserNameValidate = "Username cannot contain the Space";
+        _isValidate = false;
       });
     } else {
       setState(() {
-        _isUserNameValidate = true;
+        _isUserNameValidate = null;
         _isValidate = true;
       });
     }
     //Phone Validation
-    if (_passwordController.text.isEmpty &&
-        _passwordController.text.length < 8) {
+    if (_passwordController.text.isEmpty) {
       setState(() {
-        _isPasswordValidate = false;
+        _isPasswordValidate = "Password cannot be empty";
+        _isValidate = false;
+      });
+    } else if (_passwordController.text.length < 8) {
+      setState(() {
+        _isPasswordValidate = "Password Must be of 8 digits";
         _isValidate = false;
       });
     } else if (!RegExp(
             r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$")
         .hasMatch(_passwordController.text)) {
       setState(() {
-        _isPasswordValidate = false;
+        _isPasswordValidate =
+            "password must contain a Capiatl word , special character , number ";
         _isValidate = false;
       });
     } else {
       setState(() {
-        _isPasswordValidate = true;
+        _isPasswordValidate = null;
         _isValidate = true;
       });
     }
@@ -358,16 +361,12 @@ class _SignupPageState extends State<SignupPage> {
       });
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print(responseData['data']['userId']);
         _stoastMessage(VerifyAcount);
         setState(() {
           _isOtpSend = true;
           _registeredUserId = responseData['data']['userId'];
           _isProcessing = false;
         });
-
-       
-
       } else {
         _stoastMessage(responseData['message']);
         setState(() {
@@ -389,8 +388,6 @@ class _SignupPageState extends State<SignupPage> {
         'otp': _otpController.text,
         'userId': _registeredUserId.toString()
       });
-      print(_otpController.text);
-      print(response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         _stoastMessage(responseData['message']);

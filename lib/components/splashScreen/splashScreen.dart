@@ -1,4 +1,3 @@
-import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart';
 import 'package:feasturent_costomer_app/components/onBoarding/appOnBoarding.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';

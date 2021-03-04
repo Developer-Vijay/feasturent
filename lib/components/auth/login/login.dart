@@ -4,6 +4,7 @@ import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart'
 import 'package:feasturent_costomer_app/components/auth/login/loginWithGoolge.dart';
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,38 +32,33 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  //Controllers
-  TextEditingController _userNameController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
-
-  Future<bool> _onbackPressed() async {
+  Future<bool> backbutton() {
     return showDialog(
         context: context,
-        builder: (contex) => AlertDialog(
-              title: Text("Do you Really want to exit"),
+        builder: (context) => AlertDialog(
+              content: Text("Don't want to login"),
               actions: [
                 FlatButton(
                   child: Text("Yes"),
                   onPressed: () {
-                    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
-                ),
-                FlatButton(
-                  child: Text("No"),
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                ),
+                )
               ],
             ));
   }
 
+  //Controllers
+  TextEditingController _userNameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WillPopScope(
-        onWillPop: _onbackPressed,
-        child: ListView(children: [
+    return WillPopScope(
+      onWillPop: backbutton,
+      child: Scaffold(
+        body: ListView(children: [
           Container(
             color: Colors.white,
             child: Center(
@@ -108,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                         //Password
                         TextField(
                           obscureText: _obscureText,
-                           textInputAction: TextInputAction.done,
+                          textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
@@ -222,10 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                             icon: SvgPicture.asset('assets/icons/facebook.svg'),
                             tooltip: 'Login With Facebook',
                             iconSize: 40,
-                            onPressed: () {
-                              print("FACEBOOKS");
-                              // loginWithFacebook();
-                            },
+                            onPressed: () {},
                           ),
                         ],
                       ),
@@ -283,11 +276,6 @@ class _LoginPageState extends State<LoginPage> {
         _isUserNameValidate = false;
         _isValidate = false;
       });
-    } else if (_userNameController.text.contains(" ")) {
-      setState(() {
-        _isUserNameValidate = false;
-        _isValidate = false;
-      });
     } else {
       setState(() {
         _isUserNameValidate = true;
@@ -328,21 +316,38 @@ class _LoginPageState extends State<LoginPage> {
       });
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        _stoastMessage('LOGIN SUCCESSFUL', SUCCESSSTATUS);
-        prefs.setString('sessionToken', responseData['data']['sessionToken']);
-        prefs.setString("refreshToken", responseData['data']['refreshToken']);
-        prefs.setString("userNumber", responseData['data']['user']['phone']);
-        prefs.setString("userProfile", null);
-        prefs.setInt("userId", responseData['data']['user']['userId']);
-        prefs.setInt("loginId", responseData['data']['user']['loginId']);
-        prefs.setString("userEmail", responseData['data']['user']['email']);
-        prefs.setString("loginBy", "userName");
-        prefs.setBool("_isAuthenticate", true);
-        prefs.setString('name', _userNameController.text);
-        UserAuthenticate(context);
-        setState(() {
-          _isProcessing = false;
-        });
+        print(responseData['data']);
+        if (responseData['data']['user']['userType'] == 'USER') {
+          _stoastMessage('LOGIN SUCCESSFUL', SUCCESSSTATUS);
+
+          prefs.setString('sessionToken', responseData['data']['sessionToken']);
+          prefs.setString("refreshToken", responseData['data']['refreshToken']);
+          prefs.setString("userNumber", responseData['data']['user']['phone']);
+          prefs.setString("userProfile", null);
+          prefs.setInt("userId", responseData['data']['user']['userId']);
+          prefs.setInt("loginId", responseData['data']['user']['loginId']);
+          prefs.setString("userEmail", responseData['data']['user']['email']);
+          prefs.setString("loginBy", "userName");
+          prefs.setBool("_isAuthenticate", true);
+          prefs.setString('name', _userNameController.text);
+          UserAuthenticate(context);
+          setState(() {
+            _isProcessing = false;
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "User not found",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP_RIGHT,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          setState(() {
+            _isProcessing = false;
+            Navigator.pop(context);
+          });
+        }
       } else {
         _stoastMessage(responseData['message'], ERRORSTATUS);
         setState(() {
