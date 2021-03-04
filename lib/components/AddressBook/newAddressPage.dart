@@ -25,9 +25,7 @@ class _AddressListState extends State<AddressList> {
                 icon: Icon(Icons.arrow_back_sharp),
                 onPressed: () {
                   Navigator.pop(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserProfilePage()),
-                  );
+                    context );
                 },
               ),
             ),
@@ -97,22 +95,47 @@ class _AddressListState extends State<AddressList> {
                                     style: TextStyle(color: Colors.blueGrey),
                                   ),
                                   Spacer(),
-
-                                  // ignore: non_constant_identifier_names
                                   PopupMenuButton(
-                                    icon: Icon(Icons.arrow_drop_down),
                                     onSelected: (value) {
-                                      temp.remove(temp[index]);
+                                      if (value == 0) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => AddAdress(
+                                                    fullName: temp[index]
+                                                        .fullnameHolder,
+                                                    phoneNumber: temp[index]
+                                                        .phonenumberHolder,
+                                                    pincode: temp[index]
+                                                        .pincodeHolder,
+                                                    houseno: temp[index]
+                                                        .housenoholder,
+                                                    roadname:
+                                                        temp[index].roadholder,
+                                                    city:
+                                                        temp[index].cityholder,
+                                                    state:
+                                                        temp[index].stateholder,
+                                                    landmark: temp[index]
+                                                        .landmarkholder,
+                                                    indexnumber: temp.indexOf(
+                                                        temp[index]))));
+                                      } else if (value == 1) {
+                                        setState(() {
+                                          temp.remove(temp[index]);
+                                        });
+                                      }
                                     },
-                                    itemBuilder: (BuildContext) => [
+                                    itemBuilder: (BuildContext context) => [
                                       PopupMenuItem(
                                         child: Text("Edit"),
                                         enabled: true,
+                                        value: 0,
                                       ),
                                       PopupMenuItem(
                                         child: Text("Remove"),
                                         enabled: true,
-                                        value: temp,
+                                        value: 1,
                                       ),
                                     ],
                                   )

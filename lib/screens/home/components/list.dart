@@ -3,7 +3,6 @@ import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../../constants.dart';
 
 class PizzaList extends StatelessWidget {
@@ -113,22 +112,13 @@ class _DetailState extends State<Detail> {
                                             child: Container(
                                               child: MaterialButton(
                                                 onPressed: () {
-                                                  print(
-                                                      burgerlist[index].index0);
-
                                                   setState(() {
                                                     _index1 = burgerlist[index]
                                                         .index0;
                                                   });
-                                                  print(_index1);
 
                                                   getItemandNavigateToCart(
                                                       _index1);
-
-                                                  // showModalBottomSheet(
-                                                  //     context: context,
-                                                  //     builder: (context) =>
-                                                  //         Sheet());
                                                 },
                                                 color: Colors.white,
                                                 minWidth: size.width * 0.17,
@@ -323,8 +313,6 @@ class _DetailState extends State<Detail> {
   }
 
   getItemandNavigateToCart(_index1) async {
-    // print(index1);
-    print("add item");
     add2.add(addto(
         isSelected: false,
         counter: 0,

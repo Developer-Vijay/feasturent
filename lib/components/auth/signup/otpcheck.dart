@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-
 import '../../../constants.dart';
-import '../../../messageWrapper.dart';
 
 class OtpChecker extends StatefulWidget {
   final String phone;
@@ -196,7 +189,6 @@ class _OtpCheckerState extends State<OtpChecker> {
                       onPressed: () {
                         _verifyOtp();
 
-                        print("hello");
                       },
                       child: Text(
                         "Submit",
@@ -223,8 +215,7 @@ class _OtpCheckerState extends State<OtpChecker> {
       'otp': _otpController.text,
       'userId': _registeredUserId.toString(),
     });
-    print(_otpController.text);
-    print(response.body);
+    
  var responseData = jsonDecode(response.body);
     if (response.statusCode == 200) {
        _stoastMessage(responseData['message']);

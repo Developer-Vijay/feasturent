@@ -16,8 +16,7 @@ class OfferPageScreen extends StatefulWidget {
 }
 
 class _OfferPageScreenState extends State<OfferPageScreen> {
-  int _index1 = 0;
-  var _temp;
+
   var random;
 
   int _currentMax = 10;
@@ -397,7 +396,6 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
 
                     return InkWell(
                       onTap: () {
-                        print(foodlist[index].index0);
                         Navigator.push(
                             context,
                             MaterialPageRoute(

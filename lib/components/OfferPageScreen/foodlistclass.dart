@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:flutter/material.dart';
 

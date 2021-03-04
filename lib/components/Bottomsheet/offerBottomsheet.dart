@@ -1,5 +1,4 @@
 import 'package:dotted_border/dotted_border.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/insideofferpage.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 
@@ -33,10 +32,7 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
                 child: IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () {
-                    Navigator.pop(
-                      context,
-                      MaterialPageRoute(builder: (context) => OfferListPage()),
-                    );
+                    Navigator.pop(context);
                   },
                 ),
               )

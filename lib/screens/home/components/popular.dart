@@ -5,7 +5,6 @@ import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'ViewAllPopular.dart';
 
 class PopularList extends StatelessWidget {
@@ -48,7 +47,7 @@ class PopularList extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ViewAllPopular())),
-                    print('View All')
+                   
                   },
                   child: Row(
                     children: [

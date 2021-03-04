@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -152,7 +151,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
-                            // SizedBox(height: 30.0),
                             Text(
                               'Delivery On Time',
                               style: kTitleStyle,
@@ -180,7 +178,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
-                            // SizedBox(height: 5.0),
                             Center(
                               child: Text(
                                 "Top #1 Fastest Delivery Food For You",

@@ -83,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences date = await SharedPreferences.getInstance();
     _currentDate = DateTime.now();
     getdate = DateFormat("dd-MM-yyyy").format(_currentDate);
-    print(getdate);
     current = date.getString('date');
     if (current == getdate) {
       current = date.setString('date', getdate);
@@ -122,7 +121,6 @@ class _HomeScreenState extends State<HomeScreen> {
       locality = temp.first.featureName;
       area = temp.first.subLocality;
       localArea = temp.first.subAdminArea;
-      print(localArea);
       state = temp.first.adminArea;
       setState(() {
         if (locality == null) {
@@ -136,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       });
     } catch (error) {
-      print("loading failed");
+      print(error);
     }
   }
 
@@ -205,8 +203,6 @@ class _HomeScreenState extends State<HomeScreen> {
           });
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print(responseData['data'][0]['profile']);
-        print(responseData);
         print(_authorization);
         print(_refreshtoken);
 
@@ -282,8 +278,6 @@ class _HomeScreenState extends State<HomeScreen> {
       PlacesDetailsResponse detail =
           await _places.getDetailsByPlaceId(p.placeId);
 
-      var placeId = p.placeId;
-      print(placeId);
       double lat = detail.result.geometry.location.lat;
       double lng = detail.result.geometry.location.lng;
       coordinates = Coordinates(lat, lng);
@@ -306,10 +300,6 @@ class _HomeScreenState extends State<HomeScreen> {
           location = "$locality , $area , $state";
         }
       });
-
-      print(lat);
-      print(lng);
-      print(address.first.addressLine);
     }
   }
 
@@ -331,9 +321,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       _scaffoldKey.currentState.openDrawer();
                     }),
-                // SizedBox(
-                //   height: 5,
-                // ),
               ],
             ),
           ),
@@ -366,7 +353,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         InkWell(
                             onTap: () async {
                               displayPrediction();
-                              print("change");
                             },
                             child: Padding(
                               padding:
@@ -426,51 +412,58 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: _onbackpressed,
       child: SafeArea(
         child: Scaffold(
-          key: _scaffoldKey,
-          drawer: AppDrawer(
-              cStatus: _loginstatus,
-              cName: _customerName,
-              cProfile: _customerProfile,
-              cEmail: _customerEmail),
-          bottomNavigationBar: CurvedNavigationBar(
-            animationDuration: Duration(milliseconds: 200),
-            index: 0,
-            height: sized.height * 0.08,
-            items: <Widget>[
-              Icon(
-                Icons.home_outlined,
-                size: sized.height * 0.035,
-              ),
-              SvgPicture.asset(
-                "assets/icons/offer_bn_outline.svg",
-                height: sized.height * 0.035,
-              ),
-              SvgPicture.asset(
-                "assets/icons/dineout_bn_outline.svg",
-                height: sized.height * 0.035,
-              ),
-              SvgPicture.asset(
-                "assets/icons/person.svg",
-                height: sized.height * 0.03,
-              ),
-            ],
-            onTap: (index) {
-              setState(() {
-                _page = index;
-              });
-            },
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                flex: 3,
-                child: _buildAppBar(_page),
-              ),
-              Expanded(flex: 32, child: tabPages[_page]),
-            ],
-          ),
-        ),
+            key: _scaffoldKey,
+            drawer: AppDrawer(
+                cStatus: _loginstatus,
+                cName: _customerName,
+                cProfile: _customerProfile,
+                cEmail: _customerEmail),
+            bottomNavigationBar: CurvedNavigationBar(
+              animationDuration: Duration(milliseconds: 200),
+              index: 0,
+              height: sized.height * 0.08,
+              items: <Widget>[
+                Icon(
+                  Icons.home_outlined,
+                  size: sized.height * 0.035,
+                ),
+                SvgPicture.asset(
+                  "assets/icons/offer_bn_outline.svg",
+                  height: sized.height * 0.035,
+                ),
+                SvgPicture.asset(
+                  "assets/icons/dineout_bn_outline.svg",
+                  height: sized.height * 0.035,
+                ),
+                SvgPicture.asset(
+                  "assets/icons/person.svg",
+                  height: sized.height * 0.03,
+                ),
+              ],
+              onTap: (index) {
+                setState(() {
+                  _page = index;
+                });
+              },
+            ),
+            body: mainbodyFunction()),
       ),
     );
+  }
+
+  mainbodyFunction() {
+    if (_page == 3) {
+      return tabPages[_page];
+    } else {
+      return Column(
+        children: [
+          Expanded(
+            flex: 3,
+            child: _buildAppBar(_page),
+          ),
+          Expanded(flex: 32, child: tabPages[_page]),
+        ],
+      );
+    }
   }
 }

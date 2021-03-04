@@ -33,17 +33,7 @@ class _OfferListPageState extends State<OfferListPage> {
   int _index1 = 0;
   int isSelect = 0;
   var restaurantDataCopy;
-  final _containerDecoration = BoxDecoration(
-    boxShadow: [
-      BoxShadow(
-          blurRadius: 3,
-          offset: Offset(1, 3),
-          color: Colors.blue[50],
-          spreadRadius: 3)
-    ],
-    borderRadius: BorderRadius.circular(5),
-    color: Colors.white,
-  );
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -293,11 +283,22 @@ class _OfferListPageState extends State<OfferListPage> {
                                 context: context,
                                 builder: (context) => OnOfferBottomSheet());
                           },
-                          child: Container(
+                          child: Container(                            margin: EdgeInsets.all(4),
+
                             padding: EdgeInsets.all(4),
                             height: size.height * 0.1,
                             width: size.width * 0.42,
-                            decoration: _containerDecoration,
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 3,
+                                    color: Colors.blue[50],
+                                    offset: Offset(1,3),
+                                    spreadRadius: 3)
+                              ],
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white,
+                            ),
                             child: Column(children: [
                               Row(
                                 children: [
@@ -387,7 +388,6 @@ class _OfferListPageState extends State<OfferListPage> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: restaurantDataCopy['Menus'].length,
                     itemBuilder: (context, index) {
-                      print(restaurantDataCopy['Menus'].length);
                       return InkWell(
                         onTap: () {
                           Navigator.push(
@@ -416,13 +416,13 @@ class _OfferListPageState extends State<OfferListPage> {
                               child: Row(children: [
                                 Expanded(
                                     flex: 0,
-                                    child: Container(
-                                      alignment: Alignment.topCenter,
-                                      // height: size.height * 0.2,
-                                      // width: size.width * 0.3,
-                                      child: Stack(
-                                        children: [
-                                          Container(
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.topCenter,
+                                          height: size.height * 0.2,
+                                          width: size.width * 0.3,
+                                          child: Container(
                                             margin: EdgeInsets.only(
                                                 left: size.width * 0.01,
                                                 right: size.width * 0.014,
@@ -439,78 +439,71 @@ class _OfferListPageState extends State<OfferListPage> {
                                               ),
                                             ),
                                           ),
-                                          // For Add Button
-                                          Align(
-                                            widthFactor: size.width * 0.00368,
-                                            alignment: Alignment.bottomCenter,
-                                            heightFactor: size.height * 0.00276,
-                                            child: Container(
-                                              child: MaterialButton(
-                                                  onPressed: () {
-                                                    if (insideOfferPage[index]
-                                                            .addedStatus ==
-                                                        "Add") {
-                                                      print(
-                                                          insideOfferPage[index]
-                                                              .index0);
+                                        ),
+                                        Positioned(
+                                          top: size.height * 0.09,
+                                          bottom: size.height * 0.02,
+                                          left: size.width * 0.06,
+                                          right: size.width * 0.06,
+                                          child: Container(
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                if (insideOfferPage[index]
+                                                        .addedStatus ==
+                                                    "Add") {
+                                                  final snackBar = SnackBar(
+                                                    backgroundColor: Colors
+                                                        .lightBlueAccent[200],
+                                                    content: Text(
+                                                        "${insideOfferPage[index].title} is added to cart"),
+                                                    action: SnackBarAction(
+                                                      textColor:
+                                                          Colors.redAccent,
+                                                      label: "View Cart",
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CartScreen()));
+                                                      },
+                                                    ),
+                                                  );
 
-                                                      print(_index1);
-
-                                                      final snackBar = SnackBar(
-                                                        backgroundColor: Colors
-                                                                .lightBlueAccent[
-                                                            200],
-                                                        content: Text(
-                                                            "${insideOfferPage[index].title} is added to cart"),
-                                                        action: SnackBarAction(
-                                                          textColor:
-                                                              Colors.redAccent,
-                                                          label: "View Cart",
-                                                          onPressed: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            CartScreen()));
-                                                          },
-                                                        ),
-                                                      );
-
-                                                      Scaffold.of(context)
-                                                          .showSnackBar(
-                                                              snackBar);
-                                                      getItemandNavigateToCart(
-                                                          index);
-                                                      setState(() {
-                                                        insideOfferPage[index]
-                                                                .addedStatus =
-                                                            "Added";
-                                                      });
-                                                    } else if (insideOfferPage[
-                                                                index]
-                                                            .addedStatus ==
-                                                        "Added") {
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "${insideOfferPage[index].title} is already added");
-                                                    }
-                                                  },
-                                                  color: Colors.white,
-                                                  minWidth: size.width * 0.16,
-                                                  height: size.height * 0.033,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              14)),
-                                                  textColor: Colors.white,
+                                                  Scaffold.of(context)
+                                                      .showSnackBar(snackBar);
+                                                  getItemandNavigateToCart(
+                                                      index);
+                                                  setState(() {
+                                                    insideOfferPage[index]
+                                                        .addedStatus = "Added";
+                                                  });
+                                                } else if (insideOfferPage[
+                                                            index]
+                                                        .addedStatus ==
+                                                    "Added") {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "${insideOfferPage[index].title} is already added");
+                                                }
+                                              },
+                                              color: Colors.white,
+                                              minWidth: size.width * 0.16,
+                                              height: size.height * 0.033,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          14)),
+                                              textColor: Colors.white,
+                                              child: Center(
                                                   child: buttonText(
                                                       insideOfferPage[index]
                                                           .index0)),
                                             ),
-                                          )
-                                        ],
-                                      ),
+                                          ),
+                                        )
+                                      ],
                                     )),
                                 Expanded(
                                     flex: 6,
@@ -762,8 +755,7 @@ class _OfferListPageState extends State<OfferListPage> {
 
   getItemandNavigateToCart(index) async {
     sumtotal = sumtotal + insideOfferPage[index].foodPrice;
-    // print(index1);
-    print("add item");
+
     add2.add(addto(
         isSelected: false,
         counter: 1,

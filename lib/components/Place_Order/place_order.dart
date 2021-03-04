@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
-import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,7 +11,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../constants.dart';
 
 class PlaceOrder extends StatefulWidget {
@@ -26,7 +23,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      // padding: EdgeInsets.only(top: 7, left: 7, right: 7),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -39,7 +35,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context, () {
+                  setState(() {});
+                });
               },
               child: Icon(
                 Icons.clear,
@@ -48,7 +46,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
           ),
           Container(
             height: size.height * 0.06,
-            // color: Colors.red,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Row(
@@ -102,7 +99,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     size: size.height * 0.025,
                   ),
                   Text("Delivery in "),
-                  Text("50 mins. No line tracking"),
+                  Text("50 mins. No live tracking"),
                 ],
               ),
             ),
@@ -292,7 +289,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                     add2[index].foodPrice;
                                               });
 
-                                              print("Decrease");
                                             } else if (add2[index].counter ==
                                                 1) {
                                               showDialog(
@@ -344,9 +340,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                               add2.removeAt(
                                                                   index);
 
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
+                                                              Navigator.pop(
+                                                                  context, () {
+                                                                setState(() {});
+                                                              });
                                                             });
                                                           },
                                                         ),
@@ -591,7 +588,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   Spacer(),
                   InkWell(
                       onTap: () {
-                        print("Order placed ");
                         if (userNameWithNumber == "Select Delivery Address") {
                           showModalBottomSheet(
                               isScrollControlled: true,
@@ -718,7 +714,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     placePrecent = 0;
                     placeValue = 0;
                     Navigator.pop(context);
-                    Navigator.pop(context);
+                    Navigator.pop(context, () {
+                      setState(() {});
+                    });
                   },
                 )
               ],
@@ -733,7 +731,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
 
     placeTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      print('Percent Update');
       setState(() {
         placePrecent++;
       });
@@ -742,14 +739,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         placePrecent = 0;
         placeValue = 1;
 
-        print(add2.length);
         int k = add2.length - 1;
-        print(add2);
 
         for (int i = 0; i <= k; i++) {
-          print(i);
-          print("new item ${add2[i].title}");
-          print(add2[i].isSelected);
 
           if (add2[i].isSelected == true) {
             print("remove from cart ${add2[i].title}");
@@ -793,7 +785,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     final prefs = await SharedPreferences.getInstance();
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
-    print(_authorization);
     var response = await http.post(APP_ROUTES + 'itemOrder', body: {
       "menuId": "1",
       "vendorId": "1",
@@ -809,11 +800,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
     var responseData = jsonDecode(response.body);
 
-    print(responseData);
-    print(response.statusCode);
+    
     if (response.statusCode == 200) {
-      print("succes");
-      print(responseData);
+     
       setState(() {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
@@ -842,8 +831,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         // add2.clear();
       });
     } else {
-      print("error");
-      print(responseData);
+     
       Fluttertoast.showToast(msg: "Something went Wrong");
     }
   }
@@ -980,7 +968,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, () {
+                          setState(() {});
+                        });
                         placeTimer.cancel();
                         placePrecent = 0;
                         placeValue = 0;
@@ -1007,3 +997,4 @@ Widget build(BuildContext context) {
   // TODO: implement build
   throw UnimplementedError();
 }
+

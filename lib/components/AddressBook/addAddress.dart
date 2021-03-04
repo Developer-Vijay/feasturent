@@ -6,11 +6,60 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 
 class AddAdress extends StatefulWidget {
+  final fullName;
+  final phoneNumber;
+  final pincode;
+  final houseno;
+  final roadname;
+  final landmark;
+  final city;
+  final state;
+  final type;
+  final indexnumber;
+  const AddAdress({
+    Key key,
+    this.fullName,
+    this.city,
+    this.houseno,
+    this.landmark,
+    this.phoneNumber,
+    this.pincode,
+    this.roadname,
+    this.state,
+    this.type,
+    this.indexnumber,
+  }) : super(key: key);
   @override
   _AddAdressState createState() => _AddAdressState();
 }
 
 class _AddAdressState extends State<AddAdress> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.fullName != null) {
+      setState(() {
+        citiesSelected.text = widget.city;
+        _fullnamecontroller.text = widget.fullName;
+        _phonenumbercontroller.text = widget.phoneNumber;
+        _pincodecontroller.text = widget.pincode;
+        _housenocontroller.text = widget.houseno;
+        _roadnamecontroller.text = widget.roadname;
+        _landmarkcontroller.text = widget.landmark;
+        stateSelected.text = widget.state;
+      });
+      if (widget.type == 0) {
+        setState(() {
+          isSelected = true;
+        });
+      } else if (widget.type == 1) {
+        setState(() {
+          isSelected1 = true;
+        });
+      }
+    }
+  }
+
   TextEditingController citiesSelected = TextEditingController();
   TextEditingController _fullnamecontroller = TextEditingController();
   TextEditingController _phonenumbercontroller = TextEditingController();
@@ -46,11 +95,6 @@ class _AddAdressState extends State<AddAdress> {
   bool isSelected = false;
   bool isSelected1 = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   double latadd;
   double longadd;
 
@@ -74,10 +118,8 @@ class _AddAdressState extends State<AddAdress> {
       setState(() {
         latadd = geopostion.latitude;
         longadd = geopostion.longitude;
-        print(latadd);
-        print(longadd);
+
         coordinates = Coordinates(latadd, longadd);
-        print(coordinates);
       });
       try {
         var locate =
@@ -135,9 +177,9 @@ class _AddAdressState extends State<AddAdress> {
                     IconButton(
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
-                        Navigator.pop(
-                          context,
-                        );
+                        Navigator.pop(context, () {
+                          setState(() {});
+                        });
                       },
                     ),
                     SizedBox(
@@ -422,8 +464,8 @@ class _AddAdressState extends State<AddAdress> {
                                 isSelected = false;
                               });
                             } else {
-                              print("selected");
                               setState(() {
+                                data = 0;
                                 isSelected = true;
                               });
                             }
@@ -462,7 +504,7 @@ class _AddAdressState extends State<AddAdress> {
                               });
                             } else {
                               setState(() {
-                                data = "Home is Selected";
+                                data = 1;
                                 isSelected1 = true;
                               });
                             }
@@ -480,7 +522,7 @@ class _AddAdressState extends State<AddAdress> {
                   height: 12,
                 ),
                 MaterialButton(
-                  onPressed: () => getItemandNavigate(context),
+                  onPressed: () => _address(),
                   child: Text(
                     "Save Address",
                     style: TextStyle(fontSize: 18),
@@ -579,11 +621,18 @@ class _AddAdressState extends State<AddAdress> {
         _isValidate = false;
       });
     }
-  }
-
-  getItemandNavigate(BuildContext context) {
-    temp.insertAll(0, [
-      Addresses(
+    if (isSelected == false && isSelected1 == false) {
+      Fluttertoast.showToast(msg: "Please select address type");
+      setState(() {
+        _isValidate = true;
+      });
+    } else {
+      setState(() {
+        _isValidate = false;
+      });
+    }
+    if (_isValidate != true) {
+      temp.add(Addresses(
           fullnameHolder: _fullnamecontroller.text.toString(),
           phonenumberHolder: _phonenumbercontroller.text.toString(),
           pincodeHolder: _pincodecontroller.text.toString(),
@@ -592,8 +641,14 @@ class _AddAdressState extends State<AddAdress> {
           landmarkholder: _landmarkcontroller.text.toString(),
           roadholder: _roadnamecontroller.text.toString(),
           housenoholder: _housenocontroller.text.toString(),
-          valueholder: data)
-    ]);
-    Navigator.pop(context);
+          valueholder: data));
+      if (widget.indexnumber != null) {
+        temp.removeAt(widget.indexnumber);
+      }
+
+      Navigator.pop(context, () {
+        setState(() {});
+      });
+    }
   }
 }

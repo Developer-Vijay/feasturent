@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants.dart';
-
 class ViewAllCategory extends StatelessWidget {
   final categoryData;
   const ViewAllCategory({Key key, this.categoryData}) : super(key: key);
@@ -15,7 +13,6 @@ class ViewAllCategory extends StatelessWidget {
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        // padding: EdgeInsets.all(10),
         children: List.generate(categoryData.length, (index) {
           return Container(
             padding: EdgeInsets.only(top: 10),
@@ -45,7 +42,7 @@ class ViewAllCategory extends StatelessWidget {
                               Icon(Icons.error),
                         )
                       : Image.asset(
-                          "assets/images/loginuser.png",
+                          "assets/images/chineseplatter.png",
                           fit: BoxFit.cover,
                         ),
                 ),

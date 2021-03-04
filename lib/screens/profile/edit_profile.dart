@@ -365,10 +365,12 @@ class _EditProfileState extends State<EditProfile> {
     if (_nameController.text.isEmpty) {
       setState(() {
         _namevalidate = lastname;
+        _isvalidate = true;
       });
     } else {
       setState(() {
         _namevalidate = null;
+        _isvalidate = true;
       });
     }
 

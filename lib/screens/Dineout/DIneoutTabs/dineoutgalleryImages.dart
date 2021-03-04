@@ -12,16 +12,12 @@ class DineoutGallery extends StatefulWidget {
 class _DineoutGalleryState extends State<DineoutGallery> {
   @override
   Widget build(BuildContext context) {
-    //  final DineoutDetailPage images2 = ModalRoute.of(context).settings.arguments;
-
     Size size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.black,
-              actions: [
-                Icon(Icons.share)
-              ],
+              actions: [Icon(Icons.share)],
             ),
             body: Container(
                 child: Swiper(
@@ -34,8 +30,8 @@ class _DineoutGalleryState extends State<DineoutGallery> {
                         fit: BoxFit.fill,
                         imageUrl: barimages[index],
                         imageBuilder: (context, imageProvider) => PhotoView(
-                          // backgroundDecoration:
-                          //     BoxDecoration(color: Colors.white),
+                          minScale: PhotoViewComputedScale.contained * 1,
+                          maxScale: PhotoViewComputedScale.covered * 0.4,
                           imageProvider: imageProvider,
                         ),
                         placeholder: (context, url) => Center(

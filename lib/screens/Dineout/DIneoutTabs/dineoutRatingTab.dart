@@ -122,7 +122,11 @@ class _RatingBarTabState extends State<RatingBarTab> {
               textColor: Colors.white,
               onPressed: () {
                 showModalBottomSheet(
-                    context: context, builder: (context) => AddRating());
+                    enableDrag: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) => Container(
+                        height: size.height * 0.8, child: AddRating()));
               },
               child: Text("Rate Your Experience"),
             ),
