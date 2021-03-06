@@ -74,38 +74,19 @@ class _AddAdressState extends State<AddAdress> {
   var _housenoValidate;
   var _roadnameValidate;
   var _landmarkValidate;
-
+  var _cityValidate;
+  var _stateValidate;
   bool _isValidate = false;
   var data;
+  var temparay = 0;
 
-  String selectedCity = "";
-
-  List<String> cities = [
-    "Delhi",
-    "Mumbai",
-    "Bahadurgarh",
-    "Kolkata",
-    "Noida",
-    "Gurgaon",
-    "Jhajjar",
-  ];
   TextEditingController stateSelected = TextEditingController();
-  String selectedState = "";
-  List<String> state = ["Delhi", "Haryana", "Madhya Pradesh"];
   bool isSelected = false;
   bool isSelected1 = false;
 
   double latadd;
   double longadd;
 
-  String postalcode = "";
-  String city = "";
-  String states = "";
-  String locality = "";
-  String colony = "";
-  String landmark = "";
-  String roadname = "";
-  String houseno = "";
   var location = "Error";
 
   bool isLoading = false;
@@ -126,19 +107,11 @@ class _AddAdressState extends State<AddAdress> {
             await Geocoder.local.findAddressesFromCoordinates(coordinates);
 
         setState(() {
-          postalcode = locate.first.postalCode;
-          states = locate.first.locality;
-          roadname = locate.first.adminArea;
-          city = locate.first.subLocality;
-          landmark = locate.first.addressLine;
-        });
-        setState(() {
-          _roadnamecontroller.text = roadname;
-          _pincodecontroller.text = postalcode;
-          _housenocontroller.text = houseno;
-          citiesSelected.text = city;
-          stateSelected.text = states;
-          _landmarkcontroller.text = landmark;
+          _pincodecontroller.text = locate.first.postalCode;
+          stateSelected.text = locate.first.locality;
+          _roadnamecontroller.text = locate.first.adminArea;
+          citiesSelected.text = locate.first.subLocality;
+          _landmarkcontroller.text = locate.first.addressLine;
         });
       } catch (error) {
         Fluttertoast.showToast(msg: "Unable to load your location");
@@ -322,14 +295,14 @@ class _AddAdressState extends State<AddAdress> {
                             child: TextField(
                           controller: citiesSelected,
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(12.0),
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(12.0),
+                                ),
                               ),
-                            ),
-                            labelText: 'Cities',
-                            counterText: "",
-                          ),
+                              labelText: 'Cities',
+                              counterText: "",
+                              errorText: _cityValidate),
                         )),
                       ),
                     ),
@@ -343,14 +316,14 @@ class _AddAdressState extends State<AddAdress> {
                             child: TextField(
                               controller: stateSelected,
                               decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(12.0),
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(12.0),
+                                    ),
                                   ),
-                                ),
-                                labelText: 'State',
-                                counterText: "",
-                              ),
+                                  labelText: 'State',
+                                  counterText: "",
+                                  errorText: _stateValidate),
                             )),
                       ),
                     )
@@ -456,20 +429,11 @@ class _AddAdressState extends State<AddAdress> {
                         selected: isSelected,
                         showCheckmark: false,
                         onSelected: (value) {
-                          if (isSelected1 == true) {
-                            Fluttertoast.showToast(msg: "office is Selected");
-                          } else {
-                            if (isSelected == true) {
-                              setState(() {
-                                isSelected = false;
-                              });
-                            } else {
-                              setState(() {
-                                data = 0;
-                                isSelected = true;
-                              });
-                            }
-                          }
+                          setState(() {
+                            isSelected = true;
+                            isSelected1 = false;
+                            data = 0;
+                          });
                         },
                         avatar: Icon(
                           Icons.home,
@@ -493,22 +457,11 @@ class _AddAdressState extends State<AddAdress> {
                         selected: isSelected1,
                         showCheckmark: false,
                         onSelected: (value) {
-                          if (isSelected == true) {
-                            Fluttertoast.showToast(msg: "Home is Selected");
-
-                            setState(() {});
-                          } else {
-                            if (isSelected1 == true) {
-                              setState(() {
-                                isSelected1 = false;
-                              });
-                            } else {
-                              setState(() {
-                                data = 1;
-                                isSelected1 = true;
-                              });
-                            }
-                          }
+                          setState(() {
+                            isSelected = false;
+                            isSelected1 = true;
+                            data = 1;
+                          });
                         },
                         avatar: Icon(
                           Icons.house,
@@ -548,7 +501,7 @@ class _AddAdressState extends State<AddAdress> {
   Future<void> _address() async {
     if (_fullnamecontroller.text.isEmpty) {
       setState(() {
-        _fullNameValidate = "Please enter the details";
+        _fullNameValidate = "Please enter the fullname";
         _isValidate = true;
       });
     } else {
@@ -560,7 +513,7 @@ class _AddAdressState extends State<AddAdress> {
     // Validation For Phone Number
     if (_phonenumbercontroller.text.isEmpty) {
       setState(() {
-        _phoneNumberValidate = "please enter the details";
+        _phoneNumberValidate = "please enter the phone number";
         _isValidate = true;
       });
     } else if (_phonenumbercontroller.text.length < 10) {
@@ -577,7 +530,7 @@ class _AddAdressState extends State<AddAdress> {
     // Validation For Pin Code
     if (_pincodecontroller.text.isEmpty) {
       setState(() {
-        _pincodeValidate = "Please enter the details";
+        _pincodeValidate = "Please enter the pincode";
         _isValidate = true;
       });
     } else {
@@ -586,10 +539,34 @@ class _AddAdressState extends State<AddAdress> {
         _isValidate = false;
       });
     }
+    // Validation For city
+    if (citiesSelected.text.isEmpty) {
+      setState(() {
+        _cityValidate = "Please enter the city";
+        _isValidate = true;
+      });
+    } else {
+      setState(() {
+        _cityValidate = null;
+        _isValidate = false;
+      });
+    }
+    // Validation For state
+    if (stateSelected.text.isEmpty) {
+      setState(() {
+        _stateValidate = "Please enter the state";
+        _isValidate = true;
+      });
+    } else {
+      setState(() {
+        _stateValidate = null;
+        _isValidate = false;
+      });
+    }
     // Validation For House No.
     if (_housenocontroller.text.isEmpty) {
       setState(() {
-        _housenoValidate = "Please enter the details";
+        _housenoValidate = "Please enter the house no.";
         _isValidate = true;
       });
     } else {
@@ -600,7 +577,7 @@ class _AddAdressState extends State<AddAdress> {
     } // Validation For Roadname
     if (_roadnamecontroller.text.isEmpty) {
       setState(() {
-        _roadnameValidate = "Please enter the details";
+        _roadnameValidate = "Please enter the road name";
         _isValidate = true;
       });
     } else {
@@ -612,7 +589,7 @@ class _AddAdressState extends State<AddAdress> {
     // Validation For Landmark
     if (_landmarkcontroller.text.isEmpty) {
       setState(() {
-        _landmarkValidate = "Please enter the details";
+        _landmarkValidate = "Please enter the Landmark";
         _isValidate = true;
       });
     } else {
@@ -632,23 +609,33 @@ class _AddAdressState extends State<AddAdress> {
       });
     }
     if (_isValidate != true) {
-      temp.add(Addresses(
-          fullnameHolder: _fullnamecontroller.text.toString(),
-          phonenumberHolder: _phonenumbercontroller.text.toString(),
-          pincodeHolder: _pincodecontroller.text.toString(),
-          cityholder: selectedCity.toString(),
-          stateholder: stateSelected.text.toString(),
-          landmarkholder: _landmarkcontroller.text.toString(),
-          roadholder: _roadnamecontroller.text.toString(),
-          housenoholder: _housenocontroller.text.toString(),
-          valueholder: data));
-      if (widget.indexnumber != null) {
-        temp.removeAt(widget.indexnumber);
-      }
+      if (temparay == 0) {
+        setState(() {
+          temparay = 1;
+        });
+        Fluttertoast.showToast(msg: "Please check own Address is correct");
+      } else {
+        setState(() {
+          temparay = 0;
+        });
+        temp.add(Addresses(
+            fullnameHolder: _fullnamecontroller.text.toString(),
+            phonenumberHolder: _phonenumbercontroller.text.toString(),
+            pincodeHolder: _pincodecontroller.text.toString(),
+            cityholder: citiesSelected.text.toString(),
+            stateholder: stateSelected.text.toString(),
+            landmarkholder: _landmarkcontroller.text.toString(),
+            roadholder: _roadnamecontroller.text.toString(),
+            housenoholder: _housenocontroller.text.toString(),
+            valueholder: data));
+        if (widget.indexnumber != null) {
+          temp.removeAt(widget.indexnumber);
+        }
 
-      Navigator.pop(context, () {
-        setState(() {});
-      });
+        Navigator.pop(context, () {
+          setState(() {});
+        });
+      }
     }
   }
 }

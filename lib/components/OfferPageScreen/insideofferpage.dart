@@ -52,9 +52,9 @@ class _OfferListPageState extends State<OfferListPage> {
                       Icons.menu,
                       color: Colors.white,
                     )),
-                offset: Offset(-1.0, -220.0),
+                offset: Offset(0, -size.height * 0.3),
                 elevation: 0,
-                color: Colors.grey[100],
+                color: Colors.transparent,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 itemBuilder: (context) {
@@ -68,8 +68,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                 borderRadius: BorderRadius.circular(10))),
                         child: Scrollbar(
                           child: ListView.builder(
-                            padding: EdgeInsets.only(top: 20),
-                            itemCount: menu.length,
+                            itemCount:
+                                restaurantDataCopy['VendorCategories'].length,
                             itemBuilder: (context, index) {
                               final trans = menu[index].title;
                               return InkWell(
@@ -78,15 +78,23 @@ class _OfferListPageState extends State<OfferListPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => TandooriPage(),
-                                          settings: RouteSettings(
-                                              arguments: menu[index])));
+                                        builder: (context) =>
+                                            VendorCategoryPage(
+                                          vendorId: restaurantDataCopy[
+                                                      'VendorCategories'][index]
+                                                  ['id']
+                                              .toString(),
+                                          menudata: restaurantDataCopy,
+                                        ),
+                                      ));
                                 },
                                 child: ListTile(
                                   enabled: true,
                                   selected: index == isSelect,
                                   title: Text(
-                                    menu[index].title,
+                                    restaurantDataCopy['VendorCategories']
+                                        [index]['title'],
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: size.height * 0.02,
                                     ),
@@ -97,7 +105,7 @@ class _OfferListPageState extends State<OfferListPage> {
                           ),
                         ),
                         height: size.height * 0.26,
-                        width: size.width * 0.8,
+                        width: size.width * 0.6,
                       ),
                     ),
                   ];
@@ -122,7 +130,9 @@ class _OfferListPageState extends State<OfferListPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ResturentDetail(),
+                          builder: (context) => ResturentDetail(
+                            restaurantDataInfo: restaurantDataCopy,
+                          ),
                           // settings: RouteSettings(
                           //   arguments: foodlist[tempIndex],
                           // ),
@@ -154,17 +164,9 @@ class _OfferListPageState extends State<OfferListPage> {
             children: [
               Column(
                 children: [
-                  Container(
-                      alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(
-                          top: size.height * 0.01, left: size.width * 0.03),
-                      child: Text(
-                        "Restaurant Category",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: size.height * 0.02,
-                            fontWeight: FontWeight.w700),
-                      )),
+                  SizedBox(
+                    height: size.height * 0.034,
+                  ),
                   Row(
                     children: [
                       Container(
@@ -283,8 +285,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                 context: context,
                                 builder: (context) => OnOfferBottomSheet());
                           },
-                          child: Container(                            margin: EdgeInsets.all(4),
-
+                          child: Container(
+                            margin: EdgeInsets.all(4),
                             padding: EdgeInsets.all(4),
                             height: size.height * 0.1,
                             width: size.width * 0.42,
@@ -293,7 +295,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                 BoxShadow(
                                     blurRadius: 3,
                                     color: Colors.blue[50],
-                                    offset: Offset(1,3),
+                                    offset: Offset(1, 3),
                                     spreadRadius: 3)
                               ],
                               borderRadius: BorderRadius.circular(5),
@@ -390,10 +392,16 @@ class _OfferListPageState extends State<OfferListPage> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
+                          var menuD;
+                          setState(() {
+                            menuD = restaurantDataCopy['Menus'][index];
+                          });
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FoodSlider()));
+                                  builder: (context) => FoodSlider(
+                                        menuData: menuD,
+                                      )));
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 14),
@@ -430,13 +438,32 @@ class _OfferListPageState extends State<OfferListPage> {
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              child: CachedNetworkImage(
-                                                imageUrl: insideOfferPage[index]
-                                                    .foodImage,
-                                                height: size.height * 0.1,
-                                                width: size.width * 0.26,
-                                                fit: BoxFit.fill,
-                                              ),
+                                              child: restaurantDataCopy['Menus']
+                                                          [index]['image1'] !=
+                                                      null
+                                                  ? CachedNetworkImage(
+                                                      imageUrl: S3_BASE_PATH +
+                                                          restaurantDataCopy[
+                                                                  'Menus']
+                                                              [index]['image1'],
+                                                      height: size.height * 0.1,
+                                                      width: size.width * 0.26,
+                                                      fit: BoxFit.cover,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          Center(
+                                                              child:
+                                                                  CircularProgressIndicator()),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    )
+                                                  : Image.asset(
+                                                      "assets/images/feasturenttemp.jpeg",
+                                                      height: size.height * 0.1,
+                                                      width: size.width * 0.26,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                             ),
                                           ),
                                         ),
@@ -496,10 +523,33 @@ class _OfferListPageState extends State<OfferListPage> {
                                                       BorderRadius.circular(
                                                           14)),
                                               textColor: Colors.white,
-                                              child: Center(
-                                                  child: buttonText(
+                                              child: insideOfferPage[index]
+                                                          .addedStatus ==
+                                                      "Add"
+                                                  ? Text(
                                                       insideOfferPage[index]
-                                                          .index0)),
+                                                          .addedStatus,
+                                                      style: TextStyle(
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.015,
+                                                          color:
+                                                              Colors.blueGrey),
+                                                    )
+                                                  : Text(
+                                                      insideOfferPage[index]
+                                                          .addedStatus,
+                                                      style: TextStyle(
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.015,
+                                                          color:
+                                                              Colors.blueGrey),
+                                                    ),
                                             ),
                                           ),
                                         )
@@ -724,33 +774,6 @@ class _OfferListPageState extends State<OfferListPage> {
             ],
           )),
     );
-  }
-
-  buttonText(index) {
-    if (insideOfferPage[index].addedStatus == "Add") {
-      return Row(
-        children: [
-          Icon(
-            Icons.add,
-            size: 15,
-            color: Colors.blueGrey,
-          ),
-          Text(
-            insideOfferPage[index].addedStatus,
-            style: TextStyle(fontSize: 10, color: Colors.blueGrey),
-          ),
-        ],
-      );
-    } else if (insideOfferPage[index].addedStatus == "Added") {
-      return Row(
-        children: [
-          Text(
-            insideOfferPage[index].addedStatus,
-            style: TextStyle(fontSize: 10, color: Colors.blueGrey),
-          ),
-        ],
-      );
-    }
   }
 
   getItemandNavigateToCart(index) async {

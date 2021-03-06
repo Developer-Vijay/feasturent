@@ -2,16 +2,30 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import '../foodlistclass.dart';
 
-class DetailResturent extends StatelessWidget {
-  final int intIndex;
-  const DetailResturent({Key key, this.intIndex}) : super(key: key);
+class DetailResturent extends StatefulWidget {
+  final restaurantInfo;
+  const DetailResturent({Key key, this.restaurantInfo}) : super(key: key);
+
+  @override
+  _DetailResturentState createState() => _DetailResturentState();
+}
+
+class _DetailResturentState extends State<DetailResturent> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      data = widget.restaurantInfo;
+    });
+  }
+
+  var data;
   @override
   Widget build(BuildContext context) {
+    print(data);
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         child: Column(
@@ -19,15 +33,9 @@ class DetailResturent extends StatelessWidget {
             Expanded(
               flex: 7,
               child: Container(
-                child: Swiper(
-                  itemCount: imageList.length,
-                  layout: SwiperLayout.DEFAULT,
-                  itemBuilder: (BuildContext context, index) =>
-                      CachedNetworkImage(
-                    imageUrl: imageList[index],
-                    fit: BoxFit.fill,
-                  ),
-                  autoplay: false,
+                child: CachedNetworkImage(
+                  imageUrl: imageList[0],
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
@@ -42,7 +50,8 @@ class DetailResturent extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0, top: 10),
                             child: Text(
-                              foodlist[0].title,
+                              // "hello",
+                              data['name'],
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
@@ -100,10 +109,10 @@ class DetailResturent extends StatelessWidget {
                                   SizedBox(
                                     height: 8,
                                   ),
-                                  Text(
-                                    foodlist[0].timing,
-                                    style: TextStyle(color: Colors.black54,fontSize:size.height * 0.016 )
-                                  )
+                                  Text(foodlist[0].timing,
+                                      style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: size.height * 0.016))
                                 ],
                               ),
                             ),
@@ -123,7 +132,9 @@ class DetailResturent extends StatelessWidget {
                                   ),
                                   Text(
                                     foodlist[0].distance,
-                                    style: TextStyle(color: Colors.black54,fontSize:size.height * 0.016 ),
+                                    style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: size.height * 0.016),
                                   )
                                 ],
                               ),
@@ -144,7 +155,9 @@ class DetailResturent extends StatelessWidget {
                                   ),
                                   Text(
                                     foodlist[0].serviceType,
-                                    style: TextStyle(color: Colors.black54,fontSize:size.height * 0.016),
+                                    style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: size.height * 0.016),
                                   )
                                 ],
                               ),
@@ -172,11 +185,14 @@ class DetailResturent extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              "Get Direction",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
+                                "Get Direction",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             )
                           ],

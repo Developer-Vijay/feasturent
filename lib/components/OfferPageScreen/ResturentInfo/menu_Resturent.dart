@@ -6,6 +6,8 @@ import '../../../constants.dart';
 import '../foodlistclass.dart';
 
 class ResturentMenu extends StatefulWidget {
+  final resturentMenu;
+  const ResturentMenu({Key key, this.resturentMenu}) : super(key: key);
   @override
   _ResturentMenuState createState() => _ResturentMenuState();
 }
@@ -198,7 +200,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
   addBottonFunction(index) {
     if (insideOfferPage[index].addedStatus == "Add") {
       Fluttertoast.showToast(msg: "${insideOfferPage[index].title} is added");
-
 
       getItemandNavigateToCart(index);
       setState(() {

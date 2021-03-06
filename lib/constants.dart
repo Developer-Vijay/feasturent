@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_webservice/places.dart';
 
 //Colors Code
 const kPrimaryColor = Color(0xFF3498E5);
@@ -7,7 +8,7 @@ const ksecondaryColor = Color(0xFFB5BFD0);
 const kTextColor = Color(0xFF50505D);
 const kSecondaryTextColor = Color(0xFFFFCA27);
 const kTextLightColor = Color(0xFF3498E5);
-
+int registerdUserId;
 const kBackgroundColor = Color(0xFFE4F0FA);
 
 //Api's
@@ -27,6 +28,12 @@ const S3_BASE_PATH = 'https://festurent.s3.amazonaws.com/';
 const SUCCESSSTATUS = 'SUCCESS';
 const ERRORSTATUS = 'ERROR';
 const FAILDSTATUS = 'FAILD';
+
+// Google map Key
+const kGoogleApiKey = "AIzaSyCg54XwhQZYIkN7gpaj3wy9__mxvYQB6oE";
+
+// to get places detail (lat/lng)
+GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 //Profile Design
 

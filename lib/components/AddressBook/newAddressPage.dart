@@ -24,8 +24,7 @@ class _AddressListState extends State<AddressList> {
               child: IconButton(
                 icon: Icon(Icons.arrow_back_sharp),
                 onPressed: () {
-                  Navigator.pop(
-                    context );
+                  Navigator.pop(context);
                 },
               ),
             ),
@@ -153,8 +152,32 @@ class _AddressListState extends State<AddressList> {
                               SizedBox(
                                 height: 6,
                               ),
-                              Text("${temp[index].phonenumberHolder}",
-                                  style: textstyle),
+                              Row(
+                                children: [
+                                  Text("${temp[index].phonenumberHolder}",
+                                      style: textstyle),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 20),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(7),
+                                      decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: temp[index].valueholder == 0
+                                          ? Text(
+                                              "Home",
+                                              style: textstyle,
+                                            )
+                                          : Text(
+                                              "office",
+                                              style: textstyle,
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               SizedBox(
                                 height: 3,
                               ),
@@ -180,7 +203,6 @@ class _AddressListState extends State<AddressList> {
                                 temp[index].housenoholder,
                                 style: textstyle,
                               ),
-                              Text("${temp[index].valueholder}"),
                               SizedBox(
                                 height: 3,
                               ),

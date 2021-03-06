@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants.dart';
+
 class ViewAllCategory extends StatelessWidget {
   final categoryData;
   const ViewAllCategory({Key key, this.categoryData}) : super(key: key);
@@ -26,7 +28,8 @@ class ViewAllCategory extends StatelessWidget {
                   ),
                   child: categoryData[index]['iconImage'] != null
                       ? CachedNetworkImage(
-                          imageUrl: categoryData[index]['iconImage'],
+                          imageUrl:
+                              S3_BASE_PATH + categoryData[index]['iconImage'],
                           imageBuilder: (context, imageProvider) => Container(
                             height: sized.height * 0.195,
                             width: sized.height * 0.22,
@@ -41,9 +44,14 @@ class ViewAllCategory extends StatelessWidget {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                         )
-                      : Image.asset(
-                          "assets/images/chineseplatter.png",
-                          fit: BoxFit.cover,
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Image.asset(
+                            "assets/images/feasturenttemp.jpeg",
+                            fit: BoxFit.cover,
+                          ),
                         ),
                 ),
                 Padding(
