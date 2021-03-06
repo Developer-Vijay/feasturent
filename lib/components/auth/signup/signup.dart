@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:feasturent_costomer_app/components/auth/signup/otpcheck.dart';
 import 'package:feasturent_costomer_app/components/common/validator.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/messageWrapper.dart';
@@ -11,6 +12,8 @@ import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
+int registeredUserId;
+
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -19,7 +22,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   bool tncValue = false;
   bool _isOtpSend = false;
-  int _registeredUserId;
+
   bool _isProcessing = false;
   var _isEmailValidate;
   var _isUserNameValidate;
@@ -38,7 +41,6 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _phoneNumberController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _emailController = new TextEditingController();
-  TextEditingController _otpController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +127,7 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             labelText: 'Email Address',
                             prefixIcon: Icon(Icons.email),
-                            errorText: _isEmailValidate ),
+                            errorText: _isEmailValidate),
                         controller: _emailController,
                       ),
                       SizedBox(height: 15),
@@ -149,34 +151,9 @@ class _SignupPageState extends State<SignupPage> {
                                       : Icons.visibility),
                                   size: 17,
                                 )),
-                            errorText: _isPasswordValidate
-                                ),
+                            errorText: _isPasswordValidate),
                         controller: _passwordController,
                       ),
-                      SizedBox(height: 15),
-                      //Otp
-                      _isOtpSend == true
-                          ? TextField(
-                              obscureText: false,
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9.,]')),
-                              ],
-                              maxLength: 10,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(20.0),
-                                  ),
-                                ),
-                                labelText: 'Otp',
-                                counterText: "",
-                              ),
-                              controller: _otpController,
-                            )
-                          : Container(),
                     ],
                   ),
                 ),
@@ -213,22 +190,13 @@ class _SignupPageState extends State<SignupPage> {
                   child: RaisedButton(
                     padding: EdgeInsets.all(5),
                     onPressed: () {
-                      // Navigator.push(context,
-                      // MaterialPageRoute(builder: (context) => OtpCheck())
-                      // );
-                      _isOtpSend == false ? _signupBymobile() : _verifyOtp();
+                      _signupBymobile();
                     },
-                    child: _isOtpSend == false
-                        ? Text('Signup',
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold))
-                        : Text('Verify',
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
+                    child: Text('Signup',
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
                     color: Colors.blue,
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30.0)),
@@ -364,10 +332,15 @@ class _SignupPageState extends State<SignupPage> {
         _stoastMessage(VerifyAcount);
         setState(() {
           _isOtpSend = true;
-          _registeredUserId = responseData['data']['userId'];
+          registeredUserId = responseData['data']['userId'];
           _isProcessing = false;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OtpChecker()),
+          );
         });
-      } else {
+      }
+       else {
         _stoastMessage(responseData['message']);
         setState(() {
           _isProcessing = false;
@@ -377,28 +350,6 @@ class _SignupPageState extends State<SignupPage> {
       setState(() {
         _isProcessing = false;
       });
-      _stoastMessage(AcceptTnC);
-    }
-  }
-
-  //Verify user otp
-  Future<void> _verifyOtp() async {
-    if (tncValue == true) {
-      var response = await http.post(AUTH_API + 'verifyOtp', body: {
-        'otp': _otpController.text,
-        'userId': _registeredUserId.toString()
-      });
-      var responseData = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        _stoastMessage(responseData['message']);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-      } else {
-        _stoastMessage(responseData['message']);
-      }
-    } else {
       _stoastMessage(AcceptTnC);
     }
   }
