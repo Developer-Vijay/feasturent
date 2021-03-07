@@ -21,10 +21,7 @@ import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 
-const kGoogleApiKey = "AIzaSyCg54XwhQZYIkN7gpaj3wy9__mxvYQB6oE";
-
-// to get places detail (lat/lng)
-GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+int loginstatus = 0;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -32,7 +29,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _loginstatus = 0;
   int _customerUserId = 0;
   String _customerName;
   String _customerProfile;
@@ -207,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print(_refreshtoken);
 
         setState(() {
-          _loginstatus = 1;
+          loginstatus = 1;
           _customerName = responseData['data'][0]['name'] +
               ' ' +
               responseData['data'][0]['lastName'];
@@ -217,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         print('User not Login');
         setState(() {
-          _loginstatus = 0;
+          loginstatus = 0;
           _customerName = '';
           _customerEmail = '';
           _customerProfile = '';
@@ -276,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (p != null) {
       PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(p.placeId);
+          await places.getDetailsByPlaceId(p.placeId);
 
       double lat = detail.result.geometry.location.lat;
       double lng = detail.result.geometry.location.lng;
@@ -414,7 +410,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
             key: _scaffoldKey,
             drawer: AppDrawer(
-                cStatus: _loginstatus,
+                cStatus: loginstatus,
                 cName: _customerName,
                 cProfile: _customerProfile,
                 cEmail: _customerEmail),

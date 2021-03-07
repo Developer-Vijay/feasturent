@@ -5,6 +5,7 @@ import 'package:feasturent_costomer_app/components/Cart.dart/wishlist.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,7 +30,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(top: 8),
+              padding: EdgeInsets.only(top: 4),
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Color(0xffF8F9FE),
@@ -43,7 +44,7 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.03,
+              height: MediaQuery.of(context).size.height * 0.014,
             ),
             Container(
               padding: EdgeInsets.only(bottom: 2),
@@ -82,6 +83,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           fontSize: MediaQuery.of(context).size.height * 0.03,
                           color: Colors.white)),
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                   },
@@ -94,6 +96,8 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    print("hello");
+
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
@@ -223,6 +227,9 @@ class _AppDrawerState extends State<AppDrawer> {
                           FlatButton(
                             child: Text("Yes"),
                             onPressed: () async {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               prefs.remove(
@@ -239,7 +246,9 @@ class _AppDrawerState extends State<AppDrawer> {
                               prefs.remove("loginBy");
 
                               prefs.setBool("_isAuthenticate", false);
-
+                              setState(() {
+                                loginstatus = 0;
+                              });
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

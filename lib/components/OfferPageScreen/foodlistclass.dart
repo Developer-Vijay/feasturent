@@ -15,6 +15,7 @@ double circluarValue = 0.0;
 double circularPrecent = 0.0;
 double latitude;
 double longitude;
+int addresstype;
 
 class ListofFood {
   String timing;

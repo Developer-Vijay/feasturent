@@ -103,6 +103,15 @@ class _SelectAddressState extends State<SelectAddress> {
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
+                        if (temp[index].valueholder == 0) {
+                          setState(() {
+                            addresstype = 0;
+                          });
+                        } else {
+                          setState(() {
+                            addresstype = 1;
+                          });
+                        }
                         setState(() {
                           userNameWithNumber =
                               "${temp[index].fullnameHolder}, ${temp[index].phonenumberHolder}";
@@ -197,8 +206,32 @@ class _SelectAddressState extends State<SelectAddress> {
                               SizedBox(
                                 height: 6,
                               ),
-                              Text("${temp[index].phonenumberHolder}",
-                                  style: textstyle),
+                              Row(
+                                children: [
+                                  Text("${temp[index].phonenumberHolder}",
+                                      style: textstyle),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 20),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(7),
+                                      decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: temp[index].valueholder == 0
+                                          ? Text(
+                                              "Home",
+                                              style: textstyle,
+                                            )
+                                          : Text(
+                                              "office",
+                                              style: textstyle,
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               SizedBox(
                                 height: 3,
                               ),
@@ -224,7 +257,6 @@ class _SelectAddressState extends State<SelectAddress> {
                                 temp[index].housenoholder,
                                 style: textstyle,
                               ),
-                              Text("${temp[index].valueholder}"),
                               SizedBox(
                                 height: 3,
                               ),
@@ -250,4 +282,3 @@ class _SelectAddressState extends State<SelectAddress> {
     );
   }
 }
-

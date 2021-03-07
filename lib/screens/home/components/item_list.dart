@@ -22,8 +22,12 @@ class _CategoriesListState extends State<CategoriesList> {
 
   var data;
   Future<List<dynamic>> fetchCategories() async {
-    var result =
-        await http.get(ADMIN_API + 'category?key=STATUS&id=2&status=1');
+    var result = await http
+        .get(APP_ROUTES + 'getCategories?key=STATUS&id=2&status=1', headers: {
+      "authorization":
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlZpamF5IFNhaG9vIiwiaWF0IjoxNjE0OTI1NzA0LCJleHAiOjE2MTQ5ODg4MDB9.4K5B8KE2hZ04r-0N1T5noVDXc2RjJh5pdkF03z4po-0',
+      "Content-Type": "application/json"
+    });
     data = json.decode(result.body)['data'];
     return data;
   }
@@ -111,14 +115,15 @@ class _CategoriesListState extends State<CategoriesList> {
                                                     ['iconImage'] !=
                                                 null
                                             ? CachedNetworkImage(
-                                                imageUrl: snapshot.data[index]
-                                                    ['iconImage'],
+                                                imageUrl: S3_BASE_PATH +
+                                                    snapshot.data[index]
+                                                        ['iconImage'],
                                                 fit: BoxFit.cover,
                                                 width: size.width * 0.2,
                                                 height: size.height * 0.2,
                                               )
                                             : Image.asset(
-                                                "assets/images/chineseplatter.png",
+                                                "assets/images/feasturenttemp.jpeg",
                                                 fit: BoxFit.cover,
                                                 width: size.width * 0.2,
                                                 height: size.height * 0.2,

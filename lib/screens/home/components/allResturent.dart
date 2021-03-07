@@ -24,29 +24,27 @@ class _AllResturentState extends State<AllResturent> {
     super.initState();
   }
 
+  var returnData;
   var restaurantData;
   Future<List<dynamic>> fetchAllRestaurant() async {
     final prefs = await SharedPreferences.getInstance();
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
-    var result = await http.get(APP_ROUTES + 'getRestaurantInfos' + '?key=ALL',
+    var result = await http.get(
+        APP_ROUTES +
+            'getRestaurantInfos' +
+            '?key=ALL' +
+            '&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
         headers: {
           "authorization": _authorization,
           "Content-Type": "application/json"
         });
     print(_authorization);
     restaurantData = json.decode(result.body)['data'];
-    check();
-
     return restaurantData;
-  }
-
-  check() {
-    if (restaurantData.length >= 10) {
-      listlength = 10;
-    } else if (restaurantData.length <= 10) {
-      listlength = restaurantData.length;
-    }
   }
 
   @override
@@ -61,17 +59,19 @@ class _AllResturentState extends State<AllResturent> {
                 margin: EdgeInsets.only(left: size.width * 0.05),
                 child: Text(
                   "All Restaurant",
-                  style: TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
                 )),
-                Spacer(),
-                 Container(
+            Spacer(),
+            Container(
                 child: FlatButton(
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ViewallRestaurant(restData:restaurantData ),
+                            builder: (context) => ViewallRestaurant(
+                              restData: restaurantData,
+                            ),
                           ));
                     },
                     child: Row(
@@ -100,6 +100,11 @@ class _AllResturentState extends State<AllResturent> {
           future: fetchAllRestaurant(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              if (restaurantData.length >= 10) {
+                listlength = 10;
+              } else if (restaurantData.length <= 10) {
+                listlength = restaurantData.length;
+              }
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
@@ -145,12 +150,30 @@ class _AllResturentState extends State<AllResturent> {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                            imageUrl: foodlist[index].foodImage,
-                                            height: size.height * 0.18,
-                                            width: size.width * 0.3,
-                                            fit: BoxFit.fill,
-                                          ),
+                                          child: snapshot.data[index]['user']
+                                                      ['profile'] !=
+                                                  null
+                                              ? CachedNetworkImage(
+                                                  imageUrl: S3_BASE_PATH +
+                                                      snapshot.data[index]
+                                                          ['user']['profile'],
+                                                  height: size.height * 0.18,
+                                                  width: size.width * 0.3,
+                                                  fit: BoxFit.fill,
+                                                  placeholder: (context, url) =>
+                                                      Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                )
+                                              : Image.asset(
+                                                  "assets/images/feasturenttemp.jpeg",
+                                                  height: size.height * 0.18,
+                                                  width: size.width * 0.3,
+                                                  fit: BoxFit.cover,
+                                                ),
                                         ),
                                       ),
                                     ],
