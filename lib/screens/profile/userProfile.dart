@@ -1,7 +1,9 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/profileItemList.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -43,10 +45,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String finalUser;
   int temp;
   var email;
+  var photo;
   Future getSession() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
     var takeUser = prefs.getString('loginBy');
     email = prefs.getString('userEmail');
+    photo = prefs.getString('userProfile');
     finalUser = takeUser;
     if (finalUser != null) {
       setState(() {
@@ -66,16 +72,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Expanded(
             child: Column(
               children: <Widget>[
-                SizedBox(height: kSpacingUnit.w * 8,),
+                SizedBox(
+                  height: kSpacingUnit.w * 8,
+                ),
                 Container(
                   height: kSpacingUnit.w * 10,
                   width: kSpacingUnit.w * 10,
                   child: Stack(
                     children: <Widget>[
                       CircleAvatar(
-                        radius: kSpacingUnit.w * 5,
-                        backgroundImage: AssetImage('assets/images/avatar.png'),
+                        radius: 50,
+                        backgroundColor: Color(0xffF8F9FE),
+                        child: ClipOval(
+                            child: photo == null
+                                ? Image.asset("assets/images/loginuser.png")
+                                : CachedNetworkImage(
+                                    imageUrl: photo,
+                                    fit: BoxFit.cover,
+                                  )),
                       ),
+                      //CachedNetworkImageProvider('$photo')),
                     ],
                   ),
                 ),

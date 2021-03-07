@@ -12,20 +12,21 @@ class OrderConfirmResturent extends StatefulWidget {
 class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
   @override
   void initState() {
-    circluatimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      setState(() {
-        circularPrecent++;
-      });
-      if (circularPrecent >= 100) {
-        circularPrecent = 0;
-        circluarValue = 1;
-        circluatimer.cancel();
-      } else {
-        setState(() {
-          circluarValue = circularPrecent / 100;
-        });
-      }
-    });
+    
+    // circluatimer = Timer.periodic(Duration(milliseconds: 100), (_) {
+    //   setState(() {
+    //     circularPrecent++;
+    //   });
+    //   if (circularPrecent >= 100) {
+    //     circularPrecent = 0;
+    //     circluarValue = 1;
+    //     circluatimer.cancel();
+    //   } else {
+    //     setState(() {
+    //       circluarValue = circularPrecent / 100;
+    //     });
+    //   }
+    // });
 
     super.initState();
   }
@@ -43,25 +44,22 @@ class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
                 flex: 3,
                 child: Center(
                     child: Text(
-                  "Waiting for Resturent Response",
+                  "Order Placed Successfully",
                   style: TextStyle(
                       fontSize: size.height * 0.035, color: Colors.lightBlue),
                 )),
               ),
               Expanded(
-                flex: 5,
-                child: Center(
-                  child: Container(
-                    height: size.height * 0.5,
-                    width: size.width * 0.7,
-                    child: CircularProgressIndicator(
-                      semanticsLabel: "helo",
-                      strokeWidth: 15,
-                      value: circluarValue,
-                    ),
-                  ),
-                ),
-              ),
+                  flex: 5,
+                  child: Center(
+                      child: CircleAvatar(
+                          maxRadius: 120,
+                          backgroundColor: Colors.green,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 120,
+                          )))),
               Expanded(flex: 4, child: SizedBox()),
             ],
           ),

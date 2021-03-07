@@ -6,7 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({Key key}) : super(key: key);
+  var data;
+   CartScreen({Key key,this.data}) : super(key: key);
   @override
   _CartScreenState createState() => _CartScreenState();
 }
@@ -110,7 +111,8 @@ class _CartScreenState extends State<CartScreen> {
                                                         color: Colors.black),
                                                   ),
                                                   onPressed: () {
-                                                    Navigator.of(context).pop();
+                                                    // Navigator.of(context).pop();
+                                                    Navigator.pop(context);
                                                   },
                                                 ),
                                                 FlatButton(
@@ -145,10 +147,9 @@ class _CartScreenState extends State<CartScreen> {
 
                                                         add2.removeAt(index);
                                                       });
-                                                      Navigator.pop(context,
-                                                          () {
-                                                        setState(() {});
-                                                      });
+                                                     Navigator.pop(context,(){setState(() {
+                                                                                                            
+                                                                                                          });});
                                                     } else {
                                                       setState(() {
                                                         int temp =
@@ -164,10 +165,8 @@ class _CartScreenState extends State<CartScreen> {
 
                                                         add2.removeAt(index);
                                                       });
-                                                      Navigator.pop(context,
-                                                          () {
-                                                        setState(() {});
-                                                      });
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     }
                                                   },
                                                 ),
@@ -370,7 +369,6 @@ class _CartScreenState extends State<CartScreen> {
                                                                 add2[index]
                                                                     .foodPrice;
                                                       });
-
                                                     } else if (add2[index]
                                                             .counter ==
                                                         1) {
@@ -448,7 +446,6 @@ class _CartScreenState extends State<CartScreen> {
                                                             add2[index]
                                                                 .foodPrice;
                                                       });
-
                                                     } else if (add2[index]
                                                             .counter ==
                                                         1) {

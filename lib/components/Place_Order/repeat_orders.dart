@@ -1,12 +1,9 @@
+import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:flutter/material.dart';
 
 class RepeatOrderPage extends StatefulWidget {
-
   final itemData;
-   const RepeatOrderPage({
-    Key key,
-    this.itemData
-  }) : super(key: key);
+  const RepeatOrderPage({Key key, this.itemData}) : super(key: key);
 
   @override
   _RepeatOrderPageState createState() => _RepeatOrderPageState();
@@ -14,12 +11,13 @@ class RepeatOrderPage extends StatefulWidget {
 
 class _RepeatOrderPageState extends State<RepeatOrderPage> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     setState(() {
-          itemData1=widget.itemData;
-        });
+      itemData1 = widget.itemData;
+    });
   }
+
   var itemData1;
   @override
   Widget build(BuildContext context) {
@@ -95,7 +93,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                               "${itemData1['price'].toString()} ₹",
+                                "${itemData1['price'].toString()} ₹",
                                 style: itemPrice,
                                 textDirection: TextDirection.rtl,
                               ),
@@ -361,7 +359,10 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                   textColor: Colors.white,
                   minWidth: size.width * 0.9,
                   color: Colors.blue,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CartScreen()));
+                  },
                 ),
               ),
             )

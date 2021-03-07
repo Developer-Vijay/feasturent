@@ -288,7 +288,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                 totalPrice = totalPrice -
                                                     add2[index].foodPrice;
                                               });
-
                                             } else if (add2[index].counter ==
                                                 1) {
                                               showDialog(
@@ -695,6 +694,25 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   String _authorization = '';
   String _refreshtoken = '';
 
+  var emailid;
+  var userid;
+  var usernamed;
+  var phonenumber;
+
+  Future<void> getData() async {
+    Future<void> getData() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      //FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+      var takeUser = prefs.getString('loginBy');
+      print(takeUser);
+      emailid = prefs.getString('userEmail');
+      userid = prefs.getString('userId');
+      phonenumber.getString('userNumber');
+      usernamed = prefs.getString('name');
+    }
+  }
+
   Future<bool> onPlaceBack() {
     return showDialog(
         context: context,
@@ -742,7 +760,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         int k = add2.length - 1;
 
         for (int i = 0; i <= k; i++) {
-
           if (add2[i].isSelected == true) {
             print("remove from cart ${add2[i].title}");
           } else {
@@ -769,9 +786,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     var options = {
       'key': 'rzp_test_7iDSklI4oMeTUd',
       'amount': num.parse(totalPrice.toString()) * 100,
-      'name': 'Adams',
+      'name': usernamed,
       'description': 'Tasty',
-      'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'}
+      'prefill': {'contact': phonenumber, 'email': emailid}
     };
     try {
       _razorpay.open(options);
@@ -780,7 +797,13 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     }
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+  void _handlePaymentSuccess(PaymentSuccessResponse responsed) async {
+    print("Success");
+    print(responsed.paymentId);
+    print(responsed.signature);
+    print(responsed.orderId);
+    print(responsed);
+
     Fluttertoast.showToast(msg: "Congrats payment Succesffully Paid");
     final prefs = await SharedPreferences.getInstance();
     _authorization = prefs.getString('sessionToken');
@@ -789,10 +812,10 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       "menuId": "1",
       "vendorId": "1",
       "userId": "1",
-      "price": "300",
+      "price": "$totalPrice.00",
       "discountPrice": "40",
       "offerId": "1",
-      "paymentMode": "CASH"
+      "paymentMode": paymentMode.toString()
     }, headers: {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken
@@ -800,44 +823,23 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
     var responseData = jsonDecode(response.body);
 
-    
     if (response.statusCode == 200) {
-     
       setState(() {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-        showDialog(
-            context: context,
-            child: new AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
-              actions: [
-                FlatButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-              title: new Text(
-                "Payment Successfull",
-                style: TextStyle(
-                    color: Colors.green[700], fontWeight: FontWeight.w600),
-              ),
-              content: new Text(
-                "Order has been  Placed Successfully",
-              ),
-            ));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+
         // add2.clear();
       });
     } else {
-     
       Fluttertoast.showToast(msg: "Something went Wrong");
     }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     setState(() {
+      print("error");
+      print(response.code);
+      print(response.message);
       Navigator.pop(context, PlaceOrder());
       showDialog(
           context: context,
@@ -997,4 +999,3 @@ Widget build(BuildContext context) {
   // TODO: implement build
   throw UnimplementedError();
 }
-
