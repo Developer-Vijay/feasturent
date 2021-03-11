@@ -1,17 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo/resturentDetail.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/tandooriScreen.dart';
+import 'package:feasturent_costomer_app/components/common/common.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OfferListPage extends StatefulWidget {
   final restaurantDa;
@@ -25,12 +29,24 @@ class _OfferListPageState extends State<OfferListPage> {
   @override
   void initState() {
     super.initState();
+    getList();
+
     setState(() {
       restaurantDataCopy = widget.restaurantDa;
     });
   }
 
-  int _index1 = 0;
+  List<String> checkdata = [];
+  getList() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      checkdata = cart.getStringList('addedtocart');
+    });
+    print(checkdata);
+  }
+
+  final services = UserServices();
+  int typefood = 0;
   int isSelect = 0;
   var restaurantDataCopy;
 
@@ -123,18 +139,14 @@ class _OfferListPageState extends State<OfferListPage> {
                         fontSize: size.height * 0.017),
                   ),
                   onPressed: () {
-                    setState(() {
-                      // tempIndex = resturentIndex.index0;
-                    });
-
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ResturentDetail(
-                            restaurantDataInfo: restaurantDataCopy,
-                          ),
+                              restaurantDataInfo: restaurantDataCopy,
+                              ),
                           // settings: RouteSettings(
-                          //   arguments: foodlist[tempIndex],
+                          //   arguments: restaurantDataCopy,
                           // ),
                         ));
                   },
@@ -183,16 +195,27 @@ class _OfferListPageState extends State<OfferListPage> {
                                 fontWeight: FontWeight.w600),
                           )),
                       Spacer(),
-                      Container(
-                        alignment: Alignment.topRight,
-                        margin: EdgeInsets.only(
-                            top: size.height * 0.01, right: size.width * 0.033),
-                        child: Text(
-                          "Mobile No- +91 ${restaurantDataCopy['contact']}",
-                          style: TextStyle(
-                              fontSize: size.height * 0.016,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                      InkWell(
+                        onTap: () async {
+                          var url = 'tel:${restaurantDataCopy['contact']}';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          margin: EdgeInsets.only(
+                              top: size.height * 0.01,
+                              right: size.width * 0.033),
+                          child: Text(
+                            "Mobile No- +91 ${restaurantDataCopy['contact']}",
+                            style: TextStyle(
+                                fontSize: size.height * 0.016,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       )
                     ],
@@ -390,6 +413,8 @@ class _OfferListPageState extends State<OfferListPage> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: restaurantDataCopy['Menus'].length,
                     itemBuilder: (context, index) {
+                      int tpye = 0;
+
                       return InkWell(
                         onTap: () {
                           var menuD;
@@ -474,15 +499,50 @@ class _OfferListPageState extends State<OfferListPage> {
                                           right: size.width * 0.06,
                                           child: Container(
                                             child: MaterialButton(
-                                              onPressed: () {
-                                                if (insideOfferPage[index]
-                                                        .addedStatus ==
-                                                    "Add") {
+                                              onPressed: () async {
+                                                final SharedPreferences cart =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                if (restaurantDataCopy['Menus']
+                                                        [index]['isNonVeg'] ==
+                                                    false) {
+                                                  if (restaurantDataCopy[
+                                                              'Menus'][index]
+                                                          ['isEgg'] ==
+                                                      false) {
+                                                    tpye = 1;
+                                                  } else {
+                                                    tpye = 2;
+                                                  }
+                                                } else {
+                                                  tpye = 3;
+                                                }
+
+                                                await services
+                                                    .data(restaurantDataCopy[
+                                                        'Menus'][index]['id'])
+                                                    .then(
+                                                        (value) => fun(value));
+                                                if (data1.isEmpty) {
+                                                  setState(() {
+                                                    itemAddToCart(index, tpye);
+                                                    Fluttertoast.showToast(
+                                                        msg: "Item Added");
+                                                    checkdata.add(
+                                                        restaurantDataCopy[
+                                                                    'Menus']
+                                                                [index]['id']
+                                                            .toString());
+                                                    cart.setStringList(
+                                                        'addedtocart',
+                                                        checkdata);
+                                                  });
+
                                                   final snackBar = SnackBar(
                                                     backgroundColor: Colors
                                                         .lightBlueAccent[200],
                                                     content: Text(
-                                                        "${insideOfferPage[index].title} is added to cart"),
+                                                        "${restaurantDataCopy['Menus'][index]['title']} is added to cart"),
                                                     action: SnackBarAction(
                                                       textColor:
                                                           Colors.redAccent,
@@ -500,20 +560,52 @@ class _OfferListPageState extends State<OfferListPage> {
 
                                                   Scaffold.of(context)
                                                       .showSnackBar(snackBar);
-                                                  getItemandNavigateToCart(
-                                                      index);
-                                                  setState(() {
-                                                    insideOfferPage[index]
-                                                        .addedStatus = "Added";
-                                                  });
-                                                } else if (insideOfferPage[
-                                                            index]
-                                                        .addedStatus ==
-                                                    "Added") {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "${insideOfferPage[index].title} is already added");
+                                                } else {
+                                                  if (data1[0]['itemName'] !=
+                                                      restaurantDataCopy[
+                                                              'Menus'][index]
+                                                          ['title']) {
+                                                    setState(() {
+                                                      itemAddToCart(
+                                                          index, tpye);
+                                                      checkdata.add(
+                                                          restaurantDataCopy[
+                                                                      'Menus']
+                                                                  [index]['id']
+                                                              .toString());
+                                                      cart.setStringList(
+                                                          'addedtocart',
+                                                          checkdata);
+                                                    });
+
+                                                    Fluttertoast.showToast(
+                                                        msg: "Item Added");
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "${restaurantDataCopy['Menus'][index]['title']} is already added");
+
+                                                    print("match");
+                                                  }
                                                 }
+
+                                                // print(data.itemStatus);
+                                                // if (insideOfferPage[index]
+                                                //         .addedStatus ==
+                                                //     "Add") {
+                                                //   setState(() {
+                                                //     insideOfferPage[index]
+                                                //         .addedStatus = "Added";
+                                                //   });
+                                                //   itemAddToCart(index, tpye);
+                                                // } else if (insideOfferPage[
+                                                //             index]
+                                                //         .addedStatus ==
+                                                //     "Added") {
+                                                //   Fluttertoast.showToast(
+                                                //       msg:
+                                                //           "${insideOfferPage[index].title} is already added");
+                                                // }
                                               },
                                               color: Colors.white,
                                               minWidth: size.width * 0.16,
@@ -523,12 +615,13 @@ class _OfferListPageState extends State<OfferListPage> {
                                                       BorderRadius.circular(
                                                           14)),
                                               textColor: Colors.white,
-                                              child: insideOfferPage[index]
-                                                          .addedStatus ==
-                                                      "Add"
+                                              child: checkdata.contains(
+                                                      restaurantDataCopy[
+                                                                  'Menus']
+                                                              [index]['id']
+                                                          .toString())
                                                   ? Text(
-                                                      insideOfferPage[index]
-                                                          .addedStatus,
+                                                      "Added",
                                                       style: TextStyle(
                                                           fontSize: MediaQuery.of(
                                                                       context)
@@ -539,8 +632,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                               Colors.blueGrey),
                                                     )
                                                   : Text(
-                                                      insideOfferPage[index]
-                                                          .addedStatus,
+                                                      "Add",
                                                       style: TextStyle(
                                                           fontSize: MediaQuery.of(
                                                                       context)
@@ -776,22 +868,31 @@ class _OfferListPageState extends State<OfferListPage> {
     );
   }
 
-  getItemandNavigateToCart(index) async {
-    sumtotal = sumtotal + insideOfferPage[index].foodPrice;
+  itemAddToCart(index, tpye) async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
 
-    add2.add(addto(
-        isSelected: false,
-        counter: 1,
-        quantity: 0,
-        sum1: 0,
-        id: insideOfferPage[index].index0,
-        foodPrice: insideOfferPage[index].foodPrice,
-        title: insideOfferPage[index].title.toString(),
-        starRating: insideOfferPage[index].starRating,
-        name: insideOfferPage[index].name.toString(),
-        discountText: insideOfferPage[index].discountText,
-        vegsymbol: insideOfferPage[index].vegsymbol,
-        discountImage: insideOfferPage[index].discountImage,
-        foodImage: insideOfferPage[index].foodImage));
+    var sum = cart.getInt('price');
+    sum = sum + restaurantDataCopy['Menus'][index]['totalPrice'];
+    cart.setInt('price', sum);
+    print(sum);
+    setState(() {
+      // itemCount.add(value)
+      services.saveUser(
+          restaurantDataCopy['Menus'][index]['totalPrice'],
+          1,
+          restaurantDataCopy['Menus'][index]['vendorId'],
+          restaurantDataCopy['Menus'][index]['id'],
+          restaurantDataCopy['Menus'][index]['image1'],
+          restaurantDataCopy['Menus'][index]['title'],
+          "Add".toString(),
+          tpye,
+          0);
+    });
+  }
+
+  fun(value) {
+    setState(() {
+      data1 = value;
+    });
   }
 }

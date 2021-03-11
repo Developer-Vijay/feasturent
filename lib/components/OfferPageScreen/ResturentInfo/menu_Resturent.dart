@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants.dart';
 import '../foodlistclass.dart';
 
@@ -13,21 +16,50 @@ class ResturentMenu extends StatefulWidget {
 }
 
 class _ResturentMenuState extends State<ResturentMenu> {
+  final services = UserServices();
   int _index1 = 0;
+  @override
+  void initState() {
+    super.initState();
+    getList();
+    restaurantDataCopy = widget.resturentMenu;
+  }
 
+  List<String> checkdata = [];
+  getList() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      checkdata = cart.getStringList('addedtocart');
+    });
+    print(checkdata);
+  }
+
+  var restaurantDataCopy;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        itemCount: insideOfferPage.length,
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: restaurantDataCopy['Menus'].length,
         itemBuilder: (context, index) {
+          int tpye = 0;
+
           return InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => FoodSlider()));
+              var menuD;
+              setState(() {
+                menuD = restaurantDataCopy['Menus'][index];
+              });
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FoodSlider(
+                            menuData: menuD,
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 14),
@@ -50,52 +82,180 @@ class _ResturentMenuState extends State<ResturentMenu> {
                   child: Row(children: [
                     Expanded(
                         flex: 0,
-                        child: Container(
-                          alignment: Alignment.topCenter,
-                          height: size.height * 0.2,
-                          child: Stack(
-                            children: [
-                              Container(
-                                margin:
-                                    EdgeInsets.only(left: 4, right: 4, top: 4),
+                        child: Stack(
+                          children: [
+                            Container(
+                              alignment: Alignment.topCenter,
+                              height: size.height * 0.2,
+                              width: size.width * 0.3,
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                    left: size.width * 0.01,
+                                    right: size.width * 0.014,
+                                    top: size.height * 0.008),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: insideOfferPage[index].foodImage,
-                                    height: size.height * 0.1,
-                                    width: size.width * 0.25,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: restaurantDataCopy['Menus'][index]
+                                              ['image1'] !=
+                                          null
+                                      ? CachedNetworkImage(
+                                          imageUrl: S3_BASE_PATH +
+                                              restaurantDataCopy['Menus'][index]
+                                                  ['image1'],
+                                          height: size.height * 0.1,
+                                          width: size.width * 0.26,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => Center(
+                                              child:
+                                                  CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                        )
+                                      : Image.asset(
+                                          "assets/images/feasturenttemp.jpeg",
+                                          height: size.height * 0.1,
+                                          width: size.width * 0.26,
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
-                              // For Add Button
-                              Align(
-                                  widthFactor: 1.6,
-                                  alignment: Alignment.bottomCenter,
-                                  heightFactor: 2.2,
-                                  child: Container(
-                                    child: MaterialButton(
-                                        onPressed: () {
-                                          addBottonFunction(
-                                              insideOfferPage[index].index0);
+                            ),
+                            Positioned(
+                              top: size.height * 0.09,
+                              bottom: size.height * 0.02,
+                              left: size.width * 0.06,
+                              right: size.width * 0.06,
+                              child: Container(
+                                child: MaterialButton(
+                                  onPressed: () async {
+                                    final SharedPreferences cart =
+                                        await SharedPreferences.getInstance();
+                                    if (restaurantDataCopy['Menus'][index]
+                                            ['isNonVeg'] ==
+                                        false) {
+                                      if (restaurantDataCopy['Menus'][index]
+                                              ['isEgg'] ==
+                                          false) {
+                                        tpye = 1;
+                                      } else {
+                                        tpye = 2;
+                                      }
+                                    } else {
+                                      tpye = 3;
+                                    }
 
-                                          // showModalBottomSheet(
-                                          //     context: context,
-                                          //     builder: (context) =>
-                                          //         Sheet());
-                                        },
-                                        color: Colors.white,
-                                        minWidth: size.width * 0.16,
-                                        height: size.height * 0.033,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(14)),
-                                        textColor: Colors.white,
-                                        child: buttonText(
-                                            insideOfferPage[index].index0)),
-                                  ))
-                            ],
-                          ),
+                                    await services
+                                        .data(restaurantDataCopy['Menus'][index]
+                                            ['id'])
+                                        .then((value) => fun(value));
+                                    if (data1.isEmpty) {
+                                      setState(() {
+                                        itemAddToCart(index, tpye);
+                                        Fluttertoast.showToast(
+                                            msg: "Item Added");
+                                        checkdata.add(
+                                            restaurantDataCopy['Menus'][index]
+                                                    ['id']
+                                                .toString());
+                                        cart.setStringList(
+                                            'addedtocart', checkdata);
+                                      });
+
+                                      final snackBar = SnackBar(
+                                        backgroundColor:
+                                            Colors.lightBlueAccent[200],
+                                        content: Text(
+                                            "${restaurantDataCopy['Menus'][index]['title']} is added to cart"),
+                                        action: SnackBarAction(
+                                          textColor: Colors.redAccent,
+                                          label: "View Cart",
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CartScreen()));
+                                          },
+                                        ),
+                                      );
+
+                                      Scaffold.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      if (data1[0]['itemName'] !=
+                                          restaurantDataCopy['Menus'][index]
+                                              ['title']) {
+                                        setState(() {
+                                          itemAddToCart(index, tpye);
+                                          checkdata.add(
+                                              restaurantDataCopy['Menus'][index]
+                                                      ['id']
+                                                  .toString());
+                                          cart.setStringList(
+                                              'addedtocart', checkdata);
+                                        });
+
+                                        Fluttertoast.showToast(
+                                            msg: "Item Added");
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                "${restaurantDataCopy['Menus'][index]['title']} is already added");
+
+                                        print("match");
+                                      }
+                                    }
+
+                                    // print(data.itemStatus);
+                                    // if (insideOfferPage[index]
+                                    //         .addedStatus ==
+                                    //     "Add") {
+                                    //   setState(() {
+                                    //     insideOfferPage[index]
+                                    //         .addedStatus = "Added";
+                                    //   });
+                                    //   itemAddToCart(index, tpye);
+                                    // } else if (insideOfferPage[
+                                    //             index]
+                                    //         .addedStatus ==
+                                    //     "Added") {
+                                    //   Fluttertoast.showToast(
+                                    //       msg:
+                                    //           "${insideOfferPage[index].title} is already added");
+                                    // }
+                                  },
+                                  color: Colors.white,
+                                  minWidth: size.width * 0.16,
+                                  height: size.height * 0.033,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14)),
+                                  textColor: Colors.white,
+                                  child: checkdata.contains(
+                                          restaurantDataCopy['Menus'][index]
+                                                  ['id']
+                                              .toString())
+                                      ? Text(
+                                          "Added",
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.015,
+                                              color: Colors.blueGrey),
+                                        )
+                                      : Text(
+                                          "Add",
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.015,
+                                              color: Colors.blueGrey),
+                                        ),
+                                ),
+                              ),
+                            )
+                          ],
                         )),
                     Expanded(
                         flex: 6,
@@ -106,36 +266,79 @@ class _ResturentMenuState extends State<ResturentMenu> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: 6),
+                                margin:
+                                    EdgeInsets.only(top: size.height * 0.01),
                                 child: Row(
                                   children: [
                                     Text(
-                                      insideOfferPage[index].title,
+                                      restaurantDataCopy['Menus'][index]
+                                          ['title'],
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
-                                          fontSize: 16),
+                                          fontSize: size.height * 0.019),
                                     ),
                                     Spacer(),
                                     Padding(
-                                      padding: const EdgeInsets.only(right: 12),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            insideOfferPage[index].vegsymbol,
-                                        height: size.height * 0.02,
-                                      ),
-                                    )
+                                        padding:
+                                            const EdgeInsets.only(right: 12),
+                                        child: restaurantDataCopy['Menus']
+                                                    [index]['isNonVeg'] ==
+                                                false
+                                            ? restaurantDataCopy['Menus'][index]
+                                                        ['isEgg'] ==
+                                                    false
+                                                ? Container(
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
+                                                      height:
+                                                          size.height * 0.016,
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    child: Image.asset(
+                                                    "assets/images/eggeterian.png",
+                                                    height: size.height * 0.016,
+                                                  ))
+                                            : CachedNetworkImage(
+                                                imageUrl:
+                                                    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
+                                                height: size.height * 0.016,
+                                              ))
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 4),
-                              Text(
-                                insideOfferPage[index].subtitle,
-                                style: TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.bold),
+                              SizedBox(height: size.height * 0.005),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      child: restaurantDataCopy['Menus'][index]
+                                                  ['Category']['iconImage'] ==
+                                              "null"
+                                          ? CachedNetworkImage(
+                                              imageUrl: insideOfferPage[index]
+                                                  .discountImage,
+                                              height: size.height * 0.02,
+                                            )
+                                          : SizedBox(),
+                                    ),
+                                    SizedBox(
+                                      width: size.width * 0.006,
+                                    ),
+                                    Text(
+                                      restaurantDataCopy['Menus'][index]
+                                          ['Category']['name'],
+                                      style: TextStyle(
+                                          fontSize: size.height * 0.014,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(
-                                height: 3,
+                                height: size.height * 0.002,
                               ),
                               Container(
                                 child: Row(
@@ -146,7 +349,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                     Text(
                                       "3.0",
                                       style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: size.height * 0.014,
                                           color: Colors.red,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -155,8 +358,9 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                       margin: EdgeInsets.only(
                                           right: size.width * 0.1),
                                       child: Text(
-                                        "₹${insideOfferPage[index].foodPrice}",
+                                        "₹${restaurantDataCopy['Menus'][index]['totalPrice']}",
                                         style: TextStyle(
+                                            fontSize: size.height * 0.018,
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -165,26 +369,65 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                 ),
                               ),
                               SizedBox(
-                                height: 5,
+                                height: size.height * 0.003,
                               ),
                               Container(
-                                child: Row(
-                                  children: [
-                                    CachedNetworkImage(
-                                      imageUrl:
-                                          insideOfferPage[index].discountImage,
-                                      height: size.height * 0.026,
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Text(
-                                      insideOfferPage[index].discountText,
-                                      style: TextStyle(
-                                          fontSize: 12, color: kTextColor),
-                                    ),
-                                  ],
-                                ),
+                                child: Container(
+                                    child: restaurantDataCopy['Menus'][index]
+                                                    ['MenuOffers']
+                                                .length !=
+                                            0
+                                        ? Row(
+                                            children: [
+                                              CachedNetworkImage(
+                                                imageUrl: insideOfferPage[index]
+                                                    .discountImage,
+                                                height: size.height * 0.02,
+                                              ),
+                                              SizedBox(
+                                                width: size.width * 0.006,
+                                              ),
+                                              Container(
+                                                child: restaurantDataCopy[
+                                                                        'Menus']
+                                                                    [index]
+                                                                ['MenuOffers']
+                                                            .length >=
+                                                        2
+                                                    ? Row(
+                                                        children: [
+                                                          Text(
+                                                            "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}, ",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    size.height *
+                                                                        0.015,
+                                                                color:
+                                                                    kTextColor),
+                                                          ),
+                                                          Text(
+                                                            "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['offerId']}",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    size.height *
+                                                                        0.015,
+                                                                color:
+                                                                    kTextColor),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : Text(
+                                                        "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.015,
+                                                            color: kTextColor),
+                                                      ),
+                                              ),
+                                            ],
+                                          )
+                                        : SizedBox()),
                               ),
                             ],
                           ),
@@ -197,60 +440,31 @@ class _ResturentMenuState extends State<ResturentMenu> {
     );
   }
 
-  addBottonFunction(index) {
-    if (insideOfferPage[index].addedStatus == "Add") {
-      Fluttertoast.showToast(msg: "${insideOfferPage[index].title} is added");
+  itemAddToCart(index, tpye) async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
 
-      getItemandNavigateToCart(index);
-      setState(() {
-        insideOfferPage[index].addedStatus = "Added";
-      });
-    } else if (insideOfferPage[index].addedStatus == "Added") {
-      Fluttertoast.showToast(
-          msg: "${insideOfferPage[index].title} is already added");
-    }
+    var sum = cart.getInt('price');
+    sum = sum + restaurantDataCopy['Menus'][index]['totalPrice'];
+    cart.setInt('price', sum);
+    print(sum);
+    setState(() {
+      // itemCount.add(value)
+      services.saveUser(
+          restaurantDataCopy['Menus'][index]['totalPrice'],
+          1,
+          restaurantDataCopy['Menus'][index]['vendorId'],
+          restaurantDataCopy['Menus'][index]['id'],
+          restaurantDataCopy['Menus'][index]['image1'],
+          restaurantDataCopy['Menus'][index]['title'],
+          "Add".toString(),
+          tpye,
+          0);
+    });
   }
 
-  buttonText(index) {
-    if (insideOfferPage[index].addedStatus == "Add") {
-      return Row(
-        children: [
-          Icon(
-            Icons.add,
-            size: 15,
-            color: Colors.blueGrey,
-          ),
-          Text(
-            insideOfferPage[index].addedStatus,
-            style: TextStyle(fontSize: 10, color: Colors.blueGrey),
-          ),
-        ],
-      );
-    } else if (insideOfferPage[index].addedStatus == "Added") {
-      return Row(
-        children: [
-          Text(
-            insideOfferPage[index].addedStatus,
-            style: TextStyle(fontSize: 10, color: Colors.blueGrey),
-          ),
-        ],
-      );
-    }
-  }
-
-  getItemandNavigateToCart(index) async {
-    add2.add(addto(
-        isSelected: false,
-        counter: 1,
-        quantity: 0,
-        id: insideOfferPage[index].id,
-        foodPrice: insideOfferPage[index].foodPrice,
-        title: insideOfferPage[index].title.toString(),
-        starRating: insideOfferPage[index].starRating,
-        name: insideOfferPage[index].name.toString(),
-        discountText: insideOfferPage[index].discountText,
-        vegsymbol: insideOfferPage[index].vegsymbol,
-        discountImage: insideOfferPage[index].discountImage,
-        foodImage: insideOfferPage[index].foodImage));
+  fun(value) {
+    setState(() {
+      data1 = value;
+    });
   }
 }
