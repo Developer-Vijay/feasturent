@@ -1,5 +1,12 @@
-import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:feasturent_costomer_app/components/Place_Order/order_confirm.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../constants.dart';
 
 class RepeatOrderPage extends StatefulWidget {
   final itemData;
@@ -10,12 +17,102 @@ class RepeatOrderPage extends StatefulWidget {
 }
 
 class _RepeatOrderPageState extends State<RepeatOrderPage> {
+  Razorpay _razorpay;
+  String _authorization = '';
+  String _refreshtoken = '';
   @override
   void initState() {
     super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     setState(() {
       itemData1 = widget.itemData;
     });
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse responsed) async {
+    var responsepaymentid = responsed.paymentId;
+    var responseorderid = responsed.orderId;
+    var responsesignature = responsed.signature;
+    final prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getInt('userId');
+    _authorization = prefs.getString('sessionToken');
+    _refreshtoken = prefs.getString('refreshToken');
+    var response = await http.post(APP_ROUTES + 'itemOrder', body: {
+      "menuId": "1",
+      "vendorId": "1",
+      "userId": "$userid",
+      "price": "${itemData1['orderMenues'][0]['Menu']['price']}",
+      "discountPrice": "00",
+      "offerId": "1",
+      "razorpay_payment_id": "$responsepaymentid",
+      "razorpay_order_id": "$responseorderid",
+      "razorpay_signature": "$responsesignature",
+      "paymentMode": "Online"
+    }, headers: {
+      "authorization": _authorization,
+      "refreshtoken": _refreshtoken
+    });
+
+    var responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+      });
+    } else {
+      Fluttertoast.showToast(msg: responseData['message']);
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    setState(() {
+      Navigator.pop(context, RepeatOrderPage());
+      showDialog(
+          context: context,
+          child: new AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            title: new Text(
+              "Payment Failed",
+              style: TextStyle(
+                  color: Colors.red[700], fontWeight: FontWeight.bold),
+            ),
+            content: new Text(
+              "Something Went Wrong",
+            ),
+          ));
+    });
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+  }
+
+  Future<void> _checkout() async {
+    final prefs = await SharedPreferences.getInstance();
+    var phone = prefs.getString('userNumber');
+    var email = prefs.getString('userEmail');
+    var options = {
+      'key': 'rzp_test_7iDSklI4oMeTUd',
+      'amount': num.parse(
+              itemData1['orderMenues'][0]['Menu']['totalPrice'].toString()) *
+          100,
+      'name': "Vijay",
+      'description': 'Tasty',
+      'prefill': {'contact': "$phone", 'email': "$email"}
+    };
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint(e);
+    }
   }
 
   var itemData1;
@@ -61,16 +158,6 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                 style: TextStyle(color: Colors.black),
                               ),
                               Spacer(),
-                              MaterialButton(
-                                  color: Colors.blue,
-                                  textColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  onPressed: () {},
-                                  child: Text(
-                                    "Mark as Favourite",
-                                    style: TextStyle(fontSize: 12),
-                                  )),
                             ],
                           ),
                         ),
@@ -85,7 +172,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "${itemData1['menuTitle']}",
+                                "${itemData1['orderMenues'][0]['Menu']['title']}",
                                 style: item,
                               ),
                             ),
@@ -93,7 +180,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "${itemData1['price'].toString()} ₹",
+                                "${itemData1['orderMenues'][0]['Menu']['price']} ₹",
                                 style: itemPrice,
                                 textDirection: TextDirection.rtl,
                               ),
@@ -147,8 +234,9 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "Data",
-                                    style: orderHeading,
+                                    "${itemData1['orderMenues'][0]['Menu']['price']} ₹",
+                                    style: itemPrice,
+                                    textDirection: TextDirection.rtl,
                                   ),
                                 )
                               ],
@@ -158,7 +246,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
-                                    "Taxes",
+                                    "gst",
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600),
@@ -169,7 +257,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                   padding:
                                       const EdgeInsets.only(right: 8.0, top: 8),
                                   child: Text(
-                                    "${itemData1['gst'].toString()} ₹",
+                                    "${itemData1['orderMenues'][0]['Menu']['gstAmount'].toString()} ₹",
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600),
@@ -224,7 +312,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "${itemData1['totalPrice'].toString()} ₹",
+                                "${itemData1['orderMenues'][0]['Menu']['totalPrice']} ₹",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                                 textDirection: TextDirection.rtl,
                               ),
@@ -350,23 +438,38 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                         "Repeat Order",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        "View Cart on Next Step",
-                        style: TextStyle(fontSize: 10, color: Colors.red[600]),
-                      )
                     ],
                   ),
                   textColor: Colors.white,
                   minWidth: size.width * 0.9,
                   color: Colors.blue,
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CartScreen()));
+                    checkout();
                   },
                 ),
               ),
             )
           ],
         ));
+  }
+
+  void checkout() async {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text("Repeat Orders"),
+              actions: [
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    _checkout();
+                  },
+                ),
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () {},
+                )
+              ],
+            ));
   }
 }

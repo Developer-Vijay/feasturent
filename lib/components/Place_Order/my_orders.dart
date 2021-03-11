@@ -31,6 +31,7 @@ class _MyOrdersState extends State<MyOrders> {
     super.initState();
 
     _memoizer = AsyncMemoizer();
+    fetchOrders();
     // myFuture = fetchOrders();
   }
 
@@ -52,25 +53,19 @@ class _MyOrdersState extends State<MyOrders> {
 
   var ordersData;
 
-  Future<void> getdata() async {
-    final prefs = await SharedPreferences.getInstance();
-    userid = prefs.getString('userId');
-  }
-
   Future<List<dynamic>> fetchOrders() async {
-    // return this._memoizer.runOnce(() async {
     final prefs = await SharedPreferences.getInstance();
-
+    var userid2 = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
-    var result =
-        await http.get(COMMON_API + 'orders' + '?key=BYUSER&id=1', headers: {
+    
+    var result = await http
+        .get(COMMON_API + 'orders' + '?key=BYUSER&id=$userid2'   , headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
     });
-    var ordersData = json.decode(result.body)['data'];
-
+ ordersData = json.decode(result.body)['data'];
     return ordersData;
-    // });
+   
   }
 
   @override
@@ -110,13 +105,19 @@ class _MyOrdersState extends State<MyOrders> {
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index) {
+                        itemBuilder: (BuildContext context, int index) {print("data");
+                          print(snapshot.data[index]['orderMenues'][0]['Menu']['image1']);
                           return Padding(
                             padding: const EdgeInsets.only(
                                 left: 10.0, right: 12.0, top: 20, bottom: 10.0),
                             child: InkWell(
-                              onTap: (){
-                                Navigator.push(context,MaterialPageRoute(builder: (context)=>RepeatOrderPage(itemData: snapshot.data[index],)));
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RepeatOrderPage(
+                                              itemData: snapshot.data[index],
+                                            )));
                               },
                               child: Container(
                                   decoration: BoxDecoration(
@@ -140,8 +141,7 @@ class _MyOrdersState extends State<MyOrders> {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               child: CachedNetworkImage(
-                                                imageUrl:
-                                                    "https://media.gettyimages.com/photos/closeup-of-pizza-on-table-picture-id995467932?k=6&m=995467932&s=612x612&w=0&h=cjArdsWiJtWrIvJlUWIM7sdEwyf8MSI_0oG-87xf5IM=",
+                                                imageUrl:S3_BASE_PATH + snapshot.data[index]['orderMenues'][0]['Menu']['image1'],
                                                 fit: BoxFit.contain,
                                                 height: size.height * 0.08,
                                               ),
@@ -151,7 +151,7 @@ class _MyOrdersState extends State<MyOrders> {
                                             padding: const EdgeInsets.only(
                                                 left: 12.0),
                                             child: Text(
-                                              "${snapshot.data[index]['menuTitle']}",
+                                              "${snapshot.data[index]['orderMenues'][0]['Menu']['title']}",
                                               style: textstyle1,
                                             ),
                                           ),
@@ -160,7 +160,7 @@ class _MyOrdersState extends State<MyOrders> {
                                             padding: const EdgeInsets.only(
                                                 right: 12.0),
                                             child: Text(
-                                              " ${snapshot.data[index]['totalPrice']} ₹",
+                                              " ${snapshot.data[index]['orderMenues'][0]['Menu']['totalPrice']} ₹",
                                               style: textstyle1,
                                               textDirection: TextDirection.rtl,
                                             ),
@@ -192,13 +192,25 @@ class _MyOrdersState extends State<MyOrders> {
                                             ),
                                           ),
                                           Spacer(),
-
                                           Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: snapshot.data[index]['orderStatus'] == "PENDING"?
-                                            Text("${snapshot.data[index]['orderStatus']}",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),)
-                                            :Text("${snapshot.data[index]['orderStatus']}",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold))
-                                          )
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: snapshot.data[index]
+                                                          ['orderStatus'] ==
+                                                      "PENDING"
+                                                  ? Text(
+                                                      "${snapshot.data[index]['orderStatus']}",
+                                                      style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )
+                                                  : Text(
+                                                      "${snapshot.data[index]['orderStatus']}",
+                                                      style: TextStyle(
+                                                          color: Colors.green,
+                                                          fontWeight:
+                                                              FontWeight.bold)))
                                         ],
                                       ),
                                       SizedBox(
@@ -220,7 +232,6 @@ class _MyOrdersState extends State<MyOrders> {
                                           )
                                         ],
                                       ),
-                                     
                                     ],
                                   )),
                             ),

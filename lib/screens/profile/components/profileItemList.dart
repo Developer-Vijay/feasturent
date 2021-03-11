@@ -22,7 +22,7 @@ class ProfileListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () async {
         if (index == 0) {
           Navigator.push(
@@ -94,7 +94,7 @@ class ProfileListItem extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-          color: Theme.of(context).backgroundColor,
+          color: Colors.blueGrey[50],
         ),
         child: Row(
           children: <Widget>[
@@ -105,9 +105,8 @@ class ProfileListItem extends StatelessWidget {
             SizedBox(width: kSpacingUnit.w * 1.5),
             Text(
               this.text,
-              style: kTitleTextStyle.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
             ),
             Spacer(),
             if (this.hasNavigation)

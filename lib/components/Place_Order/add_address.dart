@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.dart';
+import 'package:feasturent_costomer_app/components/Place_Order/select_address.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class AddAdress extends StatefulWidget {
+class AddAdresses extends StatefulWidget {
   final fullName;
   final phoneNumber;
   final pincode;
@@ -20,7 +20,7 @@ class AddAdress extends StatefulWidget {
   final state;
   final type;
   final indexnumber;
-  const AddAdress({
+  const AddAdresses({
     Key key,
     this.fullName,
     this.city,
@@ -34,10 +34,10 @@ class AddAdress extends StatefulWidget {
     this.indexnumber,
   }) : super(key: key);
   @override
-  _AddAdressState createState() => _AddAdressState();
+  _AddAdressesState createState() => _AddAdressesState();
 }
 
-class _AddAdressState extends State<AddAdress> {
+class _AddAdressesState extends State<AddAdresses> {
   @override
   void initState() {
     super.initState();
@@ -88,6 +88,8 @@ class _AddAdressState extends State<AddAdress> {
   var userid;
   var latitudes;
   var longitudes;
+  var phone;
+  var name;
   void getUserID() async {
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
@@ -135,6 +137,9 @@ class _AddAdressState extends State<AddAdress> {
     }
     Navigator.pop(context);
   }
+
+  
+  
 
   @override
   void dispose() {
@@ -640,8 +645,11 @@ class _AddAdressState extends State<AddAdress> {
       var responsData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: responsData['message']);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddressList()));
+        showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (context) => SelectAddress());
       } else {
         setState(() {
           Fluttertoast.showToast(msg: responsData['message']);

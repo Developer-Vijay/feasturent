@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,23 +11,18 @@ class OrderConfirmResturent extends StatefulWidget {
 class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
   @override
   void initState() {
-    
-    // circluatimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-    //   setState(() {
-    //     circularPrecent++;
-    //   });
-    //   if (circularPrecent >= 100) {
-    //     circularPrecent = 0;
-    //     circluarValue = 1;
-    //     circluatimer.cancel();
-    //   } else {
-    //     setState(() {
-    //       circluarValue = circularPrecent / 100;
-    //     });
-    //   }
-    // });
-
     super.initState();
+    startTime();
+  }
+
+  startTime() async {
+    var duration = new Duration(seconds: 4);
+    return new Timer(duration, route);
+  }
+
+  route() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   @override
@@ -60,7 +54,22 @@ class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
                             color: Colors.white,
                             size: 120,
                           )))),
-              Expanded(flex: 4, child: SizedBox()),
+              Expanded(
+                  flex: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4, right: 4),
+                    child: Container(
+                      margin: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'You will be Redirected to the Home Screen Shortly',
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 16,
+                        ),
+                        maxLines: 2,
+                      ),
+                    ),
+                  )),
             ],
           ),
         ),

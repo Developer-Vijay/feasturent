@@ -59,7 +59,7 @@ dependencies:
   flutter_swiper: ^1.1.6  
   flutter_google_places: ^0.2.6
   liquid_progress_indicator:
-  razorpay_flutter: 1.2.3
+  razorpay_flutter: 
   sqflite:
   path: 
   google_maps_flutter:
