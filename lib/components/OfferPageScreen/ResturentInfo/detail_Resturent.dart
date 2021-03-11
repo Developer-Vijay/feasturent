@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../foodlistclass.dart';
 
 class DetailResturent extends StatefulWidget {
@@ -50,7 +51,6 @@ class _DetailResturentState extends State<DetailResturent> {
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0, top: 10),
                             child: Text(
-                              // "hello",
                               data['name'],
                               style: TextStyle(
                                 color: Colors.black87,
@@ -109,10 +109,29 @@ class _DetailResturentState extends State<DetailResturent> {
                                   SizedBox(
                                     height: 8,
                                   ),
-                                  Text(foodlist[0].timing,
-                                      style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: size.height * 0.016))
+                                  Container(
+                                      child: data['user']['Setting'] == null
+                                          ? Text("Not Avialable",
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize:
+                                                      size.height * 0.016))
+                                          : Container(
+                                              child: data['user']['Setting']
+                                                          ['storeTimeStart'] ==
+                                                      null
+                                                  ? Text("Not Avialable",
+                                                      style: TextStyle(
+                                                          color: Colors.black54,
+                                                          fontSize: size.height *
+                                                              0.016))
+                                                  : Text(
+                                                      "${data['user']['Setting']['storeTimeStart']}-${data['user']['Setting']['storeTimeEnd']}",
+                                                      style: TextStyle(
+                                                          color: Colors.black54,
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.016)))),
                                 ],
                               ),
                             ),
@@ -153,12 +172,29 @@ class _DetailResturentState extends State<DetailResturent> {
                                   SizedBox(
                                     height: 8,
                                   ),
-                                  Text(
-                                    foodlist[0].serviceType,
-                                    style: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: size.height * 0.016),
-                                  )
+                                  Container(
+                                      child: data['user']['Setting'] == null
+                                          ? Text("Not Avialable",
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize:
+                                                      size.height * 0.016))
+                                          : Container(
+                                              child: data['user']['Setting']
+                                                          ['deliveryType'] ==
+                                                      null
+                                                  ? Text("Not Avialable",
+                                                      style: TextStyle(
+                                                          color: Colors.black54,
+                                                          fontSize: size.height *
+                                                              0.016))
+                                                  : Text(
+                                                      "${data['user']['Setting']['deliveryType']}",
+                                                      style: TextStyle(
+                                                          color: Colors.black54,
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.016)))),
                                 ],
                               ),
                             ),
@@ -178,9 +214,13 @@ class _DetailResturentState extends State<DetailResturent> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              foodlist[0].address,
-                              style: TextStyle(color: Colors.black54),
+                            Container(
+                              width: 100,
+                              child: Text(
+                                data['Address']['address'],
+                                style: TextStyle(color: Colors.black54),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             SizedBox(
                               width: 5,
@@ -194,7 +234,7 @@ class _DetailResturentState extends State<DetailResturent> {
                                   decoration: TextDecoration.underline,
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -210,12 +250,22 @@ class _DetailResturentState extends State<DetailResturent> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              "9810559845",
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 15,
-                                  color: Colors.black54),
+                            InkWell(
+                              onTap: () async {
+                                var url = 'tel:${data['contact']}';
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text(
+                                data['contact'],
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 15,
+                                    color: Colors.black54),
+                              ),
                             ),
                           ],
                         ),
@@ -223,7 +273,7 @@ class _DetailResturentState extends State<DetailResturent> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
-                          foodlist[0].resturentDetails,
+                          data['about'].toString(),
                           style: TextStyle(fontSize: 15),
                         ),
                       ),

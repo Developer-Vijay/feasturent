@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/dataClass.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
@@ -18,7 +19,34 @@ class PlaceOrder extends StatefulWidget {
   _PlaceOrderState createState() => _PlaceOrderState();
 }
 
+int price = 0;
+
 class _PlaceOrderState extends State<PlaceOrder> {
+  final services = UserServices();
+  @override
+  void initState() {
+    super.initState();
+    createstorage();
+    getList();
+  }
+
+  List<String> checkitem = [];
+  getList() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      checkitem = cart.getStringList('addedtocart');
+    });
+    print("list");
+    print(checkitem);
+  }
+
+  createstorage() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      price = cart.getInt('price');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -58,13 +86,22 @@ class _PlaceOrderState extends State<PlaceOrder> {
                       size: size.height * 0.025,
                     ),
                   ),
-                  Expanded(flex: 3, child: Text("Delivery at- ")),
+                  SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    "Delivery at-",
+                    style: TextStyle(fontSize: 13),
+                  ),
                   Expanded(
                     flex: 9,
                     child: Text(
                       "$addAddress",
                       overflow: TextOverflow.ellipsis,
                     ),
+                  ),
+                  SizedBox(
+                    width: 4,
                   ),
                   Expanded(
                       flex: 2,
@@ -111,289 +148,505 @@ class _PlaceOrderState extends State<PlaceOrder> {
           Expanded(
             child: ListView(
               children: [
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: add2.length,
-                    // ignore: missing_return
-                    itemBuilder: (context, index) {
-                      if (add2[index].isSelected == true) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 2,
-                                      color: Colors.blue[50],
-                                      offset: Offset(1, 4),
-                                      spreadRadius: 2)
-                                ]),
-                            child: Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                        width: size.width * 0.69,
-                                        height: size.height * 0.128,
+                FutureBuilder(
+                    future: services.fetchUsers(),
+                    builder: (ctx, snap) {
+                      List<AddToCart> users = snap.data;
+                      if (!snap.hasData) {
+                        return Center(
+                          child: Text('No data found'),
+                        );
+                      } else {
+                        return ListView.builder(
+                            itemCount: users.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (
+                              context,
+                              index,
+                            ) {
+                              if (idCheck.contains(users[index].id)) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 2,
+                                                color: Colors.blue[50],
+                                                offset: Offset(1, 4),
+                                                spreadRadius: 2)
+                                          ]),
+                                      child: Dismissible(
+                                        direction: DismissDirection.endToStart,
+                                        // ignore: missing_return
+                                        confirmDismiss: (direction) async {
+                                          if (direction ==
+                                              DismissDirection.endToStart) {
+                                            final bool res = await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    content: Text(
+                                                        "Are you sure you want to delete ${users[index].itemName}?"),
+                                                    actions: <Widget>[
+                                                      FlatButton(
+                                                        child: Text(
+                                                          "Cancel",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                      FlatButton(
+                                                        child: Text(
+                                                          "Delete",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                        onPressed: () async {
+                                                          final SharedPreferences
+                                                              cart =
+                                                              await SharedPreferences
+                                                                  .getInstance();
+                                                          if (idCheck.contains(
+                                                              users[index]
+                                                                  .id)) {
+                                                            setState(() {
+                                                              countSum = countSum -
+                                                                  users[index]
+                                                                      .itemCount;
+                                                              totalPrice = totalPrice -
+                                                                  (users[index]
+                                                                          .itemCount *
+                                                                      users[index]
+                                                                          .itemPrice);
+                                                              price = price -
+                                                                  (users[index]
+                                                                          .itemCount *
+                                                                      users[index]
+                                                                          .itemPrice);
+                                                              cart.setInt(
+                                                                  'price',
+                                                                  price);
+                                                              services.deleteUser(
+                                                                  users[index]
+                                                                      .id);
+                                                              idCheck.remove(
+                                                                  users[index]
+                                                                      .id);
+                                                              vendorIdCheck
+                                                                  .remove(users[
+                                                                          index]
+                                                                      .vendorId);
+                                                              checkitem.remove(
+                                                                  users[index]
+                                                                      .menuItemId
+                                                                      .toString());
+                                                              print(checkitem);
+                                                              cart.setStringList(
+                                                                  'addedtocart',
+                                                                  checkitem);
+                                                            });
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          }
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                            return res;
+                                          }
+                                        },
+                                        key: ValueKey(index),
+                                        background: Container(
+                                          color: Colors.red,
+                                          padding: EdgeInsets.only(right: 10),
+                                          alignment: Alignment.centerRight,
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                         child: Row(
                                           children: [
-                                            Expanded(
-                                              flex: 0,
-                                              child: Container(
-                                                  alignment: Alignment.topLeft,
-                                                  height: size.height * 0.2,
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 4,
-                                                        right: 4,
-                                                        top: 4),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl: add2[index]
-                                                            .foodImage,
-                                                        height:
-                                                            size.height * 0.09,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    ),
-                                                  )),
-                                            ),
-                                            Expanded(
-                                                child: Container(
-                                              margin: EdgeInsets.only(
-                                                  left: size.width * 0.01),
-                                              height: size.height * 0.2,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                      top: 6,
-                                                    ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                    width: size.width * 0.69,
+                                                    height: size.height * 0.128,
                                                     child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
                                                       children: [
-                                                        Text(
-                                                          add2[index].title,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 14),
+                                                        Expanded(
+                                                          flex: 0,
+                                                          child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topLeft,
+                                                              height:
+                                                                  size.height *
+                                                                      0.2,
+                                                              child: Container(
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        left: 4,
+                                                                        right:
+                                                                            4,
+                                                                        top: 4),
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  child: users[index]
+                                                                              .imagePath !=
+                                                                          null
+                                                                      ? CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              S3_BASE_PATH + users[index].imagePath,
+                                                                          height:
+                                                                              size.height * 0.1,
+                                                                          width:
+                                                                              size.width * 0.26,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                          placeholder: (context, url) =>
+                                                                              Center(child: CircularProgressIndicator()),
+                                                                          errorWidget: (context, url, error) =>
+                                                                              Icon(Icons.error),
+                                                                        )
+                                                                      : Image
+                                                                          .asset(
+                                                                          "assets/images/feasturenttemp.jpeg",
+                                                                          height:
+                                                                              size.height * 0.1,
+                                                                          width:
+                                                                              size.width * 0.26,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                ),
+                                                              )),
                                                         ),
-                                                        Spacer(),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  right: 12),
-                                                          child:
-                                                              CachedNetworkImage(
-                                                            imageUrl:
-                                                                add2[index]
-                                                                    .vegsymbol,
-                                                            height:
-                                                                size.height *
-                                                                    0.013,
+                                                        Expanded(
+                                                            child: Container(
+                                                          margin: EdgeInsets.only(
+                                                              left: size.width *
+                                                                  0.01),
+                                                          height:
+                                                              size.height * 0.2,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Container(
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .only(
+                                                                  top: 6,
+                                                                ),
+                                                                child: Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      users[index]
+                                                                          .itemName,
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              14),
+                                                                    ),
+                                                                    Spacer(),
+                                                                    Padding(
+                                                                        padding: const EdgeInsets.only(
+                                                                            right:
+                                                                                12),
+                                                                        child: users[index].itemtype ==
+                                                                                3
+                                                                            ? CachedNetworkImage(
+                                                                                imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
+                                                                                height: size.height * 0.016,
+                                                                              )
+                                                                            : users[index].itemtype == 2
+                                                                                ? Container(
+                                                                                    child: Image.asset(
+                                                                                    "assets/images/eggeterian.png",
+                                                                                    height: size.height * 0.016,
+                                                                                  ))
+                                                                                : Container(
+                                                                                    child: CachedNetworkImage(
+                                                                                      imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
+                                                                                      height: size.height * 0.016,
+                                                                                    ),
+                                                                                  ))
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Container(
+                                                                child: Row(
+                                                                  children: [
+                                                                    Container(
+                                                                        child: Text(
+                                                                            "h")),
+                                                                    Text(
+                                                                      "3.0",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .red,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 50,
+                                                                    ),
+                                                                    Text(
+                                                                      "₹ ${users[index].itemPrice}",
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 20,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                        )
+                                                        )),
                                                       ],
-                                                    ),
-                                                  ),
+                                                    )),
+                                              ],
+                                            ),
+                                            Container(
+                                              alignment: Alignment.centerRight,
+                                              padding:
+                                                  EdgeInsets.only(right: 0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 2,
+                                                      spreadRadius: 2,
+                                                      color: Colors.grey[300],
+                                                      offset: Offset(0, 3))
+                                                ],
+                                              ),
+                                              margin: EdgeInsets.only(
+                                                  right: size.width * 0.0),
+                                              child: ButtonBar(
+                                                buttonPadding:
+                                                    EdgeInsets.all(3),
+                                                children: [
+                                                  InkWell(
+                                                      onTap: () async {
+                                                        final SharedPreferences
+                                                            cart =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        if (idCheck.contains(
+                                                            users[index].id)) {
+                                                          if (users[index]
+                                                                  .itemCount >
+                                                              1) {
+                                                            setState(() {
+                                                              countSum--;
+
+                                                              sumtotal = sumtotal -
+                                                                  users[index]
+                                                                      .itemPrice;
+                                                              totalPrice =
+                                                                  totalPrice -
+                                                                      users[index]
+                                                                          .itemPrice;
+                                                              services.decrementItemCounter(
+                                                                  users[index]
+                                                                      .id,
+                                                                  users[index]
+                                                                      .itemCount);
+                                                              price = price -
+                                                                  users[index]
+                                                                      .itemPrice;
+                                                              cart.setInt(
+                                                                  'price',
+                                                                  price);
+                                                            });
+                                                          } else if (users[
+                                                                      index]
+                                                                  .itemCount ==
+                                                              1) {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    content: Text(
+                                                                        "Are you sure you want to delete ${users[index].itemName}?"),
+                                                                    actions: <
+                                                                        Widget>[
+                                                                      FlatButton(
+                                                                        child:
+                                                                            Text(
+                                                                          "Cancel",
+                                                                          style:
+                                                                              TextStyle(color: Colors.black),
+                                                                        ),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                      ),
+                                                                      FlatButton(
+                                                                        child:
+                                                                            Text(
+                                                                          "Delete",
+                                                                          style:
+                                                                              TextStyle(color: Colors.red),
+                                                                        ),
+                                                                        onPressed:
+                                                                            () async {
+                                                                          final SharedPreferences
+                                                                              cart =
+                                                                              await SharedPreferences.getInstance();
+                                                                          // Delete the item from DB etc..
+                                                                          setState(
+                                                                              () {
+                                                                            price =
+                                                                                price - users[index].itemPrice;
+                                                                            countSum =
+                                                                                countSum - users[index].itemCount;
+                                                                            totalPrice =
+                                                                                totalPrice - users[index].itemPrice;
+                                                                            cart.setInt('price',
+                                                                                price);
+                                                                            services.deleteUser(users[index].id);
+                                                                            idCheck.remove(users[index].id);
+                                                                            vendorIdCheck.remove(users[index].vendorId);
+                                                                            checkitem.remove(users[index].menuItemId.toString());
+                                                                            print(checkitem);
+                                                                            cart.setStringList('addedtocart',
+                                                                                checkitem);
+                                                                          });
+
+                                                                          Navigator.pop(
+                                                                              context,
+                                                                              () {
+                                                                            setState(() {});
+                                                                          });
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                          }
+                                                        }
+                                                      },
+                                                      child:
+                                                          Icon(Icons.remove)),
                                                   SizedBox(
-                                                    height: 10,
+                                                    width: 5,
                                                   ),
-                                                  Container(
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          child: add2[index]
-                                                              .starRating,
-                                                        ),
-                                                        Text(
-                                                          "3.0",
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              color: Colors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 50,
-                                                        ),
-                                                        Text(
-                                                          "₹ ${add2[index].foodPrice}",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                      ],
-                                                    ),
+                                                  Text(
+                                                      "${users[index].itemCount}",
+                                                      style: TextStyle(
+                                                          color: Colors.black)),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  InkWell(
+                                                    child: Icon(Icons.add),
+                                                    onTap: () async {
+                                                      final SharedPreferences
+                                                          cart =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      if (idCheck.contains(
+                                                          users[index].id)) {
+                                                        setState(() {
+                                                          services
+                                                              .incrementItemCounter(
+                                                                  users[index]
+                                                                      .id,
+                                                                  users[index]
+                                                                      .itemCount);
+                                                          price = price +
+                                                              users[index]
+                                                                  .itemPrice;
+
+                                                          countSum++;
+                                                          totalPrice =
+                                                              totalPrice +
+                                                                  users[index]
+                                                                      .itemPrice;
+                                                          cart.setInt(
+                                                              'price', price);
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          services
+                                                              .incrementItemCounter(
+                                                                  users[index]
+                                                                      .id,
+                                                                  users[index]
+                                                                      .itemCount);
+                                                          price = price +
+                                                              users[index]
+                                                                  .itemPrice;
+                                                          cart.setInt(
+                                                              'price', price);
+                                                        });
+                                                      }
+                                                    },
                                                   ),
                                                 ],
                                               ),
-                                            )),
+                                            ),
                                           ],
-                                        )),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  padding: EdgeInsets.only(right: 0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 2,
-                                          spreadRadius: 2,
-                                          color: Colors.grey[300],
-                                          offset: Offset(0, 3))
-                                    ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  margin:
-                                      EdgeInsets.only(right: size.width * 0.0),
-                                  child: ButtonBar(
-                                    buttonPadding: EdgeInsets.all(3),
-                                    children: [
-                                      InkWell(
-                                          onTap: () {
-                                            if (add2[index].counter > 1) {
-                                              setState(() {
-                                                countSum--;
-                                                add2[index].counter--;
-                                                sumtotal = sumtotal -
-                                                    add2[index].foodPrice;
-                                                totalPrice = totalPrice -
-                                                    add2[index].foodPrice;
-                                              });
-                                            } else if (add2[index].counter ==
-                                                1) {
-                                              showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      content: Text(
-                                                          "Are you sure you want to delete ${add2[index].title}?"),
-                                                      actions: <Widget>[
-                                                        FlatButton(
-                                                          child: Text(
-                                                            "Cancel",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                        FlatButton(
-                                                          child: Text(
-                                                            "Delete",
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.red),
-                                                          ),
-                                                          onPressed: () {
-                                                            // TODO: Delete the item from DB etc..
-                                                            setState(() {
-                                                              countSum = countSum -
-                                                                  add2[index]
-                                                                      .counter;
-                                                              totalPrice =
-                                                                  totalPrice -
-                                                                      add2[index]
-                                                                          .foodPrice;
-
-                                                              insideOfferPage[
-                                                                          index]
-                                                                      .addedStatus =
-                                                                  "Add";
-                                                              sumtotal = sumtotal -
-                                                                  add2[index]
-                                                                      .foodPrice;
-                                                              add2.removeAt(
-                                                                  index);
-
-                                                              Navigator.pop(
-                                                                  context, () {
-                                                                setState(() {});
-                                                              });
-                                                            });
-                                                          },
-                                                        ),
-                                                      ],
-                                                    );
-                                                  });
-                                            }
-                                          },
-                                          child: Icon(Icons.remove)),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text("${add2[index].counter}",
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      InkWell(
-                                        child: Icon(Icons.add),
-                                        onTap: () {
-                                          if (add2[index].isSelected == true) {
-                                            setState(() {
-                                              countSum++;
-
-                                              add2[index].counter++;
-
-                                              sumtotal = sumtotal +
-                                                  add2[index].foodPrice;
-                                              totalPrice = totalPrice +
-                                                  add2[index].foodPrice;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              add2[index].counter++;
-
-                                              sumtotal = sumtotal +
-                                                  add2[index].foodPrice;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else {
-                        return SizedBox();
+                                );
+                              } else {
+                                return SizedBox();
+                              }
+                            });
                       }
                     }),
                 Padding(
@@ -494,7 +747,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: size.height * 0.0275),
+                                    fontSize: size.height * 0.0276),
                               )),
                           Expanded(flex: 5, child: SizedBox()),
                           Expanded(
@@ -504,7 +757,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: size.height * 0.0275),
+                                    fontSize: size.height * 0.0273),
                                 textDirection: TextDirection.rtl,
                               )),
                         ],
@@ -590,6 +843,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         if (userNameWithNumber == "Select Delivery Address") {
                           showModalBottomSheet(
                               isScrollControlled: true,
+                              elevation: 2,
                               backgroundColor: Colors.transparent,
                               context: context,
                               builder: (context) => SelectAddress());
@@ -793,28 +1047,29 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     try {
       _razorpay.open(options);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e);
     }
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse responsed) async {
-    print("Success");
-    print(responsed.paymentId);
-    print(responsed.signature);
-    print(responsed.orderId);
-    print(responsed);
-
-    Fluttertoast.showToast(msg: "Congrats payment Succesffully Paid");
+    var responsepaymentid = responsed.paymentId;
+    var responseorderid = responsed.orderId;
+    var responsesignature = responsed.signature;
     final prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getInt('userId');
+
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
     var response = await http.post(APP_ROUTES + 'itemOrder', body: {
       "menuId": "1",
       "vendorId": "1",
-      "userId": "1",
+      "userId": "$userid",
       "price": "$totalPrice.00",
-      "discountPrice": "40",
+      "discountPrice": "00",
       "offerId": "1",
+      "razorpay_payment_id": "$responsepaymentid",
+      "razorpay_order_id": "$responseorderid",
+      "razorpay_signature": "$responsesignature",
       "paymentMode": paymentMode.toString()
     }, headers: {
       "authorization": _authorization,
@@ -827,8 +1082,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
-
-        // add2.clear();
       });
     } else {
       Fluttertoast.showToast(msg: "Something went Wrong");
@@ -910,7 +1163,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                       addAddress,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: size.height * 0.025,
+                        fontSize: size.height * 0.016,
                       ),
                     ),
                     Spacer(),

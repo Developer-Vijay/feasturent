@@ -16,6 +16,9 @@ double circularPrecent = 0.0;
 double latitude;
 double longitude;
 int addresstype;
+List<int> idCheck = [];
+List<int> vendorIdCheck = [];
+List<String> itemAdded = [];
 
 class ListofFood {
   String timing;

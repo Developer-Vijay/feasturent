@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'detail_Resturent.dart';
 import 'menu_Resturent.dart';
 
-var info;
+var infodata;
 
 class ResturentDetail extends StatefulWidget {
   final restaurantDataInfo;
@@ -16,16 +16,18 @@ class _ResturentDetailState extends State<ResturentDetail> {
   @override
   void initState() {
     super.initState();
-    info = widget.restaurantDataInfo;
+    setState(() {
+      infodata = widget.restaurantDataInfo;
+    });
   }
 
   int _page = 0;
   List<Widget> tabPages = [
     DetailResturent(
-      restaurantInfo: info,
+      restaurantInfo: infodata,
     ),
     ResturentMenu(
-      resturentMenu: info,
+      resturentMenu: infodata,
     ),
     ReturentReview(),
   ];

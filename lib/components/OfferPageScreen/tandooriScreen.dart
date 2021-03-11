@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
 import 'foodlistclass.dart';
 
@@ -19,11 +21,23 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
   @override
   void initState() {
     super.initState();
+    getList();
     setState(() {
       menuData = widget.menudata;
       vendorID = widget.vendorId;
     });
   }
+
+  List<String> checkdata = [];
+  getList() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      checkdata = cart.getStringList('addedtocart');
+    });
+    print(checkdata);
+  }
+
+  final services = UserServices();
 
   var menuData;
   var vendorID;
@@ -56,10 +70,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
           physics: NeverScrollableScrollPhysics(),
           itemCount: menuData['Menus'].length,
           itemBuilder: (context, index) {
-            print("this");
-            print(menuData['Menus'][index]['vendorCategoryId']);
-            print("this1");
             if (menuData['Menus'][index]['vendorCategoryId'] == vendorID) {
+              int tpye = 0;
+
               return InkWell(
                 onTap: () {
                   var menuD;
@@ -140,15 +153,45 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                   right: size.width * 0.06,
                                   child: Container(
                                     child: MaterialButton(
-                                      onPressed: () {
-                                        if (insideOfferPage[index]
-                                                .addedStatus ==
-                                            "Add") {
+                                      onPressed: () async {
+                                        final SharedPreferences cart =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        if (menuData['Menus'][index]
+                                                ['isNonVeg'] ==
+                                            false) {
+                                          if (menuData['Menus'][index]
+                                                  ['isEgg'] ==
+                                              false) {
+                                            tpye = 1;
+                                          } else {
+                                            tpye = 2;
+                                          }
+                                        } else {
+                                          tpye = 3;
+                                        }
+
+                                        await services
+                                            .data(
+                                                menuData['Menus'][index]['id'])
+                                            .then((value) => fun(value));
+                                        if (data1.isEmpty) {
+                                          setState(() {
+                                            itemAddToCart(index, tpye);
+                                            Fluttertoast.showToast(
+                                                msg: "Item Added");
+                                            checkdata.add(menuData['Menus']
+                                                    [index]['id']
+                                                .toString());
+                                            cart.setStringList(
+                                                'addedtocart', checkdata);
+                                          });
+
                                           final snackBar = SnackBar(
                                             backgroundColor:
                                                 Colors.lightBlueAccent[200],
                                             content: Text(
-                                                "${insideOfferPage[index].title} is added to cart"),
+                                                "${menuData['Menus'][index]['title']} is added to cart"),
                                             action: SnackBarAction(
                                               textColor: Colors.redAccent,
                                               label: "View Cart",
@@ -164,18 +207,47 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
 
                                           Scaffold.of(context)
                                               .showSnackBar(snackBar);
-                                          getItemandNavigateToCart(index);
-                                          setState(() {
-                                            insideOfferPage[index].addedStatus =
-                                                "Added";
-                                          });
-                                        } else if (insideOfferPage[index]
-                                                .addedStatus ==
-                                            "Added") {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "${insideOfferPage[index].title} is already added");
+                                        } else {
+                                          if (data1[0]['itemName'] !=
+                                              menuData['Menus'][index]
+                                                  ['title']) {
+                                            setState(() {
+                                              itemAddToCart(index, tpye);
+                                              checkdata.add(menuData['Menus']
+                                                      [index]['id']
+                                                  .toString());
+                                              cart.setStringList(
+                                                  'addedtocart', checkdata);
+                                            });
+
+                                            Fluttertoast.showToast(
+                                                msg: "Item Added");
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "${menuData['Menus'][index]['title']} is already added");
+
+                                            print("match");
+                                          }
                                         }
+
+                                        // print(data.itemStatus);
+                                        // if (insideOfferPage[index]
+                                        //         .addedStatus ==
+                                        //     "Add") {
+                                        //   setState(() {
+                                        //     insideOfferPage[index]
+                                        //         .addedStatus = "Added";
+                                        //   });
+                                        //   itemAddToCart(index, tpye);
+                                        // } else if (insideOfferPage[
+                                        //             index]
+                                        //         .addedStatus ==
+                                        //     "Added") {
+                                        //   Fluttertoast.showToast(
+                                        //       msg:
+                                        //           "${insideOfferPage[index].title} is already added");
+                                        // }
                                       },
                                       color: Colors.white,
                                       minWidth: size.width * 0.16,
@@ -184,31 +256,29 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                           borderRadius:
                                               BorderRadius.circular(14)),
                                       textColor: Colors.white,
-                                      child:
-                                          insideOfferPage[index].addedStatus ==
-                                                  "Add"
-                                              ? Text(
-                                                  insideOfferPage[index]
-                                                      .addedStatus,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.015,
-                                                      color: Colors.blueGrey),
-                                                )
-                                              : Text(
-                                                  insideOfferPage[index]
-                                                      .addedStatus,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.015,
-                                                      color: Colors.blueGrey),
-                                                ),
+                                      child: checkdata.contains(
+                                              menuData['Menus'][index]['id']
+                                                  .toString())
+                                          ? Text(
+                                              "Added",
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                          0.015,
+                                                  color: Colors.blueGrey),
+                                            )
+                                          : Text(
+                                              "Add",
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                          0.015,
+                                                  color: Colors.blueGrey),
+                                            ),
                                     ),
                                   ),
                                 )
@@ -398,7 +468,6 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                 ),
               );
             } else {
-              print("data");
               return SizedBox();
             }
           },
@@ -592,21 +661,31 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
     );
   }
 
-  getItemandNavigateToCart(_index1) async {
-    add2.add(addto(
-        isSelected: false,
-        counter: 0,
-        quantity: 0,
-        id: tandorilist[_index1].id,
-        foodPrice: tandorilist[_index1].foodPrice,
-        title: tandorilist[_index1].title.toString(),
-        starRating: tandorilist[_index1].starRating,
-        // name: tandorilist[_index1].name.toString(),
-        discountText: tandorilist[_index1].discountText,
-        vegsymbol: tandorilist[_index1].vegsymbol,
-        discountImage: tandorilist[_index1].discountImage,
-        foodImage: tandorilist[_index1].foodImage));
+  itemAddToCart(index, tpye) async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
 
-    Fluttertoast.showToast(msg: "Items Added TO the Cart $_index1");
+    var sum = cart.getInt('price');
+    sum = sum + menuData['Menus'][index]['totalPrice'];
+    cart.setInt('price', sum);
+    print(sum);
+    setState(() {
+      // itemCount.add(value)
+      services.saveUser(
+          menuData['Menus'][index]['totalPrice'],
+          1,
+          menuData['Menus'][index]['vendorId'],
+          menuData['Menus'][index]['id'],
+          menuData['Menus'][index]['image1'],
+          menuData['Menus'][index]['title'],
+          "Add".toString(),
+          tpye,
+          0);
+    });
+  }
+
+  fun(value) {
+    setState(() {
+      data1 = value;
+    });
   }
 }

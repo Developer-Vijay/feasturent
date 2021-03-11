@@ -1,3 +1,4 @@
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void dispose() {
     super.dispose();
     setSession();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    createstorage();
+  }
+
+  createstorage() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    cart.setInt('price', 0);
+    cart.setStringList('addedtocart', itemAdded);
   }
 
   setSession() async {
