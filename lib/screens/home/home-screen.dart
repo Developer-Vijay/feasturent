@@ -35,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _customerEmail;
   String _authorization = '';
   String _refreshtoken = '';
+  var _latitude;
+  var _longitude;
 
   Future<bool> _onbackpressed() {
     return showDialog(
@@ -189,6 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _customerUserId = prefs.getInt('userId');
       _authorization = prefs.getString('sessionToken');
       _refreshtoken = prefs.getString('refreshToken');
+      _latitude = prefs.setDouble('latitude', latitude);
+      _longitude = prefs.setDouble('longitude', longitude);
 
       var response = await http.get(
           USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),

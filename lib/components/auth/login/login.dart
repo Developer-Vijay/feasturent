@@ -328,6 +328,7 @@ class _LoginPageState extends State<LoginPage> {
           prefs.setInt("loginId", responseData['data']['user']['loginId']);
           prefs.setString("userEmail", responseData['data']['user']['email']);
           prefs.setString("loginBy", "userName");
+          
           prefs.setBool("_isAuthenticate", true);
           prefs.setString('name', _userNameController.text);
           UserAuthenticate(context);
