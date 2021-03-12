@@ -23,6 +23,9 @@ const APP_ROUTES = API_BASE_URL + 'appRoutes/';
 //Base path
 const S3_BASE_PATH = 'https://festurent.s3.amazonaws.com/';
 
+//Socket server url
+const SOCKET_URL = 'http://192.168.1.35:4000/';
+
 //Status
 
 const SUCCESSSTATUS = 'SUCCESS';

@@ -1,14 +1,26 @@
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/components/splashScreen/splashScreen.dart';
+import 'package:feasturent_costomer_app/socketConnection.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 
-
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    socketConfig("default");
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
