@@ -119,13 +119,17 @@ class _AddAdressState extends State<AddAdress> {
       try {
         var locate =
             await Geocoder.local.findAddressesFromCoordinates(coordinates);
-
+        final prefs = await SharedPreferences.getInstance();
+        var username = prefs.getString('name');
+        var phonenumber=prefs.getString('userNumber');
         setState(() {
           _pincodecontroller.text = locate.first.postalCode;
-          stateSelected.text = locate.first.locality;
-          _roadnamecontroller.text = locate.first.adminArea;
-          citiesSelected.text = locate.first.subLocality;
-          _landmarkcontroller.text = locate.first.addressLine;
+          stateSelected.text = locate.first.adminArea;
+          _roadnamecontroller.text = locate.first.addressLine;
+          citiesSelected.text = locate.first.locality;
+          _landmarkcontroller.text = locate.first.subAdminArea;
+          _fullnamecontroller.text = username.toString();
+          _phonenumbercontroller.text=phonenumber.toString();
         });
       } catch (error) {
         Fluttertoast.showToast(msg: "Unable to load your location");
@@ -361,7 +365,7 @@ class _AddAdressState extends State<AddAdress> {
                             const Radius.circular(12.0),
                           ),
                         ),
-                        labelText: 'House No.,Building Name (Required)*',
+                        labelText: 'House No.,Building Name (Optional)',
                         errorText: _housenoValidate,
                         counterText: ""),
                   ),
@@ -385,7 +389,7 @@ class _AddAdressState extends State<AddAdress> {
                         ),
                       ),
                       errorText: _roadnameValidate,
-                      labelText: 'Road name,Area, Colony (Required)*',
+                      labelText: 'Full Address (Required)*',
                       counterText: "",
                     ),
                   ),
@@ -640,7 +644,7 @@ class _AddAdressState extends State<AddAdress> {
       var responsData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: responsData['message']);
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => AddressList()));
       } else {
         setState(() {

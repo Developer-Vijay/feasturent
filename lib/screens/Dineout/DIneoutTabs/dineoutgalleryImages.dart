@@ -17,7 +17,7 @@ class _DineoutGalleryState extends State<DineoutGallery> {
         child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.black,
-              actions: [Icon(Icons.share)],
+             
             ),
             body: Container(
                 child: Swiper(

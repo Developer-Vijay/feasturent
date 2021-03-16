@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutMenuTab.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/dineoutRatingTab.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/dineout_about_tab.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/dineout_offer_tab.dart';
+import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/dineout_overview.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/dineoutgalleryImages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import '../../constants.dart';
-import 'DIneoutTabs/Dineoutoverview_page.dart';
+import 'DIneoutTabs/dineout_menu_tab.dart';
 
 class DineoutDetailPage extends StatefulWidget {
   @override
@@ -68,6 +68,7 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
               SliverAppBar(
                 floating: false,
                 forceElevated: true,
+                // pinned: true,
                 actions: [
                   IconButton(
                     icon: Icon(Icons.favorite),
@@ -79,7 +80,6 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                 flexibleSpace: FlexibleSpaceBar(
                   background: InkWell(
                     onTap: () {
-                     
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -110,6 +110,21 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                     tabs: list),
                 title: Text('Bar'),
               ),
+              // SliverList(
+
+              //   delegate: SliverChildListDelegate([
+              //   TabBarView(
+              //     physics: AlwaysScrollableScrollPhysics(),
+              //     controller: _controller,
+              //     children: [
+              //      PortfolioGallerySubPage(),
+              //     DineoutOfferTabPage(),
+              //     MenuDart(),
+              //     RatingBarTab(),
+              //     About(),
+              //   ],)
+               
+              // ]),),
               SliverFillRemaining(
                   child: TabBarView(
                 controller: _controller,
@@ -120,7 +135,8 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                   RatingBarTab(),
                   About(),
                 ],
-              )),
+              )
+              ),
             ]))));
   }
 }

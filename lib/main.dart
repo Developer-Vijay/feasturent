@@ -4,6 +4,7 @@ import 'package:feasturent_costomer_app/socketConnection.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,10 +15,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  final FirebaseMessaging _messaging = FirebaseMessaging();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    
+    _messaging.getToken().then((token){
+      print("token is this ");
+      print(token);
+    });
     socketConfig("default");
   }
 

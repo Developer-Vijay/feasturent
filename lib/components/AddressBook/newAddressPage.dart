@@ -13,11 +13,12 @@ class AddressList extends StatefulWidget {
 }
 
 class _AddressListState extends State<AddressList> {
+  Future<dynamic>  myfuture;
   @override
   void initState() {
     super.initState();
     setState(() {
-      myfuture = getAddress();
+      myfuture = _getdata();
     });
   }
 
@@ -33,7 +34,7 @@ class _AddressListState extends State<AddressList> {
   }
 
   final textstyle = TextStyle(color: Colors.black, fontSize: 16);
-  Future<List<dynamic>> myfuture;
+  
   String _authorization = '';
   var userid;
   var userid2;
@@ -62,7 +63,10 @@ class _AddressListState extends State<AddressList> {
     }
   }
 
-  Future<List<dynamic>> getAddress() async {
+_getdata() async{
+  return await getAddress();
+}
+  Future<dynamic> getAddress() async {
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
@@ -78,6 +82,8 @@ class _AddressListState extends State<AddressList> {
 
   var ordersData;
   var total = 0;
+
+ 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -152,7 +158,7 @@ class _AddressListState extends State<AddressList> {
                     child: RefreshIndicator(
                       key: refreshKey,
                       onRefresh: refreshList,
-                      child: FutureBuilder<List<dynamic>>(
+                      child: FutureBuilder<dynamic>(
                           future: myfuture,
                           builder:
                               (BuildContext context, AsyncSnapshot snapshot) {
@@ -343,14 +349,7 @@ class _AddressListState extends State<AddressList> {
                                   });
                             } else if (snapshot.hasError) {
                               return Text("Error");
-                            }
-                            // else if (snapshot.data == null) {
-                            //   return Container(
-                            //     child: Image.asset(
-                            //         "assets/images/feasturenttemp.jpeg"),
-                            //   );
-                            // }
-                            else {
+                            } else {
                               return Container(
                                 margin: EdgeInsets.only(left: 18),
                                 child:
