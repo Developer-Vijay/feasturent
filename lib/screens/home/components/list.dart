@@ -56,6 +56,7 @@ class _DetailState extends State<Detail> {
                     CachedNetworkImage(
                   imageUrl: foodlist[index].foodImage,
                   fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
                 autoplayDelay: 2000,
                 autoplay: true,
@@ -101,6 +102,9 @@ class _DetailState extends State<Detail> {
                                               height: size.height * 0.1,
                                               width: size.width * 0.26,
                                               fit: BoxFit.fill,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
                                             ),
                                           ),
                                         ),
@@ -184,6 +188,9 @@ class _DetailState extends State<Detail> {
                                                   imageUrl: burgerlist[index]
                                                       .vegsymbol,
                                                   height: size.height * 0.015,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
                                                 ),
                                               ),
                                               Spacer(),
@@ -271,6 +278,9 @@ class _DetailState extends State<Detail> {
                                                 imageUrl: burgerlist[index]
                                                     .discountImage,
                                                 height: size.height * 0.02,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
                                               ),
                                               SizedBox(
                                                 width: size.width * 0.01,

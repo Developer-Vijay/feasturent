@@ -19,6 +19,9 @@ int addresstype;
 List<int> idCheck = [];
 List<int> vendorIdCheck = [];
 List<String> itemAdded = [];
+var takeUser;
+var emailid;
+var photo;
 
 class ListofFood {
   String timing;

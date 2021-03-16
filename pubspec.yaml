@@ -66,6 +66,8 @@ dependencies:
   location:
   location_web:
   adhara_socket_io: ^0.4.2+1
+  google_map_polyline:
+  permission:
   
 
 dev_dependencies:

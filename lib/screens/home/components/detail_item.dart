@@ -46,12 +46,12 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
               itemBuilder: (context, index) => CachedNetworkImage(
                 imageUrl: imageList[index],
                 fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             )),
           ),
           SliverList(
-            delegate: SliverChildListDelegate(
-              [
+            delegate: SliverChildListDelegate([
               Column(children: [
                 Container(
                     child: Row(

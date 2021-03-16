@@ -6,53 +6,44 @@ import 'package:feasturent_costomer_app/components/OfferPageScreen/insideofferpa
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class OfferPageScreen extends StatefulWidget {
-  final Timer timer;
-
-  OfferPageScreen(this.timer);
   @override
   _OfferPageScreenState createState() => _OfferPageScreenState();
 }
 
 class _OfferPageScreenState extends State<OfferPageScreen> {
-
   var random;
 
   int _currentMax = 10;
-  ScrollController _scrollController = ScrollController();
   int sum = 0;
   int i;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   void initState() {
     super.initState();
-    foodlist.length;
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        _getMoreData();
-      }
-    });
 
     refreshList();
   }
 
-  _getMoreData() {
-    for (i = _currentMax; i < _currentMax + 10; i++) {
-      foodlist.insertAll(11, [ListofFood(ratingText: "Hello")]);
-    }
-    _currentMax = _currentMax + 1;
-    setState(() {});
-  }
+  Future refreshList() async {}
 
-  Future<Null> refreshList() async {
-    refreshKey.currentState.show();
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      foodlist.shuffle();
-    });
-    return null;
+  var restaurantData;
+  Future<List<dynamic>> fetchAllRestaurant() async {
+    var result = await http.get(
+      APP_ROUTES +
+          'getRestaurantInfos' +
+          '?key=ALL' +
+          '&latitude=' +
+          latitude.toString() +
+          '&longitude=' +
+          longitude.toString(),
+    );
+    print("data fetch");
+    restaurantData = json.decode(result.body)['data'];
+    return restaurantData;
   }
 
   @override
@@ -69,7 +60,6 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
           key: refreshKey,
           onRefresh: refreshList,
           child: ListView(
-            controller: _scrollController,
             children: [
               Column(children: [
                 Container(
@@ -321,6 +311,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                             imageUrl:
                                 "https://media.gettyimages.com/vectors/happy-new-year-sale-banner-seasonal-sale-template-stock-illustration-vector-id1282815171?k=6&m=1282815171&s=612x612&w=0&h=0loPSRONAt2KAFZXPGNKVYZ2Gf-AghfEpgxtmOi9bJo=",
                             height: size.height * 0.1,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
                         ),
                       ),
@@ -383,160 +375,214 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                   height: size.height * 0.017,
                 ),
 // Important Data
-
-                ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: foodlist.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == foodlist.length) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OfferListPage(),
-                              settings: RouteSettings(
-                                arguments: foodlist[index],
-                              ),
-                            ));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 2,
-                                      color: Colors.grey[200],
-                                      offset: Offset(0, 3),
-                                      spreadRadius: 2)
-                                ]),
-                            margin: EdgeInsets.only(
-                              left: size.width * 0.02,
-                              right: size.width * 0.02,
-                            ),
-                            height: size.height * 0.14,
-                            child: Row(children: [
-                              Expanded(
-                                  flex: 0,
-                                  child: Container(
-                                    alignment: Alignment.topCenter,
-                                    height: size.height * 0.2,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 4, right: 4, top: 4),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  foodlist[index].foodImage,
-                                              height: size.height * 0.1,
-                                              width: size.width * 0.25,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                              Expanded(
-                                  flex: 6,
-                                  child: Container(
-                                    height: size.height * 0.2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(top: 6),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                foodlist[index].title,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                    fontSize:
-                                                        size.height * 0.023),
-                                              ),
-                                              Spacer(),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 12),
-                                                child: CachedNetworkImage(
-                                                    imageUrl: foodlist[index]
-                                                        .vegsymbol,
-                                                    height:
-                                                        size.height * 0.018),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: size.height * 0.002),
-                                        Text(
-                                          foodlist[index].subtitle,
-                                          style: TextStyle(
-                                              fontSize: size.height * 0.017,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          height: 3,
-                                        ),
-                                        Container(
-                                          child: Row(
+                FutureBuilder<List<dynamic>>(
+                  future: fetchAllRestaurant(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      // if (restaurantData.length >= 10) {
+                      //   listlength = 10;
+                      // } else if (restaurantData.length <= 10) {
+                      //   listlength = restaurantData.length;
+                      // }
+                      return ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: restaurantData.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => OfferListPage(
+                                          restaurantDa: snapshot.data[index])));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 2,
+                                            color: Colors.grey[200],
+                                            offset: Offset(0, 3),
+                                            spreadRadius: 2)
+                                      ]),
+                                  margin: EdgeInsets.only(
+                                    left: size.width * 0.02,
+                                    right: size.width * 0.02,
+                                  ),
+                                  height: size.height * 0.135,
+                                  child: Row(children: [
+                                    Expanded(
+                                        flex: 0,
+                                        child: Container(
+                                          alignment: Alignment.topCenter,
+                                          height: size.height * 0.2,
+                                          child: Stack(
                                             children: [
                                               Container(
-                                                child:
-                                                    foodlist[index].starRating,
+                                                margin: EdgeInsets.all(8),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: snapshot.data[index]
+                                                                  ['user']
+                                                              ['profile'] !=
+                                                          null
+                                                      ? CachedNetworkImage(
+                                                          imageUrl: S3_BASE_PATH +
+                                                              snapshot.data[
+                                                                          index]
+                                                                      ['user']
+                                                                  ['profile'],
+                                                          height: size.height *
+                                                              0.18,
+                                                          width:
+                                                              size.width * 0.3,
+                                                          fit: BoxFit.fill,
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              Center(
+                                                                  child:
+                                                                      CircularProgressIndicator()),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
+                                                        )
+                                                      : Image.asset(
+                                                          "assets/images/feasturenttemp.jpeg",
+                                                          height: size.height *
+                                                              0.18,
+                                                          width:
+                                                              size.width * 0.3,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 6,
+                                        child: Container(
+                                          height: size.height * 0.2,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(
+                                                    top: size.height * 0.02),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      snapshot.data[index]
+                                                          ['name'],
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.02),
+                                                    ),
+                                                    Spacer(),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 12),
+                                                      child: CachedNetworkImage(
+                                                          imageUrl:
+                                                              foodlist[index]
+                                                                  .vegsymbol,
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
+                                                          height: size.height *
+                                                              0.016),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.013,
                                               ),
                                               Text(
-                                                "3.0",
+                                                foodlist[index].subtitle,
                                                 style: TextStyle(
                                                     fontSize:
-                                                        size.height * 0.017,
-                                                    color: Colors.red,
+                                                        size.height * 0.015,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Spacer(),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
                                               Container(
-                                                  margin: EdgeInsets.only(
-                                                      right: size.width * 0.1),
-                                                  child: Text(
-                                                    "₹${foodlist[index].foodPrice}",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ))
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      child: foodlist[index]
+                                                          .starRating,
+                                                    ),
+                                                    Text(
+                                                      "3.0",
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.016,
+                                                          color: Colors.red,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Spacer(),
+                                                    CachedNetworkImage(
+                                                      imageUrl: foodlist[index]
+                                                          .discountImage,
+                                                      height:
+                                                          size.height * 0.022,
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        right: 12.0,
+                                                      ),
+                                                      child: Text(
+                                                        foodlist[index]
+                                                            .discountText,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.016,
+                                                            color: kTextColor),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          child: Row(
-                                            children: [],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ))
-                            ])),
-                      ),
-                    );
+                                        ))
+                                  ])),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                   },
                 )
               ]),

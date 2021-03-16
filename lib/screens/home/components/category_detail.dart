@@ -11,14 +11,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class FoodSlider extends StatefulWidget {
+class CategoryDetailPage extends StatefulWidget {
   final menuData;
-  const FoodSlider({Key key, this.menuData}) : super(key: key);
+  const CategoryDetailPage({Key key, this.menuData}) : super(key: key);
   @override
-  _FoodSliderState createState() => _FoodSliderState();
+  _CategoryDetailPageState createState() => _CategoryDetailPageState();
 }
 
-class _FoodSliderState extends State<FoodSlider> {
+class _CategoryDetailPageState extends State<CategoryDetailPage> {
   bool isSelected = false;
 
   var rating = 3.0;
@@ -55,7 +55,6 @@ class _FoodSliderState extends State<FoodSlider> {
 
   @override
   Widget build(BuildContext context) {
-    print(datamenu['foodTimings'][0]);
     Size size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
@@ -72,9 +71,10 @@ class _FoodSliderState extends State<FoodSlider> {
                     autoplay: true,
                     itemCount: 3,
                     itemBuilder: (context, index) => Container(
-                      child: datamenu['image$index'] != null
+                      child: datamenu['menuImage$index'] != null
                           ? CachedNetworkImage(
-                              imageUrl: S3_BASE_PATH + datamenu['image$index'],
+                              imageUrl:
+                                  S3_BASE_PATH + datamenu['menuImage$index'],
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) =>
                                   Icon(Icons.error),
@@ -148,7 +148,7 @@ class _FoodSliderState extends State<FoodSlider> {
                           Padding(
                             padding: const EdgeInsets.only(left: 12, top: 21),
                             child: Text(
-                              datamenu['Category']['name'],
+                              datamenu['categories']['name'],
                               style: TextStyle(fontSize: 14),
                             ),
                           ),
@@ -314,20 +314,20 @@ class _FoodSliderState extends State<FoodSlider> {
                             }
 
                             await services
-                                .data(datamenu['id'])
+                                .data(datamenu['menuId'])
                                 .then((value) => fun(value));
                             if (data1.isEmpty) {
                               setState(() {
                                 itemAddToCart(tpye);
                                 Fluttertoast.showToast(msg: "Item Added");
-                                checkdata.add(datamenu['id'].toString());
+                                checkdata.add(datamenu['menuId'].toString());
                                 cart.setStringList('addedtocart', checkdata);
                               });
                             } else {
                               if (data1[0]['itemName'] != datamenu['title']) {
                                 setState(() {
                                   itemAddToCart(tpye);
-                                  checkdata.add(datamenu['id'].toString());
+                                  checkdata.add(datamenu['menuId'].toString());
                                   cart.setStringList('addedtocart', checkdata);
                                 });
 
@@ -353,7 +353,7 @@ class _FoodSliderState extends State<FoodSlider> {
                               Icon(
                                 Icons.shopping_bag,
                               ),
-                              checkdata.contains(datamenu['id'].toString())
+                              checkdata.contains(datamenu['menuId'].toString())
                                   ? Text(
                                       "Added",
                                       style: TextStyle(fontSize: 18),
@@ -407,8 +407,8 @@ class _FoodSliderState extends State<FoodSlider> {
           datamenu['totalPrice'],
           1,
           datamenu['vendorId'],
-          datamenu['id'],
-          datamenu['image1'],
+          datamenu['menuId'],
+          datamenu['menuImage1'],
           datamenu['title'],
           "Add".toString(),
           tpye,

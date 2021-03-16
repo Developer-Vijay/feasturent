@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../foodlistclass.dart';
+import 'restaurant_tracking.dart';
 
 class DetailResturent extends StatefulWidget {
   final restaurantInfo;
@@ -37,6 +38,7 @@ class _DetailResturentState extends State<DetailResturent> {
                 child: CachedNetworkImage(
                   imageUrl: imageList[0],
                   fit: BoxFit.fill,
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
             ),
@@ -215,18 +217,30 @@ class _DetailResturentState extends State<DetailResturent> {
                               width: 5,
                             ),
                             Container(
-                              width: 100,
-                              child: Text(
-                                data['Address']['address'],
-                                style: TextStyle(color: Colors.black54),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                                width: size.height * 0.22,
+                                alignment: Alignment.topLeft,
+                                margin: EdgeInsets.only(
+                                    top: size.height * 0.01,
+                                    left: size.width * 0.033),
+                                child: Text(
+                                  data['Address']['address'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: size.height * 0.016,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w600),
+                                )),
                             SizedBox(
                               width: 5,
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TrackingPage(),
+                                    ));
+                              },
                               child: Text(
                                 "Get Direction",
                                 style: TextStyle(
@@ -271,11 +285,17 @@ class _DetailResturentState extends State<DetailResturent> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          data['about'].toString(),
-                          style: TextStyle(fontSize: 15),
-                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: data['about'] == null
+                            ? Text(
+                                "Not added any discription",
+                                style: TextStyle(fontSize: 15),
+                              )
+                            : Text(
+                                data['about'].toString(),
+                                style: TextStyle(fontSize: 15),
+                              ),
                       ),
                     ],
                   ),

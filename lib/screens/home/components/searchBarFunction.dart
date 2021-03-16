@@ -96,6 +96,7 @@ class Searchbar extends SearchDelegate<String> {
                   fit: BoxFit.fill,
                   height: 42,
                   width: 44,
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
             ),
