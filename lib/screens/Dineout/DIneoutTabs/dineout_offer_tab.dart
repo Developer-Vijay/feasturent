@@ -75,12 +75,12 @@ class _DineoutOfferTabPageState extends State<DineoutOfferTabPage> {
                         Text(
                           "1 Guest(s)",
                           style: TextStyle(
-                              color: Colors.grey, fontWeight: FontWeight.w500),
+                              color: Colors.black, fontWeight: FontWeight.w500),
                         ),
                         Spacer(),
                         Text(
                           "from",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          style: TextStyle(color: Colors.blueGrey, fontSize: 12),
                         ),
                         SizedBox(
                           width: 6,
@@ -96,7 +96,7 @@ class _DineoutOfferTabPageState extends State<DineoutOfferTabPage> {
                     ),
                     Row(
                       children: [
-                        Text("25 left for 26th Feb"),
+                        Text("25 days left for 26th Feb",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),),
                         Spacer(),
                         MaterialButton(
                             onPressed: () {},

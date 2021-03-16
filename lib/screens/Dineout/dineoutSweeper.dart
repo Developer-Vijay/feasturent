@@ -48,25 +48,17 @@ class _SwipperState extends State<Swipper> {
                             TextSpan(
                               text: "Get 25% off via dineoutsky \n",
                               style: TextStyle(
-                                shadows: [Shadow(blurRadius: 3,color: Colors.white,
-                                offset: Offset(0,5)
-                                )],
                                 fontSize: size.height * 0.023,
                               ),
                             ),
                             TextSpan(
                                 text: "Clue \n",
-                                style: TextStyle(
-                                  shadows: [Shadow(blurRadius: 2,color: Colors.white,
-                                offset: Offset(0,4)
-                                )],
-                                  fontSize:  size.height * 0.023)),
+                                style:
+                                    TextStyle(fontSize: size.height * 0.023)),
                             TextSpan(
                                 text: "Live events on rooftop",
-                                style: TextStyle(shadows: [Shadow(blurRadius: 3,color: Colors.white,
-                                offset: Offset(0,5)
-                                )],
-                                  fontSize: size.height * 0.023)),
+                                style:
+                                    TextStyle(fontSize: size.height * 0.023)),
                           ]),
                         )),
                   ],
