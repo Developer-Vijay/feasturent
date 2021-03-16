@@ -19,29 +19,21 @@ class AllResturent extends StatefulWidget {
 class _AllResturentState extends State<AllResturent> {
   var listlength = 0;
   String _authorization = '';
-  String _refreshtoken = '';
   void initState() {
     super.initState();
   }
 
-  var returnData;
   var restaurantData;
   Future<List<dynamic>> fetchAllRestaurant() async {
-    final prefs = await SharedPreferences.getInstance();
-    _authorization = prefs.getString('sessionToken');
-    _refreshtoken = prefs.getString('refreshToken');
     var result = await http.get(
-        APP_ROUTES +
-            'getRestaurantInfos' +
-            '?key=ALL' +
-            '&latitude=' +
-            latitude.toString() +
-            '&longitude=' +
-            longitude.toString(),
-        headers: {
-          "authorization": _authorization,
-          "Content-Type": "application/json"
-        });
+      APP_ROUTES +
+          'getRestaurantInfos' +
+          '?key=ALL' +
+          '&latitude=' +
+          latitude.toString() +
+          '&longitude=' +
+          longitude.toString(),
+    );
     print(_authorization);
     restaurantData = json.decode(result.body)['data'];
     return restaurantData;
@@ -207,6 +199,9 @@ class _AllResturentState extends State<AllResturent> {
                                               child: CachedNetworkImage(
                                                   imageUrl:
                                                       foodlist[index].vegsymbol,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
                                                   height: size.height * 0.016),
                                             )
                                           ],
@@ -242,6 +237,9 @@ class _AllResturentState extends State<AllResturent> {
                                               imageUrl:
                                                   foodlist[index].discountImage,
                                               height: size.height * 0.022,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(

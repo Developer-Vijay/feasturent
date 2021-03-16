@@ -188,6 +188,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                           });
 
                                           final snackBar = SnackBar(
+                                            duration: Duration(seconds: 1),
                                             backgroundColor:
                                                 Colors.lightBlueAccent[200],
                                             content: Text(
@@ -321,6 +322,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                               'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
                                                           height: size.height *
                                                               0.016,
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
                                                         ),
                                                       )
                                                     : Container(
@@ -333,6 +337,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                     imageUrl:
                                                         'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
                                                     height: size.height * 0.016,
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
                                                   ))
                                       ],
                                     ),
@@ -351,6 +358,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                       insideOfferPage[index]
                                                           .discountImage,
                                                   height: size.height * 0.02,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
                                                 )
                                               : SizedBox(),
                                         ),
@@ -415,6 +425,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                         insideOfferPage[index]
                                                             .discountImage,
                                                     height: size.height * 0.02,
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
                                                   ),
                                                   SizedBox(
                                                     width: size.width * 0.006,

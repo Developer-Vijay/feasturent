@@ -1,5 +1,6 @@
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
@@ -63,6 +64,9 @@ class ProfileListItem extends StatelessWidget {
                           prefs.remove('loginId');
                           prefs.remove('userEmail');
                           prefs.remove("loginBy");
+                          takeUser = null;
+                          emailid = null;
+                          photo = null;
 
                           prefs.setBool("_isAuthenticate", false);
 

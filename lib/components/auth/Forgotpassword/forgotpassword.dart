@@ -41,9 +41,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       alignment: Alignment.topLeft,
                       child: IconButton(
                         icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                         
-                        },
+                        onPressed: () {},
                         color: Colors.white,
                       ),
                     ),
@@ -80,7 +78,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     padding: EdgeInsets.all(5),
                     child: Text(
                       '''Enter the registerd mobile number 
-                                        to recive an otp''',
+                to receive an otp''',
                       style: TextStyle(fontSize: 17, color: Colors.black),
                     ),
                   ),

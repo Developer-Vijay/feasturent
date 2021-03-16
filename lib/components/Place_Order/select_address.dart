@@ -57,7 +57,7 @@ class _SelectAddressState extends State<SelectAddress> {
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
-    var response =  await http
+    var response = await http
         .get(USER_API + 'getOrderAddress' + '?key=BYUSER&id$userid', headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
@@ -84,9 +84,14 @@ class _SelectAddressState extends State<SelectAddress> {
               Padding(
                 padding: const EdgeInsets.only(right: 160),
                 child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.blue,),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.blue,
+                  ),
                   alignment: Alignment.center,
-                  height: 8,width: size.width * 0.1,),
+                  height: 8,
+                  width: size.width * 0.1,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -137,7 +142,8 @@ class _SelectAddressState extends State<SelectAddress> {
                         Text(
                           "Add Address",
                           style: TextStyle(
-                              color: Colors.red, fontSize: size.height * 0.0225),
+                              color: Colors.red,
+                              fontSize: size.height * 0.0225),
                         )
                       ],
                     ),
@@ -157,7 +163,8 @@ class _SelectAddressState extends State<SelectAddress> {
                         child: Text(
                           "Saved Addresses",
                           style: TextStyle(
-                              color: Colors.black, fontSize: size.height * 0.0225),
+                              color: Colors.black,
+                              fontSize: size.height * 0.0225),
                         )),
                   ),
                 ],
@@ -198,7 +205,7 @@ class _SelectAddressState extends State<SelectAddress> {
                                           "${snapshot.data[index]['name']}, ${snapshot.data[index]['phone']}";
 
                                       addAddress =
-                                          "${snapshot.data[index]['address']},${snapshot.data[index]['landMark']},${snapshot.data[index]['state']}";
+                                          "${snapshot.data[index]['landMark']}";
                                     });
                                     Navigator.pop(context, () {
                                       setState(() {});
@@ -208,7 +215,8 @@ class _SelectAddressState extends State<SelectAddress> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           color: Colors.white,
                                           boxShadow: [
                                             BoxShadow(
@@ -217,7 +225,8 @@ class _SelectAddressState extends State<SelectAddress> {
                                           ]),
                                       width: size.width,
                                       child: Padding(
-                                        padding: const EdgeInsets.only(left: 15.0),
+                                        padding:
+                                            const EdgeInsets.only(left: 15.0),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -245,7 +254,8 @@ class _SelectAddressState extends State<SelectAddress> {
                                                     }
                                                   },
                                                   itemBuilder:
-                                                      (BuildContext context) => [
+                                                      (BuildContext context) =>
+                                                          [
                                                     PopupMenuItem(
                                                       child: Text("Remove"),
                                                       enabled: true,
@@ -275,30 +285,31 @@ class _SelectAddressState extends State<SelectAddress> {
                                                     style: textstyle),
                                                 Spacer(),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      right: 20),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 20),
                                                   child: Container(
                                                     padding:
                                                         const EdgeInsets.all(7),
                                                     decoration: BoxDecoration(
                                                         color: Colors.lightBlue,
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                10)),
-                                                    child: snapshot.data[index]
-                                                                ['addressFor'] ==
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: snapshot.data[index][
+                                                                'addressFor'] ==
                                                             null
                                                         ? Text(
                                                             "Home",
                                                             style: TextStyle(
-                                                                color:
-                                                                    Colors.white),
+                                                                color: Colors
+                                                                    .white),
                                                           )
                                                         : Text(
                                                             "office",
                                                             style: TextStyle(
-                                                                color:
-                                                                    Colors.white),
+                                                                color: Colors
+                                                                    .white),
                                                           ),
                                                   ),
                                                 ),
@@ -311,7 +322,8 @@ class _SelectAddressState extends State<SelectAddress> {
                                               snapshot.data[index]['pinCode'],
                                               style: textstyle,
                                             ),
-                                            SizedBox(height: size.height * 0.001),
+                                            SizedBox(
+                                                height: size.height * 0.001),
                                             Text(
                                               snapshot.data[index]['city'],
                                               style: textstyle,
@@ -320,12 +332,8 @@ class _SelectAddressState extends State<SelectAddress> {
                                               snapshot.data[index]['state'],
                                               style: textstyle,
                                             ),
-                                            SizedBox(height: size.height * 0.001),
-                                            Text(
-                                              snapshot.data[index]['addressFor'],
-                                              style: textstyle,
-                                            ),
-                                            SizedBox(height: size.height * 0.001),
+                                            SizedBox(
+                                                height: size.height * 0.001),
                                             Text(
                                               snapshot.data[index]['landMark'],
                                               style: textstyle,

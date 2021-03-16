@@ -68,7 +68,8 @@ dependencies:
   adhara_socket_io: ^0.4.2+1
   socket_io_client: ^0.9.12
   firebase_messaging:
-  
+  google_map_polyline:
+  permission:
   
 
 dev_dependencies:

@@ -1,4 +1,9 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:ffi';
+import 'dart:io';
 import 'package:feasturent_costomer_app/screens/profile/userProfile.dart';
 import 'package:http/http.dart' as http;
 import 'package:feasturent_costomer_app/constants.dart';
@@ -23,13 +28,15 @@ class _EditProfileState extends State<EditProfile> {
   var emailid;
   int user;
   var username;
- int userid;
-  
+  int userid;
+
   String _authorization = '';
   String _refreshtoken = '';
-  // bool _isValidate = true;
+// bool _isValidate = true;
   bool _isProcessing = false;
-
+  // TextEditingController _lastnamecontroller = TextEditingController();
+  // TextEditingController _namecontroller = TextEditingController();
+  // TextEditingController _secondaryphonecontroller = TextEditingController();
   void initState() {
     super.initState();
     setState(() {
@@ -46,12 +53,14 @@ class _EditProfileState extends State<EditProfile> {
       emailid = prefs.getString('userEmail');
       photo = prefs.getString('userProfile');
       username = prefs.getString('name');
-      userid=prefs.getInt('userId');
+      userid = prefs.getInt('userId');
     });
   }
 
   Future getImageFromGallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
 
     setState(() {
       _image = image;
@@ -81,12 +90,16 @@ class _EditProfileState extends State<EditProfile> {
   bool _isvalidate = true;
 
   bool _isOtpSend = false;
+  File _imagefile;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    // height of Sizebox variable
+    final _textstyle = TextStyle(
+        fontSize: size.height * 0.04,
+        fontWeight: FontWeight.w500,
+        color: Colors.white);
+    var _iconsize = size.height * 0.035;
     var heightsize = size.height * 0.018;
 
     // TextField Varaible For Margin , style text , lable style
@@ -95,360 +108,381 @@ class _EditProfileState extends State<EditProfile> {
     var labelSize = size.height * 0.018;
     var fontSize = size.height * 0.018;
     var iconSize = size.height * 0.018;
-
     return SafeArea(
       child: Scaffold(
-          body: ListView(children: [
-        Column(
+        body: ListView(
           children: [
             Stack(
               children: [
-                // Oval Design
                 ClipPath(
-                  clipper: OvalBottomBorderClipper(),
+                  clipper: ArcClipper(),
                   child: Container(
-                    height: size.height * 0.3,
-                    width: size.width * 0.9994,
+                    height: size.height * 0.5,
                     color: Colors.blue,
-                    child: Column(children: [
-                      // Arrow back Icon
-                      Container(
-                          margin: EdgeInsets.only(
-                              left: size.width * 0.02, top: size.height * 0.03),
-                          alignment: Alignment.topLeft,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back_sharp,
-                              size: size.height * 0.034,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          )),
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
-                      Container(
-                          child: username == null
-                              ? Text(
-                                  "UserName",
-                                  style: TextStyle(
-                                      fontSize: size.height * 0.034,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              : Text(username,
-                                  style: TextStyle(
-                                      fontSize: size.height * 0.034,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)))
-                    ]),
+                    child: Center(child: Text("")),
                   ),
                 ),
-                Stack(
-                  children: [
-                    Positioned(
-                      child: Align(
-                        heightFactor: size.height * 0.0032,
-                        alignment: Alignment.bottomCenter,
-                        child: InkWell(
-                          onTap: () {},
-                          child: CircleAvatar(
-                            radius: size.height * 0.078,
+                Column(children: [
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: _iconsize,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Container(
+                      child: username == null
+                          ? Text(
+                              "UserName",
+                              style: TextStyle(
+                                  fontSize: size.height * 0.034,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text(username,
+                              style: TextStyle(
+                                  fontSize: size.height * 0.034,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)))
+                ]),
+
+                SizedBox(
+                  height: size.height * 0.065,
+                ),
+                Container(
+                  height: size.height * 0.2,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: size.height * 0.085,
                             child: photo == null
                                 ? Container(
                                     width: size.width * 0.4,
                                     height: size.height * 0.4,
-                                    decoration: BoxDecoration(
+                                    decoration: new BoxDecoration(
                                         shape: BoxShape.circle,
-                                        image: DecorationImage(
+                                        image: new DecorationImage(
                                             fit: BoxFit.fill,
                                             image: AssetImage(
-                                                "assets/images/avatar.png"))),
-                                  )
+                                                "assets/images/avatar.png"))))
                                 : ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
-                                    child: Image.file(photo,
-                                        fit: BoxFit.cover,
-                                        width: size.width * 0.4)),
+                                    child: Image.file(
+                                      photo,
+                                      fit: BoxFit.cover,
+                                      width: size.width * 0.33,
+                                    ),
+                                  )),
+                      ),
+                      Positioned(
+                        left: size.width * 0.55,
+                        top: size.height * 0.12,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => Container(
+                                      height: size.height * 0.25,
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                              onTap: () async =>
+                                                  await getImageFromCamera(),
+                                              child: Container(
+                                                child: Center(
+                                                  child: Text("Take Photo"),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Divider(),
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                              onTap: () async =>
+                                                  await getImageFromGallery(),
+                                              child: Container(
+                                                child: Center(
+                                                  child: Text(
+                                                      "Choose from Gallery"),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Divider(),
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                  child: Center(
+                                                child: Text("Cancel"),
+                                              )),
+                                            ),
+                                          )
+                                        ],
+                                      )));
+                            },
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                        left: size.width * 0.6,
-                        top: size.height * 0.26,
-                        child: CircleAvatar(
-                            backgroundColor: Theme.of(context).accentColor,
-                            child: IconButton(
-                              icon: Icon(
-                                LineAwesomeIcons.user_edit,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => Container(
-                                        height: size.height * 0.16,
-                                        child: Column(
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(Icons.photo),
-                                              onPressed: () {
-                                                getImageFromGallery();
-                                              },
-                                            ),
-                                            Divider(
-                                              thickness: 1,
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.camera),
-                                              onPressed: () {
-                                                getImageFromCamera();
-                                              },
-                                            ),
-                                          ],
-                                        )));
-                              },
-                            )))
-                  ],
+                    ],
+                  ),
                 ),
+                SizedBox(
+                  height: size.height * 0.025,
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                      left: leftRightMargin, right: leftRightMargin),
+                  child: TextField(
+                    autocorrect: false,
+                    controller: _userNameController,
+                    keyboardType: TextInputType.name,
+                    readOnly: true,
+                    style: TextStyle(fontSize: fontSize),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        LineAwesomeIcons.user_circle,
+                        size: fontSize,
+                      ),
+                      hintText: username == null ? "UserName" : "$username",
+                      errorText: _usernamevalidate,
+                      labelStyle: TextStyle(fontSize: labelSize),
+                      contentPadding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: heightsize,
+                ),
+// Last Name TextField
+                Container(
+                  margin: EdgeInsets.only(
+                      left: leftRightMargin, right: leftRightMargin),
+                  child: TextField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.name,
+                    controller: _lastNameController,
+                    style: TextStyle(fontSize: fontSize),
+                    decoration: InputDecoration(
+                      prefixIcon:
+                          Icon(LineAwesomeIcons.user_circle_1, size: 25),
+                      labelText: "Name",
+                      errorText: _lastnamevalidate,
+                      labelStyle: TextStyle(fontSize: labelSize),
+                      contentPadding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: heightsize,
+                ),
+// Last Name Textfield
+                Container(
+                  margin: EdgeInsets.only(
+                      left: leftRightMargin, right: leftRightMargin),
+                  child: TextField(
+                    autocorrect: false,
+                    controller: _nameController,
+                    keyboardType: TextInputType.name,
+                    style: TextStyle(fontSize: fontSize),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        LineAwesomeIcons.user,
+                        size: size.height * 0.023,
+                      ),
+                      labelText: "Last Name",
+                      labelStyle: TextStyle(fontSize: labelSize),
+                      errorText: _namevalidate,
+                      contentPadding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: heightsize,
+                ),
+// Phone Controller
+                Container(
+                  margin: EdgeInsets.only(
+                      left: leftRightMargin, right: leftRightMargin),
+                  child: TextField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.phone,
+                    controller: _phoneController,
+                    style: TextStyle(fontSize: fontSize),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(LineAwesomeIcons.phone, size: fontSize),
+                      labelText: "Phone",
+                      errorText: _phonevalidate,
+                      labelStyle: TextStyle(fontSize: labelSize),
+                      contentPadding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: heightsize,
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                      left: leftRightMargin, right: leftRightMargin),
+                  child: TextField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.name,
+                    controller: _emailController,
+                    style: TextStyle(fontSize: fontSize),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        size: size.height * 0.022,
+                      ),
+                      labelText: "Email",
+                      errorText: _emailvalidate,
+                      labelStyle: TextStyle(fontSize: labelSize),
+                      contentPadding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(26.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.022,
+                ),
+
+//Otp
+                _isOtpSend == true
+                    ? Container(
+                        margin: EdgeInsets.only(
+                            left: leftRightMargin, right: leftRightMargin),
+                        child: TextField(
+                          obscureText: false,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp('[0-9.,]')),
+                          ],
+                          maxLength: 10,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(26.0),
+                              ),
+                            ),
+                            labelText: 'Otp',
+                            labelStyle: TextStyle(fontSize: labelSize),
+                            contentPadding: EdgeInsets.only(
+                              top: 10,
+                              left: 20,
+                              bottom: 10,
+                            ),
+                            counterText: "",
+                          ),
+                          controller: _otpController,
+                        ),
+                      )
+                    : Container(),
+                SizedBox(height: size.height * 0.022),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.topRight,
+                          colors: [
+                            Colors.blue,
+                            Colors.cyan,
+                          ])),
+                  child: MaterialButton(
+                    onPressed: () {
+                      _isOtpSend == false ? _editProfile() : _verifyOtp();
+                    },
+                    child: _isOtpSend == false
+                        ? Text("Edit Profile",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: size.height * 0.02))
+                        : Text("Submit",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: size.height * 0.02)),
+                    textColor: Colors.white,
+                    padding: EdgeInsets.all(8),
+                    minWidth: size.width * 0.8,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: 2,
+                  ),
+                )
               ],
             ),
-            SizedBox(
-              height: heightsize,
-            ),
-            // User Name TextField
-            Container(
-              margin: EdgeInsets.only(
-                  left: leftRightMargin, right: leftRightMargin),
-              child: TextField(
-                autocorrect: false,
-                controller: _userNameController,
-                keyboardType: TextInputType.name,
-                readOnly: true,
-                style: TextStyle(fontSize: fontSize),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    LineAwesomeIcons.user_circle,
-                    size: fontSize,
-                  ),
-                  hintText: username == null ? "UserName" : "$username",
-                  errorText: _usernamevalidate,
-                  labelStyle: TextStyle(fontSize: labelSize),
-                  contentPadding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(26.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(
-              height: heightsize,
-            ),
-            // Last Name TextField
-            Container(
-              margin: EdgeInsets.only(
-                  left: leftRightMargin, right: leftRightMargin),
-              child: TextField(
-                autocorrect: false,
-                keyboardType: TextInputType.name,
-                controller: _lastNameController,
-                style: TextStyle(fontSize: fontSize),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(LineAwesomeIcons.user_circle_1, size: 25),
-                  labelText: "Name",
-                  errorText: _lastnamevalidate,
-                  labelStyle: TextStyle(fontSize: labelSize),
-                  contentPadding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(26.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: heightsize,
-            ),
-            // Last Name Textfield
-            Container(
-              margin: EdgeInsets.only(
-                  left: leftRightMargin, right: leftRightMargin),
-              child: TextField(
-                autocorrect: false,
-                controller: _nameController,
-                keyboardType: TextInputType.name,
-                style: TextStyle(fontSize: fontSize),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    LineAwesomeIcons.user,
-                    size: size.height * 0.023,
-                  ),
-                  labelText: "Last Name",
-                  labelStyle: TextStyle(fontSize: labelSize),
-                  errorText: _namevalidate,
-                  contentPadding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(26.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(
-              height: heightsize,
-            ),
-            //  Phone Controller
-            Container(
-              margin: EdgeInsets.only(
-                  left: leftRightMargin, right: leftRightMargin),
-              child: TextField(
-                autocorrect: false,
-                keyboardType: TextInputType.phone,
-                controller: _phoneController,
-                style: TextStyle(fontSize: fontSize),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(LineAwesomeIcons.phone, size: fontSize),
-                  labelText: "Phone",
-                  errorText: _phonevalidate,
-                  labelStyle: TextStyle(fontSize: labelSize),
-                  contentPadding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(26.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: heightsize,
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  left: leftRightMargin, right: leftRightMargin),
-              child: TextField(
-                autocorrect: false,
-                keyboardType: TextInputType.name,
-                controller: _emailController,
-                style: TextStyle(fontSize: fontSize),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.email_outlined,
-                    size: size.height * 0.022,
-                  ),
-                  labelText: "Email",
-                  errorText: _emailvalidate,
-                  labelStyle: TextStyle(fontSize: labelSize),
-                  contentPadding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(26.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: size.height * 0.022,
-            ),
-
-            //Otp
-            _isOtpSend == true
-                ? Container(
-                    margin: EdgeInsets.only(
-                        left: leftRightMargin, right: leftRightMargin),
-                    child: TextField(
-                      obscureText: false,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                      ],
-                      maxLength: 10,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(26.0),
-                          ),
-                        ),
-                        labelText: 'Otp',
-                        labelStyle: TextStyle(fontSize: labelSize),
-                        contentPadding: EdgeInsets.only(
-                          top: 10,
-                          left: 20,
-                          bottom: 10,
-                        ),
-                        counterText: "",
-                      ),
-                      controller: _otpController,
-                    ),
-                  )
-                : Container(),
-            SizedBox(height: size.height * 0.022),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.topRight,
-                      colors: [
-                        Colors.blue,
-                        Colors.cyan,
-                      ])),
-              child: MaterialButton(
-                onPressed: () {
-                  _isOtpSend == false ? _editProfile() : _verifyOtp();
-                },
-                child: _isOtpSend == false
-                    ? Text("Edit Profile",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: size.height * 0.02))
-                    : Text("Submit",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: size.height * 0.02)),
-                textColor: Colors.white,
-                padding: EdgeInsets.all(8),
-                minWidth: size.width * 0.8,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                elevation: 2,
-              ),
-            )
           ],
         ),
-      ])),
+      ),
     );
   }
 
-  // ignore: non_constant_identifier_names
+// ignore: non_constant_identifier_names
   Future<void> _editProfile() async {
-    // for name
+// for name
     if (_nameController.text.isEmpty) {
       setState(() {
         _namevalidate = "Name Cannot be Empty";
@@ -461,7 +495,7 @@ class _EditProfileState extends State<EditProfile> {
       });
     }
 
-    // for Last Name
+// for Last Name
     if (_lastNameController.text.isEmpty) {
       setState(() {
         _lastnamevalidate = "Last Name Cannot be empty";
@@ -474,7 +508,7 @@ class _EditProfileState extends State<EditProfile> {
       });
     }
 
-    // for Phone
+// for Phone
 
     if (_phoneController.text.isEmpty) {
       setState(() {
@@ -563,7 +597,7 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         print(userid);
         Fluttertoast.showToast(msg: "Verified");
-       Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => UserProfilePage()),
         );

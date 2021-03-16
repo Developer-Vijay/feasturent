@@ -127,6 +127,9 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                             const EdgeInsets.only(right: 12),
                                         child: CachedNetworkImage(
                                             imageUrl: foodlist[index].vegsymbol,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
                                             height: size.height * 0.016),
                                       )
                                     ],
@@ -161,6 +164,8 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                       CachedNetworkImage(
                                         imageUrl: foodlist[index].discountImage,
                                         height: size.height * 0.022,
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(

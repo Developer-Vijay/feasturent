@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants.dart';
 import '../foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/tandooriScreen.dart';
 
 class ResturentMenu extends StatefulWidget {
   final resturentMenu;
@@ -40,6 +41,80 @@ class _ResturentMenuState extends State<ResturentMenu> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      floatingActionButton: restaurantDataCopy['VendorCategories'].length == 0
+          ? Container()
+          : MaterialButton(
+              onPressed: () {},
+              child: PopupMenuButton(
+                  child: Container(
+                      height: size.height * 0.06,
+                      width: size.width * 0.12,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue,
+                      ),
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      )),
+                  offset: Offset(0, -size.height * 0.3),
+                  elevation: 0,
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  itemBuilder: (context) {
+                    return <PopupMenuEntry<Widget>>[
+                      PopupMenuItem<Widget>(
+                        enabled: true,
+                        child: Container(
+                          decoration: ShapeDecoration(
+                              color: Colors.grey[100],
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          child: Scrollbar(
+                            child: ListView.builder(
+                              itemCount:
+                                  restaurantDataCopy['VendorCategories'].length,
+                              itemBuilder: (context, index) {
+                                final trans = menu[index].title;
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              VendorCategoryPage(
+                                            vendorId: restaurantDataCopy[
+                                                        'VendorCategories']
+                                                    [index]['id']
+                                                .toString(),
+                                            menudata: restaurantDataCopy,
+                                          ),
+                                        ));
+                                  },
+                                  child: ListTile(
+                                    enabled: true,
+                                    title: Text(
+                                      restaurantDataCopy['VendorCategories']
+                                          [index]['title'],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: size.height * 0.02,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          height: size.height * 0.26,
+                          width: size.width * 0.6,
+                        ),
+                      ),
+                    ];
+                  }),
+            ),
       body: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 10),
         shrinkWrap: true,
@@ -162,6 +237,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                       });
 
                                       final snackBar = SnackBar(
+                                        duration: Duration(seconds: 1),
                                         backgroundColor:
                                             Colors.lightBlueAccent[200],
                                         content: Text(
@@ -205,24 +281,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                         print("match");
                                       }
                                     }
-
-                                    // print(data.itemStatus);
-                                    // if (insideOfferPage[index]
-                                    //         .addedStatus ==
-                                    //     "Add") {
-                                    //   setState(() {
-                                    //     insideOfferPage[index]
-                                    //         .addedStatus = "Added";
-                                    //   });
-                                    //   itemAddToCart(index, tpye);
-                                    // } else if (insideOfferPage[
-                                    //             index]
-                                    //         .addedStatus ==
-                                    //     "Added") {
-                                    //   Fluttertoast.showToast(
-                                    //       msg:
-                                    //           "${insideOfferPage[index].title} is already added");
-                                    // }
                                   },
                                   color: Colors.white,
                                   minWidth: size.width * 0.16,
@@ -294,6 +352,9 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                           'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
                                                       height:
                                                           size.height * 0.016,
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
                                                     ),
                                                   )
                                                 : Container(
@@ -305,6 +366,9 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                 imageUrl:
                                                     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
                                                 height: size.height * 0.016,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
                                               ))
                                   ],
                                 ),
@@ -321,6 +385,9 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                               imageUrl: insideOfferPage[index]
                                                   .discountImage,
                                               height: size.height * 0.02,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
                                             )
                                           : SizedBox(),
                                     ),
@@ -383,6 +450,9 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                 imageUrl: insideOfferPage[index]
                                                     .discountImage,
                                                 height: size.height * 0.02,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
                                               ),
                                               SizedBox(
                                                 width: size.width * 0.006,

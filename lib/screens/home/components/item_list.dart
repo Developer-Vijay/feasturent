@@ -4,6 +4,7 @@ import 'package:feasturent_costomer_app/screens/home/components/viewAllCategory.
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'category_related_menu.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({
@@ -22,12 +23,8 @@ class _CategoriesListState extends State<CategoriesList> {
 
   var data;
   Future<List<dynamic>> fetchCategories() async {
-    var result = await http
-        .get(APP_ROUTES + 'getCategories?key=STATUS&id=2&status=1', headers: {
-      "authorization":
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlZpamF5IFNhaG9vIiwiaWF0IjoxNjE0OTI1NzA0LCJleHAiOjE2MTQ5ODg4MDB9.4K5B8KE2hZ04r-0N1T5noVDXc2RjJh5pdkF03z4po-0',
-      "Content-Type": "application/json"
-    });
+    var result =
+        await http.get(APP_ROUTES + 'getCategories?key=STATUS&id=2&status=1');
     data = json.decode(result.body)['data'];
     return data;
   }
@@ -79,7 +76,7 @@ class _CategoriesListState extends State<CategoriesList> {
           ],
         ),
         Container(
-            height: size.height * 0.12,
+            height: size.height * 0.14,
             child: FutureBuilder<List<dynamic>>(
               future: fetchCategories(),
               builder: (context, snapshot) {
@@ -109,7 +106,17 @@ class _CategoriesListState extends State<CategoriesList> {
                                 child: CircleAvatar(
                                   backgroundColor: Colors.white,
                                   child: FlatButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryRelatedMenues(
+                                              categoryName: snapshot.data[index]
+                                                  ['name'],
+                                            ),
+                                          ));
+                                    },
                                     child: ClipOval(
                                         child: snapshot.data[index]
                                                     ['iconImage'] !=
@@ -121,6 +128,9 @@ class _CategoriesListState extends State<CategoriesList> {
                                                 fit: BoxFit.cover,
                                                 width: size.width * 0.2,
                                                 height: size.height * 0.2,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
                                               )
                                             : Image.asset(
                                                 "assets/images/feasturenttemp.jpeg",
