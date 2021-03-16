@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineouthome.dart';
@@ -29,6 +30,31 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSession();
+    getCurrentLocation();
+    fetchwelcomeBanner();
+    callme();
+  }
+
+  var tempdata;
+
+  var homeBanner;
+
+  Future<List<dynamic>> fetchwelcomeBanner() async {
+    var result = await http
+        .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=welcomePopup');
+    print(_authorization);
+    homeBanner = json.decode(result.body)['data'];
+    if (homeBanner != null) {
+      checkDate();
+    }
+    return homeBanner;
+  }
+
   int _customerUserId = 0;
   String _customerName;
   String _customerProfile;
@@ -61,18 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
   List<Widget> tabPages = [
     HomePageBody(),
-    OfferPageScreen(null),
+    OfferPageScreen(),
     DineoutHomePage(),
     UserProfilePage()
   ];
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getSession();
-    getCurrentLocation();
-    checkDate();
-  }
 
   DateTime _currentDate;
   String getdate;
@@ -151,10 +169,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 Positioned(
                   top: MediaQuery.of(context).size.height * 0.1,
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.48,
-                    width: MediaQuery.of(context).size.height * 0.35,
-                    color: Colors.lightBlue,
-                  ),
+                      decoration: BoxDecoration(
+                          color: Colors.lightBlue[100],
+                          borderRadius: BorderRadius.circular(15)),
+                      height: MediaQuery.of(context).size.height * 0.48,
+                      width: MediaQuery.of(context).size.height * 0.35,
+                      child: CachedNetworkImage(
+                        imageUrl: S3_BASE_PATH +
+                            homeBanner[0]['OffersAndCoupon']['image'],
+                        height: MediaQuery.of(context).size.height * 0.48,
+                        width: MediaQuery.of(context).size.height * 0.35,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      )),
                 ),
                 Positioned(
                   top: 10,
@@ -188,12 +217,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getSession() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      _customerUserId = prefs.getInt('userId');
-      _authorization = prefs.getString('sessionToken');
-      _refreshtoken = prefs.getString('refreshToken');
-      _latitude = prefs.setDouble('latitude', latitude);
-      _longitude = prefs.setDouble('longitude', longitude);
+      setState(() {
+        takeUser = prefs.getBool('_isAuthenticate');
 
+        _customerUserId = prefs.getInt('userId');
+        _authorization = prefs.getString('sessionToken');
+        _refreshtoken = prefs.getString('refreshToken');
+        _latitude = prefs.setDouble('latitude', latitude);
+        _longitude = prefs.setDouble('longitude', longitude);
+        emailid = prefs.getString('userEmail');
+
+        photo = prefs.getString('userProfile');
+      });
+
+      print(takeUser);
       var response = await http.get(
           USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),
           headers: {
@@ -446,9 +483,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
             ),
-            body: mainbodyFunction()),
+            body: location == "Unable to load location"
+                ? Container(
+                    height: sized.height * 1,
+                    width: sized.width * 1,
+                    child: tempdata == null
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Center(
+                            child: Text(
+                                "Something went worng Please try after some time"),
+                          ))
+                : mainbodyFunction()),
       ),
     );
+  }
+
+  callme() async {
+    await Future.delayed(Duration(seconds: 6));
+
+    setState(() {
+      tempdata = 1;
+    });
   }
 
   mainbodyFunction() {

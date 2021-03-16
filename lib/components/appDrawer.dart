@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/wishlist.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
@@ -40,6 +41,8 @@ class _AppDrawerState extends State<AppDrawer> {
                         : CachedNetworkImage(
                             imageUrl: widget.cProfile,
                             fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           )),
               ),
             ),
@@ -96,8 +99,6 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    print("hello");
-
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
@@ -216,53 +217,58 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.logout),
-            title: Text('Logout'),
+            title: widget.cStatus == 1 ? Text('Logout') : SizedBox(),
             dense: true,
             onTap: () async {
-              return showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text("Do you really want to logout"),
-                        actions: [
-                          FlatButton(
-                            child: Text("Yes"),
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
+              if (widget.cStatus == 1) {
+                return showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text("Do you really want to logout"),
+                          actions: [
+                            FlatButton(
+                              child: Text("Yes"),
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
 
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.remove(
-                                'name',
-                              );
-                              prefs.remove('sessionToken');
-                              prefs.remove('refreshToken');
-                              prefs.remove('userNumber');
-                              prefs.remove('userProfile');
-                              prefs.remove('customerName');
-                              prefs.remove('userId');
-                              prefs.remove('loginId');
-                              prefs.remove('userEmail');
-                              prefs.remove("loginBy");
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.remove(
+                                  'name',
+                                );
+                                prefs.remove('sessionToken');
+                                prefs.remove('refreshToken');
+                                prefs.remove('userNumber');
+                                prefs.remove('userProfile');
+                                prefs.remove('customerName');
+                                prefs.remove('userId');
+                                prefs.remove('loginId');
+                                prefs.remove('userEmail');
+                                prefs.remove("loginBy");
+                                takeUser = null;
+                                emailid = null;
+                                photo = null;
 
-                              prefs.setBool("_isAuthenticate", false);
-                              setState(() {
-                                loginstatus = 0;
-                              });
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("No"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          )
-                        ],
-                      ));
+                                prefs.setBool("_isAuthenticate", false);
+                                setState(() {
+                                  loginstatus = 0;
+                                });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("No"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        ));
+              }
 
               // Update the state of the app.
               // ...

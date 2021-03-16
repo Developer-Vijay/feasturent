@@ -57,15 +57,14 @@ class _MyOrdersState extends State<MyOrders> {
     final prefs = await SharedPreferences.getInstance();
     var userid2 = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
-    
+
     var result = await http
-        .get(COMMON_API + 'orders' + '?key=BYUSER&id=$userid2'   , headers: {
+        .get(COMMON_API + 'orders' + '?key=BYUSER&id=$userid2', headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
     });
- ordersData = json.decode(result.body)['data'];
+    ordersData = json.decode(result.body)['data'];
     return ordersData;
-   
   }
 
   @override
@@ -105,8 +104,10 @@ class _MyOrdersState extends State<MyOrders> {
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index) {print("data");
-                          print(snapshot.data[index]['orderMenues'][0]['Menu']['image1']);
+                        itemBuilder: (BuildContext context, int index) {
+                          print("data");
+                          print(snapshot.data[index]['orderMenues'][0]['Menu']
+                              ['image1']);
                           return Padding(
                             padding: const EdgeInsets.only(
                                 left: 10.0, right: 12.0, top: 20, bottom: 10.0),
@@ -141,9 +142,15 @@ class _MyOrdersState extends State<MyOrders> {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               child: CachedNetworkImage(
-                                                imageUrl:S3_BASE_PATH + snapshot.data[index]['orderMenues'][0]['Menu']['image1'],
+                                                imageUrl: S3_BASE_PATH +
+                                                    snapshot.data[index]
+                                                            ['orderMenues'][0]
+                                                        ['Menu']['image1'],
                                                 fit: BoxFit.contain,
                                                 height: size.height * 0.08,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
                                               ),
                                             ),
                                           ),

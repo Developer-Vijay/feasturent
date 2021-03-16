@@ -108,8 +108,6 @@ class _CartScreenState extends State<CartScreen> {
                                               vendorIdCheck
                                                   .add(users[index].vendorId);
                                             });
-                                            Fluttertoast.showToast(
-                                                msg: "selected");
                                           } else {
                                             if (idCheck
                                                 .contains(users[index].id)) {
@@ -123,11 +121,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 vendorIdCheck.remove(
                                                     users[index].vendorId);
                                               });
-                                              Fluttertoast.showToast(
-                                                  msg: "Unselected");
                                             } else {
-                                              Fluttertoast.showToast(
-                                                  msg: "selected");
                                               setState(() {
                                                 totalPrice = totalPrice +
                                                     (users[index].itemCount *
@@ -407,7 +401,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                       children: [
                                                                         Container(
                                                                             child:
-                                                                                Text("h")),
+                                                                                Text("⭐")),
                                                                         Text(
                                                                           "3.0",
                                                                           style: TextStyle(
@@ -417,7 +411,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                         ),
                                                                         SizedBox(
                                                                           width:
-                                                                              50,
+                                                                              45,
                                                                         ),
                                                                         Text(
                                                                           "₹ ${users[index].itemPrice}",
@@ -477,6 +471,7 @@ class _CartScreenState extends State<CartScreen> {
                                                               if (users[index]
                                                                       .itemCount >
                                                                   1) {
+                                                                callingLoader();
                                                                 setState(() {
                                                                   countSum--;
 
@@ -499,6 +494,8 @@ class _CartScreenState extends State<CartScreen> {
                                                                       'price',
                                                                       price);
                                                                 });
+                                                                Navigator.pop(
+                                                                    context);
                                                               } else if (users[
                                                                           index]
                                                                       .itemCount ==
@@ -561,6 +558,7 @@ class _CartScreenState extends State<CartScreen> {
                                                               if (users[index]
                                                                       .itemCount >
                                                                   1) {
+                                                                callingLoader();
                                                                 setState(() {
                                                                   services.decrementItemCounter(
                                                                       users[index]
@@ -574,6 +572,8 @@ class _CartScreenState extends State<CartScreen> {
                                                                       'price',
                                                                       price);
                                                                 });
+                                                                Navigator.pop(
+                                                                    context);
                                                               } else if (users[
                                                                           index]
                                                                       .itemCount ==
@@ -648,6 +648,7 @@ class _CartScreenState extends State<CartScreen> {
                                                       InkWell(
                                                         child: Icon(Icons.add),
                                                         onTap: () async {
+                                                          callingLoader();
                                                           final SharedPreferences
                                                               cart =
                                                               await SharedPreferences
@@ -689,6 +690,8 @@ class _CartScreenState extends State<CartScreen> {
                                                                   price);
                                                             });
                                                           }
+                                                          Navigator.pop(
+                                                              context);
                                                         },
                                                       ),
                                                     ],
@@ -904,6 +907,22 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ],
         ));
+  }
+
+  callingLoader() {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
   }
 
   var checkdata;

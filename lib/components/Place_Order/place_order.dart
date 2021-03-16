@@ -27,6 +27,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
   void initState() {
     super.initState();
     createstorage();
+    print("data");
+    print(idCheck);
+    print("data");
+
     getList();
   }
 
@@ -136,7 +140,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     size: size.height * 0.025,
                   ),
                   Text("Delivery in "),
-                  Text("50 mins. No live tracking"),
+                  Text("50 mins."),
                 ],
               ),
             ),
@@ -203,6 +207,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                   Colors.black),
                                                         ),
                                                         onPressed: () {
+                                                          print(
+                                                              users[index].id);
                                                           Navigator.pop(
                                                               context);
                                                         },
@@ -390,6 +396,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                             ? CachedNetworkImage(
                                                                                 imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
                                                                                 height: size.height * 0.016,
+                                                                                errorWidget: (context, url, error) => Icon(Icons.error),
                                                                               )
                                                                             : users[index].itemtype == 2
                                                                                 ? Container(
@@ -401,6 +408,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                                     child: CachedNetworkImage(
                                                                                       imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
                                                                                       height: size.height * 0.016,
+                                                                                      errorWidget: (context, url, error) => Icon(Icons.error),
                                                                                     ),
                                                                                   ))
                                                                   ],
@@ -414,7 +422,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                   children: [
                                                                     Container(
                                                                         child: Text(
-                                                                            "h")),
+                                                                            "⭐")),
                                                                     Text(
                                                                       "3.0",
                                                                       style: TextStyle(
@@ -426,7 +434,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                               FontWeight.bold),
                                                                     ),
                                                                     SizedBox(
-                                                                      width: 50,
+                                                                      width: 45,
                                                                     ),
                                                                     Text(
                                                                       "₹ ${users[index].itemPrice}",
@@ -670,6 +678,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               imageUrl:
                                   'https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg',
                               height: size.height * 0.045,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
                             Text("Select a promo code"),
                             Spacer(),
@@ -751,7 +761,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               )),
                           Expanded(flex: 5, child: SizedBox()),
                           Expanded(
-                              flex: 3,
+                              flex: 4,
                               child: Text(
                                 "$totalPrice.00",
                                 style: TextStyle(
@@ -818,6 +828,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   setState(() {
                                     paymentMode = "Cash On Delivery";
                                   });
+                                } else if (value == 2) {
+                                  setState(() {
+                                    paymentMode = "Cash On Delivery";
+                                  });
                                 }
                               },
                               itemBuilder: (BuildContext) => [
@@ -828,6 +842,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 PopupMenuItem(
                                   child: Text("Cash On Delivery"),
                                   value: 1,
+                                ),
+                                PopupMenuItem(
+                                  child: Text("Wallet"),
+                                  value: 2,
                                 ),
                               ],
                             ),
@@ -880,7 +898,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
           padding: EdgeInsets.all(10.0),
           decoration: BoxDecoration(
               color: Colors.blue, borderRadius: BorderRadius.circular(7)),
-          height: size.height * 0.1,
+          height: size.height * 0.08,
           width: size.width * 0.52,
           child: Center(
             child: Row(
@@ -982,6 +1000,17 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                 FlatButton(
                   child: Text("No"),
                   onPressed: () {
+                    List<int> data = [
+                      1,
+                      2,
+                      3,
+                      54,
+                    ];
+                    int k = data.length;
+                    print(k);
+                    for (int i = 0; i <= k; i++) {
+                      print(i);
+                    }
                     placeTimer.cancel();
                     placePrecent = 0;
                     placeValue = 0;
@@ -995,8 +1024,11 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
             ));
   }
 
+  var vendorId;
   @override
   void initState() {
+    vendorId = vendorIdCheck[0].toString();
+    print(vendorId);
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -1023,9 +1055,11 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         // API hit will be from here
         if (paymentMode == "Online Mode") {
           _checkout();
-        } else if (paymentMode == "Cash On Delivery")
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+        } else if (paymentMode == "Cash On Delivery") {
+          paymentCheck();
+        } else if (paymentMode == "Wallet") {
+          paymentCheck();
+        }
       } else {
         setState(() {
           placeValue = placePrecent / 100;
@@ -1034,6 +1068,40 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     });
 
     super.initState();
+  }
+
+  paymentCheck() async {
+    final prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getInt('userId');
+
+    _authorization = prefs.getString('sessionToken');
+    _refreshtoken = prefs.getString('refreshToken');
+    var response = await http.post(APP_ROUTES + 'itemOrder', body: {
+      "menuId": "1",
+      "vendorId": "$vendorId",
+      "userId": "$userid",
+      "price": "$totalPrice.00",
+      "discountPrice": "00",
+      "offerId": "1",
+      "razorpay_payment_id": null,
+      "razorpay_order_id": null,
+      "razorpay_signature": null,
+      "paymentMode": paymentMode.toString()
+    }, headers: {
+      "authorization": _authorization,
+      "refreshtoken": _refreshtoken
+    });
+
+    var responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+      });
+    } else {
+      Fluttertoast.showToast(msg: "Something went Wrong");
+    }
   }
 
   Future<void> _checkout() async {
@@ -1062,7 +1130,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _refreshtoken = prefs.getString('refreshToken');
     var response = await http.post(APP_ROUTES + 'itemOrder', body: {
       "menuId": "1",
-      "vendorId": "1",
+      "vendorId": "$vendorId",
       "userId": "$userid",
       "price": "$totalPrice.00",
       "discountPrice": "00",
@@ -1175,7 +1243,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Spacer(),
-                      Text("PAY USING"),
+                      Text("PAY USING ( ₹$totalPrice)"),
                       Spacer(),
                       Text(
                         paymentMode,
@@ -1210,7 +1278,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
               children: [
                 Container(
                   height: size.height * 0.04,
-                  width: 255,
+                  width: size.width * 0.65,
                   child: LiquidLinearProgressIndicator(
                     value: placeValue,
                     valueColor: AlwaysStoppedAnimation(Colors.blueAccent),
@@ -1219,6 +1287,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     direction: Axis.horizontal,
                   ),
                 ),
+                Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(

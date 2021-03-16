@@ -9,13 +9,11 @@ class Otprecieve extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
           ClipPath(
             clipper: WaveClipperOne(),
             child: Container(
-              height: size.height * 0.5,
-              width: size.width * 1,
               color: Colors.blue,
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -32,6 +30,9 @@ class Otprecieve extends StatelessWidget {
                         },
                         color: Colors.white,
                       ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.07,
                     ),
                     Container(
                       // width: size.width * 0.3,
@@ -60,11 +61,13 @@ class Otprecieve extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          Container(
-            child: Text(
-              '''Otp has been Sent to the 
-                  Mobile Number''',
-              style: TextStyle(fontSize: 18, color: Colors.black),
+          Center(
+            child: Container(
+              child: Text(
+                '''Otp has been Sent to the 
+        Mobile Number''',
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
             ),
           ),
           SizedBox(
@@ -121,9 +124,17 @@ class Otprecieve extends StatelessWidget {
               color: Colors.blue,
             ),
           ),
-          FlatButton(
-            child: Text("resend otp"),
-            onPressed: () {},
+          SizedBox(
+            height: 15,
+          ),
+          Center(
+            child: InkWell(
+              child: Text(
+                "resend otp",
+                style: TextStyle(color: Colors.black54),
+              ),
+              onTap: () {},
+            ),
           )
         ],
       ),

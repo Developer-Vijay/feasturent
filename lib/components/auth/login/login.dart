@@ -55,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: backbutton,
       child: Scaffold(
@@ -65,18 +66,18 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  SizedBox(height: 80),
+                  SizedBox(height: size.height * 0.1),
                   Image.asset(
-                    'assets/icons/feasturent.png',
-                    height: 170,
-                    width: 170,
+                    'assets/images/feasturent_app_logo.png',
+                    height: size.height * 0.15,
+                    width: size.width * 0.6,
                   ),
                   Text('Login',
                       style: GoogleFonts.pacifico(
                           textStyle: TextStyle(
                               color: kPrimaryColor,
                               letterSpacing: .5,
-                              fontSize: 40))),
+                              fontSize: size.height * 0.05))),
                   SizedBox(height: 10),
                   //Login Form
                   Container(
@@ -197,31 +198,35 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   //Login With Social
                   Container(
-                    margin: const EdgeInsets.only(left: 140.0),
-                    child: Center(
-                      child: Row(
-                        children: [
-                          //Login With Google
-                          IconButton(
-                            icon: SvgPicture.asset('assets/icons/google.svg'),
-                            tooltip: 'Login With Goolge',
-                            iconSize: 40,
-                            onPressed: () {
-                              setState(() => {
-                                    signInWithGoogle()
-                                        .whenComplete(() => {_signUpBySocial()})
-                                  });
-                            },
-                          ),
-                          //Login With FaceBook
-                          IconButton(
-                            icon: SvgPicture.asset('assets/icons/facebook.svg'),
-                            tooltip: 'Login With Facebook',
-                            iconSize: 40,
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
+                    width: size.width * 1,
+                    margin: const EdgeInsets.symmetric(horizontal: 100),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //Login With Google
+                        IconButton(
+                          icon: SvgPicture.asset('assets/icons/google.svg'),
+                          tooltip: 'Login With Goolge',
+                          iconSize: 40,
+                          onPressed: () {
+                            setState(() => {
+                                  signInWithGoogle()
+                                      .whenComplete(() => {_signUpBySocial()})
+                                });
+                          },
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        //Login With FaceBook
+                        IconButton(
+                          icon: SvgPicture.asset('assets/icons/facebook.svg'),
+                          tooltip: 'Login With Facebook',
+                          iconSize: 40,
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -328,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
           prefs.setInt("loginId", responseData['data']['user']['loginId']);
           prefs.setString("userEmail", responseData['data']['user']['email']);
           prefs.setString("loginBy", "userName");
-          
+
           prefs.setBool("_isAuthenticate", true);
           prefs.setString('name', _userNameController.text);
           UserAuthenticate(context);

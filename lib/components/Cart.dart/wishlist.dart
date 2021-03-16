@@ -73,6 +73,9 @@ class _WishlistState extends State<Wishlist> {
                                                   child: CachedNetworkImage(
                                                     imageUrl: favourite[index]
                                                         .foodImage,
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
                                                     height: size.height * 0.09,
                                                     fit: BoxFit.contain,
                                                   ),
@@ -121,6 +124,11 @@ class _WishlistState extends State<Wishlist> {
                                                             imageUrl:
                                                                 favourite[index]
                                                                     .vegsymbol,
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
                                                             height:
                                                                 size.height *
                                                                     0.016,

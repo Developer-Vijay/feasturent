@@ -8,14 +8,20 @@ import 'package:http/http.dart' as http;
 import 'ViewAllPopular.dart';
 
 class PopularList extends StatelessWidget {
-  const PopularList({
-    Key key,
-  }) : super(key: key);
+  var sliderOffers;
+  Future<List<dynamic>> fetchHomeSlider() async {
+    var result = await http
+        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
+    sliderOffers = json.decode(result.body)['data'];
 
-  Future<List<dynamic>> fetchPopularMenues() async {
-    var result = await http.get(VENDOR_API + 'menues?key=ALL&id=5');
-    return json.decode(result.body)['data'];
+    print(sliderOffers);
+    return sliderOffers;
   }
+
+  // Future<List<dynamic>> fetchPopularMenues() async {
+  //   var result = await http.get(VENDOR_API + 'menues?key=ALL&id=5');
+  //   return json.decode(result.body)['data'];
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +53,6 @@ class PopularList extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ViewAllPopular())),
-                   
                   },
                   child: Row(
                     children: [
@@ -109,6 +114,8 @@ class PopularList extends StatelessWidget {
                                 fit: BoxFit.cover,
                                 width: size.width * 0.16,
                                 height: size.height * 0.2,
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
                             ),
                           ),
@@ -128,7 +135,485 @@ class PopularList extends StatelessWidget {
               );
             },
           ),
-        )
+        ),
+        SizedBox(
+          height: 9,
+        ),
+        Container(
+            margin: EdgeInsets.all(8),
+            height: size.height * 0.18,
+            child: FutureBuilder<List<dynamic>>(
+              future: fetchHomeSlider(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          width: 190,
+                          height: 100,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child: Expanded(
+                                      child: snapshot.data[index]
+                                                      ['OffersAndCoupon']
+                                                  ['image'] !=
+                                              null
+                                          ? CachedNetworkImage(
+                                              imageUrl: S3_BASE_PATH +
+                                                  snapshot.data[index]
+                                                          ['OffersAndCoupon']
+                                                      ['image'],
+                                              height: size.height * 0.1,
+                                              width: size.width * 0.18,
+                                              fit: BoxFit.fill,
+                                              placeholder: (context, url) => Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            )
+                                          : Image.asset(
+                                              "assets/images/feasturenttemp.jpeg",
+                                              height: size.height * 0.18,
+                                              width: size.width * 0.3,
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(color: Colors.white),
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                "${snapshot.data[index]['OffersAndCoupon']['title']}\n",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                shadows: [
+                                                  Shadow(
+                                                      blurRadius: 2,
+                                                      offset: Offset(0.6, 0.6),
+                                                      color: Colors.white)
+                                                ]),
+                                          ),
+                                          TextSpan(
+                                            text: snapshot.data[index]
+                                                            ['OffersAndCoupon'][
+                                                        'couponDiscountType'] ==
+                                                    "PERCENT"
+                                                ? ""
+                                                : "₹",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: snapshot.data[index]
+                                                    ['OffersAndCoupon']
+                                                    ['couponDiscount']
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: snapshot.data[index]
+                                                            ['OffersAndCoupon'][
+                                                        'couponDiscountType'] ==
+                                                    "PERCENT"
+                                                ? "%\n"
+                                                : "\n",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: snapshot.data[index]
+                                                    ['OffersAndCoupon']
+                                                ['description'],
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            )),
+
+        // Container(
+        //     child: FutureBuilder<List<dynamic>>(
+        //         future: fetchHomeSlider(),
+        //         builder: (context, snapshot) {
+        //           return ListView.builder(
+        //               scrollDirection: Axis.horizontal,
+        //               itemCount: sliderOffers.length,
+        //               itemBuilder: (context, index) {
+        //                 return Row(
+        //                   children: [
+        //                     Padding(
+        //                       padding: const EdgeInsets.all(8.0),
+        //                       child: Container(
+        //                         decoration: BoxDecoration(
+        //                           color: Colors.blue,
+        //                           borderRadius: BorderRadius.circular(10),
+        //                         ),
+        //                         width: 190,
+        //                         height: 100,
+        //                         child: DecoratedBox(
+        //                           decoration: BoxDecoration(
+        //                             borderRadius: BorderRadius.circular(10),
+        //                           ),
+        //                           child: Padding(
+        //                             padding: const EdgeInsets.all(20.0),
+        //                             child: Row(
+        //                               children: <Widget>[
+        //                                 Expanded(
+        //                                   child: Image.asset(
+        //                                     "assets/images/king.png",
+        //                                     height: 60,
+        //                                   ),
+        //                                 ),
+        //                                 Expanded(
+        //                                   child: RichText(
+        //                                     text: TextSpan(
+        //                                       style: TextStyle(
+        //                                           color: Colors.white),
+        //                                       children: [
+        //                                         TextSpan(
+        //                                           text: "Get Discount of \n",
+        //                                           style: TextStyle(
+        //                                               fontSize: 12,
+        //                                               shadows: [
+        //                                                 Shadow(
+        //                                                     blurRadius: 2,
+        //                                                     offset: Offset(
+        //                                                         0.6, 0.6),
+        //                                                     color: Colors.white)
+        //                                               ]),
+        //                                         ),
+        //                                         TextSpan(
+        //                                           text: "40% \n",
+        //                                           style: TextStyle(
+        //                                             fontSize: 15,
+        //                                             fontWeight: FontWeight.bold,
+        //                                           ),
+        //                                         ),
+        //                                         TextSpan(
+        //                                           text: "at Burger King",
+        //                                           style: TextStyle(
+        //                                               fontSize: 10,
+        //                                               fontWeight:
+        //                                                   FontWeight.bold),
+        //                                         ),
+        //                                       ],
+        //                                     ),
+        //                                   ),
+        //                                 ),
+        //                               ],
+        //                             ),
+        //                           ),
+        //                         ),
+        //                       ),
+        //                     ),
+        //                     // Second Image
+        //                     // Container(
+        //                     //   decoration: BoxDecoration(
+        //                     //     color: Colors.blue,
+        //                     //     borderRadius: BorderRadius.circular(10),
+        //                     //   ),
+        //                     //   width: 190,
+        //                     //   height: 100,
+        //                     //   child: DecoratedBox(
+        //                     //     decoration: BoxDecoration(
+        //                     //       borderRadius: BorderRadius.circular(10),
+        //                     //     ),
+        //                     //     child: Padding(
+        //                     //       padding: const EdgeInsets.all(20.0),
+        //                     //       child: Row(
+        //                     //         children: <Widget>[
+        //                     //           Expanded(
+        //                     //             child: Image.asset(
+        //                     //               "assets/images/K.png",
+        //                     //               height: 60,
+        //                     //             ),
+        //                     //           ),
+        //                     //           Expanded(
+        //                     //             child: RichText(
+        //                     //               text: TextSpan(
+        //                     //                 style:
+        //                     //                     TextStyle(color: Colors.white),
+        //                     //                 children: [
+        //                     //                   TextSpan(
+        //                     //                     text: "Get Discount of \n",
+        //                     //                     style: TextStyle(
+        //                     //                         fontSize: 12,
+        //                     //                         shadows: [
+        //                     //                           Shadow(
+        //                     //                               blurRadius: 2,
+        //                     //                               offset:
+        //                     //                                   Offset(0.6, 0.6),
+        //                     //                               color: Colors.white)
+        //                     //                         ]),
+        //                     //                   ),
+        //                     //                   TextSpan(
+        //                     //                     text: "20% \n",
+        //                     //                     style: TextStyle(
+        //                     //                       fontSize: 15,
+        //                     //                       fontWeight: FontWeight.bold,
+        //                     //                     ),
+        //                     //                   ),
+        //                     //                   TextSpan(
+        //                     //                     text: "at KFC",
+        //                     //                     style: TextStyle(
+        //                     //                         fontSize: 10,
+        //                     //                         fontWeight:
+        //                     //                             FontWeight.bold),
+        //                     //                   ),
+        //                     //                 ],
+        //                     //               ),
+        //                     //             ),
+        //                     //           ),
+        //                     //         ],
+        //                     //       ),
+        //                     //     ),
+        //                     //   ),
+        //                     // ),
+        //                     // // Third Image
+        //                     // Padding(
+        //                     //   padding: const EdgeInsets.all(8.0),
+        //                     //   child: Container(
+        //                     //     decoration: BoxDecoration(
+        //                     //       color: Colors.blue,
+        //                     //       borderRadius: BorderRadius.circular(10),
+        //                     //     ),
+        //                     //     width: 190,
+        //                     //     height: 100,
+        //                     //     child: DecoratedBox(
+        //                     //       decoration: BoxDecoration(
+        //                     //         borderRadius: BorderRadius.circular(10),
+        //                     //       ),
+        //                     //       child: Padding(
+        //                     //         padding: const EdgeInsets.all(20.0),
+        //                     //         child: Row(
+        //                     //           children: <Widget>[
+        //                     //             Expanded(
+        //                     //               child: Image.asset(
+        //                     //                 "assets/images/Baskin.png",
+        //                     //               ),
+        //                     //             ),
+        //                     //             Expanded(
+        //                     //               child: RichText(
+        //                     //                 text: TextSpan(
+        //                     //                   style: TextStyle(
+        //                     //                       color: Colors.white),
+        //                     //                   children: [
+        //                     //                     TextSpan(
+        //                     //                       text: "Get Discount of \n",
+        //                     //                       style: TextStyle(
+        //                     //                           fontSize: 12,
+        //                     //                           shadows: [
+        //                     //                             Shadow(
+        //                     //                                 blurRadius: 2,
+        //                     //                                 offset: Offset(
+        //                     //                                     0.6, 0.6),
+        //                     //                                 color: Colors.white)
+        //                     //                           ]),
+        //                     //                     ),
+        //                     //                     TextSpan(
+        //                     //                       text: "20% \n",
+        //                     //                       style: TextStyle(
+        //                     //                         fontSize: 15,
+        //                     //                         fontWeight: FontWeight.bold,
+        //                     //                       ),
+        //                     //                     ),
+        //                     //                     TextSpan(
+        //                     //                       text: "at BaskinRobbin",
+        //                     //                       style:
+        //                     //                           TextStyle(fontSize: 10),
+        //                     //                     ),
+        //                     //                   ],
+        //                     //                 ),
+        //                     //               ),
+        //                     //             ),
+        //                     //           ],
+        //                     //         ),
+        //                     //       ),
+        //                     //     ),
+        //                     //   ),
+        //                     // ),
+        //                   ],
+        //                 );
+        //               });
+        //         })),
+        // Top Brands For You
+        Container(
+          margin: EdgeInsets.only(left: 20),
+          child: Text(
+            "Top Brands For You",
+            style: TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: SingleChildScrollView(
+              child: Row(
+            children: [
+              Column(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 3,
+                              color: Colors.blueGrey,
+                              spreadRadius: 2)
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 4),
+                      height: size.height * 0.08,
+                      width: size.width * 0.24,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 80,
+                        child: FlatButton(
+                          onPressed: () {},
+                          child: ClipOval(
+                            child: Image.asset("assets/images/M3.png",
+                                fit: BoxFit.cover,
+                                width: size.width * 0.14,
+                                height: size.height * 0.2),
+                          ),
+                        ),
+                      )),
+                  SizedBox(
+                    height: 7,
+                  ),
+                  Text(
+                    "McDonalds",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10),
+                  )
+                ],
+              ),
+              Column(children: [
+                Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 3,
+                            color: Colors.blueGrey,
+                            spreadRadius: 2)
+                      ],
+                    ),
+                    margin: EdgeInsets.only(left: 4),
+                    height: size.height * 0.08,
+                    width: size.width * 0.24,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 0,
+                      child: FlatButton(
+                        onPressed: () {},
+                        child: ClipOval(
+                          child: Image.asset("assets/images/king.png",
+                              fit: BoxFit.cover,
+                              width: size.width * 0.14,
+                              height: size.height * 0.2),
+                        ),
+                      ),
+                    )),
+                SizedBox(
+                  height: 7,
+                ),
+                Text(
+                  "Burger King",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 10),
+                ),
+              ]),
+              Column(children: [
+                Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 3,
+                            color: Colors.blueGrey,
+                            spreadRadius: 2)
+                      ],
+                    ),
+                    margin: EdgeInsets.only(left: 4),
+                    height: size.height * 0.08,
+                    width: size.width * 0.24,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 80,
+                      child: FlatButton(
+                        onPressed: () {},
+                        child: ClipOval(
+                          child: Image.asset("assets/images/K.png",
+                              fit: BoxFit.cover,
+                              width: size.width * 0.14,
+                              height: size.height * 0.2),
+                        ),
+                      ),
+                    )),
+                SizedBox(
+                  height: 7,
+                ),
+                Text("KFC",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10)),
+              ])
+            ],
+          )),
+        ),
       ],
     );
   }

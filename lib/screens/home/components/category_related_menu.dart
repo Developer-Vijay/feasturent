@@ -1,443 +1,91 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dotted_line/dotted_line.dart';
-import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
-import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
-import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo/resturentDetail.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/tandooriScreen.dart';
-import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:feasturent_costomer_app/constants.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/screens/home/slider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'category_detail.dart';
 
-var infodata;
-
-class OfferListPage extends StatefulWidget {
-  final restaurantDa;
-  const OfferListPage({Key key, this.restaurantDa}) : super(key: key);
-
+class CategoryRelatedMenues extends StatefulWidget {
+  final categoryName;
+  const CategoryRelatedMenues({Key key, this.categoryName}) : super(key: key);
   @override
-  _OfferListPageState createState() => _OfferListPageState();
+  _CategoryRelatedMenuesState createState() => _CategoryRelatedMenuesState();
 }
 
-class _OfferListPageState extends State<OfferListPage> {
+class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
   @override
   void initState() {
     super.initState();
-    getList();
-
     setState(() {
-      infodata = widget.restaurantDa;
-      restaurantDataCopy = widget.restaurantDa;
+      menuName = widget.categoryName;
     });
+    print(menuName);
+    getList();
   }
 
-  List<String> checkdata = [];
+  var menuName;
+
+  final services = UserServices();
+
+  List<String> checkitem = [];
   getList() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
-      checkdata = cart.getStringList('addedtocart');
+      checkitem = cart.getStringList('addedtocart');
     });
-    print(checkdata);
+    print("list");
+    print(checkitem);
   }
 
-  final services = UserServices();
-  int typefood = 0;
-  int isSelect = 0;
   var restaurantDataCopy;
+  var restaurantMenu;
+  Future<List<dynamic>> fetchMenues() async {
+    var result = await http
+        .get(APP_ROUTES + 'getMenues' + '?key=BYCAT&value=' + menuName);
+    restaurantMenu = json.decode(result.body)['data'];
+    return restaurantMenu;
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-          floatingActionButton: restaurantDataCopy['VendorCategories'].length ==
-                  0
-              ? Container()
-              : MaterialButton(
-                  onPressed: () {},
-                  child: PopupMenuButton(
-                      child: Container(
-                          height: size.height * 0.06,
-                          width: size.width * 0.12,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue,
-                          ),
-                          child: Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                          )),
-                      offset: Offset(0, -size.height * 0.3),
-                      elevation: 0,
-                      color: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      itemBuilder: (context) {
-                        return <PopupMenuEntry<Widget>>[
-                          PopupMenuItem<Widget>(
-                            enabled: true,
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                  color: Colors.grey[100],
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                  itemCount:
-                                      restaurantDataCopy['VendorCategories']
-                                          .length,
-                                  itemBuilder: (context, index) {
-                                    final trans = menu[index].title;
-                                    return InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VendorCategoryPage(
-                                                vendorId: restaurantDataCopy[
-                                                            'VendorCategories']
-                                                        [index]['id']
-                                                    .toString(),
-                                                menudata: restaurantDataCopy,
-                                              ),
-                                            ));
-                                      },
-                                      child: ListTile(
-                                        enabled: true,
-                                        selected: index == isSelect,
-                                        title: Text(
-                                          restaurantDataCopy['VendorCategories']
-                                              [index]['title'],
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: size.height * 0.02,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              height: size.height * 0.26,
-                              width: size.width * 0.6,
-                            ),
-                          ),
-                        ];
-                      }),
-                ),
-          appBar: AppBar(
-              backgroundColor: Colors.white,
-              actions: [
-                FlatButton(
-                  child: Text(
-                    "More Info..",
-                    style: TextStyle(
-                        color: kTextColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: size.height * 0.017),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ResturentDetail(
-                            restaurantDataInfo: restaurantDataCopy,
-                          ),
-                          // settings: RouteSettings(
-                          //   arguments: restaurantDataCopy,
-                          // ),
-                        ));
-                  },
-                )
-              ],
-              title: Text(
-                restaurantDataCopy['name'],
-                // resturentIndex.title,
-                style: TextStyle(
-                    color: kTextColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15),
-              ),
-              shadowColor: Colors.white,
-              leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  iconSize: size.height * 0.03,
-                  color: Colors.black,
-                  onPressed: () {
-                    Navigator.pop(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OfferPageScreen()),
-                    );
-                  })),
-          body: ListView(
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: size.height * 0.034,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                          width: size.height * 0.22,
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(left: size.width * 0.033),
-                          child: Text(
-                            restaurantDataCopy['Address']['address'],
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                // fontSize: size.height * 0.016,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                          )),
-                      Spacer(),
-                      InkWell(
-                        onTap: () async {
-                          var url = 'tel:${restaurantDataCopy['contact']}';
-                          if (await canLaunch(url)) {
-                            await launch(url);
-                          } else {
-                            throw 'Could not launch $url';
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.topRight,
-                          margin: EdgeInsets.only(
-                              top: size.height * 0.01,
-                              right: size.width * 0.033),
-                          child: Text(
-                            "Mobile No- +91 ${restaurantDataCopy['contact']}",
-                            style: TextStyle(
-                                fontSize: size.height * 0.016,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: size.height * 0.034,
-                  ),
-                  DottedLine(),
-                  SizedBox(
-                    height: size.height * 0.024,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(left: 10),
-                                child: SmoothStarRating(
-                                    allowHalfRating: false,
-                                    onRated: (v) {
-                                      Text("23");
-                                    },
-                                    starCount: 1,
-                                    rating: 3.0,
-                                    size: size.height * 0.025,
-                                    isReadOnly: false,
-                                    defaultIconData: Icons.star_border_outlined,
-                                    filledIconData: Icons.star,
-                                    halfFilledIconData: Icons.star_border,
-                                    color: Colors.black,
-                                    borderColor: Colors.black,
-                                    spacing: 0.0),
-                              ),
-                              Text(
-                                "4.1",
-                                style: offerRowHeadingStyle,
-                              ),
-                            ],
-                          ),
-                          Container(
-                              margin: EdgeInsets.only(left: size.width * 0.04),
-                              child: Text(
-                                "Taste 80%",
-                                style: offerCommonStyle,
-                              ))
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            "39 minutes",
-                            style: offerRowHeadingStyle,
-                          ),
-                          Text("Delivery Time")
-                        ],
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: size.width * 0.02),
-                        child: Column(
-                          children: [
-                            Text("₹ 75", style: offerRowHeadingStyle),
-                            Text("Cost for one")
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: size.height * 0.03,
-                  ),
-                  DottedLine(),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
 
-                  // List of Discounts
-
-                  Container(
-                    height: size.height * 0.08,
-                    child: ListView.builder(
-                      itemCount: 3,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) => OnOfferBottomSheet());
-                          },
-                          child: Container(
-                            margin: EdgeInsets.all(4),
-                            padding: EdgeInsets.all(4),
-                            height: size.height * 0.1,
-                            width: size.width * 0.42,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 3,
-                                    color: Colors.blue[50],
-                                    offset: Offset(1, 3),
-                                    spreadRadius: 3)
-                              ],
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.white,
-                            ),
-                            child: Column(children: [
-                              Row(
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(
-                                          left: size.width * 0.02,
-                                          top: size.height * 0.01),
-                                      child: SvgPicture.asset(
-                                        "assets/icons/offer.svg",
-                                        width: size.width * 0.04,
-                                      )),
-                                  SizedBox(
-                                    width: size.width * 0.02,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: size.width * 0.002,
-                                        top: size.height * 0.01),
-                                    child: Text(
-                                      "50%OFFUPTO100",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.height * 0.015,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  margin: EdgeInsets.only(
-                                      left: size.width * 0.08,
-                                      top: size.height * 0.002),
-                                  child: Text(
-                                    "Use Welcome50",
-                                    style: TextStyle(
-                                        fontSize: size.height * 0.014),
-                                  ))
-                            ]),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.014,
-                  ),
-                  Container(
-                      child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: size.width * 0.02),
-                        child: ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                "https://media.gettyimages.com/vectors/logo-of-two-green-leaves-in-a-yellow-background-vector-id186896873?k=6&m=186896873&s=612x612&w=0&h=nwQBGKYtsyeD4TlxoGtH6SSENQENlZGxmTXAwIWBJ5k=",
-                            height: size.height * 0.03,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(
-                            left: size.width * 0.03,
-                          ),
-                          child: Text(
-                            "PURE VEG",
-                            style: offerRowHeadingStyle,
-                          ))
-                    ],
-                  )),
-                  SizedBox(
-                    height: size.height * 0.055,
-                  ),
-                  Container(
-                      alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(left: size.width * 0.05),
-                      child: Text("Recommended", style: offerRecommendStyle)),
-
-                  SizedBox(
-                    height: size.height * 0.022,
-                  ),
-
-                  // List 1
-                  ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: restaurantDataCopy['Menus'].length,
-                    itemBuilder: (context, index) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Category"),
+        ),
+        body: FutureBuilder<List<dynamic>>(
+            future: fetchMenues(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    {
                       int tpye = 0;
 
                       return InkWell(
                         onTap: () {
                           var menuD;
                           setState(() {
-                            menuD = restaurantDataCopy['Menus'][index];
+                            menuD = snapshot.data[index];
                           });
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FoodSlider(
+                                  builder: (context) => CategoryDetailPage(
                                         menuData: menuD,
                                       )));
                         },
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 14),
+                          padding: const EdgeInsets.only(top: 14),
                           child: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -465,7 +113,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                         builder: (BuildContext context) {
                                           return AlertDialog(
                                             content: Text(
-                                                "Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
+                                                "Are you sure you want to delete ${snapshot.data[index]['title']}?"),
                                             actions: <Widget>[
                                               FlatButton(
                                                 child: Text(
@@ -484,14 +132,11 @@ class _OfferListPageState extends State<OfferListPage> {
                                                       color: Colors.red),
                                                 ),
                                                 onPressed: () async {
-                                                  print(restaurantDataCopy[
-                                                      'Menus'][index]['id']);
                                                   await services
-                                                      .data(restaurantDataCopy[
-                                                          'Menus'][index]['id'])
+                                                      .data(snapshot.data[index]
+                                                          ['menuId'])
                                                       .then((value) =>
                                                           fun(value));
-
                                                   final SharedPreferences cart =
                                                       await SharedPreferences
                                                           .getInstance();
@@ -518,13 +163,13 @@ class _OfferListPageState extends State<OfferListPage> {
                                                           data1[0]['id']);
                                                       vendorIdCheck.remove(
                                                           data1[0]['vendorId']);
-                                                      checkdata.remove(data1[0]
+                                                      checkitem.remove(data1[0]
                                                               ['menuItemId']
                                                           .toString());
-                                                      print(checkdata);
+                                                      print(checkitem);
                                                       cart.setStringList(
                                                           'addedtocart',
-                                                          checkdata);
+                                                          checkitem);
                                                     });
 
                                                     Navigator.pop(context);
@@ -532,14 +177,14 @@ class _OfferListPageState extends State<OfferListPage> {
                                                     setState(() {
                                                       services.deleteUser(
                                                           data1[0]['id']);
-                                                      checkdata.remove(data1[0]
+                                                      checkitem.remove(data1[0]
                                                               ['menuItemId']
                                                           .toString());
-                                                      print(checkdata);
+                                                      print(checkitem);
                                                       cart.setStringList(
                                                           'addedtocart',
-                                                          checkdata);
-                                                      print(checkdata);
+                                                          checkitem);
+                                                      print(checkitem);
                                                       price = price -
                                                           (data1[0][
                                                                   'itemCount'] *
@@ -586,16 +231,13 @@ class _OfferListPageState extends State<OfferListPage> {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: restaurantDataCopy[
-                                                                'Menus'][index]
-                                                            ['image1'] !=
+                                                child: snapshot.data[index]
+                                                            ['menuImage1'] !=
                                                         null
                                                     ? CachedNetworkImage(
                                                         imageUrl: S3_BASE_PATH +
-                                                            restaurantDataCopy[
-                                                                        'Menus']
-                                                                    [index]
-                                                                ['image1'],
+                                                            snapshot.data[index]
+                                                                ['menuImage1'],
                                                         height:
                                                             size.height * 0.1,
                                                         width:
@@ -631,11 +273,10 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 final SharedPreferences cart =
                                                     await SharedPreferences
                                                         .getInstance();
-                                                if (restaurantDataCopy['Menus']
-                                                        [index]['isNonVeg'] ==
+                                                if (snapshot.data[index]
+                                                        ['isNonVeg'] ==
                                                     false) {
-                                                  if (restaurantDataCopy[
-                                                              'Menus'][index]
+                                                  if (snapshot.data[index]
                                                           ['isEgg'] ==
                                                       false) {
                                                     tpye = 1;
@@ -647,24 +288,24 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 }
 
                                                 await services
-                                                    .data(restaurantDataCopy[
-                                                        'Menus'][index]['id'])
+                                                    .data(snapshot.data[index]
+                                                        ['menuId'])
                                                     .then(
                                                         (value) => fun(value));
                                                 if (data1.isEmpty) {
                                                   setState(() {
-                                                    itemAddToCart(index, tpye);
+                                                    var data = snapshot.data;
+                                                    itemAddToCart(
+                                                        index, tpye, data);
                                                     Fluttertoast.showToast(
                                                         msg:
-                                                            "${restaurantDataCopy['Menus'][index]['title']} Added");
-                                                    checkdata.add(
-                                                        restaurantDataCopy[
-                                                                    'Menus']
-                                                                [index]['id']
-                                                            .toString());
+                                                            "${snapshot.data[index]['title']} Added");
+                                                    checkitem.add(snapshot
+                                                        .data[index]['menuId']
+                                                        .toString());
                                                     cart.setStringList(
                                                         'addedtocart',
-                                                        checkdata);
+                                                        checkitem);
                                                   });
 
                                                   final snackBar = SnackBar(
@@ -673,7 +314,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                     backgroundColor: Colors
                                                         .lightBlueAccent[200],
                                                     content: Text(
-                                                        "${restaurantDataCopy['Menus'][index]['title']} is added to cart"),
+                                                        "${snapshot.data[index]['title']} is added to cart"),
                                                     action: SnackBarAction(
                                                       textColor:
                                                           Colors.redAccent,
@@ -693,20 +334,19 @@ class _OfferListPageState extends State<OfferListPage> {
                                                       .showSnackBar(snackBar);
                                                 } else {
                                                   if (data1[0]['itemName'] !=
-                                                      restaurantDataCopy[
-                                                              'Menus'][index]
+                                                      snapshot.data[index]
                                                           ['title']) {
                                                     setState(() {
+                                                      var data = snapshot.data;
+
                                                       itemAddToCart(
-                                                          index, tpye);
-                                                      checkdata.add(
-                                                          restaurantDataCopy[
-                                                                      'Menus']
-                                                                  [index]['id']
-                                                              .toString());
+                                                          index, tpye, data);
+                                                      checkitem.add(snapshot
+                                                          .data[index]['menuID']
+                                                          .toString());
                                                       cart.setStringList(
                                                           'addedtocart',
-                                                          checkdata);
+                                                          checkitem);
                                                     });
 
                                                     Fluttertoast.showToast(
@@ -714,7 +354,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   } else {
                                                     Fluttertoast.showToast(
                                                         msg:
-                                                            "${restaurantDataCopy['Menus'][index]['title']} is already added");
+                                                            "${snapshot.data[index]['title']} is already added");
 
                                                     print("match");
                                                   }
@@ -728,7 +368,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                       BorderRadius.circular(
                                                           14)),
                                               textColor: Colors.white,
-                                              child: checkdata.isEmpty
+                                              child: checkitem.isEmpty
                                                   ? Center(
                                                       child: Text(
                                                         "Add",
@@ -742,11 +382,9 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                 .blueGrey),
                                                       ),
                                                     )
-                                                  : checkdata.contains(
-                                                          restaurantDataCopy[
-                                                                      'Menus']
-                                                                  [index]['id']
-                                                              .toString())
+                                                  : checkitem.contains(snapshot
+                                                          .data[index]['menuId']
+                                                          .toString())
                                                       ? Center(
                                                           child: Text(
                                                             "Added",
@@ -792,8 +430,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    restaurantDataCopy['Menus']
-                                                        [index]['title'],
+                                                    snapshot.data[index]
+                                                        ['title'],
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -806,15 +444,11 @@ class _OfferListPageState extends State<OfferListPage> {
                                                       padding:
                                                           const EdgeInsets.only(
                                                               right: 12),
-                                                      child: restaurantDataCopy[
-                                                                          'Menus']
-                                                                      [index][
+                                                      child: snapshot.data[
+                                                                      index][
                                                                   'isNonVeg'] ==
                                                               false
-                                                          ? restaurantDataCopy[
-                                                                              'Menus']
-                                                                          [
-                                                                          index]
+                                                          ? snapshot.data[index]
                                                                       [
                                                                       'isEgg'] ==
                                                                   false
@@ -862,25 +496,21 @@ class _OfferListPageState extends State<OfferListPage> {
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    child: restaurantDataCopy[
-                                                                            'Menus']
-                                                                        [index]
-                                                                    ['Category']
+                                                    child: snapshot.data[index][
+                                                                    'categories']
                                                                 ['iconImage'] ==
                                                             "null"
                                                         ? CachedNetworkImage(
                                                             imageUrl:
-                                                                insideOfferPage[
-                                                                        index]
-                                                                    .discountImage,
+                                                                'https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg',
+                                                            height:
+                                                                size.height *
+                                                                    0.02,
                                                             errorWidget:
                                                                 (context, url,
                                                                         error) =>
                                                                     Icon(Icons
                                                                         .error),
-                                                            height:
-                                                                size.height *
-                                                                    0.02,
                                                           )
                                                         : SizedBox(),
                                                   ),
@@ -888,9 +518,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                                     width: size.width * 0.006,
                                                   ),
                                                   Text(
-                                                    restaurantDataCopy['Menus']
-                                                            [index]['Category']
-                                                        ['name'],
+                                                    snapshot.data[index]
+                                                        ['categories']['name'],
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.height * 0.014,
@@ -907,9 +536,12 @@ class _OfferListPageState extends State<OfferListPage> {
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    child:
-                                                        insideOfferPage[index]
-                                                            .starRating,
+                                                    child: Text(
+                                                      "⭐",
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
                                                   ),
                                                   Text(
                                                     "3.0",
@@ -926,7 +558,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                         right:
                                                             size.width * 0.1),
                                                     child: Text(
-                                                      "₹${restaurantDataCopy['Menus'][index]['totalPrice']}",
+                                                      "₹${snapshot.data[index]['totalPrice']}",
                                                       style: TextStyle(
                                                           fontSize:
                                                               size.height *
@@ -944,67 +576,58 @@ class _OfferListPageState extends State<OfferListPage> {
                                             ),
                                             Container(
                                               child: Container(
-                                                  child: restaurantDataCopy[
-                                                                          'Menus']
-                                                                      [index]
-                                                                  ['MenuOffers']
-                                                              .length !=
-                                                          0
-                                                      ? Row(
-                                                          children: [
-                                                            CachedNetworkImage(
-                                                              imageUrl:
-                                                                  insideOfferPage[
-                                                                          index]
-                                                                      .discountImage,
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
-                                                              height:
-                                                                  size.height *
-                                                                      0.02,
-                                                            ),
-                                                            SizedBox(
-                                                              width:
-                                                                  size.width *
-                                                                      0.006,
-                                                            ),
-                                                            Container(
-                                                              child: restaurantDataCopy['Menus'][index]
-                                                                              [
-                                                                              'MenuOffers']
-                                                                          .length >=
-                                                                      2
-                                                                  ? Row(
-                                                                      children: [
-                                                                        Text(
-                                                                          "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}, ",
+                                                  child:
+                                                      snapshot
+                                                                  .data[index]
+                                                                      ['offers']
+                                                                  .length !=
+                                                              0
+                                                          ? Row(
+                                                              children: [
+                                                                CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      'https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg',
+                                                                  height:
+                                                                      size.height *
+                                                                          0.02,
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
+                                                                SizedBox(
+                                                                  width:
+                                                                      size.width *
+                                                                          0.006,
+                                                                ),
+                                                                Container(
+                                                                  child: snapshot
+                                                                              .data[index]['offers']
+                                                                              .length >=
+                                                                          2
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              "OfferID ${snapshot.data[index]['offers'][0]['coupon']}, ",
+                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                            ),
+                                                                            Text(
+                                                                              "OfferID ${snapshot.data[index]['offers'][1]['coupon']}",
+                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : Text(
+                                                                          "OfferID ${snapshot.data[index]['offers'][0]['coupon']}",
                                                                           style: TextStyle(
                                                                               fontSize: size.height * 0.015,
                                                                               color: kTextColor),
                                                                         ),
-                                                                        Text(
-                                                                          "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['offerId']}",
-                                                                          style: TextStyle(
-                                                                              fontSize: size.height * 0.015,
-                                                                              color: kTextColor),
-                                                                        ),
-                                                                      ],
-                                                                    )
-                                                                  : Text(
-                                                                      "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}",
-                                                                      style: TextStyle(
-                                                                          fontSize: size.height *
-                                                                              0.015,
-                                                                          color:
-                                                                              kTextColor),
-                                                                    ),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      : SizedBox()),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : SizedBox()),
                                             ),
                                           ],
                                         ),
@@ -1013,34 +636,32 @@ class _OfferListPageState extends State<OfferListPage> {
                               )),
                         ),
                       );
-                    },
-                  ),
-                  SizedBox(
-                    height: 60,
-                  )
-                ],
-              )
-            ],
-          )),
-    );
+                    }
+                  },
+                );
+              } else {
+                print("no data00");
+                return Center(child: CircularProgressIndicator());
+              }
+            }));
   }
 
-  itemAddToCart(index, tpye) async {
+  itemAddToCart(index, tpye, data) async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
 
     var sum = cart.getInt('price');
-    sum = sum + restaurantDataCopy['Menus'][index]['totalPrice'];
+    sum = sum + data[index]['totalPrice'];
     cart.setInt('price', sum);
     print(sum);
     setState(() {
-      // itemCount.add(value)
+      // itemCount.add(value);
       services.saveUser(
-          restaurantDataCopy['Menus'][index]['totalPrice'],
+          data[index]['totalPrice'],
           1,
-          restaurantDataCopy['Menus'][index]['vendorId'],
-          restaurantDataCopy['Menus'][index]['id'],
-          restaurantDataCopy['Menus'][index]['image1'],
-          restaurantDataCopy['Menus'][index]['title'],
+          data[index]['vendorId'],
+          data[index]['menuId'],
+          data[index]['image1'],
+          data[index]['title'],
           "Add".toString(),
           tpye,
           0);

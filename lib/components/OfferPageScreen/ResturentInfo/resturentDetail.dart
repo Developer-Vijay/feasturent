@@ -2,8 +2,7 @@ import 'package:feasturent_costomer_app/components/OfferPageScreen/ResturentInfo
 import 'package:flutter/material.dart';
 import 'detail_Resturent.dart';
 import 'menu_Resturent.dart';
-
-var infodata;
+import 'package:feasturent_costomer_app/components/OfferPageScreen/insideofferpage.dart';
 
 class ResturentDetail extends StatefulWidget {
   final restaurantDataInfo;
@@ -16,13 +15,10 @@ class _ResturentDetailState extends State<ResturentDetail> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      infodata = widget.restaurantDataInfo;
-    });
   }
 
   int _page = 0;
-  List<Widget> tabPages = [
+  List tabPages = [
     DetailResturent(
       restaurantInfo: infodata,
     ),
@@ -54,7 +50,6 @@ class _ResturentDetailState extends State<ResturentDetail> {
       child: Scaffold(
         appBar: AppBar(
           title: appbarText(),
-          // backgroundColor: Colors.transparent,
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[

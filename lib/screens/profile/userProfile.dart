@@ -1,5 +1,6 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/profileItemList.dart';
@@ -35,36 +36,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool finalUser = true;
-  int temp;
-  var email;
-  var photo;
+  // bool finalUser = true;
+  // int temp;
+  // var email;
+  // var photo;
   @override
   void initState() {
     super.initState();
-    getSession();
-  }
-
-  getSession() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    setState(() {
-      var takeUser = prefs.getBool('_isAuthenticate');
-      var emailid = prefs.getString('userEmail');
-
-      photo = prefs.getString('userProfile');
-      finalUser = takeUser;
-      email = emailid;
-      if (finalUser == true) {
-        setState(() {
-          _buildloginCheck();
-        });
-      } else {
-        setState(() {
-          _buildElseCheck();
-        });
-      }
-    });
   }
 
   Widget _buildloginCheck() {
@@ -90,6 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : CachedNetworkImage(
                                   imageUrl: photo,
                                   fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
                                 )),
                     ),
                     //CachedNetworkImageProvider('$photo')),
@@ -98,11 +78,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: kSpacingUnit.w * 2),
               Container(
-                child: email == null ?Text(
-                  "Email Id",
-                  style: kTitleTextStyle,
-                ):Text("$email")
-              ),
+                  child: emailid == null
+                      ? Text(
+                          "Email Id",
+                          style: kTitleTextStyle,
+                        )
+                      : Text("$emailid")),
               SizedBox(height: kSpacingUnit.w * 2),
             ],
           ),
@@ -217,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 Expanded(
                     child: Container(
-                        child: finalUser == true
+                        child: takeUser == true
                             ? _buildloginCheck()
                             : _buildElseCheck()))
               ],
