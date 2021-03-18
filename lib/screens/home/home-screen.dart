@@ -501,7 +501,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   callme() async {
-    await Future.delayed(Duration(seconds: 6));
+    await Future.delayed(Duration(seconds: 15));
 
     setState(() {
       tempdata = 1;

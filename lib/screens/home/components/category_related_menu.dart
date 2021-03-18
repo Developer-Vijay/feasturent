@@ -58,7 +58,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Category"),
+          title: Text(menuName),
         ),
         body: FutureBuilder<List<dynamic>>(
             future: fetchMenues(),

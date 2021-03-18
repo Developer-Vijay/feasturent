@@ -67,23 +67,75 @@ class _FoodSliderState extends State<FoodSlider> {
               width: size.width * 1,
               child: Stack(
                 children: [
-                  Swiper(
-                    autoplayDelay: 2500,
-                    autoplay: true,
-                    itemCount: 3,
-                    itemBuilder: (context, index) => Container(
-                      child: datamenu['image$index'] != null
-                          ? CachedNetworkImage(
-                              imageUrl: S3_BASE_PATH + datamenu['image$index'],
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            )
-                          : Image.asset(
-                              "assets/images/feasturenttemp.jpeg",
-                              fit: BoxFit.cover,
-                            ),
-                    ),
+                  Container(
+                    width: size.width * 1,
+                    child: datamenu['image1'] != null
+                        ? datamenu['image2'] != null
+                            ? datamenu['image3'] != null
+                                ? Swiper(
+                                    autoplayDelay: 2500,
+                                    autoplay: true,
+                                    itemCount: 4,
+                                    itemBuilder: (context, index) => Container(
+                                      child: datamenu['image$index'] != null
+                                          ? CachedNetworkImage(
+                                              imageUrl: S3_BASE_PATH +
+                                                  datamenu['image$index'],
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  Image.asset(
+                                                "assets/images/feasturenttemp.jpeg",
+                                                fit: BoxFit.cover,
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            )
+                                          : Image.asset(
+                                              "assets/images/feasturenttemp.jpeg",
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  )
+                                : Swiper(
+                                    autoplayDelay: 2500,
+                                    autoplay: true,
+                                    itemCount: 3,
+                                    itemBuilder: (context, index) => Container(
+                                      child: datamenu['image$index'] != null
+                                          ? CachedNetworkImage(
+                                              imageUrl: S3_BASE_PATH +
+                                                  datamenu['image$index'],
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  Image.asset(
+                                                "assets/images/feasturenttemp.jpeg",
+                                                fit: BoxFit.cover,
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            )
+                                          : Image.asset(
+                                              "assets/images/feasturenttemp.jpeg",
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  )
+                            : CachedNetworkImage(
+                                imageUrl: S3_BASE_PATH + datamenu['image1'],
+                                fit: BoxFit.fill,
+                                placeholder: (context, url) => Image.asset(
+                                  "assets/images/feasturenttemp.jpeg",
+                                  fit: BoxFit.cover,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              )
+                        : Image.asset(
+                            "assets/images/feasturenttemp.jpeg",
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   Align(
                     alignment: Alignment.topLeft,

@@ -15,6 +15,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart ' as http;
+import 'dart:convert';
 
 var infodata;
 
@@ -30,14 +32,33 @@ class _OfferListPageState extends State<OfferListPage> {
   @override
   void initState() {
     super.initState();
-    getList();
-
     setState(() {
       infodata = widget.restaurantDa;
       restaurantDataCopy = widget.restaurantDa;
     });
+    getList();
+    fetchRestaurantStatus();
   }
 
+  Future fetchRestaurantStatus() async {
+    int id = restaurantDataCopy['id'] as int;
+    var result = await http.get(
+        APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString());
+    var hours = DateTime.now().hour;
+
+    var mintue = DateTime.now().minute;
+    // var timeData = "$hours:$mintue" ;
+    // print(timeData);
+    setState(() {
+      resturantStatus = json.decode(result.body)['data'];
+      status = resturantStatus[0]['user']['Setting']['isActive'];
+    });
+    // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
+    return resturantStatus;
+  }
+
+  var resturantStatus;
+  bool status = true;
   List<String> checkdata = [];
   getList() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
@@ -381,25 +402,26 @@ class _OfferListPageState extends State<OfferListPage> {
                       child: Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: size.width * 0.02),
-                        child: ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                "https://media.gettyimages.com/vectors/logo-of-two-green-leaves-in-a-yellow-background-vector-id186896873?k=6&m=186896873&s=612x612&w=0&h=nwQBGKYtsyeD4TlxoGtH6SSENQENlZGxmTXAwIWBJ5k=",
-                            height: size.height * 0.03,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
-                      ),
+                          margin: EdgeInsets.only(left: size.width * 0.02),
+                          child: ClipOval(
+                            child: Icon(
+                              Icons.hourglass_bottom_rounded,
+                              color: Colors.lightBlue,
+                            ),
+                          )),
                       Container(
                           margin: EdgeInsets.only(
                             left: size.width * 0.03,
                           ),
-                          child: Text(
-                            "PURE VEG",
-                            style: offerRowHeadingStyle,
-                          ))
+                          child: status == true
+                              ? Text(
+                                  "Online",
+                                  style: offerRowHeadingStyle,
+                                )
+                              : Text(
+                                  "offline",
+                                  style: offerRowHeadingStyle,
+                                ))
                     ],
                   )),
                   SizedBox(

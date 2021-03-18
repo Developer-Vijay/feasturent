@@ -72,7 +72,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           children: [
             Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.only(top: 4),
                 height: MediaQuery.of(context).size.height * 0.125,
                 child: Image.asset("assets/images/feasturent_app_logo.png")),
             SizedBox(
@@ -80,12 +80,12 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
             Container(
                 padding: EdgeInsets.only(bottom: 0),
-                child: FlatButton(
+                child: InkWell(
                   child: Text("Login",
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.height * 0.03,
                           color: Colors.white)),
-                  onPressed: () {
+                  onTap: () {
                     Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
