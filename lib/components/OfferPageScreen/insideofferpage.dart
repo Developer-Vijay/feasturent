@@ -15,6 +15,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart ' as http;
+import 'dart:convert';
 
 var infodata;
 
@@ -30,14 +32,86 @@ class _OfferListPageState extends State<OfferListPage> {
   @override
   void initState() {
     super.initState();
-    getList();
-
     setState(() {
       infodata = widget.restaurantDa;
       restaurantDataCopy = widget.restaurantDa;
     });
+    getList();
+    fetchRestaurantStatus();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  Future fetchRestaurantStatus() async {
+    int id = restaurantDataCopy['id'] as int;
+    var result = await http.get(
+        APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString());
+    var hours = DateTime.now().hour;
+
+    var mintue = DateTime.now().minute;
+    // var timeData = "$hours:$mintue" ;
+    // print(timeData);
+    setState(() {
+      resturantStatus = json.decode(result.body)['data'];
+      if (resturantStatus[0]['user']['Setting'] == null) {
+        status = false;
+        WidgetsBinding.instance.addPostFrameCallback(
+            (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+      } else {
+        status = resturantStatus[0]['user']['Setting']['isActive'];
+        if (status == false) {
+          WidgetsBinding.instance.addPostFrameCallback((_) =>
+              _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+        }
+      }
+    });
+    // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
+    return resturantStatus;
+  }
+
+  final restaurantSnackBar = SnackBar(
+      duration: Duration(minutes: 10),
+      backgroundColor: Colors.lightBlueAccent[200],
+      content: Container(
+        height: 85,
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(flex: 1, child: Icon(Icons.restaurant)),
+                Expanded(
+                    flex: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Restaurant is now closed",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text("Restaurant is no longer taking order")
+                      ],
+                    )),
+              ],
+            ),
+            FlatButton(
+              minWidth: 250,
+              onPressed: () {},
+              child: Text("View All Restaurant"),
+              color: Colors.grey,
+            )
+          ],
+        ),
+      ));
+
+  var resturantStatus;
+  bool status = true;
   List<String> checkdata = [];
   getList() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
@@ -57,6 +131,7 @@ class _OfferListPageState extends State<OfferListPage> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+          key: _scaffoldKey,
           floatingActionButton: restaurantDataCopy['VendorCategories'].length ==
                   0
               ? Container()
@@ -94,7 +169,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                       restaurantDataCopy['VendorCategories']
                                           .length,
                                   itemBuilder: (context, index) {
-                                    final trans = menu[index].title;
                                     return InkWell(
                                       onTap: () {
                                         Navigator.pop(context);
@@ -301,79 +375,87 @@ class _OfferListPageState extends State<OfferListPage> {
                   ),
 
                   // List of Discounts
-
-                  Container(
-                    height: size.height * 0.08,
-                    child: ListView.builder(
-                      itemCount: 3,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) => OnOfferBottomSheet());
-                          },
-                          child: Container(
-                            margin: EdgeInsets.all(4),
-                            padding: EdgeInsets.all(4),
-                            height: size.height * 0.1,
-                            width: size.width * 0.42,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 3,
-                                    color: Colors.blue[50],
-                                    offset: Offset(1, 3),
-                                    spreadRadius: 3)
-                              ],
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.white,
-                            ),
-                            child: Column(children: [
-                              Row(
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(
-                                          left: size.width * 0.02,
-                                          top: size.height * 0.01),
-                                      child: SvgPicture.asset(
-                                        "assets/icons/offer.svg",
-                                        width: size.width * 0.04,
-                                      )),
-                                  SizedBox(
-                                    width: size.width * 0.02,
+                  restaurantDataCopy['user']['OffersAndCoupons'].isEmpty
+                      ? SizedBox()
+                      : Container(
+                          height: size.height * 0.08,
+                          child: ListView.builder(
+                            itemCount: restaurantDataCopy['user']
+                                    ['OffersAndCoupons']
+                                .length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => OnOfferBottomSheet(
+                                            data: restaurantDataCopy['user']
+                                                ['OffersAndCoupons'][index],
+                                          ));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(4),
+                                  padding: EdgeInsets.all(4),
+                                  height: size.height * 0.1,
+                                  width: size.width * 0.42,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 3,
+                                          color: Colors.blue[50],
+                                          offset: Offset(1, 3),
+                                          spreadRadius: 3)
+                                    ],
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: size.width * 0.002,
-                                        top: size.height * 0.01),
-                                    child: Text(
-                                      "50%OFFUPTO100",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.height * 0.015,
-                                          fontWeight: FontWeight.bold),
+                                  child: Column(children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            margin: EdgeInsets.only(
+                                                left: size.width * 0.02,
+                                                top: size.height * 0.012),
+                                            child: SvgPicture.asset(
+                                              "assets/icons/offer.svg",
+                                              width: size.width * 0.04,
+                                            )),
+                                        SizedBox(
+                                          width: size.width * 0.02,
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: size.width * 0.002,
+                                              top: size.height * 0.01),
+                                          child: Text(
+                                            "${restaurantDataCopy['user']['OffersAndCoupons'][index]['description']}",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: size.height * 0.015,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  margin: EdgeInsets.only(
-                                      left: size.width * 0.08,
-                                      top: size.height * 0.002),
-                                  child: Text(
-                                    "Use Welcome50",
-                                    style: TextStyle(
-                                        fontSize: size.height * 0.014),
-                                  ))
-                            ]),
+                                    Container(
+                                        alignment: Alignment.topLeft,
+                                        margin: EdgeInsets.only(
+                                            left: size.width * 0.08,
+                                            top: size.height * 0.002),
+                                        child: Text(
+                                          "Use ${restaurantDataCopy['user']['OffersAndCoupons'][index]['coupon']}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: size.height * 0.014),
+                                        ))
+                                  ]),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        ),
                   SizedBox(
                     height: size.height * 0.014,
                   ),
@@ -381,25 +463,26 @@ class _OfferListPageState extends State<OfferListPage> {
                       child: Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: size.width * 0.02),
-                        child: ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                "https://media.gettyimages.com/vectors/logo-of-two-green-leaves-in-a-yellow-background-vector-id186896873?k=6&m=186896873&s=612x612&w=0&h=nwQBGKYtsyeD4TlxoGtH6SSENQENlZGxmTXAwIWBJ5k=",
-                            height: size.height * 0.03,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
-                      ),
+                          margin: EdgeInsets.only(left: size.width * 0.02),
+                          child: ClipOval(
+                            child: Icon(
+                              Icons.hourglass_bottom_rounded,
+                              color: Colors.lightBlue,
+                            ),
+                          )),
                       Container(
                           margin: EdgeInsets.only(
                             left: size.width * 0.03,
                           ),
-                          child: Text(
-                            "PURE VEG",
-                            style: offerRowHeadingStyle,
-                          ))
+                          child: status == true
+                              ? Text(
+                                  "Online",
+                                  style: offerRowHeadingStyle,
+                                )
+                              : Text(
+                                  "offline",
+                                  style: offerRowHeadingStyle,
+                                ))
                     ],
                   )),
                   SizedBox(
@@ -434,6 +517,9 @@ class _OfferListPageState extends State<OfferListPage> {
                               MaterialPageRoute(
                                   builder: (context) => FoodSlider(
                                         menuData: menuD,
+                                        menuStatus: status,
+                                        restaurentName:
+                                            restaurantDataCopy['name'],
                                       )));
                         },
                         child: Padding(
@@ -441,7 +527,9 @@ class _OfferListPageState extends State<OfferListPage> {
                           child: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
+                                  color: status == true
+                                      ? Colors.white
+                                      : Colors.grey[300],
                                   boxShadow: [
                                     BoxShadow(
                                         blurRadius: 2,
@@ -608,7 +696,10 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                     CircularProgressIndicator()),
                                                         errorWidget: (context,
                                                                 url, error) =>
-                                                            Icon(Icons.error),
+                                                            Image.asset(
+                                                          "assets/images/feasturenttemp.jpeg",
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                       )
                                                     : Image.asset(
                                                         "assets/images/feasturenttemp.jpeg",
@@ -628,77 +719,38 @@ class _OfferListPageState extends State<OfferListPage> {
                                             right: size.width * 0.058,
                                             child: MaterialButton(
                                               onPressed: () async {
-                                                final SharedPreferences cart =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                if (restaurantDataCopy['Menus']
-                                                        [index]['isNonVeg'] ==
-                                                    false) {
+                                                if (status == true) {
+                                                  final SharedPreferences cart =
+                                                      await SharedPreferences
+                                                          .getInstance();
                                                   if (restaurantDataCopy[
                                                               'Menus'][index]
-                                                          ['isEgg'] ==
+                                                          ['isNonVeg'] ==
                                                       false) {
-                                                    tpye = 1;
+                                                    if (restaurantDataCopy[
+                                                                'Menus'][index]
+                                                            ['isEgg'] ==
+                                                        false) {
+                                                      tpye = 1;
+                                                    } else {
+                                                      tpye = 2;
+                                                    }
                                                   } else {
-                                                    tpye = 2;
+                                                    tpye = 3;
                                                   }
-                                                } else {
-                                                  tpye = 3;
-                                                }
 
-                                                await services
-                                                    .data(restaurantDataCopy[
-                                                        'Menus'][index]['id'])
-                                                    .then(
-                                                        (value) => fun(value));
-                                                if (data1.isEmpty) {
-                                                  setState(() {
-                                                    itemAddToCart(index, tpye);
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "${restaurantDataCopy['Menus'][index]['title']} Added");
-                                                    checkdata.add(
-                                                        restaurantDataCopy[
-                                                                    'Menus']
-                                                                [index]['id']
-                                                            .toString());
-                                                    cart.setStringList(
-                                                        'addedtocart',
-                                                        checkdata);
-                                                  });
-
-                                                  final snackBar = SnackBar(
-                                                    duration:
-                                                        Duration(seconds: 1),
-                                                    backgroundColor: Colors
-                                                        .lightBlueAccent[200],
-                                                    content: Text(
-                                                        "${restaurantDataCopy['Menus'][index]['title']} is added to cart"),
-                                                    action: SnackBarAction(
-                                                      textColor:
-                                                          Colors.redAccent,
-                                                      label: "View Cart",
-                                                      onPressed: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        CartScreen()));
-                                                      },
-                                                    ),
-                                                  );
-
-                                                  Scaffold.of(context)
-                                                      .showSnackBar(snackBar);
-                                                } else {
-                                                  if (data1[0]['itemName'] !=
-                                                      restaurantDataCopy[
-                                                              'Menus'][index]
-                                                          ['title']) {
+                                                  await services
+                                                      .data(restaurantDataCopy[
+                                                          'Menus'][index]['id'])
+                                                      .then((value) =>
+                                                          fun(value));
+                                                  if (data1.isEmpty) {
                                                     setState(() {
                                                       itemAddToCart(
                                                           index, tpye);
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "${restaurantDataCopy['Menus'][index]['title']} Added");
                                                       checkdata.add(
                                                           restaurantDataCopy[
                                                                       'Menus']
@@ -709,15 +761,63 @@ class _OfferListPageState extends State<OfferListPage> {
                                                           checkdata);
                                                     });
 
-                                                    Fluttertoast.showToast(
-                                                        msg: "Item Added");
-                                                  } else {
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "${restaurantDataCopy['Menus'][index]['title']} is already added");
+                                                    final snackBar = SnackBar(
+                                                      duration:
+                                                          Duration(seconds: 1),
+                                                      backgroundColor: Colors
+                                                          .lightBlueAccent[200],
+                                                      content: Text(
+                                                          "${restaurantDataCopy['Menus'][index]['title']} is added to cart"),
+                                                      action: SnackBarAction(
+                                                        textColor:
+                                                            Colors.redAccent,
+                                                        label: "View Cart",
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          CartScreen()));
+                                                        },
+                                                      ),
+                                                    );
 
-                                                    print("match");
+                                                    Scaffold.of(context)
+                                                        .showSnackBar(snackBar);
+                                                  } else {
+                                                    if (data1[0]['itemName'] !=
+                                                        restaurantDataCopy[
+                                                                'Menus'][index]
+                                                            ['title']) {
+                                                      setState(() {
+                                                        itemAddToCart(
+                                                            index, tpye);
+                                                        checkdata.add(
+                                                            restaurantDataCopy[
+                                                                        'Menus']
+                                                                    [
+                                                                    index]['id']
+                                                                .toString());
+                                                        cart.setStringList(
+                                                            'addedtocart',
+                                                            checkdata);
+                                                      });
+
+                                                      Fluttertoast.showToast(
+                                                          msg: "Item Added");
+                                                    } else {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "${restaurantDataCopy['Menus'][index]['title']} is already added");
+
+                                                      print("match");
+                                                    }
                                                   }
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Not taking orders now");
                                                 }
                                               },
                                               color: Colors.white,
@@ -868,16 +968,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                     ['Category']
                                                                 ['iconImage'] ==
                                                             "null"
-                                                        ? CachedNetworkImage(
-                                                            imageUrl:
-                                                                insideOfferPage[
-                                                                        index]
-                                                                    .discountImage,
-                                                            errorWidget:
-                                                                (context, url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
+                                                        ? Image.asset(
+                                                            "assets/icons/discount_icon.jpg",
                                                             height:
                                                                 size.height *
                                                                     0.02,
@@ -906,11 +998,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                             Container(
                                               child: Row(
                                                 children: [
-                                                  Container(
-                                                    child:
-                                                        insideOfferPage[index]
-                                                            .starRating,
-                                                  ),
+                                                  Container(child: Text("⭐")),
                                                   Text(
                                                     "3.0",
                                                     style: TextStyle(
@@ -952,16 +1040,8 @@ class _OfferListPageState extends State<OfferListPage> {
                                                           0
                                                       ? Row(
                                                           children: [
-                                                            CachedNetworkImage(
-                                                              imageUrl:
-                                                                  insideOfferPage[
-                                                                          index]
-                                                                      .discountImage,
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
+                                                            Image.asset(
+                                                              "assets/icons/discount_icon.jpg",
                                                               height:
                                                                   size.height *
                                                                       0.02,
@@ -1035,15 +1115,17 @@ class _OfferListPageState extends State<OfferListPage> {
     setState(() {
       // itemCount.add(value)
       services.saveUser(
-          restaurantDataCopy['Menus'][index]['totalPrice'],
-          1,
-          restaurantDataCopy['Menus'][index]['vendorId'],
-          restaurantDataCopy['Menus'][index]['id'],
-          restaurantDataCopy['Menus'][index]['image1'],
-          restaurantDataCopy['Menus'][index]['title'],
-          "Add".toString(),
-          tpye,
-          0);
+        restaurantDataCopy['Menus'][index]['totalPrice'],
+        1,
+        restaurantDataCopy['Menus'][index]['vendorId'],
+        restaurantDataCopy['Menus'][index]['id'],
+        restaurantDataCopy['Menus'][index]['image1'],
+        restaurantDataCopy['Menus'][index]['title'],
+        "Add".toString(),
+        tpye,
+        0,
+        restaurantDataCopy['name'],
+      );
     });
   }
 

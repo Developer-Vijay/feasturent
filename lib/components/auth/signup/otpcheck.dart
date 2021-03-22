@@ -13,10 +13,11 @@ import '../../../constants.dart';
 class OtpChecker extends StatefulWidget {
   final String phone;
   final String email;
-  final String username;
+  final String resgUserId;
   final String passwords;
-  
-  const OtpChecker({key:Key,this.email,this.passwords,this.phone,this.username});
+
+  const OtpChecker(
+      {key: Key, this.email, this.passwords, this.phone, this.resgUserId});
   @override
   _OtpCheckerState createState() => _OtpCheckerState();
 }
@@ -28,7 +29,7 @@ class _OtpCheckerState extends State<OtpChecker> {
     startTimer();
   }
 
-  int _counter = 60;
+  int _counter = 0;
   bool tncValue = false;
 
   TextEditingController _otpController = new TextEditingController();
@@ -37,7 +38,7 @@ class _OtpCheckerState extends State<OtpChecker> {
     print("approved");
     var response = await http.post(AUTH_API + 'verifyOtp', body: {
       'otp': _otpController.text,
-      'userId': registeredUserId.toString()
+      'userId': widget.resgUserId.toString()
     });
     var responseData = jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -53,36 +54,49 @@ class _OtpCheckerState extends State<OtpChecker> {
     }
   }
 
-  // Future<void> resendtheotp() async {
-  //   var response = await http.post(
-  //     USER_API + 'signup',body: {
-        
-  //         'userName': username,
-       
-  //       'phone': phone,
-  //       'email': email
-  //     }
-  //   );
-  //   var responseData = jsonDecode(response.body);
-  //   if (response.statusCode == 200) {
-  //     setState(() {
-  //        registeredUserId = responseData['data']['userId'];
-  //       Fluttertoast.showToast(msg: "Otp Resended");
-  //       print("Status");
-  //     });
-  //   }else{
-  //     print("error");
-  //   }
-  // }
+  Future<void> resendtheotp() async {
+    print(widget.resgUserId);
+    var response = await http.get(
+      AUTH_API + 'resendOtp/' + widget.resgUserId.toString(),
+    );
 
+    var responseData = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      setState(() {
+        _stoastMessage(responseData['message']);
+        print("Status");
+      });
+    } else {
+      print("error");
+    }
+  }
+
+  int time = 59;
+  Timer placeTimer;
   void startTimer() {
-    const oneSec = const Duration(seconds: 1);
+    time = 59;
+    placeTimer = Timer.periodic(Duration(seconds: 1), (_) {
+      if (time == 0) {
+        setState(() {
+          placeTimer.cancel();
+          print("timer close");
+
+          _counter = 1;
+        });
+      } else {
+        setState(() {
+          time--;
+          print(time);
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    startTimer();
+    placeTimer.cancel();
+    print("timer close");
   }
 
   @override
@@ -152,10 +166,12 @@ class _OtpCheckerState extends State<OtpChecker> {
                 height: size.height * 0.02,
               ),
               Container(
-                child: Text(
-                  '''Otp has been sent to the 
-                       ${widget.phone} mobile number''',
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                child: Center(
+                  child: Text(
+                    '''   Otp has been sent to the 
+${widget.phone} mobile number''',
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ),
                 ),
               ),
               // Timer Function
@@ -163,17 +179,11 @@ class _OtpCheckerState extends State<OtpChecker> {
                 width: size.width * 0.02,
               ),
 
-              (_counter > 60)
-                  ? Text("")
-                  : Text(
-                      "",
-                      style: TextStyle(color: Colors.green),
-                    ),
               Container(
                 alignment: Alignment.topRight,
                 margin: EdgeInsets.only(right: 180),
                 child: Text(
-                  '$_counter',
+                  '$time',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -202,33 +212,48 @@ class _OtpCheckerState extends State<OtpChecker> {
                   controller: _otpController,
                 ),
               ),
+              SizedBox(
+                height: size.height * 0.005,
+              ),
+              _counter == 0
+                  ? Container()
+                  : Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: size.width * 0.01),
+                          //alignment: Alignment.topLeft,
+                          child: FlatButton(
+                            child: Text(
+                              " Resend the otp",
+                              style: TextStyle(
+                                  fontSize: size.height * 0.02,
+                                  color: Colors.blue),
+                            ),
+                            onPressed: () {
+                              if (time == 0) {
+                                setState(() {
+                                  placeTimer.cancel();
+                                  startTimer();
+                                  resendtheotp();
+                                });
+                              } else {
+                                _stoastMessage('otp has been sent');
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.005,
+                        ),
+                      ],
+                    ),
 
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              Container(
-                margin: EdgeInsets.only(left: size.width * 0.01),
-                //alignment: Alignment.topLeft,
-                child: FlatButton(
-                  child: _counter == 0
-                      ? Text(
-                          " resend the otp",
-                          style: TextStyle(fontSize: size.height * 0.02),
-                        )
-                      : Container(),
-                  onPressed: () {
-                    
-                  },
-                ),
-              ),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
               Container(
                 margin: EdgeInsets.only(
                     left: size.width * 0.03, right: size.width * 0.03),
                 child: MaterialButton(
                   onPressed: () {
+                    print(widget.resgUserId);
                     _verifyOtp();
                   },
                   child: Text(

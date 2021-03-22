@@ -12,8 +12,6 @@ import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-int registeredUserId;
-
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -22,6 +20,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   bool tncValue = false;
   bool _isOtpSend = false;
+  int registeredUserId;
 
   bool _isProcessing = false;
   var _isEmailValidate;
@@ -336,11 +335,14 @@ class _SignupPageState extends State<SignupPage> {
           _isProcessing = false;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => OtpChecker()),
+            MaterialPageRoute(
+                builder: (context) => OtpChecker(
+                      phone: _phoneNumberController.text,
+                      resgUserId: registeredUserId.toString(),
+                    )),
           );
         });
-      }
-       else {
+      } else {
         _stoastMessage(responseData['message']);
         setState(() {
           _isProcessing = false;

@@ -19,6 +19,7 @@ const COMMON_API = API_BASE_URL + 'common/';
 const ADMIN_API = API_BASE_URL + 'admin/';
 const VENDOR_API = API_BASE_URL + 'vendor/';
 const APP_ROUTES = API_BASE_URL + 'appRoutes/';
+const PAYMENT_API = API_BASE_URL + 'payment/';
 
 //Base path
 const S3_BASE_PATH = 'https://festurent.s3.amazonaws.com/';
@@ -114,31 +115,6 @@ final walletProfileName =
     TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold);
 
 final walletIconStyle = TextStyle(fontSize: 12, color: Colors.blueGrey);
-
-class Addresses {
-  String fullnameHolder;
-  String phonenumberHolder;
-  String pincodeHolder;
-  String cityholder;
-  String housenoholder;
-  String stateholder;
-  String roadholder;
-  String landmarkholder;
-  var valueholder;
-
-  Addresses(
-      {this.fullnameHolder,
-      this.phonenumberHolder,
-      this.cityholder,
-      this.landmarkholder,
-      this.stateholder,
-      this.valueholder,
-      this.roadholder,
-      this.housenoholder,
-      this.pincodeHolder});
-}
-
-List<Addresses> temp = [];
 
 class Productmodel {
   final foodtitle;
@@ -261,27 +237,6 @@ List<SettingsList> settingpanel = [
       icon: Icon(Icons.notifications))
 ];
 
-class MenuList {
-  var title;
-  int number;
-  MenuList({this.title, this.number});
-}
-
-List<MenuList> menu = [
-  MenuList(title: "Recomended", number: 0),
-  MenuList(title: "Tandoori", number: 1),
-  MenuList(title: "Bread", number: 2),
-  MenuList(title: "Snacks and Beverages", number: 3),
-  MenuList(title: "Gravy", number: 4),
-  MenuList(title: "Chinese", number: 5),
-  MenuList(title: "Recomended", number: 6),
-  MenuList(title: "Recomended", number: 7),
-  MenuList(title: "Recomended", number: 8),
-  MenuList(title: "Recomended", number: 9),
-  MenuList(title: "Recomended", number: 10),
-  MenuList(title: "Recomended", number: 11),
-];
-
 var barimages = [
   "https://media.gettyimages.com/photos/wooden-table-in-front-of-abstract-blurred-restaurant-lights-of-bar-picture-id1250327071?k=6&m=1250327071&s=612x612&w=0&h=z_gcxwIlFxPxrPh3XX3maljIx7Nqg4Ct2hA6LKjgYqM=",
   "https://media.gettyimages.com/photos/waiter-serves-beers-at-a-bar-on-the-eve-of-the-mandatory-closure-of-picture-id1228945616?k=6&m=1228945616&s=612x612&w=0&h=d-qVLDUFwS5hZzJuXKGosaY6O0TYEL09T9EXAVyjLJ4="
@@ -292,52 +247,6 @@ final imageList = [
   "https://media.gettyimages.com/photos/interior-of-empty-bar-at-night-picture-id826837298?k=6&m=826837298&s=612x612&w=0&h=-hIbnJFk265RDKqfykcNmKXlge91c0ynk3hDAGvjESI=",
   "https://media.gettyimages.com/photos/empty-nightclub-dance-floor-picture-id1053940970?k=6&m=1053940970&s=612x612&w=0&h=2VsbM5AKs7sLlklQ7m0iN6lTg_7ulDB4jZfdrG5t36M=",
   "https://media.gettyimages.com/photos/bartender-making-cocktails-at-retro-bar-for-mature-couple-picture-id991839156?k=6&m=991839156&s=612x612&w=0&h=nXyZjg1b9XlVeNQUJp3wy3WkiAirt0ZkocsPmBrQe00=",
-];
-
-class CategoriesItem {
-  String categoryName = '';
-  String categoryImage;
-  CategoriesItem({
-    this.categoryName,
-    this.categoryImage,
-  });
-}
-
-List<CategoriesItem> category = [
-  CategoriesItem(
-      categoryName: 'Thali',
-      categoryImage:
-          'https://image.shutterstock.com/z/stock-photo-typical-indian-food-from-jaipur-thali-rajasthani-1010465743.jpg'),
-  CategoriesItem(
-    categoryName: 'South Indian',
-    categoryImage:
-        "https://image.shutterstock.com/z/stock-photo-group-of-south-indian-food-like-masala-dosa-uttapam-idli-idly-wada-vada-sambar-appam-semolina-1153818823.jpg",
-  ),
-  CategoriesItem(
-    categoryName: 'Cake & Desserts',
-    categoryImage:
-        "https://image.shutterstock.com/z/stock-photo-board-with-delicious-caramel-cake-on-table-768814738.jpg",
-  ),
-  CategoriesItem(
-    categoryName: 'Burger',
-    categoryImage:
-        "https://image.shutterstock.com/z/stock-photo-classic-hamburger-with-cheese-bacon-tomato-and-lettuce-on-dark-wooden-background-1677795556.jpg",
-  ),
-  CategoriesItem(
-    categoryName: 'Chinese',
-    categoryImage:
-        "https://image.shutterstock.com/z/stock-photo-schezwan-noodles-or-vegetable-hakka-noodles-or-chow-mein-is-a-popular-indo-chinese-recipes-served-1251390421.jpg",
-  ),
-  CategoriesItem(
-    categoryName: 'North Indian',
-    categoryImage:
-        "https://image.shutterstock.com/z/stock-photo-murgh-makhani-butter-chicken-tikka-masala-served-with-roti-paratha-and-plain-rice-along-with-1210314505.jpg",
-  ),
-  CategoriesItem(
-    categoryName: 'Snacks and Beverages',
-    categoryImage:
-        "https://image.shutterstock.com/z/stock-photo-punjabi-aloo-samosa-or-potato-samosa-recipe-or-indian-traditional-aloo-samosa-indian-chat-recipe-1508653862.jpg",
-  ),
 ];
 
 class PopularOnFeasturent {

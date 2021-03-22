@@ -496,15 +496,6 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                       padding:
                                                           const EdgeInsets.only(
                                                               right: 12),
-                                                      child: CachedNetworkImage(
-                                                          imageUrl:
-                                                              foodlist[index]
-                                                                  .vegsymbol,
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
-                                                          height: size.height *
-                                                              0.016),
                                                     )
                                                   ],
                                                 ),
@@ -513,7 +504,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                 height: size.height * 0.013,
                                               ),
                                               Text(
-                                                foodlist[index].subtitle,
+                                                "North Indian",
                                                 style: TextStyle(
                                                     fontSize:
                                                         size.height * 0.015,
@@ -526,10 +517,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                               Container(
                                                 child: Row(
                                                   children: [
-                                                    Container(
-                                                      child: foodlist[index]
-                                                          .starRating,
-                                                    ),
+                                                    Container(child: Text("⭐")),
                                                     Text(
                                                       "3.0",
                                                       style: TextStyle(
@@ -541,14 +529,10 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                               FontWeight.bold),
                                                     ),
                                                     Spacer(),
-                                                    CachedNetworkImage(
-                                                      imageUrl: foodlist[index]
-                                                          .discountImage,
+                                                    Image.asset(
+                                                      "assets/icons/discount_icon.jpg",
                                                       height:
-                                                          size.height * 0.022,
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          Icon(Icons.error),
+                                                          size.height * 0.02,
                                                     ),
                                                     Padding(
                                                       padding:
@@ -556,8 +540,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                         right: 12.0,
                                                       ),
                                                       child: Text(
-                                                        foodlist[index]
-                                                            .discountText,
+                                                        "40%SW12345678",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,

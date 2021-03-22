@@ -84,6 +84,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                       MaterialPageRoute(
                           builder: (context) => FoodSlider(
                                 menuData: menuD,
+                                restaurentName: menuData['name'],
                               )));
                 },
                 child: Padding(
@@ -353,14 +354,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                           ['Category']
                                                       ['iconImage'] ==
                                                   "null"
-                                              ? CachedNetworkImage(
-                                                  imageUrl:
-                                                      insideOfferPage[index]
-                                                          .discountImage,
+                                              ? Image.asset(
+                                                  "assets/icons/discount_icon.jpg",
                                                   height: size.height * 0.02,
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
                                                 )
                                               : SizedBox(),
                                         ),
@@ -384,8 +380,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                     child: Row(
                                       children: [
                                         Container(
-                                          child:
-                                              insideOfferPage[index].starRating,
+                                          child: Text("⭐"),
                                         ),
                                         Text(
                                           "3.0",
@@ -420,14 +415,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                 0
                                             ? Row(
                                                 children: [
-                                                  CachedNetworkImage(
-                                                    imageUrl:
-                                                        insideOfferPage[index]
-                                                            .discountImage,
+                                                  Image.asset(
+                                                    "assets/icons/discount_icon.jpg",
                                                     height: size.height * 0.02,
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Icon(Icons.error),
                                                   ),
                                                   SizedBox(
                                                     width: size.width * 0.006,
@@ -692,7 +682,8 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
           menuData['Menus'][index]['title'],
           "Add".toString(),
           tpye,
-          0);
+          0,
+          menuData['name']);
     });
   }
 

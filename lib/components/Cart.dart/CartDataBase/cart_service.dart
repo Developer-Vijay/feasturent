@@ -2,7 +2,9 @@ import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/dataCl
 import 'helper.dart';
 
 var data1;
+var data2;
 var tempcount;
+var sqlIdData;
 
 class UserServices {
   void saveUser(
@@ -15,6 +17,7 @@ class UserServices {
     String itemStatus,
     int itemtype,
     int isSelected,
+    String vendorName,
   ) {
     DBHelper.insert('addToCartData', {
       'itemPrice': itemPrice,
@@ -26,6 +29,7 @@ class UserServices {
       'itemStatus': itemStatus,
       'itemtype': itemtype,
       'isSelected': isSelected,
+      'vendorName': vendorName,
     });
   }
 
@@ -33,17 +37,17 @@ class UserServices {
     final usersList = await DBHelper.getData('addToCartData');
     return usersList
         .map((item) => AddToCart(
-              id: item['id'],
-              itemPrice: item['itemPrice'],
-              itemCount: item['itemCount'],
-              vendorId: item['vendorId'],
-              menuItemId: item['menuItemId'],
-              imagePath: item['imagePath'],
-              itemName: item['itemName'],
-              itemStatus: item['itemStatus'],
-              itemtype: item['itemtype'],
-              isSelected: item['isSelected'],
-            ))
+            id: item['id'],
+            itemPrice: item['itemPrice'],
+            itemCount: item['itemCount'],
+            vendorId: item['vendorId'],
+            menuItemId: item['menuItemId'],
+            imagePath: item['imagePath'],
+            itemName: item['itemName'],
+            itemStatus: item['itemStatus'],
+            itemtype: item['itemtype'],
+            isSelected: item['isSelected'],
+            vendorName: item['vendorName']))
         .toList();
   }
 
@@ -87,6 +91,11 @@ class UserServices {
     return data1;
   }
 
+  Future sqliteIDquery(id) async {
+    final userdata = await DBHelper.sqlIDquerydata(id);
+    sqlIdData = userdata;
+    return sqlIdData;
+  }
   // Future<List<AddToCart>> query(id) async {
   //   final db = await DBHelper.database();
   //   List<Map> result =
@@ -112,6 +121,7 @@ class UserServices {
     String itemStatus,
     int itemtype,
     int isSelected,
+    String vendorName,
   ) {
     DBHelper.updateData('addToCartData', id, {
       'itemPrice': itemPrice,
@@ -123,6 +133,7 @@ class UserServices {
       'itemStatus': itemStatus,
       'itemtype': itemtype,
       'isSelected': isSelected,
+      'vendorName': vendorName,
     });
   }
 }

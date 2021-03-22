@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants.dart';
-import '../foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/tandooriScreen.dart';
 
 class ResturentMenu extends StatefulWidget {
@@ -18,7 +17,6 @@ class ResturentMenu extends StatefulWidget {
 
 class _ResturentMenuState extends State<ResturentMenu> {
   final services = UserServices();
-  int _index1 = 0;
   @override
   void initState() {
     super.initState();
@@ -76,7 +74,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
                               itemCount:
                                   restaurantDataCopy['VendorCategories'].length,
                               itemBuilder: (context, index) {
-                                final trans = menu[index].title;
                                 return InkWell(
                                   onTap: () {
                                     Navigator.pop(context);
@@ -134,6 +131,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                   MaterialPageRoute(
                       builder: (context) => FoodSlider(
                             menuData: menuD,
+                            restaurentName: restaurantDataCopy['name'],
                           )));
             },
             child: Padding(
@@ -381,13 +379,9 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                       child: restaurantDataCopy['Menus'][index]
                                                   ['Category']['iconImage'] ==
                                               "null"
-                                          ? CachedNetworkImage(
-                                              imageUrl: insideOfferPage[index]
-                                                  .discountImage,
+                                          ? Image.asset(
+                                              "assets/icons/discount_icon.jpg",
                                               height: size.height * 0.02,
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
                                             )
                                           : SizedBox(),
                                     ),
@@ -411,7 +405,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                 child: Row(
                                   children: [
                                     Container(
-                                      child: insideOfferPage[index].starRating,
+                                      child: Text("⭐"),
                                     ),
                                     Text(
                                       "3.0",
@@ -446,13 +440,9 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                             0
                                         ? Row(
                                             children: [
-                                              CachedNetworkImage(
-                                                imageUrl: insideOfferPage[index]
-                                                    .discountImage,
+                                              Image.asset(
+                                                "assets/icons/discount_icon.jpg",
                                                 height: size.height * 0.02,
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
                                               ),
                                               SizedBox(
                                                 width: size.width * 0.006,
@@ -528,7 +518,8 @@ class _ResturentMenuState extends State<ResturentMenu> {
           restaurantDataCopy['Menus'][index]['title'],
           "Add".toString(),
           tpye,
-          0);
+          0,
+          restaurantDataCopy['name']);
     });
   }
 

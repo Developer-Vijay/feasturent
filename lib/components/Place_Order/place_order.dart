@@ -28,7 +28,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
     super.initState();
     createstorage();
     print("data");
-    print(idCheck);
+    print("sqlite ids :- $idCheck");
     print("data");
 
     getList();
@@ -972,17 +972,15 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   var phonenumber;
 
   Future<void> getData() async {
-    Future<void> getData() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      //FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //FirebaseUser user = await FirebaseAuth.instance.currentUser();
 
-      var takeUser = prefs.getString('loginBy');
-      print(takeUser);
-      emailid = prefs.getString('userEmail');
-      userid = prefs.getString('userId');
-      phonenumber.getString('userNumber');
-      usernamed = prefs.getString('name');
-    }
+    var takeUser = prefs.getString('loginBy');
+    print(takeUser);
+    emailid = prefs.getString('userEmail');
+    userid = prefs.getString('userId');
+    phonenumber.getString('userNumber');
+    usernamed = prefs.getString('name');
   }
 
   Future<bool> onPlaceBack() {
@@ -1027,6 +1025,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   var vendorId;
   @override
   void initState() {
+    getList();
+    getMenuDetails();
+
     vendorId = vendorIdCheck[0].toString();
     print(vendorId);
     _razorpay = Razorpay();
@@ -1043,16 +1044,17 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         placePrecent = 0;
         placeValue = 1;
 
-        int k = add2.length - 1;
+        // int k = add2.length - 1;
 
-        for (int i = 0; i <= k; i++) {
-          if (add2[i].isSelected == true) {
-            print("remove from cart ${add2[i].title}");
-          } else {
-            print("item not selected  ${add2[i].title}");
-          }
-        }
+        // for (int i = 0; i <= k; i++) {
+        //   if (add2[i].isSelected == true) {
+        //     print("remove from cart ${add2[i].title}");
+        //   } else {
+        //     print("item not selected  ${add2[i].title}");
+        //   }
+        // }
         // API hit will be from here
+
         if (paymentMode == "Online Mode") {
           _checkout();
         } else if (paymentMode == "Cash On Delivery") {
@@ -1066,32 +1068,134 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         });
       }
     });
-
     super.initState();
   }
 
+  final services = UserServices();
+  String jsonTags;
+  getMenuDetails() async {
+    int k = idCheck.length;
+    for (int i = 0; i <= k - 1; i++) {
+      print("ID:-$i");
+      int data = idCheck[i];
+      await services.sqliteIDquery(data).then((value) => fun(value));
+      String menuName = data1[0]['itemName'];
+
+      int menuID = data1[0]['menuItemId'];
+      int menuQty = data1[0]['itemCount'];
+      print("***************************new data*************************");
+      print(
+          "MenuName = $menuName and MenuId = $menuID and MenuQuantity = $menuQty");
+      print("***************************data close*************************");
+      menuidAndQty.add(MenuData(menuID, menuQty));
+    }
+    print("***************************final*************************");
+    print(menuidAndQty);
+    print(
+        "***************************Simple list printed*************************");
+
+    setState(() {
+      jsonTags = jsonEncode(menuidAndQty);
+      // jsonTags = jsonDecode(jsonTags);
+    });
+
+    print(jsonTags);
+    print(
+        "***************************final address id $addressID*************************");
+  }
+
+  fun(value) {
+    setState(() {
+      data1 = value;
+    });
+  }
+
+  List<String> checkitem = [];
+  getList() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      checkitem = cart.getStringList('addedtocart');
+    });
+    print("list");
+    print(checkitem);
+  }
+
+  List<MenuData> menuidAndQty = [];
+
   paymentCheck() async {
+    print("*****************************************");
     final prefs = await SharedPreferences.getInstance();
     var userid = prefs.getInt('userId');
 
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
-    var response = await http.post(APP_ROUTES + 'itemOrder', body: {
-      "menuId": "1",
+    Map data = {
+      "menuId": menuidAndQty,
       "vendorId": "$vendorId",
       "userId": "$userid",
-      "price": "$totalPrice.00",
-      "discountPrice": "00",
+      "addressId": addressID,
+      "orderPrice": "$totalPrice.00",
+      "gst": "107.82",
+      "discountPrice": "50",
       "offerId": "1",
+      "paymentMode": "CASH",
       "razorpay_payment_id": null,
-      "razorpay_order_id": null,
-      "razorpay_signature": null,
-      "paymentMode": paymentMode.toString()
-    }, headers: {
-      "authorization": _authorization,
-      "refreshtoken": _refreshtoken
-    });
+      "razo rpay_order_id": null,
+      "razorpay_signature": null
+    };
+    var requestBody = jsonEncode(data);
+    print("*****************HEloo************************");
+    print("*****************World************************");
+    print("*****************Heloo************************");
+    print("*****************************************");
+    print("*****************************************");
+    print("*****************************************");
 
+    print(requestBody);
+
+    var response =
+        await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
+      "authorization": _authorization,
+      "refreshtoken": _refreshtoken,
+      "Content-Type": "application/json"
+    });
+    print(response.statusCode);
+
+    //   var responseData = jsonDecode(response.body);
+
+    //   if (response.statusCode == 200) {
+    //     // int k = idCheck.length;
+    //     // for (int i = 0; i <= k - 1; i++) {
+    //     //   print("ID:-$i");
+    //     //   final SharedPreferences cart = await SharedPreferences.getInstance();
+
+    //     //   int data = idCheck[i];
+    //     //   await services.sqliteIDquery(data).then((value) => func(value));
+
+    //     //   int menuPriceRemove = data2[0]['itemPrice'];
+    //     //   int menuQtyRemove = data2[0]['itemCount'];
+    //     //   int vendorIdRemove = data2[0]['vendorId'];
+    //     //   int menuIdRemove = data2[0]['menuItemId'];
+
+    //     setState(() {
+    //       // countSum = countSum - menuQtyRemove;
+    //       // totalPrice = totalPrice - (menuQtyRemove * menuPriceRemove);
+    //       // price = price - (menuQtyRemove * menuPriceRemove);
+    //       // cart.setInt('price', price);
+    //       // services.deleteUser(data);
+    //       // idCheck.remove(data);
+    //       // vendorIdCheck.remove(vendorIdRemove);
+    //       // checkitem.remove(menuIdRemove.toString());
+    //       // print(checkitem);
+    //       // cart.setStringList('addedtocart', checkitem);
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+    //     });
+    //     // }
+    //   } else {
+    //     Fluttertoast.showToast(msg: "Something went Wrong");
+    //   }
+    // }
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
@@ -1103,6 +1207,12 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       Fluttertoast.showToast(msg: "Something went Wrong");
     }
   }
+
+  // func(value) {
+  //   setState(() {
+  //     data2 = value;
+  //   });
+  // }
 
   Future<void> _checkout() async {
     var options = {
@@ -1128,20 +1238,27 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
-    var response = await http.post(APP_ROUTES + 'itemOrder', body: {
-      "menuId": "1",
+    Map data = {
+      "menuId": menuidAndQty,
       "vendorId": "$vendorId",
       "userId": "$userid",
-      "price": "$totalPrice.00",
-      "discountPrice": "00",
+      "addressId": addressID,
+      "orderPrice": "$totalPrice.00",
+      "gst": "107.82",
+      "discountPrice": "50",
       "offerId": "1",
+      "paymentMode": "ONLINE",
       "razorpay_payment_id": "$responsepaymentid",
-      "razorpay_order_id": "$responseorderid",
-      "razorpay_signature": "$responsesignature",
-      "paymentMode": paymentMode.toString()
-    }, headers: {
+      "razo rpay_order_id": "$responseorderid",
+      "razorpay_signature": "$responsesignature"
+    };
+    var requestBody = jsonEncode(data);
+
+    var response =
+        await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
       "authorization": _authorization,
-      "refreshtoken": _refreshtoken
+      "refreshtoken": _refreshtoken,
+      "Content-Type": "application/json"
     });
 
     var responseData = jsonDecode(response.body);

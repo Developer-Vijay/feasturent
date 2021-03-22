@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
-import 'package:feasturent_costomer_app/components/Cart.dart/wishlist.dart';
+import 'package:feasturent_costomer_app/components/WishList/wishlist.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
-import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -67,8 +66,12 @@ class _AppDrawerState extends State<AppDrawer> {
                         : CachedNetworkImage(
                             imageUrl: widget.cProfile,
                             fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Image.asset(
+                              "assets/images/feasturenttemp.jpeg",
+                              fit: BoxFit.cover,
+                            ),
                           )),
               ),
             ),
@@ -98,7 +101,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           children: [
             Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.only(top: 4),
                 height: MediaQuery.of(context).size.height * 0.125,
                 child: Image.asset("assets/images/feasturent_app_logo.png")),
             SizedBox(
@@ -106,12 +109,12 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
             Container(
                 padding: EdgeInsets.only(bottom: 0),
-                child: FlatButton(
+                child: InkWell(
                   child: Text("Login",
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.height * 0.03,
                           color: Colors.white)),
-                  onPressed: () {
+                  onTap: () {
                     Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));

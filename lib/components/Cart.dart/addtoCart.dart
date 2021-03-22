@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/place_order.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
@@ -319,7 +320,10 @@ class _CartScreenState extends State<CartScreen> {
                                                                               width: size.width * 0.26,
                                                                               fit: BoxFit.cover,
                                                                               placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                                                              errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                              errorWidget: (context, url, error) => Image.asset(
+                                                                                "assets/images/feasturenttemp.jpeg",
+                                                                                fit: BoxFit.cover,
+                                                                              ),
                                                                             )
                                                                           : Image
                                                                               .asset(
@@ -425,6 +429,21 @@ class _CartScreenState extends State<CartScreen> {
                                                                         ),
                                                                       ],
                                                                     ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 5,
+                                                                  ),
+                                                                  Text(
+                                                                    users[index]
+                                                                        .vendorName,
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            11),
                                                                   ),
                                                                 ],
                                                               ),
@@ -864,12 +883,15 @@ class _CartScreenState extends State<CartScreen> {
                                   backgroundColor: Colors.transparent,
                                   context: context,
                                   builder: (context) => PlaceOrder());
+                              print("sqllite Id $checkitem");
                             } else {
                               Fluttertoast.showToast(
                                   msg:
                                       "Items selected from different restaurant");
                             }
                           } else {
+                            print("sqllite Id $checkitem");
+
                             Fluttertoast.showToast(
                                 msg: "Please select any item to place order");
                           }

@@ -1,4 +1,4 @@
-class AddToCart {
+class WishListClass {
   int id;
   int itemPrice;
   int itemCount;
@@ -9,9 +9,8 @@ class AddToCart {
   String itemStatus;
   int itemtype;
   int isSelected;
-  String vendorName;
 
-  AddToCart(
+  WishListClass(
       {this.id,
       this.itemtype,
       this.imagePath,
@@ -21,6 +20,5 @@ class AddToCart {
       this.menuItemId,
       this.vendorId,
       this.itemStatus,
-      this.isSelected,
-      this.vendorName});
+      this.isSelected});
 }

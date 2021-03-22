@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/Bottomsheet/addbar.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
-import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/components/rating.dart';
@@ -10,10 +8,15 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:feasturent_costomer_app/components/WishList/WishListDataBase/wishlist_service.dart';
 
 class FoodSlider extends StatefulWidget {
   final menuData;
-  const FoodSlider({Key key, this.menuData}) : super(key: key);
+  final menuStatus;
+  final restaurentName;
+  const FoodSlider(
+      {Key key, this.menuData, this.menuStatus, this.restaurentName})
+      : super(key: key);
   @override
   _FoodSliderState createState() => _FoodSliderState();
 }
@@ -22,8 +25,6 @@ class _FoodSliderState extends State<FoodSlider> {
   bool isSelected = false;
 
   var rating = 3.0;
-  int _current = 0;
-  int _index = 0;
   int selectedRadioTile;
 
   var pad = 34;
@@ -45,6 +46,7 @@ class _FoodSliderState extends State<FoodSlider> {
   }
 
   final services = UserServices();
+  final wishListServices = WishListService();
 
   var datamenu;
   setSelectedRadioTile(int val) {
@@ -67,23 +69,75 @@ class _FoodSliderState extends State<FoodSlider> {
               width: size.width * 1,
               child: Stack(
                 children: [
-                  Swiper(
-                    autoplayDelay: 2500,
-                    autoplay: true,
-                    itemCount: 3,
-                    itemBuilder: (context, index) => Container(
-                      child: datamenu['image$index'] != null
-                          ? CachedNetworkImage(
-                              imageUrl: S3_BASE_PATH + datamenu['image$index'],
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            )
-                          : Image.asset(
-                              "assets/images/feasturenttemp.jpeg",
-                              fit: BoxFit.cover,
-                            ),
-                    ),
+                  Container(
+                    width: size.width * 1,
+                    child: datamenu['image1'] != null
+                        ? datamenu['image2'] != null
+                            ? datamenu['image3'] != null
+                                ? Swiper(
+                                    autoplayDelay: 2500,
+                                    autoplay: true,
+                                    itemCount: 4,
+                                    itemBuilder: (context, index) => Container(
+                                      child: datamenu['image$index'] != null
+                                          ? CachedNetworkImage(
+                                              imageUrl: S3_BASE_PATH +
+                                                  datamenu['image$index'],
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  Image.asset(
+                                                "assets/images/feasturenttemp.jpeg",
+                                                fit: BoxFit.cover,
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            )
+                                          : Image.asset(
+                                              "assets/images/feasturenttemp.jpeg",
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  )
+                                : Swiper(
+                                    autoplayDelay: 2500,
+                                    autoplay: true,
+                                    itemCount: 3,
+                                    itemBuilder: (context, index) => Container(
+                                      child: datamenu['image$index'] != null
+                                          ? CachedNetworkImage(
+                                              imageUrl: S3_BASE_PATH +
+                                                  datamenu['image$index'],
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  Image.asset(
+                                                "assets/images/feasturenttemp.jpeg",
+                                                fit: BoxFit.cover,
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            )
+                                          : Image.asset(
+                                              "assets/images/feasturenttemp.jpeg",
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  )
+                            : CachedNetworkImage(
+                                imageUrl: S3_BASE_PATH + datamenu['image1'],
+                                fit: BoxFit.fill,
+                                placeholder: (context, url) => Image.asset(
+                                  "assets/images/feasturenttemp.jpeg",
+                                  fit: BoxFit.cover,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              )
+                        : Image.asset(
+                            "assets/images/feasturenttemp.jpeg",
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   Align(
                     alignment: Alignment.topLeft,
@@ -101,18 +155,41 @@ class _FoodSliderState extends State<FoodSlider> {
                       child: IconButton(
                         icon: Icon(Icons.favorite),
                         color: (isSelected) ? Colors.red : Colors.white,
-                        onPressed: () {
+                        onPressed: () async {
+                          var type;
+                          if (datamenu['isNonVeg'] == false) {
+                            if (datamenu['isEgg'] == false) {
+                              type = 1;
+                            } else {
+                              type = 2;
+                            }
+                          } else {
+                            type = 3;
+                          }
+
                           if (isSelected == false) {
-                            setState(() {
-                              isSelected = true;
-                              getItemandNavigateToFavourites(_index);
-                              Fluttertoast.showToast(
-                                  msg: "Item Added to favourites");
-                            });
+                            await wishListServices
+                                .data(datamenu['id'])
+                                .then((value) => func(value));
+
+                            if (dataCheck1.isEmpty) {
+                              getItemandNavigateToFavourites(type);
+                            } else {
+                              print(dataCheck1[0]);
+                              if (dataCheck1[0]['itemName'] !=
+                                  datamenu['title']) {
+                                setState(() {
+                                  isSelected = true;
+                                  getItemandNavigateToFavourites(type);
+                                  Fluttertoast.showToast(
+                                      msg: "Item Added to favourites");
+                                });
+                              }
+                            }
                           } else if (isSelected == true) {
                             setState(() {
                               isSelected = false;
-                              removeItemFromFavourites(_index);
+                              removeItemFromFavourites();
                               Fluttertoast.showToast(
                                   msg: "Item removed from Favourites");
                             });
@@ -299,46 +376,52 @@ class _FoodSliderState extends State<FoodSlider> {
                             left: size.width * 0.11, right: size.width * 0.11),
                         child: MaterialButton(
                           onPressed: () async {
-                            int tpye = 0;
+                            if (widget.menuStatus == true) {
+                              int tpye = 0;
 
-                            final SharedPreferences cart =
-                                await SharedPreferences.getInstance();
-                            if (datamenu['isNonVeg'] == false) {
-                              if (datamenu['isEgg'] == false) {
-                                tpye = 1;
+                              final SharedPreferences cart =
+                                  await SharedPreferences.getInstance();
+                              if (datamenu['isNonVeg'] == false) {
+                                if (datamenu['isEgg'] == false) {
+                                  tpye = 1;
+                                } else {
+                                  tpye = 2;
+                                }
                               } else {
-                                tpye = 2;
+                                tpye = 3;
                               }
-                            } else {
-                              tpye = 3;
-                            }
 
-                            await services
-                                .data(datamenu['id'])
-                                .then((value) => fun(value));
-                            if (data1.isEmpty) {
-                              setState(() {
-                                itemAddToCart(tpye);
-                                Fluttertoast.showToast(msg: "Item Added");
-                                checkdata.add(datamenu['id'].toString());
-                                cart.setStringList('addedtocart', checkdata);
-                              });
-                            } else {
-                              if (data1[0]['itemName'] != datamenu['title']) {
+                              await services
+                                  .data(datamenu['id'])
+                                  .then((value) => fun(value));
+                              if (data1.isEmpty) {
                                 setState(() {
                                   itemAddToCart(tpye);
+                                  Fluttertoast.showToast(msg: "Item Added");
                                   checkdata.add(datamenu['id'].toString());
                                   cart.setStringList('addedtocart', checkdata);
                                 });
-
-                                Fluttertoast.showToast(msg: "Item Added");
                               } else {
-                                Fluttertoast.showToast(
-                                    msg:
-                                        "${datamenu['title']} is already added");
+                                if (data1[0]['itemName'] != datamenu['title']) {
+                                  setState(() {
+                                    itemAddToCart(tpye);
+                                    checkdata.add(datamenu['id'].toString());
+                                    cart.setStringList(
+                                        'addedtocart', checkdata);
+                                  });
 
-                                print("match");
+                                  Fluttertoast.showToast(msg: "Item Added");
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          "${datamenu['title']} is already added");
+
+                                  print("match");
+                                }
                               }
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Not taking orders now");
                             }
                           },
                           shape: RoundedRectangleBorder(
@@ -373,24 +456,24 @@ class _FoodSliderState extends State<FoodSlider> {
     ));
   }
 
-  getItemandNavigateToFavourites(_index1) async {
-    favourite.add(addto(
-        isSelected: false,
-        counter: 0,
-        quantity: 0,
-        id: burgerlist[_index1].id,
-        subtitle: burgerlist[_index1].subtitle,
-        foodPrice: burgerlist[_index1].foodPrice,
-        title: burgerlist[_index1].title.toString(),
-        starRating: burgerlist[_index1].starRating,
-        name: burgerlist[_index1].name.toString(),
-        discountText: burgerlist[_index1].discountText,
-        vegsymbol: burgerlist[_index1].vegsymbol,
-        discountImage: burgerlist[_index1].discountImage,
-        foodImage: burgerlist[_index1].foodImage));
+  getItemandNavigateToFavourites(type) async {
+    setState(() {
+      wishListServices.saveUser(
+        datamenu['totalPrice'],
+        1,
+        datamenu['vendorId'],
+        datamenu['id'],
+        datamenu['image1'],
+        datamenu['title'],
+        "Add".toString(),
+        type,
+        0,
+      );
+    });
+    print("data added");
   }
 
-  removeItemFromFavourites(_index1) async {
+  removeItemFromFavourites() async {
     favourite.clear();
   }
 
@@ -412,7 +495,14 @@ class _FoodSliderState extends State<FoodSlider> {
           datamenu['title'],
           "Add".toString(),
           tpye,
-          0);
+          0,
+          widget.restaurentName);
+    });
+  }
+
+  func(value) {
+    setState(() {
+      dataCheck1 = value;
     });
   }
 

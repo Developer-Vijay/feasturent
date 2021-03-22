@@ -35,11 +35,17 @@ class _DetailResturentState extends State<DetailResturent> {
             Expanded(
               flex: 7,
               child: Container(
-                child: CachedNetworkImage(
-                  imageUrl: imageList[0],
-                  fit: BoxFit.fill,
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+                width: size.width * 1,
+                child: data['user']['profile'] != null
+                    ? CachedNetworkImage(
+                        imageUrl: S3_BASE_PATH + data['user']['profile'],
+                        fit: BoxFit.fill,
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      )
+                    : Image.asset(
+                        "assets/images/feasturenttemp.jpeg",
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             Expanded(
@@ -152,7 +158,7 @@ class _DetailResturentState extends State<DetailResturent> {
                                     height: 5,
                                   ),
                                   Text(
-                                    foodlist[0].distance,
+                                    "1.5Km",
                                     style: TextStyle(
                                         color: Colors.black54,
                                         fontSize: size.height * 0.016),

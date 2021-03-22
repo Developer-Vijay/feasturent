@@ -51,10 +51,10 @@ class _DetailState extends State<Detail> {
                   )),
               flexibleSpace: FlexibleSpaceBar(
                   background: Swiper(
-                itemCount: foodlist.length,
+                itemCount: imageList.length,
                 itemBuilder: (BuildContext context, int index) =>
                     CachedNetworkImage(
-                  imageUrl: foodlist[index].foodImage,
+                  imageUrl: imageList[index],
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
@@ -121,8 +121,7 @@ class _DetailState extends State<Detail> {
                                                         .index0;
                                                   });
 
-                                                  getItemandNavigateToCart(
-                                                      _index1);
+                                                  print("No fuction declare");
                                                 },
                                                 color: Colors.white,
                                                 minWidth: size.width * 0.17,
@@ -322,24 +321,24 @@ class _DetailState extends State<Detail> {
     );
   }
 
-  getItemandNavigateToCart(_index1) async {
-    add2.add(addto(
-        isSelected: false,
-        counter: 0,
-        quantity: 0,
-        id: burgerlist[_index1].id,
-        subtitle: burgerlist[_index1].subtitle,
-        foodPrice: burgerlist[_index1].foodPrice,
-        title: burgerlist[_index1].title.toString(),
-        starRating: burgerlist[_index1].starRating,
-        name: burgerlist[_index1].name.toString(),
-        discountText: burgerlist[_index1].discountText,
-        vegsymbol: burgerlist[_index1].vegsymbol,
-        discountImage: burgerlist[_index1].discountImage,
-        foodImage: burgerlist[_index1].foodImage));
+  // getItemandNavigateToCart(_index1) async {
+  //   add2.add(addto(
+  //       isSelected: false,
+  //       counter: 0,
+  //       quantity: 0,
+  //       id: burgerlist[_index1].id,
+  //       subtitle: burgerlist[_index1].subtitle,
+  //       foodPrice: burgerlist[_index1].foodPrice,
+  //       title: burgerlist[_index1].title.toString(),
+  //       starRating: burgerlist[_index1].starRating,
+  //       name: burgerlist[_index1].name.toString(),
+  //       discountText: burgerlist[_index1].discountText,
+  //       vegsymbol: burgerlist[_index1].vegsymbol,
+  //       discountImage: burgerlist[_index1].discountImage,
+  //       foodImage: burgerlist[_index1].foodImage));
 
-    Fluttertoast.showToast(msg: "Items Added TO the Cart $_index1");
-  }
+  //   Fluttertoast.showToast(msg: "Items Added TO the Cart $_index1");
+  // }
 
   getItemandNavigateToFavourites(_index1) async {
     favourite.add(addto(

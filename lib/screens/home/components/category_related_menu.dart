@@ -58,7 +58,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Category"),
+          title: Text(menuName),
         ),
         body: FutureBuilder<List<dynamic>>(
             future: fetchMenues(),
@@ -664,7 +664,8 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
           data[index]['title'],
           "Add".toString(),
           tpye,
-          0);
+          0,
+          data[index]['restaurantName']);
     });
   }
 
