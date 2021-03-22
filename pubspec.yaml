@@ -65,11 +65,14 @@ dependencies:
   google_maps_flutter:
   location:
   location_web:
-  adhara_socket_io: ^0.4.2+1
+
   socket_io_client: ^0.9.12
   firebase_messaging:
+  adhara_socket_io: ^0.4.2+1 
   google_map_polyline:
   permission:
+  flutter_local_notifications:
+  step_progress_indicator:    
   
 
 dev_dependencies:

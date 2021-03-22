@@ -1,5 +1,7 @@
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'package:adhara_socket_io/manager.dart';
+import 'package:adhara_socket_io/options.dart';
+
 import 'constants.dart';
 
 Future<void> socketConfig(String identifier) async {
