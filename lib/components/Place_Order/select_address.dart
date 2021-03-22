@@ -201,6 +201,7 @@ class _SelectAddressState extends State<SelectAddress> {
                                       });
                                     }
                                     setState(() {
+                                      addressID = snapshot.data[index]['id'];
                                       userNameWithNumber =
                                           "${snapshot.data[index]['name']}, ${snapshot.data[index]['phone']}";
 

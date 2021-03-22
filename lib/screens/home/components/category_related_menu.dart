@@ -664,7 +664,8 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
           data[index]['title'],
           "Add".toString(),
           tpye,
-          0);
+          0,
+          data[index]['restaurantName']);
     });
   }
 

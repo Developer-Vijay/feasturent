@@ -196,13 +196,6 @@ class _AllResturentState extends State<AllResturent> {
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 12),
-                                              child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      foodlist[index].vegsymbol,
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                  height: size.height * 0.016),
                                             )
                                           ],
                                         ),
@@ -211,7 +204,7 @@ class _AllResturentState extends State<AllResturent> {
                                         height: size.height * 0.013,
                                       ),
                                       Text(
-                                        foodlist[index].subtitle,
+                                        "North Indian",
                                         style: TextStyle(
                                             fontSize: size.height * 0.015,
                                             fontWeight: FontWeight.bold),
@@ -223,7 +216,7 @@ class _AllResturentState extends State<AllResturent> {
                                         child: Row(
                                           children: [
                                             Container(
-                                              child: foodlist[index].starRating,
+                                              child: Text("⭐"),
                                             ),
                                             Text(
                                               "3.0",
@@ -233,20 +226,16 @@ class _AllResturentState extends State<AllResturent> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Spacer(),
-                                            CachedNetworkImage(
-                                              imageUrl:
-                                                  foodlist[index].discountImage,
-                                              height: size.height * 0.022,
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
+                                            Image.asset(
+                                              "assets/icons/discount_icon.jpg",
+                                              height: size.height * 0.02,
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                 right: 12.0,
                                               ),
                                               child: Text(
-                                                foodlist[index].discountText,
+                                                "40%SW12345678",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize:

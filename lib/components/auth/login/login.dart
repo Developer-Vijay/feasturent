@@ -315,10 +315,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               )));
+      print("before hit server");
       var response = await http.post(AUTH_API + 'login', body: {
         'userName': _userNameController.text,
         'password': _passwordController.text,
       });
+      print(" hit server");
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         print(responseData['data']);

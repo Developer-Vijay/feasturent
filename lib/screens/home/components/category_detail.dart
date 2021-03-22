@@ -463,7 +463,8 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
           datamenu['title'],
           "Add".toString(),
           tpye,
-          0);
+          0,
+          datamenu['restaurantName']);
     });
   }
 

@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
-import 'package:feasturent_costomer_app/components/Cart.dart/wishlist.dart';
+import 'package:feasturent_costomer_app/components/WishList/wishlist.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
-import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,8 +40,12 @@ class _AppDrawerState extends State<AppDrawer> {
                         : CachedNetworkImage(
                             imageUrl: widget.cProfile,
                             fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Image.asset(
+                              "assets/images/feasturenttemp.jpeg",
+                              fit: BoxFit.cover,
+                            ),
                           )),
               ),
             ),

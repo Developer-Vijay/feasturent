@@ -125,12 +125,6 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(right: 12),
-                                        child: CachedNetworkImage(
-                                            imageUrl: foodlist[index].vegsymbol,
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                            height: size.height * 0.016),
                                       )
                                     ],
                                   ),
@@ -139,7 +133,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                   height: size.height * 0.013,
                                 ),
                                 Text(
-                                  foodlist[index].subtitle,
+                                  "North Indian",
                                   style: TextStyle(
                                       fontSize: size.height * 0.015,
                                       fontWeight: FontWeight.bold),
@@ -150,9 +144,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                 Container(
                                   child: Row(
                                     children: [
-                                      Container(
-                                        child: foodlist[index].starRating,
-                                      ),
+                                      Container(child: Text("⭐")),
                                       Text(
                                         "3.0",
                                         style: TextStyle(
@@ -161,18 +153,16 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
-                                      CachedNetworkImage(
-                                        imageUrl: foodlist[index].discountImage,
-                                        height: size.height * 0.022,
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
+                                      Image.asset(
+                                        "assets/icons/discount_icon.jpg",
+                                        height: size.height * 0.02,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
                                           right: 12.0,
                                         ),
                                         child: Text(
-                                          foodlist[index].discountText,
+                                          "40%SW12345678",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: size.height * 0.016,

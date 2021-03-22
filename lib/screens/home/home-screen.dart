@@ -22,8 +22,6 @@ import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 
-int loginstatus = 0;
-
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -34,25 +32,39 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    takeLocation();
     getSession();
     getCurrentLocation();
     fetchwelcomeBanner();
-    callme();
   }
 
   var tempdata;
 
   var homeBanner;
+  takeLocation() async {
+    final SharedPreferences locationShared =
+        await SharedPreferences.getInstance();
+    location = locationShared.getString('tempLocation');
+  }
 
   Future<List<dynamic>> fetchwelcomeBanner() async {
-    var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=welcomePopup');
-    print(_authorization);
-    homeBanner = json.decode(result.body)['data'];
-    if (homeBanner != null) {
-      checkDate();
+    try {
+      var result = await http
+          .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=welcomePopup');
+      print(_authorization);
+      homeBanner = json.decode(result.body)['data'];
+      if (result.statusCode == 200) {
+        if (homeBanner != null) {
+          if (homeBanner[0]['status'] == true) {
+            checkDate(homeBanner);
+          }
+        } else {
+          print("data  avialable");
+        }
+      }
+    } catch (error) {
+      print(error);
     }
-    return homeBanner;
   }
 
   int _customerUserId = 0;
@@ -95,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _currentDate;
   String getdate;
   var current;
-  checkDate() async {
+  checkDate(homedata) async {
     SharedPreferences date = await SharedPreferences.getInstance();
     _currentDate = DateTime.now();
     getdate = DateFormat("dd-MM-yyyy").format(_currentDate);
@@ -104,11 +116,12 @@ class _HomeScreenState extends State<HomeScreen> {
       current = date.setString('date', getdate);
     } else {
       current = date.setString('date', getdate);
-
+      var data = homedata;
+      setState(() {});
       return showDialog(
         context: context,
         barrierDismissible: false,
-        child: _showOffers(),
+        child: _showOffers(data),
       );
     }
   }
@@ -119,8 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String area = '';
   String localArea = '';
   String state = '';
-  var location = "Unable to load location";
-
   Future<void> getCurrentLocation() async {
     try {
       final geopostion = await Geolocator.getCurrentPosition(
@@ -138,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
       area = temp.first.subLocality;
       localArea = temp.first.subAdminArea;
       state = temp.first.adminArea;
-      setState(() {
+      setState(() async {
         if (locality == null) {
           location = "$area , $state";
         } else if (area == null) {
@@ -148,13 +159,16 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           location = "$locality , $area , $state";
         }
+        final SharedPreferences locationShared =
+            await SharedPreferences.getInstance();
+        locationShared.setString('tempLocation', location);
       });
     } catch (error) {
       print(error);
     }
   }
 
-  _showOffers() {
+  _showOffers(homebannerData) {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -176,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: MediaQuery.of(context).size.height * 0.35,
                       child: CachedNetworkImage(
                         imageUrl: S3_BASE_PATH +
-                            homeBanner[0]['OffersAndCoupon']['image'],
+                            homebannerData[0]['OffersAndCoupon']['image'],
                         height: MediaQuery.of(context).size.height * 0.48,
                         width: MediaQuery.of(context).size.height * 0.35,
                         fit: BoxFit.cover,
@@ -483,29 +497,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
             ),
-            body: location == "Unable to load location"
-                ? Container(
-                    height: sized.height * 1,
-                    width: sized.width * 1,
-                    child: tempdata == null
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : Center(
-                            child: Text(
-                                "Something went worng Please try after some time"),
-                          ))
-                : mainbodyFunction()),
+            body: mainbodyFunction()),
       ),
     );
-  }
-
-  callme() async {
-    await Future.delayed(Duration(seconds: 15));
-
-    setState(() {
-      tempdata = 1;
-    });
   }
 
   mainbodyFunction() {

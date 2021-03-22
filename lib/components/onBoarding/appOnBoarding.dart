@@ -34,6 +34,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   createstorage() async {
+    final SharedPreferences locationShared =
+        await SharedPreferences.getInstance();
+    locationShared.setString('tempLocation', "Fetching location...");
     final SharedPreferences cart = await SharedPreferences.getInstance();
     cart.setInt('price', 0);
     cart.setStringList('addedtocart', itemAdded);

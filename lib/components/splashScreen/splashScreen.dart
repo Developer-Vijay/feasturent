@@ -10,7 +10,6 @@ class SplashScreenApp extends StatefulWidget {
 }
 
 class _SplashScreenAppState extends State<SplashScreenApp> {
-  
   bool _isOnboadingSeen = false;
 
   @override
@@ -41,7 +40,6 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
       seconds: 2,
       navigateAfterSeconds:
           _isOnboadingSeen ? HomeScreen() : OnboardingScreen(),
-      
       image: new Image.asset('assets/images/feasturent_app_logo.png'),
       backgroundColor: Colors.white,
       styleTextUnderTheLoader: new TextStyle(),

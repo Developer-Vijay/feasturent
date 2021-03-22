@@ -3,17 +3,28 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 class OnOfferBottomSheet extends StatefulWidget {
+  final data;
+  OnOfferBottomSheet({Key key, this.data}) : super(key: key);
   @override
   _OnOfferBottomSheetState createState() => _OnOfferBottomSheetState();
 }
 
 class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
   @override
+  void initState() {
+    offerData = widget.data;
+    super.initState();
+  }
+
+  var offerData;
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      height: size.height * 0.56,
+      height: size.height * 0.58,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,7 +65,7 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
                   radius: Radius.circular(20),
                   color: Colors.black,
                   child: Text(
-                    "WELCOME1234",
+                    "${offerData['coupon']}",
                     style: TextStyle(color: Colors.black, fontSize: 15),
                   ),
                 ),
@@ -68,17 +79,18 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Get 20% discount on your First order using Axis Bank Cards",
+              "${offerData['title']}",
               style: offerSheetStyle,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Use code Welcome50 and get 50% discount up to INR 300/-on orders above INR 600/-",
-              style: offerCommonStyle,
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              child: offerData['description'] != null
+                  ? Text(
+                      offerData['description'],
+                      style: offerCommonStyle,
+                    )
+                  : SizedBox()),
           SizedBox(
             height: 12,
           ),
@@ -106,7 +118,7 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.only(left: size.width * 0.01),
                   child: Text(
-                    " offer Valid thrice per user per month",
+                    " offer Valid ${offerData['perUserValidity']} per user ",
                     style: TextStyle(color: kTextColor),
                   )),
             ],
@@ -172,7 +184,7 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.only(left: size.width * 0.01),
                   child: Text(
-                    " offer valid till 14th feb",
+                    " offer valid till ${offerData['couponValidity']}",
                     style: TextStyle(color: kTextColor),
                   )),
             ],

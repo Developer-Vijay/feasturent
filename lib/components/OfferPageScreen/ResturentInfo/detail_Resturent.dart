@@ -158,7 +158,7 @@ class _DetailResturentState extends State<DetailResturent> {
                                     height: 5,
                                   ),
                                   Text(
-                                    foodlist[0].distance,
+                                    "1.5Km",
                                     style: TextStyle(
                                         color: Colors.black54,
                                         fontSize: size.height * 0.016),

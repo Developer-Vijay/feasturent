@@ -7,21 +7,61 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'ViewAllPopular.dart';
 
-class PopularList extends StatelessWidget {
+class PopularList extends StatefulWidget {
+  @override
+  _PopularListState createState() => _PopularListState();
+}
+
+class _PopularListState extends State<PopularList> {
+  @override
+  void initState() {
+    fetchHomeSliderLength();
+    super.initState();
+  }
+
   var sliderOffers;
+
+  int checkDataLenght;
+
+  Future fetchHomeSliderLength() async {
+    var result = await http
+        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
+    var data = json.decode(result.body)['data'];
+    if (sliderOffers != null) {
+      print("data here");
+      if (sliderOffers[0]['status'] == true) {
+        setState(() {
+          checkDataLenght = data.length;
+        });
+      } else {
+        setState(() {
+          checkDataLenght = 0;
+        });
+        print("data not here");
+      }
+    } else {
+      setState(() {
+        checkDataLenght = 0;
+      });
+      print("data not here");
+    }
+
+    print("data length $checkDataLenght");
+  }
+
   Future<List<dynamic>> fetchHomeSlider() async {
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
     sliderOffers = json.decode(result.body)['data'];
-
-    print(sliderOffers);
-    return sliderOffers;
+    if (sliderOffers != null) {
+      print("data here");
+      if (sliderOffers[0]['status'] == true) {
+        return sliderOffers;
+      }
+    } else {
+      print("data not here");
+    }
   }
-
-  // Future<List<dynamic>> fetchPopularMenues() async {
-  //   var result = await http.get(VENDOR_API + 'menues?key=ALL&id=5');
-  //   return json.decode(result.body)['data'];
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -139,349 +179,307 @@ class PopularList extends StatelessWidget {
         SizedBox(
           height: 9,
         ),
-        Container(
-            margin: EdgeInsets.all(8),
-            height: size.height * 0.18,
-            child: FutureBuilder<List<dynamic>>(
-              future: fetchHomeSlider(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          width: 190,
-                          height: 100,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 5),
-                                    child: Expanded(
-                                      child: snapshot.data[index]
-                                                      ['OffersAndCoupon']
-                                                  ['image'] !=
-                                              null
-                                          ? CachedNetworkImage(
-                                              imageUrl: S3_BASE_PATH +
-                                                  snapshot.data[index]
-                                                          ['OffersAndCoupon']
-                                                      ['image'],
-                                              height: size.height * 0.1,
-                                              width: size.width * 0.18,
-                                              fit: BoxFit.fill,
-                                              placeholder: (context, url) => Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            )
-                                          : Image.asset(
-                                              "assets/images/feasturenttemp.jpeg",
-                                              height: size.height * 0.18,
-                                              width: size.width * 0.3,
-                                              fit: BoxFit.cover,
-                                            ),
-                                    ),
+        checkDataLenght == 0
+            ? SizedBox()
+            : checkDataLenght == 1
+                ? Container(
+                    margin: EdgeInsets.all(8),
+                    height: size.height * 0.18,
+                    child: FutureBuilder<List<dynamic>>(
+                      future: fetchHomeSlider(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Expanded(
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(color: Colors.white),
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                "${snapshot.data[index]['OffersAndCoupon']['title']}\n",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                shadows: [
-                                                  Shadow(
-                                                      blurRadius: 2,
-                                                      offset: Offset(0.6, 0.6),
-                                                      color: Colors.white)
-                                                ]),
-                                          ),
-                                          TextSpan(
-                                            text: snapshot.data[index]
-                                                            ['OffersAndCoupon'][
-                                                        'couponDiscountType'] ==
-                                                    "PERCENT"
-                                                ? ""
-                                                : "₹",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
+                                  width: size.width * 1,
+                                  height: 100,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 5),
+                                            child: Expanded(
+                                              child: snapshot.data[index][
+                                                              'OffersAndCoupon']
+                                                          ['image'] !=
+                                                      null
+                                                  ? CachedNetworkImage(
+                                                      imageUrl: S3_BASE_PATH +
+                                                          snapshot.data[index][
+                                                                  'OffersAndCoupon']
+                                                              ['image'],
+                                                      height: size.height * 0.1,
+                                                      width: size.width * 0.18,
+                                                      fit: BoxFit.fill,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          Center(
+                                                              child:
+                                                                  CircularProgressIndicator()),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    )
+                                                  : Image.asset(
+                                                      "assets/images/feasturenttemp.jpeg",
+                                                      height:
+                                                          size.height * 0.18,
+                                                      width: size.width * 0.3,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                             ),
                                           ),
-                                          TextSpan(
-                                            text: snapshot.data[index]
-                                                    ['OffersAndCoupon']
-                                                    ['couponDiscount']
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
+                                          Expanded(
+                                            child: RichText(
+                                              text: TextSpan(
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                                children: [
+                                                  TextSpan(
+                                                    text:
+                                                        "${snapshot.data[index]['OffersAndCoupon']['title']}\n",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        shadows: [
+                                                          Shadow(
+                                                              blurRadius: 2,
+                                                              offset: Offset(
+                                                                  0.6, 0.6),
+                                                              color:
+                                                                  Colors.white)
+                                                        ]),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index][
+                                                                    'OffersAndCoupon']
+                                                                [
+                                                                'couponDiscountType'] ==
+                                                            "PERCENT"
+                                                        ? ""
+                                                        : "₹",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index]
+                                                            ['OffersAndCoupon']
+                                                            ['couponDiscount']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index][
+                                                                    'OffersAndCoupon']
+                                                                [
+                                                                'couponDiscountType'] ==
+                                                            "PERCENT"
+                                                        ? "%\n"
+                                                        : "\n",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index]
+                                                            ['OffersAndCoupon']
+                                                        ['description'],
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          TextSpan(
-                                            text: snapshot.data[index]
-                                                            ['OffersAndCoupon'][
-                                                        'couponDiscountType'] ==
-                                                    "PERCENT"
-                                                ? "%\n"
-                                                : "\n",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: snapshot.data[index]
-                                                    ['OffersAndCoupon']
-                                                ['description'],
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            )),
-
-        // Container(
-        //     child: FutureBuilder<List<dynamic>>(
-        //         future: fetchHomeSlider(),
-        //         builder: (context, snapshot) {
-        //           return ListView.builder(
-        //               scrollDirection: Axis.horizontal,
-        //               itemCount: sliderOffers.length,
-        //               itemBuilder: (context, index) {
-        //                 return Row(
-        //                   children: [
-        //                     Padding(
-        //                       padding: const EdgeInsets.all(8.0),
-        //                       child: Container(
-        //                         decoration: BoxDecoration(
-        //                           color: Colors.blue,
-        //                           borderRadius: BorderRadius.circular(10),
-        //                         ),
-        //                         width: 190,
-        //                         height: 100,
-        //                         child: DecoratedBox(
-        //                           decoration: BoxDecoration(
-        //                             borderRadius: BorderRadius.circular(10),
-        //                           ),
-        //                           child: Padding(
-        //                             padding: const EdgeInsets.all(20.0),
-        //                             child: Row(
-        //                               children: <Widget>[
-        //                                 Expanded(
-        //                                   child: Image.asset(
-        //                                     "assets/images/king.png",
-        //                                     height: 60,
-        //                                   ),
-        //                                 ),
-        //                                 Expanded(
-        //                                   child: RichText(
-        //                                     text: TextSpan(
-        //                                       style: TextStyle(
-        //                                           color: Colors.white),
-        //                                       children: [
-        //                                         TextSpan(
-        //                                           text: "Get Discount of \n",
-        //                                           style: TextStyle(
-        //                                               fontSize: 12,
-        //                                               shadows: [
-        //                                                 Shadow(
-        //                                                     blurRadius: 2,
-        //                                                     offset: Offset(
-        //                                                         0.6, 0.6),
-        //                                                     color: Colors.white)
-        //                                               ]),
-        //                                         ),
-        //                                         TextSpan(
-        //                                           text: "40% \n",
-        //                                           style: TextStyle(
-        //                                             fontSize: 15,
-        //                                             fontWeight: FontWeight.bold,
-        //                                           ),
-        //                                         ),
-        //                                         TextSpan(
-        //                                           text: "at Burger King",
-        //                                           style: TextStyle(
-        //                                               fontSize: 10,
-        //                                               fontWeight:
-        //                                                   FontWeight.bold),
-        //                                         ),
-        //                                       ],
-        //                                     ),
-        //                                   ),
-        //                                 ),
-        //                               ],
-        //                             ),
-        //                           ),
-        //                         ),
-        //                       ),
-        //                     ),
-        //                     // Second Image
-        //                     // Container(
-        //                     //   decoration: BoxDecoration(
-        //                     //     color: Colors.blue,
-        //                     //     borderRadius: BorderRadius.circular(10),
-        //                     //   ),
-        //                     //   width: 190,
-        //                     //   height: 100,
-        //                     //   child: DecoratedBox(
-        //                     //     decoration: BoxDecoration(
-        //                     //       borderRadius: BorderRadius.circular(10),
-        //                     //     ),
-        //                     //     child: Padding(
-        //                     //       padding: const EdgeInsets.all(20.0),
-        //                     //       child: Row(
-        //                     //         children: <Widget>[
-        //                     //           Expanded(
-        //                     //             child: Image.asset(
-        //                     //               "assets/images/K.png",
-        //                     //               height: 60,
-        //                     //             ),
-        //                     //           ),
-        //                     //           Expanded(
-        //                     //             child: RichText(
-        //                     //               text: TextSpan(
-        //                     //                 style:
-        //                     //                     TextStyle(color: Colors.white),
-        //                     //                 children: [
-        //                     //                   TextSpan(
-        //                     //                     text: "Get Discount of \n",
-        //                     //                     style: TextStyle(
-        //                     //                         fontSize: 12,
-        //                     //                         shadows: [
-        //                     //                           Shadow(
-        //                     //                               blurRadius: 2,
-        //                     //                               offset:
-        //                     //                                   Offset(0.6, 0.6),
-        //                     //                               color: Colors.white)
-        //                     //                         ]),
-        //                     //                   ),
-        //                     //                   TextSpan(
-        //                     //                     text: "20% \n",
-        //                     //                     style: TextStyle(
-        //                     //                       fontSize: 15,
-        //                     //                       fontWeight: FontWeight.bold,
-        //                     //                     ),
-        //                     //                   ),
-        //                     //                   TextSpan(
-        //                     //                     text: "at KFC",
-        //                     //                     style: TextStyle(
-        //                     //                         fontSize: 10,
-        //                     //                         fontWeight:
-        //                     //                             FontWeight.bold),
-        //                     //                   ),
-        //                     //                 ],
-        //                     //               ),
-        //                     //             ),
-        //                     //           ),
-        //                     //         ],
-        //                     //       ),
-        //                     //     ),
-        //                     //   ),
-        //                     // ),
-        //                     // // Third Image
-        //                     // Padding(
-        //                     //   padding: const EdgeInsets.all(8.0),
-        //                     //   child: Container(
-        //                     //     decoration: BoxDecoration(
-        //                     //       color: Colors.blue,
-        //                     //       borderRadius: BorderRadius.circular(10),
-        //                     //     ),
-        //                     //     width: 190,
-        //                     //     height: 100,
-        //                     //     child: DecoratedBox(
-        //                     //       decoration: BoxDecoration(
-        //                     //         borderRadius: BorderRadius.circular(10),
-        //                     //       ),
-        //                     //       child: Padding(
-        //                     //         padding: const EdgeInsets.all(20.0),
-        //                     //         child: Row(
-        //                     //           children: <Widget>[
-        //                     //             Expanded(
-        //                     //               child: Image.asset(
-        //                     //                 "assets/images/Baskin.png",
-        //                     //               ),
-        //                     //             ),
-        //                     //             Expanded(
-        //                     //               child: RichText(
-        //                     //                 text: TextSpan(
-        //                     //                   style: TextStyle(
-        //                     //                       color: Colors.white),
-        //                     //                   children: [
-        //                     //                     TextSpan(
-        //                     //                       text: "Get Discount of \n",
-        //                     //                       style: TextStyle(
-        //                     //                           fontSize: 12,
-        //                     //                           shadows: [
-        //                     //                             Shadow(
-        //                     //                                 blurRadius: 2,
-        //                     //                                 offset: Offset(
-        //                     //                                     0.6, 0.6),
-        //                     //                                 color: Colors.white)
-        //                     //                           ]),
-        //                     //                     ),
-        //                     //                     TextSpan(
-        //                     //                       text: "20% \n",
-        //                     //                       style: TextStyle(
-        //                     //                         fontSize: 15,
-        //                     //                         fontWeight: FontWeight.bold,
-        //                     //                       ),
-        //                     //                     ),
-        //                     //                     TextSpan(
-        //                     //                       text: "at BaskinRobbin",
-        //                     //                       style:
-        //                     //                           TextStyle(fontSize: 10),
-        //                     //                     ),
-        //                     //                   ],
-        //                     //                 ),
-        //                     //               ),
-        //                     //             ),
-        //                     //           ],
-        //                     //         ),
-        //                     //       ),
-        //                     //     ),
-        //                     //   ),
-        //                     // ),
-        //                   ],
-        //                 );
-        //               });
-        //         })),
-        // Top Brands For You
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ))
+                : Container(
+                    margin: EdgeInsets.all(8),
+                    height: size.height * 0.18,
+                    child: FutureBuilder<List<dynamic>>(
+                      future: fetchHomeSlider(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  width: 190,
+                                  height: 100,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 5),
+                                            child: Expanded(
+                                              child: snapshot.data[index][
+                                                              'OffersAndCoupon']
+                                                          ['image'] !=
+                                                      null
+                                                  ? CachedNetworkImage(
+                                                      imageUrl: S3_BASE_PATH +
+                                                          snapshot.data[index][
+                                                                  'OffersAndCoupon']
+                                                              ['image'],
+                                                      height: size.height * 0.1,
+                                                      width: size.width * 0.18,
+                                                      fit: BoxFit.fill,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          Center(
+                                                              child:
+                                                                  CircularProgressIndicator()),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    )
+                                                  : Image.asset(
+                                                      "assets/images/feasturenttemp.jpeg",
+                                                      height:
+                                                          size.height * 0.18,
+                                                      width: size.width * 0.3,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: RichText(
+                                              text: TextSpan(
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                                children: [
+                                                  TextSpan(
+                                                    text:
+                                                        "${snapshot.data[index]['OffersAndCoupon']['title']}\n",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        shadows: [
+                                                          Shadow(
+                                                              blurRadius: 2,
+                                                              offset: Offset(
+                                                                  0.6, 0.6),
+                                                              color:
+                                                                  Colors.white)
+                                                        ]),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index][
+                                                                    'OffersAndCoupon']
+                                                                [
+                                                                'couponDiscountType'] ==
+                                                            "PERCENT"
+                                                        ? ""
+                                                        : "₹",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index]
+                                                            ['OffersAndCoupon']
+                                                            ['couponDiscount']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index][
+                                                                    'OffersAndCoupon']
+                                                                [
+                                                                'couponDiscountType'] ==
+                                                            "PERCENT"
+                                                        ? "%\n"
+                                                        : "\n",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: snapshot.data[index]
+                                                            ['OffersAndCoupon']
+                                                        ['description'],
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    )),
         Container(
           margin: EdgeInsets.only(left: 20),
           child: Text(
