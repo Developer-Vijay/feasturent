@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
@@ -9,6 +11,7 @@ import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class AppDrawer extends StatefulWidget {
   final int cStatus;
@@ -24,6 +27,29 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  @override
+  void initState() {
+    super.initState();
+    getWalletDetaile();
+  }
+
+  var walletdetails;
+  Future getWalletDetaile() async {
+    final prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getInt('userId');
+    String _authorization = prefs.getString('sessionToken');
+    var result = await http.get(
+        'http://18.223.208.214/api/payment/userWalletAndTransaction/$userid',
+        headers: {
+          "Content-type": "application/json",
+          "authorization": _authorization,
+        });
+    walletdetails = json.decode(result.body)['data'];
+    print(walletdetails);
+
+    return walletdetails;
+  }
+
   bool isenabled = false;
   loginCheckForData() {
     if (widget.cStatus == 1) {
@@ -163,7 +189,10 @@ class _AppDrawerState extends State<AppDrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WalletDesign()),
+                MaterialPageRoute(
+                    builder: (context) => WalletDesign(
+                          walletdata: walletdetails[0],
+                        )),
               );
               // Update the state of the app.
               // ...

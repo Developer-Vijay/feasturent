@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:feasturent_costomer_app/notificationsfiles.dart';
 import 'package:http/http.dart' as http;
 import 'package:feasturent_costomer_app/components/Place_Order/order_confirm.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class RepeatOrderPage extends StatefulWidget {
 }
 
 class _RepeatOrderPageState extends State<RepeatOrderPage> {
+  Notifications notifications = Notifications();
   Razorpay _razorpay;
   String _authorization = '';
   String _refreshtoken = '';
@@ -36,6 +38,8 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
     var responsepaymentid = responsed.paymentId;
     var responseorderid = responsed.orderId;
     var responsesignature = responsed.signature;
+    var orderprice;
+    orderprice = itemData1['orderMenues'][0]['Menu']['price'];
     final prefs = await SharedPreferences.getInstance();
     var userid = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
@@ -44,7 +48,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
       "menuId": "1",
       "vendorId": "1",
       "userId": "$userid",
-      "price": "${itemData1['orderMenues'][0]['Menu']['price']}",
+      "orderPrice": "${itemData1['orderMenues'][0]['Menu']['price']}",
       "discountPrice": "00",
       "offerId": "1",
       "razorpay_payment_id": "$responsepaymentid",
@@ -62,6 +66,8 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+        notifications.scheduleNotification("Rezorpay",
+            "Payment of  ₹ ${orderprice.toString()} is Successfully Paid");
       });
     } else {
       Fluttertoast.showToast(msg: responseData['message']);
@@ -99,12 +105,13 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
     final prefs = await SharedPreferences.getInstance();
     var phone = prefs.getString('userNumber');
     var email = prefs.getString('userEmail');
+    var name = prefs.getString('name');
     var options = {
       'key': 'rzp_test_7iDSklI4oMeTUd',
       'amount': num.parse(
               itemData1['orderMenues'][0]['Menu']['totalPrice'].toString()) *
           100,
-      'name': "Vijay",
+      'name': "$name",
       'description': 'Tasty',
       'prefill': {'contact': "$phone", 'email': "$email"}
     };
@@ -116,6 +123,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
   }
 
   var itemData1;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -166,137 +174,101 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "${itemData1['orderMenues'][0]['Menu']['title']}",
-                                style: item,
+                      ListView.builder(
+                        itemCount: itemData1['orderMenues'].length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Container(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "${itemData1['orderMenues'][index]['Menu']['title']}",
+                                            style: item,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "${itemData1['orderMenues'][index]['Menu']['price']} ₹",
+                                            style: itemPrice,
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            "gst",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 8.0, top: 8),
+                                          child: Text(
+                                            "${itemData1['orderMenues'][index]['Menu']['gstAmount'].toString()} ₹",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600),
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: size.height * 0.01,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            "Total",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 8.0, top: 8),
+                                          child: Text(
+                                            " ${itemData1['orderMenues'][index]['Menu']['totalPrice']} ₹ ",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600),
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "${itemData1['orderMenues'][0]['Menu']['price']} ₹",
-                                style: itemPrice,
-                                textDirection: TextDirection.rtl,
+                              Divider(),
+                              SizedBox(
+                                height: 5,
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Item Name2",
-                                style: item,
-                              ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Item Quantity Price",
-                                style: itemPrice,
-                                textDirection: TextDirection.rtl,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Item Total",
-                                    style: item,
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "${itemData1['orderMenues'][0]['Menu']['price']} ₹",
-                                    style: itemPrice,
-                                    textDirection: TextDirection.rtl,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                    "gst",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 8.0, top: 8),
-                                  child: Text(
-                                    "${itemData1['orderMenues'][0]['Menu']['gstAmount'].toString()} ₹",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                    textDirection: TextDirection.rtl,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                    "Deleivery Charge",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 8.0, top: 8),
-                                  child: Text(
-                                    "0 ₹",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                    textDirection: TextDirection.rtl,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 5,
+                            ],
+                          );
+                        },
                       ),
                       Container(
                         child: Row(
@@ -312,7 +284,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "${itemData1['orderMenues'][0]['Menu']['totalPrice']} ₹",
+                                "${itemData1['orderPrice']} ₹",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                                 textDirection: TextDirection.rtl,
                               ),
