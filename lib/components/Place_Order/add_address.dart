@@ -108,6 +108,9 @@ class _AddAdressesState extends State<AddAdresses> {
   Coordinates coordinates;
 
   Future<void> getlocation() async {
+    final prefs = await SharedPreferences.getInstance();
+    var username = prefs.getString('name');
+    var phonenumber = prefs.getString('userNumber');
     try {
       final geopostion = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
@@ -128,6 +131,8 @@ class _AddAdressesState extends State<AddAdresses> {
           _roadnamecontroller.text = locate.first.adminArea;
           citiesSelected.text = locate.first.subLocality;
           _landmarkcontroller.text = locate.first.addressLine;
+          _fullnamecontroller.text=username;
+          _phonenumbercontroller.text=phonenumber;
         });
       } catch (error) {
         Fluttertoast.showToast(msg: "Unable to load your location");
@@ -137,9 +142,6 @@ class _AddAdressesState extends State<AddAdresses> {
     }
     Navigator.pop(context);
   }
-
-  
-  
 
   @override
   void dispose() {

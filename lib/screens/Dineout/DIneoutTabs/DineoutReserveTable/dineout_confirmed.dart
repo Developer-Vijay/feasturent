@@ -7,7 +7,10 @@ class DineoutConfirmed extends StatefulWidget {
   var guest;
   var wholedata;
   var maleguest1;
+  var childguest;
   var name;
+  var adult;
+  
   var femaleguest1;
 
   DineoutConfirmed(
@@ -16,7 +19,9 @@ class DineoutConfirmed extends StatefulWidget {
       this.name,
       this.timeconfirm,
       this.wholedata,
+      this.adult,
       this.maleguest1,
+      this.childguest,
       this.femaleguest1});
 
   @override
@@ -31,6 +36,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
   var nameis;
   var maleguest;
   var femaleguests;
+  var childguests;
   @override
   void initState() {
     super.initState();
@@ -39,6 +45,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
     guest = widget.guest;
     nameis=widget.name;
     maleguest = widget.maleguest1;
+    childguests=widget.childguest;
     femaleguests = widget.femaleguest1;
   }
 
@@ -114,7 +121,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "$maleguest Male and $femaleguests Female",
+                      "$maleguest Male , $femaleguests Female and $childguests Child" ,
                       style: TextStyle(color: Colors.black),
                     ),
                   ),

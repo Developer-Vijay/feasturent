@@ -316,7 +316,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "${itemData1['orderId'].toString()}",
+                          "${itemData1['id'].toString()}",
                           style: orderdetails,
                         ),
                       ),
@@ -350,30 +350,30 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "${itemData1['orderDate'].toString()}",
+                          "${itemData1['createdAt'].toString()}",
                           style: orderdetails,
                         ),
                       ),
                       SizedBox(
                         height: size.height * 0.03,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Phone Number",
-                          style: orderHeading,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "${itemData1['customerPhone'].toString()}",
-                          style: orderdetails,
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 8.0),
+                      //   child: Text(
+                      //     "Phone Number",
+                      //     style: orderHeading,
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 8.0),
+                      //   child: Text(
+                      //     "${itemData1['customerPhone'].toString()}",
+                      //     style: orderdetails,
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: size.height * 0.03,
+                      // ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(

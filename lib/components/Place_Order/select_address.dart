@@ -57,8 +57,9 @@ class _SelectAddressState extends State<SelectAddress> {
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
+    print(userid);
     var response = await http
-        .get(USER_API + 'getOrderAddress' + '?key=BYUSER&id$userid', headers: {
+        .get(USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid', headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
     });

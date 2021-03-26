@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class DineoutAddMembers extends StatefulWidget {
   var date;
   var time;
-  DineoutAddMembers({this.date, this.time});
+  var senddate;
+  DineoutAddMembers({this.date, this.time,this.senddate});
   @override
   _DineoutAddMembersState createState() => _DineoutAddMembersState();
 }
@@ -12,15 +13,21 @@ class DineoutAddMembers extends StatefulWidget {
 class _DineoutAddMembersState extends State<DineoutAddMembers> {
   int counter = 0;
   int counter1 = 0;
+  int counter2 = 0;
+  int adult = 0;
+  int guest = 0;
   var showdate;
   var showtime;
+  var senddate;
   @override
   void initState() {
     super.initState();
     counter = 0;
     counter1 = 0;
+    counter2 = 0;
     showdate = widget.date;
     showtime = widget.time;
+    senddate=widget.senddate;
   }
 
   @override
@@ -28,16 +35,21 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
     super.dispose();
     counter = 0;
     counter1 = 0;
+    counter2 = 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    guest = counter + counter1 + counter2;
+    adult = counter + counter1;
+    print(guest);
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("Cafe Name"),
+        ),
         body: Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: 12,
@@ -51,20 +63,22 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "$showdate",
-                      style: TextStyle(color: Colors.white),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "$showdate",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                    Text(
-                      "$showtime",
-                      style: TextStyle(color: Colors.white),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "$showtime",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                    Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                    )
                   ],
                 ),
               ),
@@ -83,7 +97,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                       ],
                       borderRadius: BorderRadius.circular(5)),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(left: 11,right: 11,bottom: 8,top: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -151,22 +165,6 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Text("25 left for 26th Feb"),
-                            Spacer(),
-                            MaterialButton(
-                                onPressed: () {},
-                                minWidth: 50,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Text(
-                                  "BUY NOW",
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                color: Colors.white)
-                          ],
-                        ),
                         Container(
                           height: 3,
                           width: size.width * 0.7,
@@ -210,7 +208,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12),
               child: Container(
-                height: size.height * 0.2,
+                height: size.height * 0.25,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
@@ -357,6 +355,72 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: size.width * 0.24),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Children",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.06,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (counter2 == 0) {
+                                    setState(() {
+                                      counter2 = 0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      counter2--;
+                                    });
+                                  }
+                                });
+                              },
+                              child: Icon(
+                                Icons.remove,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text("$counter2"),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  counter2++;
+                                });
+                              },
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -374,6 +438,10 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                               time: showtime,
                               femalecount: counter1,
                               malecount: counter,
+                              childcount: counter2,
+                              totalguest: guest,
+                              senddate: senddate,
+                              adult: adult,
                             )));
               },
               child: Text("Continue to Reserve"),

@@ -1,18 +1,23 @@
 import 'dart:async';
+import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrderConfirmResturent extends StatefulWidget {
+  var ordertime;
+  OrderConfirmResturent({this.ordertime});
   @override
   _OrderConfirmResturentState createState() => _OrderConfirmResturentState();
 }
 
 class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
+  var currentime;
   @override
   void initState() {
     super.initState();
     startTime();
+    currentime = widget.ordertime;
   }
 
   startTime() async {

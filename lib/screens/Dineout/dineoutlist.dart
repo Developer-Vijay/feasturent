@@ -50,6 +50,7 @@ class PopularList {
   PopularList({this.image, this.name});
 }
 
+DateTime time = DateTime.now();
 List<PopularList> popular = [
   PopularList(
       image:
@@ -78,44 +79,44 @@ class TimeList {
 }
 
 List<TimeList> breaskfastList = [
-  TimeList(isSelected1: true, isSelected: false, time: "9:00"),
-  TimeList(isSelected1: false, isSelected: false, time: "9:15"),
-  TimeList(isSelected1: false, isSelected: false, time: "9:30"),
-  TimeList(isSelected1: false, isSelected: false, time: "9:45"),
-  TimeList(isSelected1: false, isSelected: false, time: "10:00"),
-  TimeList(isSelected1: false, isSelected: false, time: "10:15"),
-  TimeList(isSelected1: false, isSelected: false, time: "10:30"),
-  TimeList(isSelected1: false, isSelected: false, time: "10:45"),
-  TimeList(isSelected1: false, isSelected: false, time: "11:00"),
+  TimeList(isSelected1: true, isSelected: false, time: "9:00 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "9:15 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "9:30 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "9:45 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "10:00 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "10:15 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "10:30 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "10:45 AM"),
+  TimeList(isSelected1: false, isSelected: false, time: "11:00 AM"),
 ];
 
 List<TimeList> lunchlist = [
-  TimeList(isSelected1: true, isSelected: false, time: "12:00"),
-  TimeList(isSelected1: true, isSelected: false, time: "12:15"),
-  TimeList(isSelected1: true, isSelected: false, time: "12:30"),
-  TimeList(isSelected1: true, isSelected: false, time: "1:00"),
-  TimeList(isSelected1: true, isSelected: false, time: "1:15"),
-  TimeList(isSelected1: true, isSelected: false, time: "1:30"),
-  TimeList(isSelected1: true, isSelected: false, time: "1:45"),
-  TimeList(isSelected1: true, isSelected: false, time: "2:00"),
-  TimeList(isSelected1: true, isSelected: false, time: "2:15"),
-  TimeList(isSelected1: true, isSelected: false, time: "2:30"),
-  TimeList(isSelected1: true, isSelected: false, time: "2:45"),
-  TimeList(isSelected1: true, isSelected: false, time: "3:00:"),
+  TimeList(isSelected1: true, isSelected: false, time: "12:00 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "12:15 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "12:30 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "1:00 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "1:15 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "1:30 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "1:45 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "2:00 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "2:15 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "2:30 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "2:45 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "3:00 PM"),
 ];
 
 List<TimeList> dinnerlist = [
-  TimeList(isSelected1: true, isSelected: false, time: "7:00"),
-  TimeList(isSelected1: true, isSelected: false, time: "7:15"),
-  TimeList(isSelected1: true, isSelected: false, time: "7:30"),
-  TimeList(isSelected1: true, isSelected: false, time: "7:45"),
-  TimeList(isSelected1: true, isSelected: false, time: "8:00"),
-  TimeList(isSelected1: true, isSelected: false, time: "8:15"),
-  TimeList(isSelected1: true, isSelected: false, time: "8:30"),
-  TimeList(isSelected1: true, isSelected: false, time: "8:45"),
-  TimeList(isSelected1: true, isSelected: false, time: "9:00"),
-  TimeList(isSelected1: true, isSelected: false, time: "9:15"),
-  TimeList(isSelected1: true, isSelected: false, time: "9:30"),
-  TimeList(isSelected1: true, isSelected: false, time: "9:45"),
-  TimeList(isSelected1: true, isSelected: false, time: "10:00"),
+  TimeList(isSelected1: true, isSelected: false, time: "7:00 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "7:15 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "7:30 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "7:45 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "8:00 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "8:15 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "8:30 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "8:45 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "9:00 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "9:15 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "9:30 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "9:45 PM"),
+  TimeList(isSelected1: true, isSelected: false, time: "10:00 PM"),
 ];

@@ -4,6 +4,7 @@ import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:date_time_format/date_time_format.dart';
 
 class DineoutDateSelection extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class DineoutDateSelection extends StatefulWidget {
 }
 
 DateTime selectedDate = DateTime.now();
+
+final datetime = DateTime.now();
 
 var date = DateTime.parse("$selectedDate");
 var formattedDate = "${date.day}-${date.month}-${date.year}";
@@ -83,7 +86,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   SizedBox(
                     width: size.width * 0.01,
                   ),
-                  Text("$selectedDate")
+                  Text(selectedDate.format("\d-\M\-\Y"))
                 ],
               ),
               onPressed: () {
@@ -212,61 +215,13 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                 controller: pageController,
                 children: [
                   // Breakfast
-                  GridView.builder(
-                    padding: EdgeInsets.zero,
-                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4),
-                    shrinkWrap: true,
-                    semanticChildCount: 3,
-                    itemCount: breaskfastList.length,
-                    itemBuilder: (context, index) {
-                      return InputChip(
-                        label: Text(
-                          breaskfastList[index].time,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        selectedColor: Colors.blue,
-                        disabledColor: Colors.grey[200],
-                        elevation: 2,
-                        isEnabled: true,
-                        selected: breaskfastList[index].isSelected,
-                        showCheckmark: false,
-                        onSelected: (value) {
-                          int k = breaskfastList.length - 1;
-                          for (int i = 0; i <= k; i++) {
-                            setState(() {
-                              breaskfastList[i].isSelected = false;
-                            });
-                          }
-                          if (breaskfastList[index].isSelected == true) {
-                            setState(() {
-                              breaskfastList[index].isSelected = false;
-                              time = "${breaskfastList[index].time}";
-                            });
-                          } else {
-                            setState(() {
-                              breaskfastList[index].isSelected = true;
-                              time = "${breaskfastList[index].time}";
-                            });
-                          }
-                        },
-                        avatar: Icon(
-                          Icons.lock_clock,
-                          color: Colors.white,
-                        ),
-                      );
-                    },
-                  ),
 
-                  // Lunch
-                  GridView.builder(
-                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4),
+                  ListView.builder(
+                   
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
-                    scrollDirection: Axis.vertical,
+                    
+                    scrollDirection: Axis.horizontal,
                     itemCount: lunchlist.length,
                     itemBuilder: (context, index) {
                       return InputChip(
@@ -298,6 +253,52 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                             setState(() {
                               lunchlist[index].isSelected = true;
                               time = "${lunchlist[index].time}";
+                            });
+                          }
+                        },
+                        avatar: Icon(
+                          Icons.lock_clock,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                  // Lunch
+                  ListView.builder(
+                    padding: EdgeInsets.zero,
+                
+                    shrinkWrap: true,
+                    itemCount: breaskfastList.length,
+                    itemBuilder: (context, index) {
+                      return InputChip(
+                        label: Text(
+                          breaskfastList[index].time,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        selectedColor: Colors.blue,
+                        disabledColor: Colors.grey[200],
+                        elevation: 2,
+                        isEnabled: true,
+                        selected: breaskfastList[index].isSelected,
+                        showCheckmark: false,
+                        onSelected: (value) {
+                          int k = breaskfastList.length - 1;
+                          for (int i = 0; i <= k; i++) {
+                            setState(() {
+                              breaskfastList[i].isSelected = false;
+                            });
+                          }
+                          if (breaskfastList[index].isSelected == true) {
+                            setState(() {
+                              breaskfastList[index].isSelected = false;
+                              time = "${breaskfastList[index].time}";
+                            });
+                          } else {
+                            setState(() {
+                              breaskfastList[index].isSelected = true;
+                              time = "${breaskfastList[index].time}";
                             });
                           }
                         },
@@ -366,8 +367,10 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          DineoutAddMembers(date: selectedDate, time: time)));
+                      builder: (context) => DineoutAddMembers(
+                        senddate: selectedDate.format("\d-\M-\Y"),
+                          date: selectedDate.format("\d-\M-\Y-\D"),
+                          time: time)));
             },
             color: Colors.blue,
             minWidth: size.width * 0.8,
