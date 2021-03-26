@@ -232,16 +232,16 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final prefs = await SharedPreferences.getInstance();
       setState(() {
-        takeUser = prefs.getBool('_isAuthenticate');
-
+        // takeUser = prefs.getBool('_isAuthenticate');
+        // userName = prefs.getString('sessionToken');
         _customerUserId = prefs.getInt('userId');
         _authorization = prefs.getString('sessionToken');
         _refreshtoken = prefs.getString('refreshToken');
         _latitude = prefs.setDouble('latitude', latitude);
         _longitude = prefs.setDouble('longitude', longitude);
-        emailid = prefs.getString('userEmail');
+        // emailid = prefs.getString('userEmail');
 
-        photo = prefs.getString('userProfile');
+        // photo = prefs.getString('userProfile');
       });
 
       print(takeUser);
@@ -258,12 +258,18 @@ class _HomeScreenState extends State<HomeScreen> {
         print(_refreshtoken);
 
         setState(() {
+          takeUser = true;
+
           loginstatus = 1;
           _customerName = responseData['data'][0]['name'] +
               ' ' +
               responseData['data'][0]['lastName'];
           _customerEmail = responseData['data'][0]['email'];
           _customerProfile = responseData['data'][0]['profile'];
+          userName = _customerName;
+          emailid = _customerEmail;
+          photo = _customerProfile;
+          print(_customerName);
         });
       } else {
         print('User not Login');
@@ -272,6 +278,10 @@ class _HomeScreenState extends State<HomeScreen> {
           _customerName = '';
           _customerEmail = '';
           _customerProfile = '';
+          takeUser = false;
+          userName = '';
+          emailid = '';
+          photo = '';
         });
       }
     } catch (error) {

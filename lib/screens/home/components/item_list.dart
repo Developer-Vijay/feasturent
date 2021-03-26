@@ -21,7 +21,7 @@ class _CategoriesListState extends State<CategoriesList> {
     super.initState();
   }
 
-  var data;
+  var data = null;
   Future<List<dynamic>> fetchCategories() async {
     var result =
         await http.get(APP_ROUTES + 'getCategories?key=STATUS&id=2&status=1');
@@ -49,12 +49,14 @@ class _CategoriesListState extends State<CategoriesList> {
             Container(
                 child: FlatButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ViewAllCategory(categoryData: data),
-                          ));
+                      if (data != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewAllCategory(categoryData: data),
+                            ));
+                      }
                     },
                     child: Row(
                       children: [
@@ -114,6 +116,9 @@ class _CategoriesListState extends State<CategoriesList> {
                                                 CategoryRelatedMenues(
                                               categoryName: snapshot.data[index]
                                                   ['name'],
+                                              categoryid: snapshot.data[index]
+                                                      ['id']
+                                                  .toString(),
                                             ),
                                           ));
                                     },

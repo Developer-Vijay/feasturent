@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
@@ -29,6 +32,90 @@ class _CartScreenState extends State<CartScreen> {
     getList();
   }
 
+  var resturantDataStatus;
+  Future fetchRestaurantStatus(id) async {
+    print("****************** API hitting*********************");
+    var result = await http.get(
+        APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString());
+    var hours = DateTime.now().hour;
+
+    var mintue = DateTime.now().minute;
+    // var timeData = "$hours:$mintue" ;
+    // print(timeData);
+    setState(() {
+      resturantStatus = json.decode(result.body)['data'];
+      if (resturantStatus[0]['user']['Setting'] == null) {
+        status = false;
+        WidgetsBinding.instance.addPostFrameCallback(
+            (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+      } else {
+        status = resturantStatus[0]['user']['Setting']['isActive'];
+        if (status == false) {
+          WidgetsBinding.instance.addPostFrameCallback((_) =>
+              _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+        } else {
+          setState(() {
+            resturantDataStatus = resturantStatus[0]['user'];
+          });
+          showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (context) => PlaceOrder(
+                    data: resturantDataStatus,
+                  ));
+        }
+      }
+    });
+    setState(() {
+      statusno = 0;
+    });
+    // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
+    return resturantStatus;
+  }
+
+  int statusno = 0;
+
+  final restaurantSnackBar = SnackBar(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      duration: Duration(minutes: 100),
+      backgroundColor: Colors.white,
+      content: Container(
+        height: 50,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.restaurant, color: Colors.blue),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Restaurant is now closed",
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text("Restaurant is no longer taking order",
+                        style: TextStyle(color: kPrimaryColor)),
+                  ],
+                )
+              ],
+            ),
+          ],
+        ),
+      ));
+  var resturantStatus;
+  bool status = true;
+
   List<String> checkitem = [];
   getList() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
@@ -50,11 +137,13 @@ class _CartScreenState extends State<CartScreen> {
 
   final _textstyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 15);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.white,
           centerTitle: false,
@@ -398,7 +487,29 @@ class _CartScreenState extends State<CartScreen> {
                                                                     ),
                                                                   ),
                                                                   SizedBox(
-                                                                    height: 10,
+                                                                    height: 7,
+                                                                  ),
+                                                                  Container(
+                                                                    width:
+                                                                        size.width *
+                                                                            0.3,
+                                                                    child: Text(
+                                                                      users[index]
+                                                                          .vendorName,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              11),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 5,
                                                                   ),
                                                                   Container(
                                                                     child: Row(
@@ -429,21 +540,6 @@ class _CartScreenState extends State<CartScreen> {
                                                                         ),
                                                                       ],
                                                                     ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Text(
-                                                                    users[index]
-                                                                        .vendorName,
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            11),
                                                                   ),
                                                                 ],
                                                               ),
@@ -874,20 +970,33 @@ class _CartScreenState extends State<CartScreen> {
                     padding: const EdgeInsets.only(right: 15.0),
                     child: MaterialButton(
                       onPressed: () {
+                        print(
+                            "5555555555555555555555555555555555555555555544444444444******************$vendorIdCheck");
                         if (checkdata == 1) {
-                          var distinctIds = vendorIdCheck.toSet().toList();
                           if (totalPrice != 0) {
-                            if (distinctIds.length == 1) {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (context) => PlaceOrder());
-                              print("sqllite Id $checkitem");
+                            if (vendorIdCheck.isNotEmpty) {
+                              var distinctIds = vendorIdCheck.toSet().toList();
+                              print("vendor id ${distinctIds[0]}");
+                              if (distinctIds.length == 1) {
+                                if (statusno == 0) {
+                                  setState(() {
+                                    statusno = 1;
+                                  });
+                                  fetchRestaurantStatus(distinctIds[0]);
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Placing order...");
+                                }
+
+                                print("sqllite Id $checkitem");
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Items selected from different restaurant");
+                              }
                             } else {
                               Fluttertoast.showToast(
-                                  msg:
-                                      "Items selected from different restaurant");
+                                  msg: "Please select any item to place order");
                             }
                           } else {
                             print("sqllite Id $checkitem");
@@ -903,7 +1012,9 @@ class _CartScreenState extends State<CartScreen> {
                         }
                       },
                       child: checkdata == 1
-                          ? Text("Place Order  ₹ $totalPrice")
+                          ? statusno == 1
+                              ? Text("Place order...")
+                              : Text("Place Order  ₹ $totalPrice")
                           : Text("Login"),
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -911,21 +1022,8 @@ class _CartScreenState extends State<CartScreen> {
                       color: Colors.blue[600],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(),
-                    child: Text(
-                      "",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 3,
             ),
           ],
         ));

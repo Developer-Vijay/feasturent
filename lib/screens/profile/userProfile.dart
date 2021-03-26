@@ -78,6 +78,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: kSpacingUnit.w * 2),
               Container(
+                  child: userName == null
+                      ? Text(
+                          "UserName",
+                          style: kTitleTextStyle,
+                        )
+                      : Text("$userName")),
+              SizedBox(height: kSpacingUnit.w * 2),
+              Container(
                   child: emailid == null
                       ? Text(
                           "Email Id",
@@ -173,9 +181,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         SizedBox(
           height: 20,
-        ),
-        Divider(
-          color: Colors.black,
         ),
         ProfileListItem(
           icon: LineAwesomeIcons.cog,

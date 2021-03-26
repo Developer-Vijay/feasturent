@@ -9,6 +9,7 @@ class WishListClass {
   String itemStatus;
   int itemtype;
   int isSelected;
+  String vendorName;
 
   WishListClass(
       {this.id,
@@ -20,5 +21,6 @@ class WishListClass {
       this.menuItemId,
       this.vendorId,
       this.itemStatus,
-      this.isSelected});
+      this.isSelected,
+      this.vendorName});
 }

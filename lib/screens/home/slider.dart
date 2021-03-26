@@ -34,6 +34,28 @@ class _FoodSliderState extends State<FoodSlider> {
     getList();
     datamenu = widget.menuData;
     selectedRadioTile = 0;
+    checkStatus();
+  }
+
+  checkStatus() async {
+    await wishListServices.data(datamenu['id']).then((value) => func(value));
+
+    if (dataCheck1.isEmpty) {
+      setState(() {
+        isSelected = false;
+      });
+    } else {
+      print(dataCheck1[0]);
+      if (dataCheck1[0]['itemName'] != datamenu['title']) {
+        setState(() {
+          isSelected = false;
+        });
+      } else {
+        setState(() {
+          isSelected = true;
+        });
+      }
+    }
   }
 
   List<String> checkdata = [];
@@ -173,6 +195,9 @@ class _FoodSliderState extends State<FoodSlider> {
                                 .then((value) => func(value));
 
                             if (dataCheck1.isEmpty) {
+                              setState(() {
+                                isSelected = true;
+                              });
                               getItemandNavigateToFavourites(type);
                             } else {
                               print(dataCheck1[0]);
@@ -186,13 +211,6 @@ class _FoodSliderState extends State<FoodSlider> {
                                 });
                               }
                             }
-                          } else if (isSelected == true) {
-                            setState(() {
-                              isSelected = false;
-                              removeItemFromFavourites();
-                              Fluttertoast.showToast(
-                                  msg: "Item removed from Favourites");
-                            });
                           }
                         },
                       ))
@@ -459,22 +477,18 @@ class _FoodSliderState extends State<FoodSlider> {
   getItemandNavigateToFavourites(type) async {
     setState(() {
       wishListServices.saveUser(
-        datamenu['totalPrice'],
-        1,
-        datamenu['vendorId'],
-        datamenu['id'],
-        datamenu['image1'],
-        datamenu['title'],
-        "Add".toString(),
-        type,
-        0,
-      );
+          datamenu['totalPrice'],
+          1,
+          datamenu['vendorId'],
+          datamenu['id'],
+          datamenu['image1'],
+          datamenu['title'],
+          "Add".toString(),
+          type,
+          0,
+          widget.restaurentName);
     });
     print("data added");
-  }
-
-  removeItemFromFavourites() async {
-    favourite.clear();
   }
 
   itemAddToCart(tpye) async {
