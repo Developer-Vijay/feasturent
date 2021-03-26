@@ -500,19 +500,37 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                   ],
                                                 ),
                                               ),
+                                              snapshot.data[index]['type'] ==
+                                                      null
+                                                  ? SizedBox()
+                                                  : Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          height: size.height *
+                                                              0.013,
+                                                        ),
+                                                        Container(
+                                                          width:
+                                                              size.width * 0.35,
+                                                          child: Text(
+                                                            snapshot.data[index]
+                                                                ['type'],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    size.height *
+                                                                        0.015,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                               SizedBox(
-                                                height: size.height * 0.013,
-                                              ),
-                                              Text(
-                                                "North Indian",
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        size.height * 0.015,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              SizedBox(
-                                                height: size.height * 0.01,
+                                                height: size.height * 0.015,
                                               ),
                                               Container(
                                                 child: Row(

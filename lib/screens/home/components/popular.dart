@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/components/category_detail.dart';
 import 'package:feasturent_costomer_app/screens/home/components/list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,17 +20,29 @@ class _PopularListState extends State<PopularList> {
     super.initState();
   }
 
+  var data = null;
+  Future<List<dynamic>> fetchPopular() async {
+    var result = await http.get(APP_ROUTES + 'getPopularMenues');
+    data = json.decode(result.body)['data'];
+    return data;
+  }
+
   var sliderOffers;
 
-  int checkDataLenght;
+  int checkDataLenght = 0;
 
   Future fetchHomeSliderLength() async {
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
     var data = json.decode(result.body)['data'];
-    if (sliderOffers != null) {
+    if (data.isEmpty) {
+      setState(() {
+        checkDataLenght = 0;
+      });
+      print("data not here");
+    } else {
       print("data here");
-      if (sliderOffers[0]['status'] == true) {
+      if (data[0]['status'] == true) {
         setState(() {
           checkDataLenght = data.length;
         });
@@ -39,11 +52,6 @@ class _PopularListState extends State<PopularList> {
         });
         print("data not here");
       }
-    } else {
-      setState(() {
-        checkDataLenght = 0;
-      });
-      print("data not here");
     }
 
     print("data length $checkDataLenght");
@@ -53,13 +61,13 @@ class _PopularListState extends State<PopularList> {
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
     sliderOffers = json.decode(result.body)['data'];
-    if (sliderOffers != null) {
+    if (sliderOffers.isEmpty) {
+      print("data not here");
+    } else {
       print("data here");
       if (sliderOffers[0]['status'] == true) {
         return sliderOffers;
       }
-    } else {
-      print("data not here");
     }
   }
 
@@ -88,11 +96,15 @@ class _PopularListState extends State<PopularList> {
             Container(
                 alignment: Alignment.topRight,
                 child: FlatButton(
-                  onPressed: () => {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewAllPopular())),
+                  onPressed: () {
+                    if (data != null) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewAllPopular(
+                                    popularData: data,
+                                  )));
+                    }
                   },
                   child: Row(
                     children: [
@@ -116,66 +128,102 @@ class _PopularListState extends State<PopularList> {
           ],
         ),
         Container(
-          height: size.height * 0.14,
-          child: ListView.builder(
-            itemCount: popularonfeast.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 3,
-                                color: Colors.blueGrey,
-                                spreadRadius: 1)
-                          ],
-                        ),
-                        margin: EdgeInsets.only(left: size.width * 0.02),
-                        height: size.height * 0.08,
-                        width: size.width * 0.24,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: FlatButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PizzaList()),
-                              );
-                            },
-                            child: ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: popularonfeast[index].categoryImage,
-                                fit: BoxFit.cover,
-                                width: size.width * 0.16,
-                                height: size.height * 0.2,
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              ),
+            height: size.height * 0.14,
+            child: FutureBuilder<List<dynamic>>(
+              future: fetchPopular(),
+              builder: (context, snap) {
+                if (snap.hasData) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snap.data.length,
+                    itemBuilder: (context, index) {
+                      if (snap.data[index]['Menu'] != null) {
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 3,
+                                          color: Colors.blueGrey,
+                                          spreadRadius: 1)
+                                    ],
+                                  ),
+                                  margin:
+                                      EdgeInsets.only(left: size.width * 0.011),
+                                  height: size.height * 0.08,
+                                  width: size.width * 0.24,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        var menuD;
+                                        setState(() {
+                                          menuD =
+                                              snap.data[index]['Menu']['id'];
+                                        });
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CategoryDetailPage(
+                                                      menuId: menuD,
+                                                      cateID: snap.data[index]
+                                                              ['Menu']
+                                                          ['categoryId'],
+                                                    )));
+                                      },
+                                      child: ClipOval(
+                                          child: snap.data[index]['Menu']
+                                                      ['image1'] !=
+                                                  null
+                                              ? CachedNetworkImage(
+                                                  imageUrl: S3_BASE_PATH +
+                                                      snap.data[index]['Menu']
+                                                          ['image1'],
+                                                  fit: BoxFit.cover,
+                                                  width: size.width * 0.2,
+                                                  height: size.height * 0.2,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                )
+                                              : Image.asset(
+                                                  "assets/images/feasturenttemp.jpeg",
+                                                  fit: BoxFit.cover,
+                                                  width: size.width * 0.2,
+                                                  height: size.height * 0.2,
+                                                )),
+                                    ),
+                                  )),
                             ),
-                          ),
-                        )),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.016,
-                  ),
-                  Text(
-                    popularonfeast[index].categoryName,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: size.height * 0.0136),
-                  )
-                ],
-              );
-            },
-          ),
-        ),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            Text(
+                              snap.data[index]['Menu']['title'],
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: size.height * 0.014),
+                            )
+                          ],
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            )),
         SizedBox(
           height: 9,
         ),

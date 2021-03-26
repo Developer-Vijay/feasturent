@@ -64,9 +64,10 @@ class ProfileListItem extends StatelessWidget {
                           prefs.remove('loginId');
                           prefs.remove('userEmail');
                           prefs.remove("loginBy");
-                          takeUser = null;
+                          takeUser = false;
                           emailid = null;
                           photo = null;
+                          userName = null;
 
                           prefs.setBool("_isAuthenticate", false);
 

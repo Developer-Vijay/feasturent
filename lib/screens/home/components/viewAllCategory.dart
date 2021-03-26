@@ -28,6 +28,7 @@ class ViewAllCategory extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => CategoryRelatedMenues(
                             categoryName: categoryData[index]['name'],
+                            categoryid: categoryData[index]['id'].toString(),
                           ),
                         ));
                   },

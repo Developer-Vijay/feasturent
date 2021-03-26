@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/dataClass.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
 
 class PlaceOrder extends StatefulWidget {
+  final data;
+  const PlaceOrder({Key key, this.data}) : super(key: key);
   @override
   _PlaceOrderState createState() => _PlaceOrderState();
 }
@@ -27,11 +30,34 @@ class _PlaceOrderState extends State<PlaceOrder> {
   void initState() {
     super.initState();
     createstorage();
-    print("data");
-    print("sqlite ids :- $idCheck");
-    print("data");
 
+    refresh();
+    dataForOffer = widget.data;
+    print(dataForOffer);
     getList();
+  }
+
+  var dataForOffer;
+
+  Timer placeTimer;
+
+  refresh() {
+    placeTimer = Timer.periodic(Duration(seconds: 1), (_) {
+      placeTimer.cancel();
+      if (mounted) {
+        setState(() {});
+        refresh();
+        // Your state change code goes here
+
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    refresh();
+    placeTimer.cancel();
+    super.dispose();
   }
 
   List<String> checkitem = [];
@@ -49,6 +75,11 @@ class _PlaceOrderState extends State<PlaceOrder> {
     setState(() {
       price = cart.getInt('price');
     });
+  }
+
+  onGoBack(dynamic value) {
+    print("hello data refresh");
+    setState(() {});
   }
 
   @override
@@ -685,12 +716,28 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             Spacer(),
                             InkWell(
                               onTap: () {
-                                Fluttertoast.showToast(
-                                    msg: "checking the best offers");
+                                if (dataForOffer['OffersAndCoupons'].isEmpty) {
+                                  Fluttertoast.showToast(
+                                      msg: "No offer avialable..");
+                                } else {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => OnOfferBottomSheet(
+                                            data:
+                                                dataForOffer['OffersAndCoupons']
+                                                    [0],
+                                          ));
+                                }
                               },
-                              child: Text(
-                                "View offers",
-                                style: TextStyle(color: Colors.red),
+                              child: Container(
+                                height: 25,
+                                width: 100,
+                                child: Center(
+                                  child: Text(
+                                    "View offers",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
                               ),
                             )
                           ],
@@ -816,39 +863,99 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         Row(
                           children: [
                             Text("Pay Using"),
-                            PopupMenuButton(
-                              padding: EdgeInsets.all(10),
-                              icon: Icon(Icons.arrow_drop_down),
-                              onSelected: (value) {
-                                if (value == 0) {
-                                  setState(() {
-                                    paymentMode = "Online Mode";
-                                  });
-                                } else if (value == 1) {
-                                  setState(() {
-                                    paymentMode = "Cash On Delivery";
-                                  });
-                                } else if (value == 2) {
-                                  setState(() {
-                                    paymentMode = "Cash On Delivery";
-                                  });
-                                }
-                              },
-                              itemBuilder: (BuildContext) => [
-                                PopupMenuItem(
-                                  child: Text("Online Mode"),
-                                  value: 0,
-                                ),
-                                PopupMenuItem(
-                                  child: Text("Cash On Delivery"),
-                                  value: 1,
-                                ),
-                                PopupMenuItem(
-                                  child: Text("Wallet"),
-                                  value: 2,
-                                ),
-                              ],
-                            ),
+                            dataForOffer['Setting']['isCod'] == null
+                                ? PopupMenuButton(
+                                    padding: EdgeInsets.all(10),
+                                    icon: Icon(Icons.arrow_drop_down),
+                                    onSelected: (value) {
+                                      if (value == 0) {
+                                        setState(() {
+                                          paymentMode = "Online Mode";
+                                        });
+                                      } else if (value == 1) {
+                                        setState(() {
+                                          paymentMode = "Cash On Delivery";
+                                        });
+                                      } else if (value == 2) {
+                                        setState(() {
+                                          paymentMode = "Wallet";
+                                        });
+                                      }
+                                    },
+                                    itemBuilder: (BuildContext) => [
+                                      PopupMenuItem(
+                                        child: Text("Online Mode"),
+                                        value: 0,
+                                      ),
+                                      PopupMenuItem(
+                                        child: Text("Cash On Delivery"),
+                                        value: 1,
+                                      ),
+                                      PopupMenuItem(
+                                        child: Text("Wallet"),
+                                        value: 2,
+                                      ),
+                                    ],
+                                  )
+                                : dataForOffer['Setting']['isCod'] == true
+                                    ? PopupMenuButton(
+                                        padding: EdgeInsets.all(10),
+                                        icon: Icon(Icons.arrow_drop_down),
+                                        onSelected: (value) {
+                                          if (value == 0) {
+                                            setState(() {
+                                              paymentMode = "Online Mode";
+                                            });
+                                          } else if (value == 1) {
+                                            setState(() {
+                                              paymentMode = "Cash On Delivery";
+                                            });
+                                          } else if (value == 2) {
+                                            setState(() {
+                                              paymentMode = "Wallet";
+                                            });
+                                          }
+                                        },
+                                        itemBuilder: (BuildContext) => [
+                                          PopupMenuItem(
+                                            child: Text("Online Mode"),
+                                            value: 0,
+                                          ),
+                                          PopupMenuItem(
+                                            child: Text("Cash On Delivery"),
+                                            value: 1,
+                                          ),
+                                          PopupMenuItem(
+                                            child: Text("Wallet"),
+                                            value: 2,
+                                          ),
+                                        ],
+                                      )
+                                    : PopupMenuButton(
+                                        padding: EdgeInsets.all(10),
+                                        icon: Icon(Icons.arrow_drop_down),
+                                        onSelected: (value) {
+                                          if (value == 0) {
+                                            setState(() {
+                                              paymentMode = "Online Mode";
+                                            });
+                                          } else if (value == 2) {
+                                            setState(() {
+                                              paymentMode = "Wallet";
+                                            });
+                                          }
+                                        },
+                                        itemBuilder: (BuildContext) => [
+                                          PopupMenuItem(
+                                            child: Text("Online Mode"),
+                                            value: 0,
+                                          ),
+                                          PopupMenuItem(
+                                            child: Text("Wallet"),
+                                            value: 2,
+                                          ),
+                                        ],
+                                      )
                           ],
                         ),
                         Text(paymentMode),
@@ -1122,6 +1229,42 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
   List<MenuData> menuidAndQty = [];
 
+  removeDataFromCart() async {
+    print(
+        "*********************************   idcheck length********    ${idCheck.length}");
+    int k = idCheck.length;
+    print("*********************************   k length********    $k");
+    for (int i = 0; i <= k - 1; i++) {
+      print("*********************************   for loop stated********");
+      print("*********************************   i  ********    $i");
+      print("ID:-$i");
+      final SharedPreferences cart = await SharedPreferences.getInstance();
+
+      int data = idCheck[i];
+      await services.sqliteIDquery(data).then((value) => func(value));
+
+      int menuPriceRemove = data2[0]['itemPrice'];
+      int menuQtyRemove = data2[0]['itemCount'];
+      int vendorIdRemove = data2[0]['vendorId'];
+      int menuIdRemove = data2[0]['menuItemId'];
+
+      setState(() {
+        countSum = 0;
+        totalPrice = 0;
+        price = price - (menuQtyRemove * menuPriceRemove);
+        cart.setInt('price', price);
+        services.deleteUser(data);
+        vendorIdCheck.remove(vendorIdRemove);
+        checkitem.remove(menuIdRemove.toString());
+        print(checkitem);
+        cart.setStringList('addedtocart', checkitem);
+      });
+    }
+    setState(() {
+      idCheck.clear();
+    });
+  }
+
   paymentCheck() async {
     print("*****************************************");
     final prefs = await SharedPreferences.getInstance();
@@ -1161,44 +1304,10 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     });
     print(response.statusCode);
 
-    //   var responseData = jsonDecode(response.body);
-
-    //   if (response.statusCode == 200) {
-    //     // int k = idCheck.length;
-    //     // for (int i = 0; i <= k - 1; i++) {
-    //     //   print("ID:-$i");
-    //     //   final SharedPreferences cart = await SharedPreferences.getInstance();
-
-    //     //   int data = idCheck[i];
-    //     //   await services.sqliteIDquery(data).then((value) => func(value));
-
-    //     //   int menuPriceRemove = data2[0]['itemPrice'];
-    //     //   int menuQtyRemove = data2[0]['itemCount'];
-    //     //   int vendorIdRemove = data2[0]['vendorId'];
-    //     //   int menuIdRemove = data2[0]['menuItemId'];
-
-    //     setState(() {
-    //       // countSum = countSum - menuQtyRemove;
-    //       // totalPrice = totalPrice - (menuQtyRemove * menuPriceRemove);
-    //       // price = price - (menuQtyRemove * menuPriceRemove);
-    //       // cart.setInt('price', price);
-    //       // services.deleteUser(data);
-    //       // idCheck.remove(data);
-    //       // vendorIdCheck.remove(vendorIdRemove);
-    //       // checkitem.remove(menuIdRemove.toString());
-    //       // print(checkitem);
-    //       // cart.setStringList('addedtocart', checkitem);
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
-    //     });
-    //     // }
-    //   } else {
-    //     Fluttertoast.showToast(msg: "Something went Wrong");
-    //   }
-    // }
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
+      removeDataFromCart();
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
@@ -1208,11 +1317,11 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     }
   }
 
-  // func(value) {
-  //   setState(() {
-  //     data2 = value;
-  //   });
-  // }
+  func(value) {
+    setState(() {
+      data2 = value;
+    });
+  }
 
   Future<void> _checkout() async {
     var options = {
@@ -1264,6 +1373,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
+      removeDataFromCart();
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));

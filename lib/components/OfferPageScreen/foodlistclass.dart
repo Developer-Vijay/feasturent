@@ -23,6 +23,7 @@ List<String> itemAdded = [];
 var takeUser;
 var emailid;
 var photo;
+var userName;
 var location = "Fetching location...";
 int loginstatus = 0;
 

@@ -88,15 +88,23 @@ class _DetailResturentState extends State<DetailResturent> {
                           ),
                         ],
                       ),
-                      Padding(
-                          padding: const EdgeInsets.only(left: 15, bottom: 10),
-                          child: Text(
-                            "Sweets, North Indian, South Indian",
-                            style: TextStyle(
-                                fontSize: size.height * 0.016,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          )),
+                      data['cuisine'] == null
+                          ? SizedBox()
+                          : Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, bottom: 10, right: 130),
+                              child: Container(
+                                width: size.width * 0.1,
+                                child: Text(
+                                  data['cuisine'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: size.height * 0.017,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black),
+                                ),
+                              ),
+                            ),
                       Container(
                         margin: EdgeInsets.all(10),
                         height: size.height * 0.1,
@@ -239,22 +247,26 @@ class _DetailResturentState extends State<DetailResturent> {
                             SizedBox(
                               width: 5,
                             ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TrackingPage(),
-                                    ));
-                              },
-                              child: Text(
-                                "Get Direction",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
+                            data['Address']['latitude'].isEmpty &&
+                                    data['Address']['longitude'].isEmpty
+                                ? SizedBox()
+                                : InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TrackingPage(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Get Direction",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
                           ],
                         ),
                       ),

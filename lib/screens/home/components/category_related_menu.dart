@@ -13,7 +13,9 @@ import 'category_detail.dart';
 
 class CategoryRelatedMenues extends StatefulWidget {
   final categoryName;
-  const CategoryRelatedMenues({Key key, this.categoryName}) : super(key: key);
+  final categoryid;
+  const CategoryRelatedMenues({Key key, this.categoryName, this.categoryid})
+      : super(key: key);
   @override
   _CategoryRelatedMenuesState createState() => _CategoryRelatedMenuesState();
 }
@@ -24,12 +26,14 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
     super.initState();
     setState(() {
       menuName = widget.categoryName;
+      cateId = widget.categoryid;
     });
     print(menuName);
     getList();
   }
 
   var menuName;
+  var cateId;
 
   final services = UserServices();
 
@@ -46,8 +50,8 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
   var restaurantDataCopy;
   var restaurantMenu;
   Future<List<dynamic>> fetchMenues() async {
-    var result = await http
-        .get(APP_ROUTES + 'getMenues' + '?key=BYCAT&value=' + menuName);
+    var result =
+        await http.get(APP_ROUTES + 'getMenues' + '?BYCATID&id=' + cateId);
     restaurantMenu = json.decode(result.body)['data'];
     return restaurantMenu;
   }

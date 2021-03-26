@@ -3,6 +3,7 @@ import 'wishlist_data_class.dart';
 
 var dataCheck;
 var dataCheck1;
+var dataWishList;
 
 class WishListService {
   void saveUser(
@@ -15,6 +16,7 @@ class WishListService {
     String itemStatus,
     int itemtype,
     int isSelected,
+    String vendorName,
   ) {
     WishListDBhelper.insert('wishListDat', {
       'itemPrice': itemPrice,
@@ -26,6 +28,7 @@ class WishListService {
       'itemStatus': itemStatus,
       'itemtype': itemtype,
       'isSelected': isSelected,
+      'vendorName': vendorName,
     });
   }
 
@@ -33,17 +36,17 @@ class WishListService {
     final usersList = await WishListDBhelper.getData('wishListDat');
     return usersList
         .map((item) => WishListClass(
-              id: item['id'],
-              itemPrice: item['itemPrice'],
-              itemCount: item['itemCount'],
-              vendorId: item['vendorId'],
-              menuItemId: item['menuItemId'],
-              imagePath: item['imagePath'],
-              itemName: item['itemName'],
-              itemStatus: item['itemStatus'],
-              itemtype: item['itemtype'],
-              isSelected: item['isSelected'],
-            ))
+            id: item['id'],
+            itemPrice: item['itemPrice'],
+            itemCount: item['itemCount'],
+            vendorId: item['vendorId'],
+            menuItemId: item['menuItemId'],
+            imagePath: item['imagePath'],
+            itemName: item['itemName'],
+            itemStatus: item['itemStatus'],
+            itemtype: item['itemtype'],
+            isSelected: item['isSelected'],
+            vendorName: item['vendorName']))
         .toList();
   }
 

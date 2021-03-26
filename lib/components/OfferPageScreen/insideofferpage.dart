@@ -8,6 +8,7 @@ import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass
 import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/tandooriScreen.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:feasturent_costomer_app/screens/home/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,76 +37,101 @@ class _OfferListPageState extends State<OfferListPage> {
       infodata = widget.restaurantDa;
       restaurantDataCopy = widget.restaurantDa;
     });
+    calculateDeliveryTime(restaurantDataCopy);
     getList();
     fetchRestaurantStatus();
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  double timeTake = 0;
+  calculateDeliveryTime(restaurantDataCopy) {
+    int k = restaurantDataCopy['Menus'].length;
+    for (int i = 0; i <= k - 1; i++) {
+      timeTake = timeTake + restaurantDataCopy['Menus'][i]['deliveryTime'];
+    }
+    timeTake = timeTake / k;
 
+    deliverTime = timeTake.toInt();
+    print("dilebvtimr  $deliverTime");
+  }
+
+  int deliverTime;
   Future fetchRestaurantStatus() async {
     int id = restaurantDataCopy['id'] as int;
-    var result = await http.get(
-        APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString());
-    var hours = DateTime.now().hour;
-
-    var mintue = DateTime.now().minute;
-    // var timeData = "$hours:$mintue" ;
-    // print(timeData);
-    setState(() {
-      resturantStatus = json.decode(result.body)['data'];
-      if (resturantStatus[0]['user']['Setting'] == null) {
-        status = false;
+    if (restaurantDataCopy['user']['Setting'] == null) {
+      status = false;
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+    } else {
+      status = restaurantDataCopy['user']['Setting']['isActive'];
+      if (status == false) {
         WidgetsBinding.instance.addPostFrameCallback(
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
-        status = resturantStatus[0]['user']['Setting']['isActive'];
-        if (status == false) {
-          WidgetsBinding.instance.addPostFrameCallback((_) =>
-              _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-        }
+        var result = await http.get(APP_ROUTES +
+            'getRestaurantInfos' +
+            '?key=BYID&id=' +
+            id.toString());
+        var hours = DateTime.now().hour;
+
+        var mintue = DateTime.now().minute;
+        // var timeData = "$hours:$mintue" ;
+        // print(timeData);
+        setState(() {
+          resturantStatus = json.decode(result.body)['data'];
+          if (resturantStatus[0]['user']['Setting'] == null) {
+            status = false;
+            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+          } else {
+            status = resturantStatus[0]['user']['Setting']['isActive'];
+            if (status == false) {
+              WidgetsBinding.instance.addPostFrameCallback((_) =>
+                  _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+            }
+          }
+        });
       }
-    });
+    }
+
     // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
     return resturantStatus;
   }
 
   final restaurantSnackBar = SnackBar(
-      duration: Duration(minutes: 10),
-      backgroundColor: Colors.lightBlueAccent[200],
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      duration: Duration(minutes: 100),
+      backgroundColor: Colors.white,
       content: Container(
-        height: 85,
+        height: 50,
         child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(flex: 1, child: Icon(Icons.restaurant)),
-                Expanded(
-                    flex: 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Restaurant is now closed",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text("Restaurant is no longer taking order")
-                      ],
-                    )),
+                Icon(Icons.restaurant, color: Colors.blue),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Restaurant is now closed",
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text("Restaurant is no longer taking order",
+                        style: TextStyle(color: kPrimaryColor)),
+                  ],
+                )
               ],
             ),
-            FlatButton(
-              minWidth: 250,
-              onPressed: () {},
-              child: Text("View All Restaurant"),
-              color: Colors.grey,
-            )
           ],
         ),
       ));
@@ -256,10 +282,33 @@ class _OfferListPageState extends State<OfferListPage> {
           body: ListView(
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: size.height * 0.034,
+                    height: size.height * 0.025,
                   ),
+                  restaurantDataCopy['type'] == null
+                      ? SizedBox()
+                      : Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: size.width * 0.03,
+                              ),
+                              width: size.width * 0.5,
+                              child: Text(
+                                restaurantDataCopy['type'],
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: size.height * 0.02,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.005,
+                            ),
+                          ],
+                        ),
                   Row(
                     children: [
                       Container(
@@ -349,21 +398,25 @@ class _OfferListPageState extends State<OfferListPage> {
                       Column(
                         children: [
                           Text(
-                            "39 minutes",
+                            "$deliverTime minutes",
                             style: offerRowHeadingStyle,
                           ),
                           Text("Delivery Time")
                         ],
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: size.width * 0.02),
-                        child: Column(
-                          children: [
-                            Text("₹ 75", style: offerRowHeadingStyle),
-                            Text("Cost for one")
-                          ],
-                        ),
-                      ),
+                      restaurantDataCopy['avgCost'] == null
+                          ? SizedBox()
+                          : Container(
+                              margin: EdgeInsets.only(right: size.width * 0.02),
+                              child: Column(
+                                children: [
+                                  Text("₹ ${restaurantDataCopy['avgCost']}",
+                                      style: offerRowHeadingStyle),
+                                  Text(
+                                      "Cost for ${restaurantDataCopy['forPeople']}")
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                   SizedBox(
@@ -425,6 +478,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                           width: size.width * 0.02,
                                         ),
                                         Container(
+                                          width: size.width * 0.3,
                                           margin: EdgeInsets.only(
                                               left: size.width * 0.002,
                                               top: size.height * 0.01),
@@ -480,7 +534,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                   style: offerRowHeadingStyle,
                                 )
                               : Text(
-                                  "offline",
+                                  "Offline",
                                   style: offerRowHeadingStyle,
                                 ))
                     ],
@@ -529,7 +583,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                   borderRadius: BorderRadius.circular(10),
                                   color: status == true
                                       ? Colors.white
-                                      : Colors.grey[300],
+                                      : Colors.blue[50],
                                   boxShadow: [
                                     BoxShadow(
                                         blurRadius: 2,

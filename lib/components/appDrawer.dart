@@ -30,8 +30,12 @@ class _AppDrawerState extends State<AppDrawer> {
   void initState() {
     super.initState();
     getWalletDetaile();
+    setState(() {
+      datastatus = widget.cStatus;
+    });
   }
 
+  int datastatus;
   var walletdetails;
   Future getWalletDetaile() async {
     final prefs = await SharedPreferences.getInstance();
@@ -83,8 +87,10 @@ class _AppDrawerState extends State<AppDrawer> {
               child: Column(
                 children: [
                   Text(
-                    widget.cName,
-                    style: TextStyle(fontSize: 0, color: Colors.white),
+                    widget.cName != null ? widget.cName : ' ',
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
+                        color: Colors.white),
                   ),
                   Text(widget.cEmail != null ? widget.cEmail : ' ',
                       style: TextStyle(
@@ -194,7 +200,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => WalletDesign(
-                          walletdata: walletdetails[0],
+                          status: datastatus,
                         )),
               );
               // Update the state of the app.
@@ -247,65 +253,66 @@ class _AppDrawerState extends State<AppDrawer> {
               // ...
             },
           ),
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: widget.cStatus == 1 ? Text('Logout') : SizedBox(),
-            dense: true,
-            onTap: () async {
-              if (widget.cStatus == 1) {
-                return showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text("Do you really want to logout"),
-                          actions: [
-                            FlatButton(
-                              child: Text("Yes"),
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+          widget.cStatus == 1
+              ? ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Logout'),
+                  dense: true,
+                  onTap: () async {
+                    return showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text("Do you really want to logout"),
+                              actions: [
+                                FlatButton(
+                                  child: Text("Yes"),
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
 
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                prefs.remove(
-                                  'name',
-                                );
-                                prefs.remove('sessionToken');
-                                prefs.remove('refreshToken');
-                                prefs.remove('userNumber');
-                                prefs.remove('userProfile');
-                                prefs.remove('customerName');
-                                prefs.remove('userId');
-                                prefs.remove('loginId');
-                                prefs.remove('userEmail');
-                                prefs.remove("loginBy");
-                                takeUser = null;
-                                emailid = null;
-                                photo = null;
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.remove(
+                                      'name',
+                                    );
+                                    prefs.remove('sessionToken');
+                                    prefs.remove('refreshToken');
+                                    prefs.remove('userNumber');
+                                    prefs.remove('userProfile');
+                                    prefs.remove('customerName');
+                                    prefs.remove('userId');
+                                    prefs.remove('loginId');
+                                    prefs.remove('userEmail');
+                                    prefs.remove("loginBy");
+                                    takeUser = false;
+                                    emailid = null;
+                                    photo = null;
+                                    userName = null;
 
-                                prefs.setBool("_isAuthenticate", false);
-                                setState(() {
-                                  loginstatus = 0;
-                                });
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()));
-                              },
-                            ),
-                            FlatButton(
-                              child: Text("No"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            )
-                          ],
-                        ));
-              }
+                                    prefs.setBool("_isAuthenticate", false);
+                                    setState(() {
+                                      loginstatus = 0;
+                                    });
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()));
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text("No"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            ));
 
-              // Update the state of the app.
-              // ...
-            },
-          ),
+                    // Update the state of the app.
+                    // ...
+                  },
+                )
+              : SizedBox(),
         ],
       ),
     );

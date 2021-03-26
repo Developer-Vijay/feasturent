@@ -26,7 +26,12 @@ class _DiscountCardState extends State<DiscountCard> {
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
     var data = json.decode(result.body)['data'];
-    if (data != null) {
+    if (data.isEmpty) {
+      setState(() {
+        dataLenght = 0;
+      });
+      print("data not here");
+    } else {
       print("data here");
       if (data[0]['status'] == true) {
         setState(() {
@@ -38,11 +43,6 @@ class _DiscountCardState extends State<DiscountCard> {
         });
         print("data not here");
       }
-    } else {
-      setState(() {
-        dataLenght = 0;
-      });
-      print("data not here");
     }
 
     print("data  $dataLenght");
@@ -54,13 +54,13 @@ class _DiscountCardState extends State<DiscountCard> {
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
     homeOffers = json.decode(result.body)['data'];
-    if (homeOffers != null) {
+    if (homeOffers.isEmpty) {
+      print("data not here");
+    } else {
       print("data here");
       if (homeOffers[0]['status'] == true) {
         return homeOffers;
       }
-    } else {
-      print("data not here");
     }
   }
 
