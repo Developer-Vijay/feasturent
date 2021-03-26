@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/repeat_orders.dart';
@@ -7,17 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:date_time_format/date_time_format.dart';
 
 class MyOrders extends StatefulWidget {
-  final menuid;
-  String foodname;
-
-  MyOrders({
-    Key key,
-    this.menuid,
-    this.foodname,
-  }) : super(key: key);
-
   @override
   _MyOrdersState createState() => _MyOrdersState();
 }
@@ -29,57 +22,92 @@ class _MyOrdersState extends State<MyOrders> {
   @override
   void initState() {
     super.initState();
+    refreshList();
   }
+
+  List<String> cancelreason = [];
+  DateTime time;
+  DateTime currentTime = DateTime.now();
 
   ScrollController _scrollController = ScrollController();
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  Future cancelOrder() async {
-     final prefs = await SharedPreferences.getInstance();
-    var userid = prefs.getInt('userId');
+  var canceldata;
 
-    _authorization = prefs.getString('sessionToken');
-   
-    var response = await http.post(APP_ROUTES + 'cancelOrder' + '?orderId=orderId&userId=userId&reason=No reason' );
-    
-  }
-
-  Future<Null> refreshList() async {
+  Future refreshList() async {
     refreshKey.currentState.show();
     await Future.delayed(Duration(seconds: 2));
     setState(() {
       Fluttertoast.showToast(msg: "Page Refreshed");
     });
-    return null;
+    return fetchOrders();
   }
 
   String _authorization = "";
   bool _progressController = true;
   var userid;
-
   var ordersData;
   var datalength;
+  var orderId;
+  var timeised;
   Future<List<dynamic>> fetchOrders() async {
     final prefs = await SharedPreferences.getInstance();
     var userid2 = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
 
     var result = await http
-        .get(COMMON_API + 'orders' + '?key=BYUSER&id=$userid2', headers: {
+        .get(APP_ROUTES + 'userOrders' + '?key=BYUSER&id=$userid2', headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
     });
     ordersData = json.decode(result.body)['data'];
     datalength = ordersData.length;
-    print(datalength);
+    // refresh();
+
     return ordersData;
+  }
+
+  Timer placeTimer;
+
+  refresh() {
+    placeTimer = Timer.periodic(Duration(seconds: 30), (_) {
+      placeTimer.cancel();
+      print("refreshed");
+      if (mounted) {
+        setState(() {});
+        refresh();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    refresh();
+    placeTimer.cancel();
+    super.dispose();
+  }
+
+  void alertBox() {}
+
+  bool isDisabled = false;
+  void timercondition() {
+    if (time.compareTo(currentTime) > currentTime.minute) {
+      isDisabled = false;
+    } else {
+      isDisabled = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // print(time);
+    var current = currentTime.format("\h\i");
+    // print("${currentTime.hour}:${currentTime.minute}");
     final textstyle1 =
         TextStyle(color: Colors.black, fontWeight: FontWeight.w800);
-    final textstyle2 = TextStyle(fontWeight: FontWeight.w800);
+    final textstyle2 = TextStyle(
+      fontWeight: FontWeight.w600,
+    );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -114,6 +142,114 @@ class _MyOrdersState extends State<MyOrders> {
                         itemCount: datalength,
                         // ignore: missing_return
                         itemBuilder: (BuildContext context, index) {
+                          Future cancelOrder() async {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return AlertDialog(
+                                        title:
+                                            Center(child: Text("CANCELLATION")),
+                                        titleTextStyle: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w700),
+                                        content: Container(
+                                          height: 240,
+                                          width: 200,
+                                          child: Column(
+                                            children: [
+                                              ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: cancel.length,
+                                                itemBuilder: (context, index) {
+                                                  return CheckboxListTile(
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        cancel[index].value =
+                                                            value;
+                                                        if (cancel[index]
+                                                                .value !=
+                                                            value) {
+                                                          canceldata = "";
+                                                        } else {
+                                                          canceldata =
+                                                              cancel[index]
+                                                                  .title;
+                                                        }
+
+                                                        print(canceldata);
+                                                      });
+                                                    },
+                                                    value: cancel[index].value,
+                                                    title: Text(
+                                                        cancel[index].title),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                            child: Text("Done"),
+                                            onPressed: () async {
+                                              final prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              var userid =
+                                                  prefs.getInt('userId');
+                                              _authorization = prefs
+                                                  .getString('sessionToken');
+                                              _authorization = prefs
+                                                  .getString('sessionToken');
+
+                                              var response = await http.post(
+                                                  APP_ROUTES +
+                                                      'cancelOrder' +
+                                                      '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata',
+                                                  headers: {
+                                                    "authorization":
+                                                        _authorization
+                                                  });
+                                              if (response.statusCode == 200) {
+                                                Fluttertoast.showToast(
+                                                    msg: "ordercancelled");
+                                                Navigator.pop(context);
+                                                refreshList();
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "Order Cancellqation time is Finished");
+                                                        Navigator.pop(context);
+                                                        
+                                                        refreshList();
+                                              }
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  );
+                                });
+                          }
+
+                          DateTime _timed =
+                              DateTime.parse(snapshot.data[index]['createdAt']);
+                          var data2 = _timed.toLocal();
+                          var data4 = _timed.toLocal();
+                          print("check........");
+                          print(data2);
+                          var data5 = data4.format("\d-\m\-\Y");
+                          var data3 = data2.format("\h:\i \A");
+                          // DateTime _timeis=DateTime.parse(data3);
+                          // print(_timeis);
+                          var data = _timed.format("\h:\i \a");
+                          print(currentTime.difference(data2));
+                          print("///////////");
+                          print(data3);
+                          // print(_timed);
+                          // print(data);
                           if (snapshot.data[index]['orderMenues'].isEmpty) {
                             return SizedBox();
                           } else {
@@ -230,7 +366,7 @@ class _MyOrdersState extends State<MyOrders> {
                                               padding: const EdgeInsets.only(
                                                   right: 12.0),
                                               child: Text(
-                                                " ${snapshot.data[index]['orderMenues'][0]['Menu']['orderPrice']} ₹",
+                                                " ${snapshot.data[index]['orderPrice']} ₹",
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight:
@@ -244,13 +380,26 @@ class _MyOrdersState extends State<MyOrders> {
                                         Divider(
                                           thickness: 1,
                                         ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10.0),
-                                          child: Text(
-                                            "Total Items",
-                                            style: textstyle2,
-                                          ),
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0),
+                                              child: Text(
+                                                "Order Id",
+                                                style: textstyle2,
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "Date",
+                                                style: textstyle2,
+                                              ),
+                                            )
+                                          ],
                                         ),
                                         SizedBox(
                                           height: size.height * 0.01,
@@ -261,7 +410,7 @@ class _MyOrdersState extends State<MyOrders> {
                                               padding: const EdgeInsets.only(
                                                   left: 10.0),
                                               child: Text(
-                                                "${snapshot.data[index]['orderMenues'].length}",
+                                                "${snapshot.data[index]['id']}",
                                                 style: textstyle1,
                                               ),
                                             ),
@@ -270,7 +419,12 @@ class _MyOrdersState extends State<MyOrders> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                  "${snapshot.data[index]['createdAt']}"),
+                                                "$data5",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
                                             )
                                           ],
                                         ),
@@ -282,87 +436,191 @@ class _MyOrdersState extends State<MyOrders> {
                                               MainAxisAlignment.start,
                                           children: [
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: StepProgressIndicator(
-                                                totalSteps: 2,
-                                                progressDirection:
-                                                    TextDirection.ltr,
-                                                unselectedColor: snapshot
-                                                                .data[index]
-                                                            ['orderStatus'] ==
-                                                        "PENDING"
-                                                    ? Colors.grey
-                                                    : Colors.green,
-                                                selectedColor: snapshot
-                                                                .data[index]
-                                                            ['orderStatus'] ==
-                                                        "PENDING"
-                                                    ? Colors.green
-                                                    : Colors.grey,
-                                                currentStep: 1,
-                                                roundedEdges:
-                                                    Radius.circular(20),
-                                                size: 13,
-                                              ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: snapshot.data[index][
-                                                                'orderStatus'] ==
-                                                            "PENDING"
-                                                        ? Text(
-                                                            "PENDING",
-                                                            style: TextStyle(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: snapshot.data[index]
+                                                            ['orderStatus'] !=
+                                                        "CANCELED"
+                                                    ? StepProgressIndicator(
+                                                        totalSteps: 4,
+                                                        progressDirection:
+                                                            TextDirection.ltr,
+                                                        unselectedColor:
+                                                            Colors.grey,
+                                                        selectedColor:
+                                                            Colors.green,
+                                                        currentStep: snapshot
+                                                                            .data[
+                                                                        index][
+                                                                    'orderStatus'] !=
+                                                                "PENDING"
+                                                            ? snapshot.data[index]
+                                                                        [
+                                                                        'orderStatus'] !=
+                                                                    "ACCEPTED"
+                                                                ? snapshot.data[index]
+                                                                            [
+                                                                            'orderStatus'] !=
+                                                                        "PICKUP"
+                                                                    ? 4
+                                                                    : 3
+                                                                : 2
+                                                            : 1,
+                                                        roundedEdges:
+                                                            Radius.circular(20),
+                                                        size: 13,
+                                                      )
+                                                    : Text(
+                                                        "ORDER CANCELED",
+                                                        style: TextStyle(
+                                                            color: Colors.red,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                            Container(
+                                                child: snapshot.data[index]
+                                                            ['orderStatus'] !=
+                                                        "CANCELED"
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: snapshot.data[
+                                                                              index]
+                                                                          [
+                                                                          'orderStatus'] ==
+                                                                      "PENDING"
+                                                                  ? Text(
+                                                                      "PENDING",
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .red,
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    )
+                                                                  : Text(
+                                                                      "PENDING",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.bold))),
+                                                          // Spacer(),
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: snapshot.data[
+                                                                              index]
+                                                                          [
+                                                                          'orderStatus'] ==
+                                                                      "ACCEPTED"
+                                                                  ? Text(
+                                                                      "ACCEPTED",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          color: Colors
+                                                                              .red,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    )
+                                                                  : Text(
+                                                                      "ACCEPTED",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.bold))),
+                                                          // Spacer(),
+
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: snapshot.data[
+                                                                              index]
+                                                                          [
+                                                                          'orderStatus'] ==
+                                                                      "PICKUP"
+                                                                  ? Text(
+                                                                      "PICKUP",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          color: Colors
+                                                                              .red,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    )
+                                                                  : Text(
+                                                                      "PICKUP",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.bold))),
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: snapshot.data[
+                                                                              index]
+                                                                          [
+                                                                          'orderStatus'] ==
+                                                                      "COMPLETED"
+                                                                  ? Text(
+                                                                      "DELIVERED",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          color: Colors
+                                                                              .green,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    )
+                                                                  : Text(
+                                                                      "DELIVERED",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ))
+                                                        ],
+                                                      )
+                                                    : SizedBox()),
+                                            Container(
+                                                child: snapshot.data[index]
+                                                            ['orderStatus'] !=
+                                                        "CANCELED"
+                                                    ? Container(
+                                                        // remove not symbol from here Afteer Testing it
+                                                        child: currentTime
+                                                                    .minute ==
+                                                                data2.minute
+                                                            ? MaterialButton(
+                                                                child: Text(
+                                                                    "Cancel"),
                                                                 color:
                                                                     Colors.red,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )
-                                                        : Text("PENDING",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold))),
-                                                Spacer(),
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: snapshot.data[index][
-                                                                'orderStatus'] ==
-                                                            "COMPLETED"
-                                                        ? Text(
-                                                            "COMPLETED",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .green,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )
-                                                        : Text(
-                                                            "COMPLETED",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ))
-                                              ],
-                                            ),
-                                            Container(
-                                              child: MaterialButton(
-                                                color: Colors.red[500],
-                                                textColor: Colors.white,
-                                                child: Text("Cancel"),
-                                                onPressed: () {},
-                                              ),
-                                            )
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                onPressed: () {
+                                                                  cancelOrder();
+                                                                },
+                                                              )
+                                                            : SizedBox())
+                                                    : SizedBox())
                                           ],
                                         )
                                       ],

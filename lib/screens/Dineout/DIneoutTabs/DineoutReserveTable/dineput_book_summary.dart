@@ -1,14 +1,34 @@
+import 'dart:convert';
+
+import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_confirmed.dart';
+import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
+import 'package:feasturent_costomer_app/screens/home/components/notificationPage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../../notificationsfiles.dart';
 
 class DineoutBookingSummary extends StatefulWidget {
   var date;
   var time;
   var malecount;
+  var childcount;
   var femalecount;
+  var totalguest;
+  var senddate;
+  var adult;
   DineoutBookingSummary(
-      {this.date, this.time, this.malecount, this.femalecount});
+      {this.date,
+      this.time,
+      this.malecount,
+      this.adult,
+      this.femalecount,
+      this.totalguest,
+      this.senddate,
+      this.childcount});
   @override
   _DineoutBookingSummaryState createState() => _DineoutBookingSummaryState();
 }
@@ -21,7 +41,6 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
 
   var _nameValidate;
   var _phoneValidate;
-  var _email;
 
   bool _isValidate = false;
   var name;
@@ -35,27 +54,38 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
   var timeis;
   var dateis;
   var maleguest;
+  var guests;
+  var totaladults;
+  var childguest;
+  var sendateis;
   var femaleguests;
   @override
   void initState() {
     super.initState();
     timeis = widget.time;
     dateis = widget.date;
+    sendateis=widget.senddate;
+    totaladults = widget.adult;
     maleguest = widget.malecount;
     femaleguests = widget.femalecount;
+    childguest = widget.childcount;
+    guests = widget.totalguest;
+    print(totaladults);
+    print(dateis);
     getuserdata();
   }
 
   Future getuserdata() async {
     final prefs = await SharedPreferences.getInstance();
-    username = prefs.getString('customerName');
+    username = prefs.getString('name');
     usermobilenumber = prefs.getString('userNumber');
     useremailid = prefs.getString('userEmail');
 
     _emailController.text = useremailid;
     _nameController.text = username;
-    _emailController.text = useremailid;
+    _phoneController.text = usermobilenumber;
   }
+  NotificationSheet _notificationSheet =NotificationSheet();
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +93,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     name = _nameController.text;
     phone = _phoneController.text;
     specialrequest = _specialRequestController.text;
-    
+    print("name variable");
+    print(name);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -163,7 +194,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                       controller: _nameController,
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.w600),
-                      decoration: InputDecoration(labelText: "Name",errorText: _nameValidate),
+                      decoration: InputDecoration(
+                          labelText: "Name", errorText: _nameValidate),
                     ),
                   ),
                   Padding(
@@ -173,7 +205,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.w600),
                       keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(labelText: "Mobile No.",errorText: _phoneValidate),
+                      decoration: InputDecoration(
+                          labelText: "Mobile No.", errorText: _phoneValidate),
                     ),
                   ),
                   Padding(
@@ -241,17 +274,51 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     }
 
     if (_isValidate == true) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DineoutConfirmed(
-                    dateconfirm: dateis,
-                    timeconfirm: timeis,
-                    wholedata: email,
-                    name: name,
-                    maleguest1: maleguest,
-                    femaleguest1: femaleguests,
-                  )));
+      Map data = {
+        "vendorId": "3",
+        "member": "$guests",
+        "child": "$childguest",
+        "adult": "$totaladults",
+        "bookingDate": "$sendateis",
+        "specialRequest": _specialRequestController.text,
+        "customerPhone": _phoneController.text,
+        "customerName": _nameController.text,
+        "customerEmail": _emailController.text,
+        "tableTiming": "$timeis",
+        "status": true
+      };
+      var bookbody = json.encode(data);
+      print(bookbody);
+
+      var response = await http.post(APP_ROUTES + 'bookTable', body: bookbody,
+       
+       headers: {
+        "Content-Type": "application/json",
+      });
+      var responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        response.body;
+        Fluttertoast.showToast(msg:responseData['message']);
+        setState(() {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DineoutConfirmed(
+                        dateconfirm: dateis,
+                        timeconfirm: timeis,
+                        wholedata: email,
+                        name: _nameController.text,
+                        childguest: childguest,
+                        maleguest1: maleguest,
+                        femaleguest1: femaleguests,
+                      )));
+        });
+        Notifications().scheduleNotification("Dear ${_nameController.text}","Your Table is Booked For $guests");
+      } else {
+        Fluttertoast.showToast(msg: responseData['message']);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "out of the validate");
     }
   }
 }

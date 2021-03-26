@@ -288,3 +288,17 @@ List<PopularOnFeasturent> popularonfeast = [
           "https://image.shutterstock.com/z/stock-photo-masala-dosa-indian-savory-crepes-with-potato-filling-top-down-view-783911236.jpg",
       categoryName: "Masala Dosa"),
 ];
+
+class CancelOrderList {
+  bool value = false;
+  var title;
+
+  CancelOrderList({this.value, this.title});
+}
+
+List<CancelOrderList> cancel = [
+  CancelOrderList(title: "By Mistake", value: false),
+  CancelOrderList(title: "OverPriced", value: false),
+  CancelOrderList(title: "Mood Changed", value: false),
+  CancelOrderList(title: "Hygiene issue", value: false),
+];

@@ -13,7 +13,7 @@ class AddressList extends StatefulWidget {
 }
 
 class _AddressListState extends State<AddressList> {
-  Future<dynamic>  myfuture;
+  Future<dynamic> myfuture;
   @override
   void initState() {
     super.initState();
@@ -34,7 +34,7 @@ class _AddressListState extends State<AddressList> {
   }
 
   final textstyle = TextStyle(color: Colors.black, fontSize: 16);
-  
+
   String _authorization = '';
   var userid;
   var userid2;
@@ -63,18 +63,20 @@ class _AddressListState extends State<AddressList> {
     }
   }
 
-_getdata() async{
-  return await getAddress();
-}
+  _getdata() async {
+    return await getAddress();
+  }
+
   Future<dynamic> getAddress() async {
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
-    var response = await http
-        .get(USER_API + 'getOrderAddress' + '?key=BYUSER&id$userid', headers: {
-      "Content-type": "application/json",
-      "authorization": _authorization,
-    });
+    var response = await http.get(
+        USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid',
+        headers: {
+          "Content-type": "application/json",
+          "authorization": _authorization,
+        });
     ordersData = json.decode(response.body)['data'];
     total = ordersData.length;
     return ordersData;
@@ -83,7 +85,6 @@ _getdata() async{
   var ordersData;
   var total = 0;
 
- 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -248,11 +249,6 @@ _getdata() async{
                                                     itemBuilder: (BuildContext
                                                             context) =>
                                                         [
-                                                      PopupMenuItem(
-                                                        child: Text("Edit"),
-                                                        enabled: true,
-                                                        value: 0,
-                                                      ),
                                                       PopupMenuItem(
                                                         child: Text("Remove"),
                                                         enabled: true,

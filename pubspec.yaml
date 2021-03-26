@@ -55,6 +55,7 @@ dependencies:
   photo_view: ^0.10.3
   lazy_load_scrollview: 1.2.0
   geolocator:
+  date_time_format: 
   geocoder: ^0.2.1
   flutter_swiper: ^1.1.6  
   flutter_google_places: ^0.2.6
@@ -65,6 +66,7 @@ dependencies:
   google_maps_flutter:
   location:
   location_web:
+  timer_button: 
 
   socket_io_client: ^0.9.12
   firebase_messaging:
