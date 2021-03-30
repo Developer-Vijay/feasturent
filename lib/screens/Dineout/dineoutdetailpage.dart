@@ -10,6 +10,8 @@ import '../../constants.dart';
 import 'DIneoutTabs/dineout_menu_tab.dart';
 
 class DineoutDetailPage extends StatefulWidget {
+  final data;
+  const DineoutDetailPage({this.data});
   @override
   _DineoutDetailPageState createState() => _DineoutDetailPageState();
 }
@@ -83,9 +85,12 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DineoutGallery()));
+                              builder: (context) => DineoutGallery(
+                                    data: widget.data['dineoutImages'],
+                                  )));
                     },
-                    child: Swiper(
+                    child: widget.data['dineoutImages'].isNotEmpty ?
+                     Swiper(
                       itemBuilder: (context, index) {
                         return CachedNetworkImage(
                           placeholder: (context, url) => Center(
@@ -94,12 +99,13 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                               semanticsLabel: "Loading",
                             ),
                           ),
-                          imageUrl: barimages[index],
-                          fit: BoxFit.fill,
+                          imageUrl: S3_BASE_PATH +
+                              widget.data['dineoutImages'][index]['image'],
+                          fit: BoxFit.cover,
                         );
                       },
-                      itemCount: barimages.length,
-                    ),
+                      itemCount: widget.data['dineoutImages'].length,
+                    ):Image.asset("assets/images/NoImage.png.jpeg",fit: BoxFit.cover,)
                   ),
                 ),
                 bottom: TabBar(
@@ -123,20 +129,25 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
               //     RatingBarTab(),
               //     About(),
               //   ],)
-               
+
               // ]),),
               SliverFillRemaining(
                   child: TabBarView(
                 controller: _controller,
                 children: [
-                  PortfolioGallerySubPage(),
-                  DineoutOfferTabPage(),
+                  PortfolioGallerySubPage(
+                    data: widget.data,
+                  ),
+                  DineoutOfferTabPage(
+                    data: widget.data,
+                  ),
                   MenuDart(),
                   RatingBarTab(),
-                  About(),
+                  About(
+                    data: widget.data,
+                  ),
                 ],
-              )
-              ),
+              )),
             ]))));
   }
 }

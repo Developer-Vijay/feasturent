@@ -20,6 +20,7 @@ class DineoutBookingSummary extends StatefulWidget {
   var totalguest;
   var senddate;
   var adult;
+  var data;
   DineoutBookingSummary(
       {this.date,
       this.time,
@@ -28,6 +29,7 @@ class DineoutBookingSummary extends StatefulWidget {
       this.femalecount,
       this.totalguest,
       this.senddate,
+      this.data,
       this.childcount});
   @override
   _DineoutBookingSummaryState createState() => _DineoutBookingSummaryState();
@@ -64,7 +66,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     super.initState();
     timeis = widget.time;
     dateis = widget.date;
-    sendateis=widget.senddate;
+    sendateis = widget.senddate;
     totaladults = widget.adult;
     maleguest = widget.malecount;
     femaleguests = widget.femalecount;
@@ -85,7 +87,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     _nameController.text = username;
     _phoneController.text = usermobilenumber;
   }
-  NotificationSheet _notificationSheet =NotificationSheet();
+
+  NotificationSheet _notificationSheet = NotificationSheet();
 
   @override
   Widget build(BuildContext context) {
@@ -100,15 +103,19 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text("Cafe Name"),
+        title: Text(widget.data['name']),
       ),
-      body: Column(
+      body: ListView(
         children: [
           SizedBox(
             height: size.height * 0.014,
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+              top: 8.0,
+              left: 14,
+              bottom: 8,
+            ),
             child: Container(
                 alignment: Alignment.topLeft,
                 child: Text(
@@ -181,12 +188,13 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                   boxShadow: [
                     BoxShadow(
                         blurRadius: 2,
-                        spreadRadius: 2,
-                        color: Colors.blue[50],
-                        offset: Offset(1, 3))
+                        spreadRadius: 4,
+                        color: Colors.blue[100],
+                        offset: Offset(3, 3))
                   ],
                   borderRadius: BorderRadius.circular(10)),
-              child: Column(
+              child: ListView(
+                shrinkWrap: true,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(6.0),
@@ -235,17 +243,24 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
           SizedBox(
             height: size.height * 0.13,
           ),
-          MaterialButton(
-            onPressed: () {
-              data();
-            },
-            child: Text("Continue to Reserve"),
-            color: Colors.blue,
-            textColor: Colors.white,
-            minWidth: size.width * 0.9,
-            height: size.height * 0.06,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 12,
+              right: 12,
+              bottom: 12,
+            ),
+            child: MaterialButton(
+              onPressed: () {
+                data();
+              },
+              child: Text("Continue to Reserve"),
+              color: Colors.blue,
+              textColor: Colors.white,
+              minWidth: size.width * 0.7,
+              height: size.height * 0.06,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
           )
         ],
       ),
@@ -275,7 +290,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
 
     if (_isValidate == true) {
       Map data = {
-        "vendorId": "3",
+        "vendorId": "${widget.data['id']}",
         "member": "$guests",
         "child": "$childguest",
         "adult": "$totaladults",
@@ -290,15 +305,15 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
       var bookbody = json.encode(data);
       print(bookbody);
 
-      var response = await http.post(APP_ROUTES + 'bookTable', body: bookbody,
-       
-       headers: {
+      var response =
+          await http.post(APP_ROUTES + 'bookTable', body: bookbody, headers: {
         "Content-Type": "application/json",
       });
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         response.body;
-        Fluttertoast.showToast(msg:responseData['message']);
+        Fluttertoast.showToast(msg: responseData['message']);
+        Center(child: CircularProgressIndicator());
         setState(() {
           Navigator.push(
               context,
@@ -313,7 +328,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                         femaleguest1: femaleguests,
                       )));
         });
-        Notifications().scheduleNotification("Dear ${_nameController.text}","Your Table is Booked For $guests");
+        Notifications().scheduleNotification(
+            "Dear ${_nameController.text}", "Your Table is Booked For $guests");
       } else {
         Fluttertoast.showToast(msg: responseData['message']);
       }

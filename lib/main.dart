@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() => runApp(MyApp());
@@ -19,6 +20,7 @@ class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _messaging = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+      IO.Socket socket;
 
   @override
   void initState() {
@@ -28,11 +30,21 @@ class _MyAppState extends State<MyApp> {
     _messaging.getToken().then((token) {
       print("token is this ");
       print(token);
+      connect();
     });
 
     socketConfig("default");
   }
-
+void connect(){
+  socket=IO.io("http://192.168.0.106:5000",<String,dynamic>{
+    "transports":["websocket"],
+    "autoConnect":false,
+  });
+  socket.connect();
+  socket.onConnect((data)=>print("Connected"));
+  print("socket.connected");
+  socket.emit("/test","Hello World");
+}
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

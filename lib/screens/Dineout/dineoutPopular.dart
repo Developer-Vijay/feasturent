@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart' as http;
 
 class PopularDininingLists extends StatefulWidget {
   @override
@@ -14,6 +17,18 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
     "https://media.gettyimages.com/photos/cafebar-in-moscow-picture-id1158221681?s=2048x2048",
     "https://media.gettyimages.com/photos/family-in-a-cafe-picture-id1089596346?k=6&m=1089596346&s=612x612&w=0&h=w3lny9JWOUDIBTQbMVNVDBu48KMw316UANpAhPV0zdk=",
   ];
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<List> getpopulardineouts() async {
+    var response = await http.get(APP_ROUTES + 'popularDineout');
+    print(response);
+    var responseData = json.decode(response.body)['data'];
+    print(responseData);
+    return responseData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,36 +53,48 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
           ),
           Container(
               height: size.height * 0.15,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: popular.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Container(
-                            height: size.height * 0.11,
-                            width: size.width * 0.31,
-                            child: FlatButton(
-                              onPressed: () {},
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: CachedNetworkImage(
-                                  imageUrl: popular[index].image,
-                                  fit: BoxFit.cover,
+              child: FutureBuilder<List>(
+                future: getpopulardineouts(),
+                // ignore: missing_return
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
+                                  height: size.height * 0.11,
                                   width: size.width * 0.31,
-                                  height: size.height * 0.2,
-                                ),
-                              ),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 7,
-                      ),
-                      Text(popular[index].name, style: _textstyle)
-                    ],
-                  );
+                                  child: FlatButton(
+                                    onPressed: () {},
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: CachedNetworkImage(
+                                        imageUrl: popular[index].image,
+                                        fit: BoxFit.cover,
+                                        width: size.width * 0.31,
+                                        height: size.height * 0.2,
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 7,
+                            ),
+                            Text(
+                                "${snapshot.data[index]['VendorInfo']['name']}",
+                                style: _textstyle)
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                   return Center(child: CircularProgressIndicator());
+                  }
                 },
               )),
         ],
