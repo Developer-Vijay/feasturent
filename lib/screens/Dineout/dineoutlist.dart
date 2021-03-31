@@ -92,7 +92,7 @@ List<TimeList> breaskfastList = [
 
 List<TimeList> lunchlist = [
   TimeList(isSelected1: true, isSelected: false, time: "12:00 PM"),
-  TimeList(isSelected1: true, isSelected: false, time: "12:15 PM"),
+  TimeList(isSelected1: true, isSelected: true, time: "12:15 PM"),
   TimeList(isSelected1: true, isSelected: false, time: "12:30 PM"),
   TimeList(isSelected1: true, isSelected: false, time: "1:00 PM"),
   TimeList(isSelected1: true, isSelected: false, time: "1:15 PM"),

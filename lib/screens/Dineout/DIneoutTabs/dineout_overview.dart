@@ -17,8 +17,6 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
   void initState() {
     super.initState();
     data = widget.data;
-    print("////////");
-    print(data);
   }
 
   @override

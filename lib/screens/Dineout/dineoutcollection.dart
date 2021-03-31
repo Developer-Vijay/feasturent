@@ -79,16 +79,14 @@ class _CollectionsState extends State<Collections> {
                               width: size.width * 0.34,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  image: snapshot
-                                          .data[index]['restaurantMenuImages']
+                                  image: snapshot.data[index]['dineoutImages']
                                           .isNotEmpty
                                       ? DecorationImage(
                                           image: CachedNetworkImageProvider(
                                               S3_BASE_PATH +
                                                   snapshot.data[index]
-                                                          [
-                                                          'restaurantMenuImages']
-                                                      [index]['image']),
+                                                          ['dineoutImages'][0]
+                                                      ['image']),
                                           // collectionImage[index],
                                           fit: BoxFit.cover)
                                       : DecorationImage(
@@ -109,25 +107,40 @@ class _CollectionsState extends State<Collections> {
                                           ),
                                           children: [
                                             TextSpan(
-                                              text: snapshot.data[index]
-                                                  ['name'],
-                                              style: TextStyle(
-                                                  shadows: [
-                                                    Shadow(
+                                                text:
+                                                    " ${snapshot.data[index]['name']}",
+                                                style: snapshot
+                                                        .data[index][
+                                                            'restaurantMenuImages']
+                                                        .isNotEmpty
+                                                    ? TextStyle(
+                                                        shadows: [
+                                                            Shadow(
+                                                                color: Colors
+                                                                    .black,
+                                                                offset: Offset(
+                                                                    2, 6),
+                                                                blurRadius: 3)
+                                                          ],
+                                                        fontSize:
+                                                            size.height * 0.02,
+                                                        fontWeight:
+                                                            FontWeight.w600)
+                                                    : TextStyle(
                                                         color: Colors.black,
-                                                        offset: Offset(2, 6),
-                                                        blurRadius: 3)
-                                                  ],
-                                                  fontSize: size.height * 0.02,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
+                                                        shadows: [],
+                                                        fontSize:
+                                                            size.height * 0.02,
+                                                        fontWeight:
+                                                            FontWeight.w900)),
                                             // TextSpan(
                                             //     text: " 168 Places",
                                             //     style: TextStyle(
                                             //         fontSize:
                                             //             size.height * 0.018,
                                             //         fontWeight:
-                                            //             FontWeight.w600)),
+                                            //             FontWeight.w600)
+                                            // ),
                                           ]),
                                     ),
                                   ),
@@ -138,12 +151,12 @@ class _CollectionsState extends State<Collections> {
                         );
                       },
                     );
-                  } 
+                  }
                   // else if (snapshot.data == null) {
                   //   return
-                  // } 
+                  // }
                   else {
-                   return Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
                 },
               ),

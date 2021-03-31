@@ -23,7 +23,9 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
 
   List<Widget> list = [
     Tab(
-      child: Text("OverView"),
+      child: Text(
+        "OverView",
+      ),
     ),
     Tab(
       child: Text("Offers"),
@@ -81,56 +83,49 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                 expandedHeight: size.height * 0.4,
                 flexibleSpace: FlexibleSpaceBar(
                   background: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DineoutGallery(
-                                    data: widget.data['dineoutImages'],
-                                  )));
-                    },
-                    child: widget.data['dineoutImages'].isNotEmpty ?
-                     Swiper(
-                      itemBuilder: (context, index) {
-                        return CachedNetworkImage(
-                          placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.black,
-                              semanticsLabel: "Loading",
-                            ),
-                          ),
-                          imageUrl: S3_BASE_PATH +
-                              widget.data['dineoutImages'][index]['image'],
-                          fit: BoxFit.cover,
-                        );
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DineoutGallery(
+                                      data: widget.data['dineoutImages'],
+                                    )));
                       },
-                      itemCount: widget.data['dineoutImages'].length,
-                    ):Image.asset("assets/images/NoImage.png.jpeg",fit: BoxFit.cover,)
-                  ),
+                      child: widget.data['dineoutImages'].isNotEmpty
+                          ? Swiper(
+                              itemBuilder: (context, index) {
+                                return CachedNetworkImage(
+                                  placeholder: (context, url) => Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: Colors.black,
+                                      semanticsLabel: "Loading",
+                                    ),
+                                  ),
+                                  imageUrl: S3_BASE_PATH +
+                                      widget.data['dineoutImages'][index]
+                                          ['image'],
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                              itemCount: widget.data['dineoutImages'].length,
+                            )
+                          : Image.asset(
+                              "assets/images/NoImage.png.jpeg",
+                              fit: BoxFit.cover,
+                            )),
                 ),
                 bottom: TabBar(
                     labelPadding: EdgeInsets.all(2),
                     indicatorWeight: 3.0,
                     onTap: (index) {},
+                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                    labelColor: widget.data['dineoutImages'].isNotEmpty
+                        ? Colors.white
+                        : Colors.black,
                     controller: _controller,
                     tabs: list),
-                title: Text('Bar'),
+                title: Text('${widget.data['name']}'),
               ),
-              // SliverList(
-
-              //   delegate: SliverChildListDelegate([
-              //   TabBarView(
-              //     physics: AlwaysScrollableScrollPhysics(),
-              //     controller: _controller,
-              //     children: [
-              //      PortfolioGallerySubPage(),
-              //     DineoutOfferTabPage(),
-              //     MenuDart(),
-              //     RatingBarTab(),
-              //     About(),
-              //   ],)
-
-              // ]),),
               SliverFillRemaining(
                   child: TabBarView(
                 controller: _controller,
@@ -141,7 +136,9 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                   DineoutOfferTabPage(
                     data: widget.data,
                   ),
-                  MenuDart(),
+                  MenuDart(
+                    data: widget.data,
+                  ),
                   RatingBarTab(),
                   About(
                     data: widget.data,

@@ -1,14 +1,12 @@
 import 'dart:convert';
-
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_confirmed.dart';
-import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:feasturent_costomer_app/screens/home/components/notificationPage.dart';
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
 import '../../../../notificationsfiles.dart';
 
 class DineoutBookingSummary extends StatefulWidget {
@@ -96,8 +94,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     name = _nameController.text;
     phone = _phoneController.text;
     specialrequest = _specialRequestController.text;
-    print("name variable");
-    print(name);
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -315,6 +312,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
         Fluttertoast.showToast(msg: responseData['message']);
         Center(child: CircularProgressIndicator());
         setState(() {
+          CircularProgressIndicator();
           Navigator.push(
               context,
               MaterialPageRoute(

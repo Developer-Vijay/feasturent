@@ -8,7 +8,7 @@ import 'package:date_time_format/date_time_format.dart';
 
 class DineoutDateSelection extends StatefulWidget {
   final data;
- const DineoutDateSelection({this.data});
+  const DineoutDateSelection({this.data});
   @override
   _DineoutDateSelectionState createState() => _DineoutDateSelectionState();
 }
@@ -20,15 +20,21 @@ final datetime = DateTime.now();
 var date = DateTime.parse("$selectedDate");
 var formattedDate = "${date.day}-${date.month}-${date.year}";
 var myFormat = DateFormat('d-MM-yyyy');
-int isSelect = 0;
-bool isSelected = false;
-bool isSelected1 = false;
-bool isSelected2 = false;
 
-var time;
 final pageController = PageController(initialPage: 0);
 
 class _DineoutDateSelectionState extends State<DineoutDateSelection> {
+  int isSelect = 0;
+  bool isSelected = false;
+  bool isSelected1 = false;
+  bool isSelected2 = false;
+  var time;
+  @override
+  void initState() {
+    super.initState();
+    isSelected = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -113,7 +119,8 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   isEnabled: true,
                   backgroundColor: Colors.blueGrey,
                   selected: isSelected1,
-                  showCheckmark: false,
+                  checkmarkColor: Colors.white,
+                  showCheckmark: true,
                   onSelected: (value) {
                     setState(() {
                       isSelect = 1;
@@ -237,9 +244,10 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                         selectedColor: Colors.blue,
                         disabledColor: Colors.grey[200],
                         elevation: 2,
+                        checkmarkColor: Colors.white,
                         isEnabled: true,
                         selected: lunchlist[index].isSelected,
-                        showCheckmark: false,
+                        showCheckmark: true,
                         onSelected: (value) {
                           int k = lunchlist.length - 1;
                           for (int i = 0; i <= k; i++) {
@@ -259,10 +267,6 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                             });
                           }
                         },
-                        avatar: Icon(
-                          Icons.lock_clock,
-                          color: Colors.white,
-                        ),
                       );
                     },
                   ),
@@ -289,8 +293,9 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                           disabledColor: Colors.grey[200],
                           elevation: 2,
                           isEnabled: true,
+                          checkmarkColor: Colors.white,
                           selected: breaskfastList[index].isSelected,
-                          showCheckmark: false,
+                          showCheckmark: true,
                           onSelected: (value) {
                             int k = breaskfastList.length - 1;
                             for (int i = 0; i <= k; i++) {
@@ -310,10 +315,6 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                               });
                             }
                           },
-                          avatar: Icon(
-                            Icons.lock_clock,
-                            color: Colors.white,
-                          ),
                         ),
                       );
                     },
@@ -340,7 +341,8 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                         elevation: 2,
                         isEnabled: true,
                         selected: dinnerlist[index].isSelected,
-                        showCheckmark: false,
+                        showCheckmark: true,
+                        checkmarkColor: Colors.white,
                         onSelected: (value) {
                           int k = dinnerlist.length - 1;
                           for (int i = 0; i <= k; i++) {
@@ -360,10 +362,10 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                             });
                           }
                         },
-                        avatar: Icon(
-                          Icons.lock_clock,
-                          color: Colors.white,
-                        ),
+                        // avatar: Icon(
+                        //   Icons.lock_clock,
+                        //   color: Colors.white,
+                        // ),
                       );
                     },
                   ),
@@ -377,7 +379,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => DineoutAddMembers(
-                        data: widget.data,
+                          data: widget.data,
                           senddate: selectedDate.format("\d-\M-\Y"),
                           date: selectedDate.format("\d-\M-\Y-\D"),
                           time: time)));

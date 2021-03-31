@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -70,7 +71,13 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                                   height: size.height * 0.11,
                                   width: size.width * 0.31,
                                   child: FlatButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DineoutDetailPage()));
+                                    },
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(5),
                                       child: CachedNetworkImage(
@@ -93,7 +100,7 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                       },
                     );
                   } else {
-                   return Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
                 },
               )),

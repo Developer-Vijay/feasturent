@@ -10,7 +10,7 @@ class DineoutConfirmed extends StatefulWidget {
   var childguest;
   var name;
   var adult;
-  
+
   var femaleguest1;
 
   DineoutConfirmed(
@@ -43,9 +43,9 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
     date = widget.dateconfirm;
     timeis = widget.timeconfirm;
     guest = widget.guest;
-    nameis=widget.name;
+    nameis = widget.name;
     maleguest = widget.maleguest1;
-    childguests=widget.childguest;
+    childguests = widget.childguest;
     femaleguests = widget.femaleguest1;
   }
 
@@ -121,7 +121,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "$maleguest Male , $femaleguests Female and $childguests Child" ,
+                      "$maleguest Male , $femaleguests Female and $childguests Child",
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
@@ -136,20 +136,6 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "$nameis",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("ID"),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "D0112272156",
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
