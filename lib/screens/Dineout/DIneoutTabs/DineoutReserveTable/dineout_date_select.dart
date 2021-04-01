@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:date_time_format/date_time_format.dart';
 
 class DineoutDateSelection extends StatefulWidget {
+  final data;
+  const DineoutDateSelection({this.data});
   @override
   _DineoutDateSelectionState createState() => _DineoutDateSelectionState();
 }
@@ -18,15 +20,21 @@ final datetime = DateTime.now();
 var date = DateTime.parse("$selectedDate");
 var formattedDate = "${date.day}-${date.month}-${date.year}";
 var myFormat = DateFormat('d-MM-yyyy');
-int isSelect = 0;
-bool isSelected = false;
-bool isSelected1 = false;
-bool isSelected2 = false;
 
-var time;
 final pageController = PageController(initialPage: 0);
 
 class _DineoutDateSelectionState extends State<DineoutDateSelection> {
+  int isSelect = 0;
+  bool isSelected = false;
+  bool isSelected1 = false;
+  bool isSelected2 = false;
+  var time;
+  @override
+  void initState() {
+    super.initState();
+    isSelected = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -111,7 +119,8 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   isEnabled: true,
                   backgroundColor: Colors.blueGrey,
                   selected: isSelected1,
-                  showCheckmark: false,
+                  checkmarkColor: Colors.white,
+                  showCheckmark: true,
                   onSelected: (value) {
                     setState(() {
                       isSelect = 1;
@@ -216,12 +225,13 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                 children: [
                   // Breakfast
 
-                  ListView.builder(
-                   
+                  GridView.builder(
+                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 2.4,
+                        crossAxisSpacing: 0,
+                        mainAxisSpacing: 0),
                     shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    
-                    scrollDirection: Axis.horizontal,
                     itemCount: lunchlist.length,
                     itemBuilder: (context, index) {
                       return InputChip(
@@ -234,9 +244,10 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                         selectedColor: Colors.blue,
                         disabledColor: Colors.grey[200],
                         elevation: 2,
+                        checkmarkColor: Colors.white,
                         isEnabled: true,
                         selected: lunchlist[index].isSelected,
-                        showCheckmark: false,
+                        showCheckmark: true,
                         onSelected: (value) {
                           int k = lunchlist.length - 1;
                           for (int i = 0; i <= k; i++) {
@@ -256,55 +267,54 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                             });
                           }
                         },
-                        avatar: Icon(
-                          Icons.lock_clock,
-                          color: Colors.white,
-                        ),
                       );
                     },
                   ),
-                  // Lunch
-                  ListView.builder(
-                    padding: EdgeInsets.zero,
-                
+                  // breakfast
+                  GridView.builder(
+                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: 0,
+                        mainAxisSpacing: 0,
+                        childAspectRatio: 2.4,
+                        crossAxisCount: 3),
                     shrinkWrap: true,
                     itemCount: breaskfastList.length,
                     itemBuilder: (context, index) {
-                      return InputChip(
-                        label: Text(
-                          breaskfastList[index].time,
-                          style: TextStyle(
-                            color: Colors.white,
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InputChip(
+                          label: Text(
+                            breaskfastList[index].time,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        selectedColor: Colors.blue,
-                        disabledColor: Colors.grey[200],
-                        elevation: 2,
-                        isEnabled: true,
-                        selected: breaskfastList[index].isSelected,
-                        showCheckmark: false,
-                        onSelected: (value) {
-                          int k = breaskfastList.length - 1;
-                          for (int i = 0; i <= k; i++) {
-                            setState(() {
-                              breaskfastList[i].isSelected = false;
-                            });
-                          }
-                          if (breaskfastList[index].isSelected == true) {
-                            setState(() {
-                              breaskfastList[index].isSelected = false;
-                              time = "${breaskfastList[index].time}";
-                            });
-                          } else {
-                            setState(() {
-                              breaskfastList[index].isSelected = true;
-                              time = "${breaskfastList[index].time}";
-                            });
-                          }
-                        },
-                        avatar: Icon(
-                          Icons.lock_clock,
-                          color: Colors.white,
+                          selectedColor: Colors.blue,
+                          disabledColor: Colors.grey[200],
+                          elevation: 2,
+                          isEnabled: true,
+                          checkmarkColor: Colors.white,
+                          selected: breaskfastList[index].isSelected,
+                          showCheckmark: true,
+                          onSelected: (value) {
+                            int k = breaskfastList.length - 1;
+                            for (int i = 0; i <= k; i++) {
+                              setState(() {
+                                breaskfastList[i].isSelected = false;
+                              });
+                            }
+                            if (breaskfastList[index].isSelected == true) {
+                              setState(() {
+                                breaskfastList[index].isSelected = false;
+                                time = "${breaskfastList[index].time}";
+                              });
+                            } else {
+                              setState(() {
+                                breaskfastList[index].isSelected = true;
+                                time = "${breaskfastList[index].time}";
+                              });
+                            }
+                          },
                         ),
                       );
                     },
@@ -313,9 +323,9 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   // Dinner
                   GridView.builder(
                     gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4),
+                        crossAxisCount: 3, childAspectRatio: 2.4),
                     shrinkWrap: true,
-                    padding: EdgeInsets.zero,
+                    padding: EdgeInsets.symmetric(vertical: 0),
                     scrollDirection: Axis.vertical,
                     itemCount: dinnerlist.length,
                     itemBuilder: (context, index) {
@@ -331,7 +341,8 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                         elevation: 2,
                         isEnabled: true,
                         selected: dinnerlist[index].isSelected,
-                        showCheckmark: false,
+                        showCheckmark: true,
+                        checkmarkColor: Colors.white,
                         onSelected: (value) {
                           int k = dinnerlist.length - 1;
                           for (int i = 0; i <= k; i++) {
@@ -351,10 +362,10 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                             });
                           }
                         },
-                        avatar: Icon(
-                          Icons.lock_clock,
-                          color: Colors.white,
-                        ),
+                        // avatar: Icon(
+                        //   Icons.lock_clock,
+                        //   color: Colors.white,
+                        // ),
                       );
                     },
                   ),
@@ -368,7 +379,8 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => DineoutAddMembers(
-                        senddate: selectedDate.format("\d-\M-\Y"),
+                          data: widget.data,
+                          senddate: selectedDate.format("\d-\M-\Y"),
                           date: selectedDate.format("\d-\M-\Y-\D"),
                           time: time)));
             },

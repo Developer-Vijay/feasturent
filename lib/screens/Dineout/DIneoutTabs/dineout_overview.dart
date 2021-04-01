@@ -2,12 +2,26 @@ import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReser
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
 
-class PortfolioGallerySubPage extends StatelessWidget {
-  const PortfolioGallerySubPage({Key key}) : super(key: key);
+class PortfolioGallerySubPage extends StatefulWidget {
+  final data;
+  const PortfolioGallerySubPage({Key key, this.data}) : super(key: key);
+
+  @override
+  _PortfolioGallerySubPageState createState() =>
+      _PortfolioGallerySubPageState();
+}
+
+class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
+  var data;
+  @override
+  void initState() {
+    super.initState();
+    data = widget.data;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _textstyle=TextStyle(color: Colors.black);
+    final _textstyle = TextStyle(color: Colors.black);
     Size size = MediaQuery.of(context).size;
     return Container(
         child: ListView(
@@ -30,32 +44,77 @@ class PortfolioGallerySubPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Raisng Bar",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    ),
+                    Container(
+                        child: data['name'] != null
+                            ? Text(
+                                '${data['name']}',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                              )
+                            : Text("Name of the Restaurant")),
                     SizedBox(
                       height: 4,
                     ),
-                    Text(
-                      "Netaji Subhash Place , North Delhi",
-                      style: TextStyle(fontSize: 12,color: Colors.black
-                      ),
-                    ),
+                    Container(
+                        child: data['Address']['address'] != null
+                            ? Text(
+                                data['Address']['address'],
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.black),
+                              )
+                            : Text("Address")),
                     SizedBox(
                       height: 4,
                     ),
                     Row(
                       children: [
-                        Text(
-                          " ₹ 1,000 for 2 . Rajasthani",
-                          style: TextStyle(fontSize: 12,color: Colors.black),
+                        Container(
+                            child: data['avgCost'] != null
+                                ? Text(
+                                    " ₹ ${data['avgCost']}",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.black),
+                                  )
+                                : Text("offers")),
+                        SizedBox(
+                          width: 8,
                         ),
-                        SizedBox(width: 12,),
-                        Text("Call - 9818069709",style: TextStyle(color: Colors.black),)
+                        Text(
+                          "for",
+                          style: TextStyle(fontSize: 12, color: Colors.black),
+                        ),
+                        SizedBox(
+                          width: 7,
+                        ),
+                        Container(
+                            child: data['forPeople'] != null
+                                ? Text(
+                                    data['forPeople'],
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.black),
+                                  )
+                                : Text("Data")),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "Call -",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                            child: data['Address']['address'] != null
+                                ? Text(
+                                    data['user']['phone'],
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : Text("phone"))
                       ],
                     ),
                     SizedBox(
@@ -73,9 +132,11 @@ class PortfolioGallerySubPage extends StatelessWidget {
                         ),
                         Text(
                           "Opens at 07:00 PM",
-                          style: TextStyle(fontSize: 12,color: Colors.green,fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold),
                         ),
-                        
                       ],
                     ),
                     SizedBox(
@@ -83,7 +144,7 @@ class PortfolioGallerySubPage extends StatelessWidget {
                     ),
                     Text(
                       "Pay 10% of Total Bill using PromoCash",
-                      style: TextStyle(fontSize: 12,color: Colors.black),
+                      style: TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ],
                 ),
@@ -118,7 +179,9 @@ class PortfolioGallerySubPage extends StatelessWidget {
                           context: context,
                           builder: (context) => Container(
                               height: size.height * 0.6,
-                              child: DineoutDateSelection()));
+                              child: DineoutDateSelection(
+                                data: data,
+                              )));
                     } else {
                       print(dineoutlist[index].number);
                     }

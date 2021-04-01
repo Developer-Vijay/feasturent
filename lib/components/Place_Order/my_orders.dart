@@ -231,7 +231,8 @@ class _MyOrdersState extends State<MyOrders> {
                                       );
                                     },
                                   );
-                                });
+                                }
+                                );
                           }
 
                           DateTime _timed =
