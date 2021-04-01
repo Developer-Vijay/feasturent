@@ -158,17 +158,19 @@ class _AppDrawerState extends State<AppDrawer> {
               // ...
             },
           ),
-          ListTile(
-            leading: Icon(Icons.article),
-            title: Text('MyOrders'),
-            dense: true,
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MyOrders()));
-              // Update the state of the app.
-              // ...
-            },
-          ),
+          widget.cStatus == 1
+              ? ListTile(
+                  leading: Icon(Icons.article),
+                  title: Text('MyOrders'),
+                  dense: true,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MyOrders()));
+                    // Update the state of the app.
+                    // ...
+                  },
+                )
+              : SizedBox(),
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text('Wishlist'),

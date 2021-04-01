@@ -122,15 +122,27 @@ class _ResturentMenuState extends State<ResturentMenu> {
 
           return InkWell(
             onTap: () {
+              bool status;
               var menuD;
+              if (restaurantDataCopy['user']['Setting'] == null) {
+                setState(() {
+                  status = false;
+                });
+              } else {
+                setState(() {
+                  status = restaurantDataCopy['user']['Setting']['isActive'];
+                });
+              }
               setState(() {
                 menuD = restaurantDataCopy['Menus'][index];
               });
+              print(status);
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => FoodSlider(
                             menuData: menuD,
+                            menuStatus: status,
                             restaurentName: restaurantDataCopy['name'],
                           )));
             },

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../foodlistclass.dart';
 import 'restaurant_tracking.dart';
@@ -70,21 +71,19 @@ class _DetailResturentState extends State<DetailResturent> {
                           Spacer(),
                           Container(
                             margin: EdgeInsets.only(right: 15, top: 10),
-                            height: size.height * 0.06,
-                            width: size.width * 0.09,
-                            decoration: BoxDecoration(
-                              color: Colors.blue[600],
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)),
-                            ),
-                            child: Center(
-                                child: Text(
-                              "4.8",
-                              style: TextStyle(
-                                  fontSize: size.height * 0.017,
-                                  color: Colors.white),
-                            )),
+                            child: SmoothStarRating(
+                                allowHalfRating: true,
+                                onRated: (value) {},
+                                starCount: 5,
+                                rating: 4,
+                                size: 23.0,
+                                isReadOnly: false,
+                                defaultIconData: Icons.star_border_outlined,
+                                filledIconData: Icons.star,
+                                halfFilledIconData: Icons.star_border,
+                                color: Colors.amber,
+                                borderColor: Colors.amber[300],
+                                spacing: 0.0),
                           ),
                         ],
                       ),
@@ -255,8 +254,7 @@ class _DetailResturentState extends State<DetailResturent> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                TrackingPage(),
+                                            builder: (context) => MapView(),
                                           ));
                                     },
                                     child: Text(

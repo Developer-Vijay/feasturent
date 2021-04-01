@@ -256,6 +256,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                               cart =
                                                               await SharedPreferences
                                                                   .getInstance();
+                                                          price = cart
+                                                              .getInt('price');
                                                           if (idCheck.contains(
                                                               users[index]
                                                                   .id)) {
@@ -583,6 +585,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                           final SharedPreferences
                                                                               cart =
                                                                               await SharedPreferences.getInstance();
+                                                                          price =
+                                                                              cart.getInt('price');
                                                                           // Delete the item from DB etc..
                                                                           setState(
                                                                               () {

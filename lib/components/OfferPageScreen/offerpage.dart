@@ -75,7 +75,6 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                   height: size.height * 0.24,
                   margin: EdgeInsets.only(top: size.height * 0.008),
                   child: SingleChildScrollView(
-                    reverse: true,
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [

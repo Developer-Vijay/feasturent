@@ -26,24 +26,12 @@ class _ReturentReviewState extends State<ReturentReview> {
 
     return SafeArea(
       child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                  enableDrag: true,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) => Container(
-                    height: size.height * 0.8,
-                    child: AddRating()));
-            },
-            child: Icon(Icons.add),
-          ),
           body: ListView.builder(
-      
               itemCount: 15,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -74,11 +62,13 @@ class _ReturentReviewState extends State<ReturentReview> {
                                       ))),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 12.0, top: 8),
+                              padding:
+                                  const EdgeInsets.only(left: 12.0, top: 8),
                               child: Text(
                                 "Adams",
                                 style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: titlesize),
+                                    color: Colors.blueGrey,
+                                    fontSize: titlesize),
                               ),
                             ),
                             Padding(
@@ -104,7 +94,8 @@ class _ReturentReviewState extends State<ReturentReview> {
                                   spacing: 0.0),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 8, bottom: 6),
+                              padding:
+                                  const EdgeInsets.only(left: 8, bottom: 6),
                               child: Text(
                                 "$rating ",
                                 style: TextStyle(color: Colors.blueGrey),
