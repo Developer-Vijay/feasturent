@@ -428,7 +428,7 @@ class _RatingPageState extends State<RatingPage> {
                   child: FloatingActionButton(
                     onPressed: () {
                       showModalBottomSheet(
-                          context: context, builder: (context) => AddRating());
+                          context: context, builder: (context) => AddRatingPage());
                     },
                     child: Icon(Icons.add),
                   ),

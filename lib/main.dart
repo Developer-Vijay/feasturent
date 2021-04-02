@@ -36,13 +36,19 @@ class _MyAppState extends State<MyApp> {
     socketConfig("default");
   }
 void connect(){
-  socket=IO.io("http://192.168.0.106:5000",<String,dynamic>{
+  socket=IO.io("http://192.168.43.122:5000",<String,dynamic>{
     "transports":["websocket"],
     "autoConnect":false,
   });
   socket.connect();
-  socket.onConnect((data)=>print("Connected"));
+  socket.onConnect((data){
+    print("Connected",);
+    print("///////");
+    print(socket.id);
+    print("///////");
+    });
   print("socket.connected");
+  // print(socket.id);
   socket.emit("/test","Hello World");
 }
   @override

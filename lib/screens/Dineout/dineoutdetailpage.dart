@@ -33,9 +33,9 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
     Tab(
       child: Text("Menu"),
     ),
-    Tab(
-      child: Text("Rating"),
-    ),
+    // Tab(
+    //   child: Text("Rating"),
+    // ),
     Tab(
       child: Text("About"),
     ),
@@ -66,7 +66,7 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
     Size size = MediaQuery.of(context).size;
     return SafeArea(
         child: DefaultTabController(
-            length: 5,
+            length: 4,
             child: Scaffold(
                 body: CustomScrollView(slivers: [
               SliverAppBar(
@@ -139,7 +139,7 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                   MenuDart(
                     data: widget.data,
                   ),
-                  RatingBarTab(),
+                  // RatingBarTab(),
                   About(
                     data: widget.data,
                   ),

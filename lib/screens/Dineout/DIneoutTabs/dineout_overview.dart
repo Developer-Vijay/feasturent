@@ -1,6 +1,7 @@
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_date_select.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PortfolioGallerySubPage extends StatefulWidget {
   final data;
@@ -69,6 +70,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                       height: 4,
                     ),
                     Row(
+                      
                       children: [
                         Container(
                             child: data['avgCost'] != null
@@ -96,56 +98,56 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                                         fontSize: 12, color: Colors.black),
                                   )
                                 : Text("Data")),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "Call -",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Container(
-                            child: data['Address']['address'] != null
-                                ? Text(
-                                    data['user']['phone'],
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                : Text("phone"))
+                        // SizedBox(
+                        //   width: 20,
+                        // ),
+                        // Text(
+                        //   "Call -",
+                        //   style: TextStyle(color: Colors.black),
+                        // ),
+                        // SizedBox(
+                        //   width: 12,
+                        // ),
+                        // Container(
+                        //     child: data['Address']['address'] != null
+                        //         ? Text(
+                        //             data['user']['phone'],
+                        //             style: TextStyle(
+                        //                 color: Colors.black,
+                        //                 fontWeight: FontWeight.bold),
+                        //           )
+                        //         : Text("phone"))
                       ],
                     ),
                     SizedBox(
                       height: 4,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "Now Closed",
-                          style:
-                              TextStyle(color: Colors.red[700], fontSize: 12),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "Opens at 07:00 PM",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      "Pay 10% of Total Bill using PromoCash",
-                      style: TextStyle(fontSize: 12, color: Colors.black),
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       "Now Closed",
+                    //       style:
+                    //           TextStyle(color: Colors.red[700], fontSize: 12),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 20,
+                    //     ),
+                    //     Text(
+                    //       "Opens at 07:00 PM",
+                    //       style: TextStyle(
+                    //           fontSize: 12,
+                    //           color: Colors.green,
+                    //           fontWeight: FontWeight.bold),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   height: 4,
+                    // ),
+                    // Text(
+                    //   "Pay 10% of Total Bill using PromoCash",
+                    //   style: TextStyle(fontSize: 12, color: Colors.black),
+                    // ),
                   ],
                 ),
               )),
@@ -157,7 +159,10 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(
+                left: 8,
+                right: 30,
+              ),
               child: Container(
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -165,6 +170,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                       BoxShadow(
                           blurRadius: 2,
                           spreadRadius: 2,
+                          offset: Offset(1, 3),
                           color: Colors.blue[50])
                     ],
                     borderRadius: BorderRadius.circular(8)),
@@ -195,6 +201,56 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
             );
           },
         )),
+        SizedBox(
+          height: 30,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8, right: 30),
+          child: Container(
+              height: 60,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 2,
+                        spreadRadius: 2,
+                        offset: Offset(1, 3),
+                        color: Colors.blue[50])
+                  ]),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      onPressed: () async {
+                        var url = 'tel:${data['contact']}';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      },
+                      icon: Icon(Icons.call),
+                      color: Colors.green,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Container(
+                      child: data['Address']['address'] != null
+                          ? Text(
+                              " +91 ${data['user']['phone']}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text("phone Number Not Avaliable"))
+                ],
+              )),
+        )
       ],
     ));
   }

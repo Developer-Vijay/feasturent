@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -203,7 +204,7 @@ class _EditProfileState extends State<EditProfile> {
                                               ),
                                             ),
                                             Divider(),
-                                            Expanded(
+                                            Expanded( 
                                               flex: 1,
                                               child: InkWell(
                                                 onTap: () async =>
@@ -345,6 +346,7 @@ class _EditProfileState extends State<EditProfile> {
                       autocorrect: false,
                       keyboardType: TextInputType.phone,
                       controller: _phoneController,
+                      maxLength: 10,
                       style: TextStyle(fontSize: fontSize),
                       decoration: InputDecoration(
                         prefixIcon:
@@ -552,7 +554,7 @@ class _EditProfileState extends State<EditProfile> {
         "authorization": _authorization,
         "refreshtoken": _refreshtoken
       });
-
+var responseData=jsonDecode(response.body);
       if (response.statusCode == 200) {
         setState(() {
           Fluttertoast.showToast(msg: "ok");
@@ -560,12 +562,12 @@ class _EditProfileState extends State<EditProfile> {
         });
       } else if (response.statusCode == 201) {
         setState(() {
-          Fluttertoast.showToast(msg: "otp has been send to the mobile number");
+          Fluttertoast.showToast(msg: "${responseData['message']}");
           _isOtpSend = true;
         });
       } else {
         setState(() {
-          Fluttertoast.showToast(msg: "Error to Validate");
+          Fluttertoast.showToast(msg: "${responseData['message']}");
         });
       }
     } else {
@@ -585,17 +587,18 @@ class _EditProfileState extends State<EditProfile> {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken
     });
+    var responseData=jsonDecode(response.body);
     if (response.statusCode == 200) {
       setState(() {
         print(userid);
-        Fluttertoast.showToast(msg: "Verified");
+        Fluttertoast.showToast(msg: "${responseData['message']}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => UserProfilePage()),
         );
       });
     } else {
-      Fluttertoast.showToast(msg: "Not Verified");
+      Fluttertoast.showToast(msg: "${responseData['message']}");
       print(userid);
     }
   }

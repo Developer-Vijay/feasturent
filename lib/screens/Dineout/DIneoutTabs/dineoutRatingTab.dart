@@ -126,7 +126,7 @@ class _RatingBarTabState extends State<RatingBarTab> {
                     isScrollControlled: true,
                     context: context,
                     builder: (context) => Container(
-                        height: size.height * 0.8, child: AddRating()));
+                        height: size.height * 0.8, child: AddRatingPage()));
               },
               child: Text("Rate Your Experience"),
             ),

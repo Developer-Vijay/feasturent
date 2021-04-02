@@ -80,7 +80,7 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.014,
+              height: MediaQuery.of(context).size.height * 0.003,
             ),
             Container(
               padding: EdgeInsets.only(bottom: 2),
