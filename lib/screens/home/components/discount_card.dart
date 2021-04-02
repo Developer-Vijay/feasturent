@@ -27,20 +27,27 @@ class _DiscountCardState extends State<DiscountCard> {
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
     var data = json.decode(result.body)['data'];
     if (data.isEmpty) {
-      setState(() {
-        dataLenght = 0;
-      });
+      if (mounted) {
+        setState(() {
+          dataLenght = 0;
+        });
+      }
       print("data not here");
     } else {
       print("data here");
       if (data[0]['status'] == true) {
-        setState(() {
-          dataLenght = data.length;
-        });
+        if (mounted) {
+          setState(() {
+            dataLenght = data.length;
+          });
+        }
       } else {
-        setState(() {
-          dataLenght = 0;
-        });
+        if (mounted) {
+          setState(() {
+            dataLenght = 0;
+          });
+        }
+
         print("data not here");
       }
     }

@@ -1169,9 +1169,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         if (paymentMode == "Online Mode") {
           _checkout();
         } else if (paymentMode == "Cash On Delivery") {
-          paymentCheck();
+          cashPayment();
         } else if (paymentMode == "Wallet") {
-          paymentCheck();
+          walletPayment();
         }
       } else {
         setState(() {
@@ -1269,7 +1269,61 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     });
   }
 
-  paymentCheck() async {
+  walletPayment() async {
+    print("*****************************************");
+    final prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getInt('userId');
+
+    _authorization = prefs.getString('sessionToken');
+    _refreshtoken = prefs.getString('refreshToken');
+    Map data = {
+      "menuId": menuidAndQty,
+      "vendorId": "$vendorId",
+      "userId": "$userid",
+      "addressId": addressID,
+      "orderPrice": "$totalPrice.00",
+      "gst": "107.82",
+      "discountPrice": "50",
+      "offerId": "1",
+      "paymentMode": "WALLET",
+      "razorpay_payment_id": null,
+      "razo rpay_order_id": null,
+      "razorpay_signature": null
+    };
+    var requestBody = jsonEncode(data);
+    print("*****************HEloo************************");
+    print("*****************World************************");
+    print("*****************Heloo************************");
+    print("*****************************************");
+    print("*****************************************");
+    print("*****************************************");
+
+    print(requestBody);
+
+    var response =
+        await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
+      "authorization": _authorization,
+      "refreshtoken": _refreshtoken,
+      "Content-Type": "application/json"
+    });
+    print(response.statusCode);
+
+    var responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      removeDataFromCart();
+      setState(() {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
+      });
+    } else {
+      print(responseData['message']);
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: responseData['message']);
+    }
+  }
+
+  cashPayment() async {
     print("*****************************************");
     final prefs = await SharedPreferences.getInstance();
     var userid = prefs.getInt('userId');

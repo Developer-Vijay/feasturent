@@ -44,26 +44,30 @@ class _CartScreenState extends State<CartScreen> {
     // print(timeData);
     setState(() {
       resturantStatus = json.decode(result.body)['data'];
-      if (resturantStatus[0]['user']['Setting'] == null) {
-        status = false;
+      if (resturantStatus.isEmpty) {
         WidgetsBinding.instance.addPostFrameCallback(
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
-        status = resturantStatus[0]['user']['Setting']['isActive'];
-        if (status == false) {
+        if (resturantStatus['vendorInfo'][0]['user']['Setting'] == null) {
+          status = false;
           WidgetsBinding.instance.addPostFrameCallback((_) =>
               _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
         } else {
-          setState(() {
-            resturantDataStatus = resturantStatus[0]['user'];
-          });
-          showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              context: context,
-              builder: (context) => PlaceOrder(
-                    data: resturantDataStatus,
-                  ));
+          status =
+              resturantStatus['vendorInfo'][0]['user']['Setting']['isActive'];
+          if (status == false) {
+          } else {
+            setState(() {
+              resturantDataStatus = resturantStatus['vendorInfo'][0]['user'];
+            });
+            showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                context: context,
+                builder: (context) => PlaceOrder(
+                      data: resturantDataStatus,
+                    ));
+          }
         }
       }
     });
