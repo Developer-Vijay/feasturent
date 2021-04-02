@@ -38,7 +38,7 @@ class _SwipperState extends State<Swipper> {
           return snapshot.data != null
               ? ListView.builder(
                   shrinkWrap: true,
-                  itemCount: snapshot.data.length,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
                     return ClipRect(
                       child: InkWell(
@@ -123,14 +123,7 @@ class _SwipperState extends State<Swipper> {
                                   size: 6,
                                   activeSize: 12),
                             ),
-                            itemCount: snapshot
-                                        .data[index]['OffersAndCoupon']['image']
-                                        .length <
-                                    1
-                                ? snapshot
-                                    .data[index]['OffersAndCoupon']['image']
-                                    .length
-                                : 1,
+                            itemCount: snapshot.data.length,
                             itemWidth: 300,
                             layout: SwiperLayout.DEFAULT,
                           ),

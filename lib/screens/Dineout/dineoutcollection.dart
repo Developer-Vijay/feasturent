@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
+import 'package:feasturent_costomer_app/screens/Dineout/view_all_best.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,29 +25,66 @@ class _CollectionsState extends State<Collections> {
     super.initState();
   }
 
+  var responseData = null;
   Future<List> getdineouts() async {
     var response = await http.get(APP_ROUTES + 'dineout' + '?key=ALL');
-    var responseData = json.decode(response.body)['data'];
+    responseData = json.decode(response.body)['data'];
     return responseData;
   }
 
   @override
   Widget build(BuildContext context) {
+    
     Size size = MediaQuery.of(context).size;
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                "Best Collections",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: size.height * 0.018,
-                    fontWeight: FontWeight.w700),
-              ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Text(
+                    "Best Collections",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: size.height * 0.018,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Spacer(),
+                Container(
+                    child: FlatButton(
+                        onPressed: () {
+                          if (responseData != null) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ViewAllDineoutCollection(
+                                          data: responseData),
+                                ));
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 15),
+                              child: Text(
+                                "View All",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: kPrimaryColor),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_right_rounded,
+                              color: kSecondaryTextColor,
+                            ),
+                          ],
+                        )))
+              ],
             ),
             Container(
               height: size.height * 0.22,

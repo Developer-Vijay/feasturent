@@ -1,28 +1,26 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import '../../constants.dart';
-
-class AddRating extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: AddRatingPage(),
-    );
-  }
-}
+import 'package:http/http.dart' as http;
 
 class AddRatingPage extends StatefulWidget {
+  final data;
+  AddRatingPage({this.data});
   @override
   _AddRatingPageState createState() => _AddRatingPageState();
 }
 
 class _AddRatingPageState extends State<AddRatingPage> {
   TextEditingController _commentController = TextEditingController();
-
+  var userId;
+  var authorization;
+  var refreshToken;
   var _commentvalidate;
-  var rating = 3.0;
+  var rating = 1.0;
+  bool isValidate = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -33,7 +31,6 @@ class _AddRatingPageState extends State<AddRatingPage> {
             child: FlatButton(
               onPressed: () {
                 _AddComment();
-                Fluttertoast.showToast(msg: "Comment Posted");
               },
               child: Text(
                 "Post",
@@ -59,7 +56,7 @@ class _AddRatingPageState extends State<AddRatingPage> {
                               padding:
                                   const EdgeInsets.only(left: 10, right: 10),
                               child: SmoothStarRating(
-                                  allowHalfRating: true,
+                                  allowHalfRating: false,
                                   onRated: (value) {
                                     setState(() {
                                       rating = value;
@@ -118,17 +115,43 @@ class _AddRatingPageState extends State<AddRatingPage> {
     );
   }
 
-  Future<void> _AddComment() async {
+  Future _AddComment() async {
     // for name
     if (_commentController.text.isEmpty) {
       setState(() {
         _commentvalidate =
             "Please Enter The Comment and Star Rating Before Posting It";
+        isValidate = false;
       });
     } else {
       setState(() {
+        isValidate = true;
         _commentvalidate = null;
       });
+    }
+    if (isValidate = true) {
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getInt('userId');
+      authorization = prefs.getString('sessionToken');
+      refreshToken = prefs.getString('refreshToken');
+      var response = await http.post(COMMON_API + 'ratingReview', body: {
+        "userId": "$userId",
+        "vendorId": "${widget.data['vendorId']}",
+        "menuId": "${widget.data['orderMenues'][0]['Menu']['id']}",
+        "rating": "$rating",
+        "review": "${_commentController.text}"
+      }, headers: {
+        "authorization": authorization,
+        "refreshToken": refreshToken
+      });
+      var responseData = json.decode(response.body);
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: "${responseData['message']}");
+      } else {
+        Fluttertoast.showToast(msg: "${responseData['message']}");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Error occured");
     }
   }
 }

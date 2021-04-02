@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
+import 'package:feasturent_costomer_app/screens/Dineout/view_popular.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
@@ -23,12 +24,18 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
     super.initState();
   }
 
+  var responseData = null;
   Future<List> getpopulardineouts() async {
     var response = await http.get(APP_ROUTES + 'popularDineout');
     print(response);
-    var responseData = json.decode(response.body)['data'];
+
     print(responseData);
-    return responseData;
+    if (response.statusCode == 200) {
+      responseData = json.decode(response.body)['data'];
+      return responseData;
+    } else {
+      return responseData;
+    }
   }
 
   @override
@@ -42,15 +49,49 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              "Popular Dineout Areas",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: size.height * 0.016,
-                  fontWeight: FontWeight.w700),
-            ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "Popular Dineout Areas",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: size.height * 0.016,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+              Spacer(),
+              Container(
+                  child: FlatButton(
+                      onPressed: () {
+                        if (responseData != null) {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) =>
+                          //           ViewAllPopular(data: responseData),
+                          //     ));
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 15),
+                            child: Text(
+                              "View All",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: kPrimaryColor),
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_right_rounded,
+                            color: kSecondaryTextColor,
+                          ),
+                        ],
+                      )))
+            ],
           ),
           Container(
               height: size.height * 0.15,
@@ -72,11 +113,11 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                                   width: size.width * 0.31,
                                   child: FlatButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DineoutDetailPage()));
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             DineoutDetailPage()));
                                     },
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(5),
@@ -92,9 +133,12 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                             SizedBox(
                               height: 7,
                             ),
-                            Text(
-                                "${snapshot.data[index]['VendorInfo']['name']}",
-                                style: _textstyle)
+                            Container(
+                              child: snapshot.data[index]['VendorInfo']['name']!=null?
+                              Text(
+                                  "${snapshot.data[index]['VendorInfo']['name']}",
+                                  style: _textstyle):Text("Name")
+                            )
                           ],
                         );
                       },

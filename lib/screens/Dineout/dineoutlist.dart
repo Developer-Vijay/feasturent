@@ -5,27 +5,13 @@ class Dineoutlist {
   var subtitle;
   var icon;
   int number;
+  int phoneNumber;
 
-  Dineoutlist({this.icon, this.subtitle, this.title, this.number});
+  Dineoutlist(
+      {this.icon, this.subtitle, this.title, this.number, this.phoneNumber});
 }
 
 List<Dineoutlist> dineoutlist = [
-  Dineoutlist(
-      icon: Icon(
-        Icons.local_offer,
-        color: Colors.red[800],
-      ),
-      title: "up to 50% off",
-      subtitle: "",
-      number: 1),
-  Dineoutlist(
-      icon: Icon(
-        Icons.attach_money,
-        color: Colors.green[700],
-      ),
-      title: "Paybill",
-      subtitle: "Save Extra 10% using PromoCash",
-      number: 2),
   Dineoutlist(
       icon: Icon(
         Icons.table_chart,
@@ -33,14 +19,9 @@ List<Dineoutlist> dineoutlist = [
       ),
       title: "Reserve Table",
       subtitle: "",
+      phoneNumber: 0,
       number: 3),
-  Dineoutlist(
-      icon: Icon(
-        Icons.people,
-      ),
-      title: "Stories",
-      subtitle: "",
-      number: 4),
+ 
 ];
 
 class PopularList {

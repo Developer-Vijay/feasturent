@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/repeat_orders.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -106,6 +107,7 @@ class _MyOrdersState extends State<MyOrders> {
     final textstyle1 =
         TextStyle(color: Colors.black, fontWeight: FontWeight.w800);
     final textstyle2 = TextStyle(
+      color: Colors.black,
       fontWeight: FontWeight.w600,
     );
     Size size = MediaQuery.of(context).size;
@@ -165,20 +167,20 @@ class _MyOrdersState extends State<MyOrders> {
                                                 itemBuilder: (context, index) {
                                                   return CheckboxListTile(
                                                     onChanged: (value) {
+                                                      for (int i = 0;
+                                                          i <=
+                                                              cancel.length - 1;
+                                                          i++) {
+                                                        setState(() {
+                                                          cancel[i].value =
+                                                              false;
+                                                        });
+                                                      }
                                                       setState(() {
                                                         cancel[index].value =
                                                             value;
-                                                        if (cancel[index]
-                                                                .value !=
-                                                            value) {
-                                                          canceldata = "";
-                                                        } else {
-                                                          canceldata =
-                                                              cancel[index]
-                                                                  .title;
-                                                        }
-
-                                                        print(canceldata);
+                                                        canceldata =
+                                                            cancel[index].title;
                                                       });
                                                     },
                                                     value: cancel[index].value,
@@ -221,9 +223,9 @@ class _MyOrdersState extends State<MyOrders> {
                                                 Fluttertoast.showToast(
                                                     msg:
                                                         "Order Cancellqation time is Finished");
-                                                        Navigator.pop(context);
-                                                        
-                                                        refreshList();
+                                                Navigator.pop(context);
+
+                                                refreshList();
                                               }
                                             },
                                           )
@@ -231,8 +233,7 @@ class _MyOrdersState extends State<MyOrders> {
                                       );
                                     },
                                   );
-                                }
-                                );
+                                });
                           }
 
                           DateTime _timed =
@@ -241,7 +242,7 @@ class _MyOrdersState extends State<MyOrders> {
                           var data4 = _timed.toLocal();
                           print("check........");
                           print(data2);
-                          var data5 = data4.format("\d-\m\-\Y");
+                          var data5 = data4.format("\d-\m\-\Y-\h:\i \A");
                           var data3 = data2.format("\h:\i \A");
                           // DateTime _timeis=DateTime.parse(data3);
                           // print(_timeis);
@@ -266,6 +267,7 @@ class _MyOrdersState extends State<MyOrders> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => RepeatOrderPage(
+                                                data: data5,
                                                 itemData: snapshot.data[index],
                                               )));
                                 },
@@ -621,6 +623,34 @@ class _MyOrdersState extends State<MyOrders> {
                                                                 },
                                                               )
                                                             : SizedBox())
+                                                    : SizedBox()),
+                                            Container(
+                                                child: snapshot.data[index]
+                                                            ['orderStatus'] ==
+                                                        "COMPLETED"
+                                                    ? MaterialButton(
+                                                        textColor: Colors.grey,
+                                                        color:
+                                                            Colors.amber[600],
+                                                        child: Text("Review"),
+                                                        onPressed: () {
+                                                          showModalBottomSheet(
+                                                              enableDrag: true,
+                                                              isScrollControlled:
+                                                                  true,
+                                                              context: context,
+                                                              builder: (context) =>
+                                                                  Container(
+                                                                      height:
+                                                                          size.height *
+                                                                              0.8,
+                                                                      child:
+                                                                          AddRatingPage(
+                                                                        data: snapshot
+                                                                            .data[index],
+                                                                      )));
+                                                        },
+                                                      )
                                                     : SizedBox())
                                           ],
                                         )

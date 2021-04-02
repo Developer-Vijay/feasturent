@@ -3,6 +3,7 @@ import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.da
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
+import 'package:feasturent_costomer_app/components/auth/Forgotpassword/resetpassword.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/profile/edit_profile.dart';
@@ -33,7 +34,7 @@ class ProfileListItem extends StatelessWidget {
               context, MaterialPageRoute(builder: (context) => AddressList()));
         } else if (index == 2) {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Forgot()));
+              context, MaterialPageRoute(builder: (context) => ResetPassword()));
         } else if (index == 3) {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => WalletDesign()));

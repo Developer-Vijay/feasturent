@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../constants.dart';
 
 class RepeatOrderPage extends StatefulWidget {
   final itemData;
-  const RepeatOrderPage({Key key, this.itemData}) : super(key: key);
+  final data;
+  const RepeatOrderPage({Key key, this.itemData, this.data}) : super(key: key);
 
   @override
   _RepeatOrderPageState createState() => _RepeatOrderPageState();
@@ -57,7 +57,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
       "paymentMode": "Online"
     }, headers: {
       "authorization": _authorization,
-      "refreshtoken": _refreshtoken
+      "refreshToken": _refreshtoken
     });
 
     var responseData = jsonDecode(response.body);
@@ -129,21 +129,14 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
     Size size = MediaQuery.of(context).size;
     final orderdetails =
         TextStyle(color: Colors.black, fontWeight: FontWeight.w400);
-    final orderHeading = TextStyle(fontWeight: FontWeight.w600);
+    final orderHeading =
+        TextStyle(color: Colors.black, fontWeight: FontWeight.w600);
     final item = TextStyle(color: Colors.black, fontWeight: FontWeight.w600);
     final itemPrice =
         TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
     return Scaffold(
         appBar: AppBar(
-          actions: [
-            FlatButton(
-              child: Text(
-                "Support",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {},
-            )
-          ],
+          title: Text("Order Details"),
         ),
         body: Column(
           children: [
@@ -170,7 +163,10 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                           ),
                         ),
                       ),
-                      Divider(),
+                      Divider(
+                        color: Colors.black45,
+                        thickness: 1,
+                      ),
                       SizedBox(
                         height: 5,
                       ),
@@ -179,6 +175,9 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
+                          DateTime _timed =
+                              DateTime.parse(itemData1['createdAt']);
+                          var data1 = _timed.toLocal();
                           return Column(
                             children: [
                               Container(
@@ -204,6 +203,39 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                         )
                                       ],
                                     ),
+                                    Divider(
+                                      color: Colors.black45,
+                                      thickness: 1,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            "Quantity",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black45,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 8.0, top: 8),
+                                          child: Text(
+                                            "${itemData1['orderMenues'][index]['quantity']} ",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.w600),
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Divider(),
                                     Row(
                                       children: [
                                         Padding(
@@ -213,6 +245,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                             "gst",
                                             style: TextStyle(
                                                 fontSize: 12,
+                                                color: Colors.black,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                         ),
@@ -224,6 +257,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                             "${itemData1['orderMenues'][index]['Menu']['gstAmount'].toString()} ₹",
                                             style: TextStyle(
                                                 fontSize: 12,
+                                                color: Colors.black,
                                                 fontWeight: FontWeight.w600),
                                             textDirection: TextDirection.rtl,
                                           ),
@@ -242,6 +276,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                             "Total",
                                             style: TextStyle(
                                                 fontSize: 12,
+                                                color: Colors.black,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                         ),
@@ -250,9 +285,10 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                           padding: const EdgeInsets.only(
                                               right: 8.0, top: 8),
                                           child: Text(
-                                            " ${itemData1['orderMenues'][index]['Menu']['totalPrice']} ₹ ",
+                                            " ${itemData1['orderMenues'][index]['quantity']} ₹ ",
                                             style: TextStyle(
                                                 fontSize: 12,
+                                                color: Colors.black,
                                                 fontWeight: FontWeight.w600),
                                             textDirection: TextDirection.rtl,
                                           ),
@@ -262,7 +298,10 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                   ],
                                 ),
                               ),
-                              Divider(),
+                              Divider(
+                                color: Colors.black45,
+                                thickness: 1,
+                              ),
                               SizedBox(
                                 height: 5,
                               ),
@@ -277,7 +316,9 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 "Grand Total",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                             Spacer(),
@@ -285,7 +326,9 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 "${itemData1['orderPrice']} ₹",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
                                 textDirection: TextDirection.rtl,
                               ),
                             )
@@ -343,37 +386,20 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "Date",
+                          "Date and Time",
                           style: orderHeading,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "${itemData1['createdAt'].toString()}",
+                          "${widget.data}",
                           style: orderdetails,
                         ),
                       ),
                       SizedBox(
                         height: size.height * 0.03,
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 8.0),
-                      //   child: Text(
-                      //     "Phone Number",
-                      //     style: orderHeading,
-                      //   ),
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 8.0),
-                      //   child: Text(
-                      //     "${itemData1['customerPhone'].toString()}",
-                      //     style: orderdetails,
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   height: size.height * 0.03,
-                      // ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(

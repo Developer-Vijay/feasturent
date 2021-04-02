@@ -184,6 +184,6 @@ class _DineoutOfferTabPageState extends State<DineoutOfferTabPage> {
             },
           )
           )
-        : Text("No offer Yet");
+        : Center(child: Text("No offer Yet"));
   }
 }
