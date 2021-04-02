@@ -69,15 +69,16 @@ class _DetailResturentState extends State<DetailResturent> {
                             ),
                           ),
                           Spacer(),
+                          data['avgRating'] == null? SizedBox():
                           Container(
                             margin: EdgeInsets.only(right: 15, top: 10),
                             child: SmoothStarRating(
                                 allowHalfRating: true,
                                 onRated: (value) {},
                                 starCount: 5,
-                                rating: 4,
+                                rating: data['avgRating'].toDouble(),
                                 size: 23.0,
-                                isReadOnly: false,
+                                isReadOnly: true,
                                 defaultIconData: Icons.star_border_outlined,
                                 filledIconData: Icons.star,
                                 halfFilledIconData: Icons.star_border,

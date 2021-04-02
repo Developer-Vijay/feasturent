@@ -154,14 +154,25 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                 Container(
                                   child: Row(
                                     children: [
-                                      Container(child: Text("⭐")),
-                                      Text(
-                                        "3.0",
-                                        style: TextStyle(
-                                            fontSize: size.height * 0.016,
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                      restaurantData[index]['avgRating'] == null
+                                          ? SizedBox()
+                                          : Container(
+                                              child: Row(children: [
+                                              Container(
+                                                child: Text("⭐"),
+                                              ),
+                                              Text(
+                                                restaurantData[index]
+                                                        ['avgRating']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        size.height * 0.016,
+                                                    color: Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ])),
                                       Spacer(),
                                       Image.asset(
                                         "assets/icons/discount_icon.jpg",

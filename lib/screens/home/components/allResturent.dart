@@ -35,7 +35,7 @@ class _AllResturentState extends State<AllResturent> {
           longitude.toString(),
     );
     print(_authorization);
-    restaurantData = json.decode(result.body)['data'];
+    restaurantData = json.decode(result.body)['data']['vendorInfo'];
     return restaurantData;
   }
 
@@ -103,6 +103,39 @@ class _AllResturentState extends State<AllResturent> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: listlength,
                 itemBuilder: (context, index) {
+                  var couponDetatil;
+
+                  if (snapshot
+                      .data[index]['user']['OffersAndCoupons'].isEmpty) {
+                  } else {
+                    if (snapshot.data[index]['user']['OffersAndCoupons'][0]
+                            ['discount'] ==
+                        null) {
+                      String symbol;
+                      if (snapshot.data[index]['user']['OffersAndCoupons'][0]
+                              ['couponDiscountType'] ==
+                          "PERCENT") {
+                        symbol = "%";
+                      } else {
+                        symbol = "₹";
+                      }
+
+                      couponDetatil =
+                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                    } else {
+                      String symbol;
+                      if (snapshot.data[index]['user']['OffersAndCoupons'][0]
+                              ['discountType'] ==
+                          "PERCENT") {
+                        symbol = "%";
+                      } else {
+                        symbol = "₹";
+                      }
+
+                      couponDetatil =
+                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                    }
+                  }
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -226,40 +259,57 @@ class _AllResturentState extends State<AllResturent> {
                                       SizedBox(
                                         height: size.height * 0.015,
                                       ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              child: Text("⭐"),
-                                            ),
-                                            Text(
-                                              "3.0",
-                                              style: TextStyle(
-                                                  fontSize: size.height * 0.016,
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Spacer(),
-                                            Image.asset(
-                                              "assets/icons/discount_icon.jpg",
-                                              height: size.height * 0.02,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                right: 12.0,
+                                      snapshot.data[index]['avgRating'] == null
+                                          ? SizedBox()
+                                          : Container(
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    child: Text("⭐"),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data[index]
+                                                            ['avgRating']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            size.height * 0.016,
+                                                        color: Colors.red,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Spacer(),
+                                                  couponDetatil == null
+                                                      ? SizedBox()
+                                                      : Image.asset(
+                                                          "assets/icons/discount_icon.jpg",
+                                                          height: size.height *
+                                                              0.02,
+                                                        ),
+                                                  couponDetatil == null
+                                                      ? SizedBox()
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                            right: 12.0,
+                                                          ),
+                                                          child: Text(
+                                                            couponDetatil,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    size.height *
+                                                                        0.016,
+                                                                color:
+                                                                    kTextColor),
+                                                          ),
+                                                        ),
+                                                ],
                                               ),
-                                              child: Text(
-                                                "40%SW12345678",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize:
-                                                        size.height * 0.016,
-                                                    color: kTextColor),
-                                              ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ))

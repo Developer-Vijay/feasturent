@@ -97,12 +97,13 @@ class _OfferListPageState extends State<OfferListPage> {
         // print(timeData);
         setState(() {
           resturantStatus = json.decode(result.body)['data'];
-          if (resturantStatus[0]['user']['Setting'] == null) {
+          if (resturantStatus['vendorInfo'][0]['user']['Setting'] == null) {
             status = false;
             WidgetsBinding.instance.addPostFrameCallback((_) =>
                 _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
           } else {
-            status = resturantStatus[0]['user']['Setting']['isActive'];
+            status =
+                resturantStatus['vendorInfo'][0]['user']['Setting']['isActive'];
             if (status == false) {
               WidgetsBinding.instance.addPostFrameCallback((_) =>
                   _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
@@ -387,46 +388,80 @@ class _OfferListPageState extends State<OfferListPage> {
                           height: size.height * 0.024,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      child: SmoothStarRating(
-                                          allowHalfRating: false,
-                                          onRated: (v) {
-                                            Text("23");
-                                          },
-                                          starCount: 1,
-                                          rating: 3.0,
-                                          size: size.height * 0.025,
-                                          isReadOnly: false,
-                                          defaultIconData:
-                                              Icons.star_border_outlined,
-                                          filledIconData: Icons.star,
-                                          halfFilledIconData: Icons.star_border,
-                                          color: Colors.black,
-                                          borderColor: Colors.black,
-                                          spacing: 0.0),
-                                    ),
-                                    Text(
-                                      "4.1",
-                                      style: offerRowHeadingStyle,
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                    margin: EdgeInsets.only(
-                                        left: size.width * 0.04),
-                                    child: Text(
-                                      "Taste 80%",
-                                      style: offerCommonStyle,
-                                    ))
-                              ],
-                            ),
+                            restaurantDataCopy['avgRating'] == null
+                                ? SizedBox()
+                                : Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(left: 10),
+                                            child: SmoothStarRating(
+                                                allowHalfRating: false,
+                                                onRated: (v) {
+                                                  Text("23");
+                                                },
+                                                starCount: 1,
+                                                rating: 5.0,
+                                                size: size.height * 0.025,
+                                                isReadOnly: true,
+                                                defaultIconData:
+                                                    Icons.star_border_outlined,
+                                                filledIconData: Icons.star,
+                                                halfFilledIconData:
+                                                    Icons.star_border,
+                                                color: Colors.black,
+                                                borderColor: Colors.black,
+                                                spacing: 0.0),
+                                          ),
+                                          Text(
+                                            "${restaurantDataCopy['avgRating']}",
+                                            style: offerRowHeadingStyle,
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(
+                                              left: size.width * 0.04),
+                                          child: restaurantDataCopy[
+                                                      'avgRating'] ==
+                                                  5
+                                              ? Text(
+                                                  "Taste 100%",
+                                                  style: offerCommonStyle,
+                                                )
+                                              : restaurantDataCopy[
+                                                          'avgRating'] ==
+                                                      4
+                                                  ? Text(
+                                                      "Taste 80%",
+                                                      style: offerCommonStyle,
+                                                    )
+                                                  : restaurantDataCopy[
+                                                              'avgRating'] ==
+                                                          3
+                                                      ? Text(
+                                                          "Taste 60%",
+                                                          style:
+                                                              offerCommonStyle,
+                                                        )
+                                                      : restaurantDataCopy[
+                                                                  'avgRating'] ==
+                                                              2
+                                                          ? Text(
+                                                              "Taste 40%",
+                                                              style:
+                                                                  offerCommonStyle,
+                                                            )
+                                                          : Text(
+                                                              "Taste 20%",
+                                                              style:
+                                                                  offerCommonStyle,
+                                                            ))
+                                    ],
+                                  ),
                             Column(
                               children: [
                                 Text(
