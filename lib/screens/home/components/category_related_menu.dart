@@ -69,7 +69,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
   var restaurantMenu;
   Future<List<dynamic>> fetchMenues() async {
     var result =
-        await http.get(APP_ROUTES + 'getMenues' + '?BYCATID&id=' + cateId);
+        await http.get(APP_ROUTES + 'getMenues?key=BYCATID&id=' + cateId);
     restaurantMenu = json.decode(result.body)['data'];
     return restaurantMenu;
   }
@@ -96,7 +96,6 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                         itemBuilder: (context, index) {
                           {
                             int tpye = 0;
-
                             return InkWell(
                               onTap: () {
                                 var menuD;
@@ -662,44 +661,40 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                                 0
                                                             ? Row(
                                                                 children: [
-                                                                  CachedNetworkImage(
-                                                                    imageUrl:
-                                                                        'https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg',
-                                                                    height: size
-                                                                            .height *
-                                                                        0.02,
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        Icon(Icons
-                                                                            .error),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: size
-                                                                            .width *
-                                                                        0.006,
-                                                                  ),
                                                                   Container(
-                                                                    child: snapshot.data[index]['offers'].length >=
-                                                                            2
-                                                                        ? Row(
-                                                                            children: [
-                                                                              Text(
-                                                                                "OfferID ${snapshot.data[index]['offers'][0]['coupon']}, ",
-                                                                                style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                              ),
-                                                                              Text(
-                                                                                "OfferID ${snapshot.data[index]['offers'][1]['coupon']}",
-                                                                                style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                              ),
-                                                                            ],
-                                                                          )
-                                                                        : Text(
-                                                                            "OfferID ${snapshot.data[index]['offers'][0]['coupon']}",
-                                                                            style:
-                                                                                TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                          ),
-                                                                  ),
+                                                                      child: snapshot.data[index]['offers'].length !=
+                                                                              0
+                                                                          ? Row(
+                                                                              children: [
+                                                                                Image.asset(
+                                                                                  "assets/icons/discount_icon.jpg",
+                                                                                  height: size.height * 0.02,
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: size.width * 0.006,
+                                                                                ),
+                                                                                Container(
+                                                                                  child: snapshot.data[index]['offers'].length >= 2
+                                                                                      ? Row(
+                                                                                          children: [
+                                                                                            Text(
+                                                                                              "OfferID ${snapshot.data[index]['offers'][0]['OffersAndCoupon']['coupon']}, ",
+                                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                            ),
+                                                                                            Text(
+                                                                                              "OfferID ${snapshot.data[index]['offers'][1]['OffersAndCoupon']['coupon']}",
+                                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                            ),
+                                                                                          ],
+                                                                                        )
+                                                                                      : Text(
+                                                                                          "OfferID ${snapshot.data[index]['offers'][0]['OffersAndCoupon']['coupon']}",
+                                                                                          style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                        ),
+                                                                                ),
+                                                                              ],
+                                                                            )
+                                                                          : SizedBox()),
                                                                 ],
                                                               )
                                                             : SizedBox()),

@@ -13,8 +13,10 @@ import 'dart:async';
 
 class WalletDesign extends StatefulWidget {
   var walletdata;
-  final status;
-  WalletDesign({this.walletdata, this.status});
+
+  WalletDesign({
+    this.walletdata,
+  });
   @override
   _WalletDesignState createState() => _WalletDesignState();
 }
@@ -25,9 +27,15 @@ class _WalletDesignState extends State<WalletDesign> {
   @override
   void initState() {
     super.initState();
-    // setState(() {
-    //   wallet = widget.walletdata;
-    // });
+    getSession();
+  }
+
+  bool status = false;
+  Future<void> getSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      status = prefs.getBool("_isAuthenticate");
+    });
   }
 
   Future<List<dynamic>> getWalletDetaile() async {
@@ -67,7 +75,7 @@ class _WalletDesignState extends State<WalletDesign> {
             children: [
               Expanded(
                   flex: 18,
-                  child: widget.status == 1
+                  child: status == true
                       ? FutureBuilder<List<dynamic>>(
                           future: getWalletDetaile(),
                           builder: (context, snapshot) {

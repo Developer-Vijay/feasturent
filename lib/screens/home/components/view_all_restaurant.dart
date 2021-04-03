@@ -35,6 +35,38 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
           physics: NeverScrollableScrollPhysics(),
           itemCount: restaurantData.length,
           itemBuilder: (context, index) {
+            var couponDetatil;
+
+            if (restaurantData[index]['user']['OffersAndCoupons'].isEmpty) {
+            } else {
+              if (restaurantData[index]['user']['OffersAndCoupons'][0]
+                      ['discount'] ==
+                  null) {
+                String symbol;
+                if (restaurantData[index]['user']['OffersAndCoupons'][0]
+                        ['couponDiscountType'] ==
+                    "PERCENT") {
+                  symbol = "%";
+                } else {
+                  symbol = "₹";
+                }
+
+                couponDetatil =
+                    "${restaurantData[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
+              } else {
+                String symbol;
+                if (restaurantData[index]['user']['OffersAndCoupons'][0]
+                        ['discountType'] ==
+                    "PERCENT") {
+                  symbol = "%";
+                } else {
+                  symbol = "₹";
+                }
+
+                couponDetatil =
+                    "${restaurantData[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
+              }
+            }
             return InkWell(
               onTap: () {
                 Navigator.push(
@@ -155,7 +187,13 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                   child: Row(
                                     children: [
                                       restaurantData[index]['avgRating'] == null
-                                          ? SizedBox()
+                                          ? Text(
+                                              "Not Rated",
+                                              style: TextStyle(
+                                                  fontSize: size.height * 0.016,
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold),
+                                            )
                                           : Container(
                                               child: Row(children: [
                                               Container(
@@ -174,22 +212,27 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                               ),
                                             ])),
                                       Spacer(),
-                                      Image.asset(
-                                        "assets/icons/discount_icon.jpg",
-                                        height: size.height * 0.02,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 12.0,
-                                        ),
-                                        child: Text(
-                                          "40%SW12345678",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: size.height * 0.016,
-                                              color: kTextColor),
-                                        ),
-                                      ),
+                                      couponDetatil == null
+                                          ? SizedBox()
+                                          : Image.asset(
+                                              "assets/icons/discount_icon.jpg",
+                                              height: size.height * 0.02,
+                                            ),
+                                      couponDetatil == null
+                                          ? SizedBox()
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 12.0,
+                                              ),
+                                              child: Text(
+                                                couponDetatil,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize:
+                                                        size.height * 0.016,
+                                                    color: kTextColor),
+                                              ),
+                                            ),
                                     ],
                                   ),
                                 ),

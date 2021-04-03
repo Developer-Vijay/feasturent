@@ -91,146 +91,153 @@ class _PopularListState extends State<PopularList> {
         ),
         Row(
           children: [
-            // Container(
-            //   margin: EdgeInsets.only(left: size.width * 0.04),
-            //   child: Text(
-            //     "Popular on Feasturent",
-            //     style:
-            //         TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
-            //   ),
-            // ),
+            Container(
+              margin: EdgeInsets.only(left: size.width * 0.04),
+              child: Text(
+                "Popular on Feasturent",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
+              ),
+            ),
             Spacer(),
-            // Container(
-            //     alignment: Alignment.topRight,
-            //     child: FlatButton(
-            //       onPressed: () {
-            //         if (data != null) {
-            //           Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) => ViewAllPopular(
-            //                         popularData: data,
-            //                       )));
-            //         }
-            //       },
-            //       child: Row(
-            //         children: [
-            //           Container(
-            //             child: Text(
-            //               "View All",
-            //               style: TextStyle(
-            //                   fontWeight: FontWeight.bold,
-            //                   color: kPrimaryColor),
-            //             ),
-            //           ),
-            //           Container(
-            //               margin: EdgeInsets.zero,
-            //               child: Icon(
-            //                 Icons.arrow_right_rounded,
-            //                 color: kSecondaryTextColor,
-            //               )),
-            //         ],
-            //       ),
-            //     ))
+            Container(
+                alignment: Alignment.topRight,
+                child: FlatButton(
+                  onPressed: () {
+                    if (data != null) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewAllPopular(
+                                    popularData: data,
+                                  )));
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        child: Text(
+                          "View All",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: kPrimaryColor),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.zero,
+                          child: Icon(
+                            Icons.arrow_right_rounded,
+                            color: kSecondaryTextColor,
+                          )),
+                    ],
+                  ),
+                ))
           ],
         ),
-        // Container(
-        //     height: size.height * 0.14,
-        //     child: FutureBuilder<List<dynamic>>(
-        //       future: fetchPopular(),
-        //       builder: (context, snap) {
-        //         if (snap.hasData) {
-        //           return ListView.builder(
-        //             scrollDirection: Axis.horizontal,
-        //             itemCount: snap.data.length,
-        //             itemBuilder: (context, index) {
-        //               if (snap.data[index]['Menu'] != null) {
-        //                 return Column(
-        //                   children: [
-        //                     Padding(
-        //                       padding: const EdgeInsets.only(top: 8.0),
-        //                       child: Container(
-        //                           decoration: BoxDecoration(
-        //                             shape: BoxShape.circle,
-        //                             boxShadow: [
-        //                               BoxShadow(
-        //                                   blurRadius: 3,
-        //                                   color: Colors.blueGrey,
-        //                                   spreadRadius: 1)
-        //                             ],
-        //                           ),
-        //                           margin:
-        //                               EdgeInsets.only(left: size.width * 0.011),
-        //                           height: size.height * 0.08,
-        //                           width: size.width * 0.24,
-        //                           child: CircleAvatar(
-        //                             backgroundColor: Colors.white,
-        //                             child: FlatButton(
-        //                               onPressed: () {
-        //                                 var menuD;
-        //                                 setState(() {
-        //                                   menuD =
-        //                                       snap.data[index]['Menu']['id'];
-        //                                 });
-        //                                 Navigator.push(
-        //                                     context,
-        //                                     MaterialPageRoute(
-        //                                         builder: (context) =>
-        //                                             CategoryDetailPage(
-        //                                               menuId: menuD,
-        //                                               cateID: snap.data[index]
-        //                                                       ['Menu']
-        //                                                   ['categoryId'],
-        //                                             )));
-        //                               },
-        //                               child: ClipOval(
-        //                                   child: snap.data[index]['Menu']
-        //                                               ['image1'] !=
-        //                                           null
-        //                                       ? CachedNetworkImage(
-        //                                           imageUrl: S3_BASE_PATH +
-        //                                               snap.data[index]['Menu']
-        //                                                   ['image1'],
-        //                                           fit: BoxFit.cover,
-        //                                           width: size.width * 0.2,
-        //                                           height: size.height * 0.2,
-        //                                           errorWidget:
-        //                                               (context, url, error) =>
-        //                                                   Icon(Icons.error),
-        //                                         )
-        //                                       : Image.asset(
-        //                                           "assets/images/feasturenttemp.jpeg",
-        //                                           fit: BoxFit.cover,
-        //                                           width: size.width * 0.2,
-        //                                           height: size.height * 0.2,
-        //                                         )),
-        //                             ),
-        //                           )),
-        //                     ),
-        //                     SizedBox(
-        //                       height: size.height * 0.01,
-        //                     ),
-        //                     Text(
-        //                       snap.data[index]['Menu']['title'],
-        //                       style: TextStyle(
-        //                           color: Colors.black,
-        //                           fontWeight: FontWeight.w600,
-        //                           fontSize: size.height * 0.014),
-        //                     )
-        //                   ],
-        //                 );
-        //               } else {
-        //                 return SizedBox();
-        //               }
-        //             },
-        //           );
-        //         } else {
-        //           return Center(
-        //             child: CircularProgressIndicator(),
-        //           );
-        //         }
-        //       },
-        //     )),
+        Container(
+            height: size.height * 0.14,
+            child: FutureBuilder<List<dynamic>>(
+              future: fetchPopular(),
+              builder: (context, snap) {
+                if (snap.hasData) {
+                  int legnth;
+                  if (snap.data.length > 15) {
+                    legnth = 15;
+                  } else {
+                    legnth = snap.data.length;
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: legnth,
+                    itemBuilder: (context, index) {
+                      if (snap.data[index] != null) {
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 3,
+                                          color: Colors.blueGrey,
+                                          spreadRadius: 1)
+                                    ],
+                                  ),
+                                  margin:
+                                      EdgeInsets.only(left: size.width * 0.011),
+                                  height: size.height * 0.08,
+                                  width: size.width * 0.24,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        var menuD;
+                                        setState(() {
+                                          menuD = snap.data[index];
+                                        });
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CategoryDetailPage(
+                                                      menuData: menuD,
+                                                    )));
+                                      },
+                                      child: ClipOval(
+                                          child: snap.data[index]
+                                                      ['menuImage1'] !=
+                                                  null
+                                              ? CachedNetworkImage(
+                                                  imageUrl: S3_BASE_PATH +
+                                                      snap.data[index]
+                                                          ['menuImage1'],
+                                                  fit: BoxFit.cover,
+                                                  width: size.width * 0.2,
+                                                  height: size.height * 0.2,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                  placeholder: (context, url) =>
+                                                      Image.asset(
+                                                    "assets/images/feasturenttemp.jpeg",
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                )
+                                              : Image.asset(
+                                                  "assets/images/feasturenttemp.jpeg",
+                                                  fit: BoxFit.cover,
+                                                  width: size.width * 0.2,
+                                                  height: size.height * 0.2,
+                                                )),
+                                    ),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            Text(
+                              snap.data[index]['title'],
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: size.height * 0.014),
+                            )
+                          ],
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            )),
         SizedBox(
           height: size.height * 0.01,
         ),

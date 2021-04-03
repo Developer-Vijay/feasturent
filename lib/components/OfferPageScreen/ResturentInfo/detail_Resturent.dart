@@ -23,6 +23,16 @@ class _DetailResturentState extends State<DetailResturent> {
     });
   }
 
+  Future<void> openMap(double latitude, double longitude) async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }
+
   var data;
   @override
   Widget build(BuildContext context) {
@@ -68,23 +78,25 @@ class _DetailResturentState extends State<DetailResturent> {
                             ),
                           ),
                           Spacer(),
-                          data['avgRating'] == null? SizedBox():
-                          Container(
-                            margin: EdgeInsets.only(right: 15, top: 10),
-                            child: SmoothStarRating(
-                                allowHalfRating: true,
-                                onRated: (value) {},
-                                starCount: 5,
-                                rating: data['avgRating'].toDouble(),
-                                size: 23.0,
-                                isReadOnly: true,
-                                defaultIconData: Icons.star_border_outlined,
-                                filledIconData: Icons.star,
-                                halfFilledIconData: Icons.star_border,
-                                color: Colors.amber,
-                                borderColor: Colors.amber[300],
-                                spacing: 0.0),
-                          ),
+                          data['avgRating'] == null
+                              ? SizedBox()
+                              : Container(
+                                  margin: EdgeInsets.only(right: 15, top: 10),
+                                  child: SmoothStarRating(
+                                      allowHalfRating: true,
+                                      onRated: (value) {},
+                                      starCount: 5,
+                                      rating: data['avgRating'].toDouble(),
+                                      size: 23.0,
+                                      isReadOnly: true,
+                                      defaultIconData:
+                                          Icons.star_border_outlined,
+                                      filledIconData: Icons.star,
+                                      halfFilledIconData: Icons.star_border,
+                                      color: Colors.amber,
+                                      borderColor: Colors.amber[300],
+                                      spacing: 0.0),
+                                ),
                         ],
                       ),
                       data['cuisine'] == null
@@ -251,11 +263,11 @@ class _DetailResturentState extends State<DetailResturent> {
                                 ? SizedBox()
                                 : InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => MapView(),
-                                          ));
+                                      openMap(
+                                          double.parse(
+                                              data['Address']['latitude']),
+                                          double.parse(
+                                              data['Address']['longitude']));
                                     },
                                     child: Text(
                                       "Get Direction",
