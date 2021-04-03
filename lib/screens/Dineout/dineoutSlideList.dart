@@ -22,7 +22,7 @@ class _DineoutListState extends State<DineoutList> {
           CategoryItem(
             title: "Filter",
             press: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context)=>Filter()));
+              // Navigator.push(context,MaterialPageRoute(builder: (context)=>Filter()));
             },
           ),
           CategoryItem(

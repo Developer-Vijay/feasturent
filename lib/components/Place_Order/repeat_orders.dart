@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.dart';
 import 'package:feasturent_costomer_app/notificationsfiles.dart';
 import 'package:http/http.dart' as http;
 import 'package:feasturent_costomer_app/components/Place_Order/order_confirm.dart';
@@ -403,14 +404,14 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "Deliver to",
+                          "Delivered to",
                           style: orderHeading,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "Address",
+                          itemData1['OrderAddress']['address'],
                           style: orderdetails,
                         ),
                       ),
@@ -423,30 +424,101 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Expanded(
-                flex: 1,
-                child: MaterialButton(
-                  height: size.height * 0.07,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Repeat Order",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  textColor: Colors.white,
-                  minWidth: size.width * 0.9,
-                  color: Colors.blue,
-                  onPressed: () {
-                    checkout();
-                  },
-                ),
-              ),
-            )
+                padding: const EdgeInsets.all(8.0),
+                child: itemData1['orderStatus'] != "PENDING"
+                    ? Container(
+                        child: itemData1['orderStatus'] != "CANCELED"
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: itemData1['orderStatus'] ==
+                                              "DELIVERED"
+                                          ? Expanded(
+                                              flex: 1,
+                                              child: OutlineButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            14)),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      "Repeat Order",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                ),
+                                                textColor: Colors.blue,
+                                                borderSide: BorderSide(
+                                                    color: Colors.green,
+                                                    width: 2),
+                                                onPressed: () {
+                                                  checkout();
+                                                },
+                                              ),
+                                            )
+                                          : SizedBox()),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                        child: itemData1['orderStatus'] ==
+                                                "DELIVERED"
+                                            ? OutlineButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                textColor: Colors.blue,
+                                                borderSide: BorderSide(
+                                                    color: Colors.amber,
+                                                    width: 2),
+                                                child: Text("Give Rating"),
+                                                onPressed: () {
+                                                  showModalBottomSheet(
+                                                      enableDrag: true,
+                                                      isScrollControlled: true,
+                                                      context: context,
+                                                      builder: (context) => Container(
+                                                          height:
+                                                              size.height * 0.8,
+                                                          child: AddRatingPage(
+                                                              data:
+                                                                  itemData1)));
+                                                },
+                                              )
+                                            : SizedBox()),
+                                  )
+                                ],
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  child: Text(
+                                    "Order is Cancelled",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Text(
+                            "IN PROGRESS",
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ))
           ],
         ));
   }

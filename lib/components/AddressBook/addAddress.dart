@@ -41,6 +41,8 @@ class _AddAdressState extends State<AddAdress> {
   @override
   void initState() {
     super.initState();
+    isSelected = true;
+    data = "Home";
     if (widget.fullName != null) {
       setState(() {
         citiesSelected.text = widget.city;
@@ -121,7 +123,7 @@ class _AddAdressState extends State<AddAdress> {
             await Geocoder.local.findAddressesFromCoordinates(coordinates);
         final prefs = await SharedPreferences.getInstance();
         var username = prefs.getString('name');
-        var phonenumber=prefs.getString('userNumber');
+        var phonenumber = prefs.getString('userNumber');
         setState(() {
           _pincodecontroller.text = locate.first.postalCode;
           stateSelected.text = locate.first.adminArea;
@@ -129,7 +131,7 @@ class _AddAdressState extends State<AddAdress> {
           citiesSelected.text = locate.first.locality;
           _landmarkcontroller.text = locate.first.subAdminArea;
           _fullnamecontroller.text = username.toString();
-          _phonenumbercontroller.text=phonenumber.toString();
+          _phonenumbercontroller.text = phonenumber.toString();
         });
       } catch (error) {
         Fluttertoast.showToast(msg: "Unable to load your location");
@@ -584,17 +586,17 @@ class _AddAdressState extends State<AddAdress> {
       });
     }
     // Validation For House No.
-    if (_housenocontroller.text.isEmpty) {
-      setState(() {
-        _housenoValidate = "Please enter the house no.";
-        _isValidate = false;
-      });
-    } else {
-      setState(() {
-        _housenoValidate = null;
-        _isValidate = true;
-      });
-    } // Validation For Roadname
+    // if (_housenocontroller.text.isEmpty) {
+    //   setState(() {
+    //     _housenoValidate = "Please enter the house no.";
+    //     _isValidate = false;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _housenoValidate = null;
+    //     _isValidate = true;
+    //   });
+    // } // Validation For Roadname
     if (_roadnamecontroller.text.isEmpty) {
       setState(() {
         _roadnameValidate = "Please enter the road name";
@@ -619,7 +621,7 @@ class _AddAdressState extends State<AddAdress> {
       });
     }
 
-    if (_isValidate) {
+    if (_isValidate==true) {
       final prefs = await SharedPreferences.getInstance();
       _authorization = prefs.getString('sessionToken');
       userid = prefs.getInt('userId');
@@ -644,7 +646,7 @@ class _AddAdressState extends State<AddAdress> {
       var responsData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: responsData['message']);
-        Navigator.pushReplacement(
+        Navigator.pop(
             context, MaterialPageRoute(builder: (context) => AddressList()));
       } else {
         setState(() {

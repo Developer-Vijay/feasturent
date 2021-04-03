@@ -1337,7 +1337,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       "addressId": addressID,
       "orderPrice": "$totalPrice.00",
       "gst": "107.82",
-      "discountPrice": "50",
+      "discountPrice": "0",
       "offerId": "1",
       "paymentMode": "CASH",
       "razorpay_payment_id": null,

@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final prefs = await SharedPreferences.getInstance();
       setState(() {
         // takeUser = prefs.getBool('_isAuthenticate');
-        // userName = prefs.getString('sessionToken');
+        userName = prefs.getString('name');
         _customerUserId = prefs.getInt('userId');
         _authorization = prefs.getString('sessionToken');
         _refreshtoken = prefs.getString('refreshToken');
