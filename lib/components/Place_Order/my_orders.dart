@@ -579,7 +579,7 @@ class _MyOrdersState extends State<MyOrders> {
                                                                               index]
                                                                           [
                                                                           'orderStatus'] ==
-                                                                      "COMPLETED"
+                                                                      "DELIVERED"
                                                                   ? Text(
                                                                       "DELIVERED",
                                                                       style: TextStyle(
@@ -624,34 +624,6 @@ class _MyOrdersState extends State<MyOrders> {
                                                               )
                                                             : SizedBox())
                                                     : SizedBox()),
-                                            Container(
-                                                child: snapshot.data[index]
-                                                            ['orderStatus'] ==
-                                                        "COMPLETED"
-                                                    ? MaterialButton(
-                                                        textColor: Colors.grey,
-                                                        color:
-                                                            Colors.amber[600],
-                                                        child: Text("Review"),
-                                                        onPressed: () {
-                                                          showModalBottomSheet(
-                                                              enableDrag: true,
-                                                              isScrollControlled:
-                                                                  true,
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  Container(
-                                                                      height:
-                                                                          size.height *
-                                                                              0.8,
-                                                                      child:
-                                                                          AddRatingPage(
-                                                                        data: snapshot
-                                                                            .data[index],
-                                                                      )));
-                                                        },
-                                                      )
-                                                    : SizedBox())
                                           ],
                                         )
                                       ],

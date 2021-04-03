@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:ffi';
 import 'package:feasturent_costomer_app/screens/profile/userProfile.dart';
 import 'package:http/http.dart' as http;
 import 'package:feasturent_costomer_app/constants.dart';
@@ -24,14 +23,13 @@ class _EditProfileState extends State<EditProfile> {
   int user;
   var username;
   int userid;
+  var phonenumber;
 
   String _authorization = '';
   String _refreshtoken = '';
-// bool _isValidate = true;
+
   bool _isProcessing = false;
-  // TextEditingController _lastnamecontroller = TextEditingController();
-  // TextEditingController _namecontroller = TextEditingController();
-  // TextEditingController _secondaryphonecontroller = TextEditingController();
+
   void initState() {
     super.initState();
     setState(() {
@@ -49,6 +47,7 @@ class _EditProfileState extends State<EditProfile> {
       photo = prefs.getString('userProfile');
       username = prefs.getString('name');
       userid = prefs.getInt('userId');
+      phonenumber = prefs.getString('userNumber');
     });
   }
 
@@ -204,7 +203,7 @@ class _EditProfileState extends State<EditProfile> {
                                               ),
                                             ),
                                             Divider(),
-                                            Expanded( 
+                                            Expanded(
                                               flex: 1,
                                               child: InkWell(
                                                 onTap: () async =>
@@ -275,14 +274,14 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: heightsize,
                   ),
-// Last Name TextField
+                   // Last Name TextField
                   Container(
                     margin: EdgeInsets.only(
                         left: leftRightMargin, right: leftRightMargin),
                     child: TextField(
                       autocorrect: false,
                       keyboardType: TextInputType.name,
-                      controller: _lastNameController,
+                      controller: _nameController,
                       style: TextStyle(fontSize: fontSize),
                       decoration: InputDecoration(
                         prefixIcon:
@@ -311,7 +310,7 @@ class _EditProfileState extends State<EditProfile> {
                         left: leftRightMargin, right: leftRightMargin),
                     child: TextField(
                       autocorrect: false,
-                      controller: _nameController,
+                      controller: _lastNameController,
                       keyboardType: TextInputType.name,
                       style: TextStyle(fontSize: fontSize),
                       decoration: InputDecoration(
@@ -338,7 +337,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: heightsize,
                   ),
-// Phone Controller
+                  // Phone Controller
                   Container(
                     margin: EdgeInsets.only(
                         left: leftRightMargin, right: leftRightMargin),
@@ -347,11 +346,12 @@ class _EditProfileState extends State<EditProfile> {
                       keyboardType: TextInputType.phone,
                       controller: _phoneController,
                       maxLength: 10,
+                      readOnly: true,
                       style: TextStyle(fontSize: fontSize),
                       decoration: InputDecoration(
                         prefixIcon:
                             Icon(LineAwesomeIcons.phone, size: fontSize),
-                        labelText: "Phone",
+                        hintText: phonenumber==null ? "Phone Number" :phonenumber,
                         errorText: _phonevalidate,
                         labelStyle: TextStyle(fontSize: labelSize),
                         contentPadding: EdgeInsets.only(
@@ -369,6 +369,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: heightsize,
                   ),
+                  // Email
                   Container(
                     margin: EdgeInsets.only(
                         left: leftRightMargin, right: leftRightMargin),
@@ -376,13 +377,14 @@ class _EditProfileState extends State<EditProfile> {
                       autocorrect: false,
                       keyboardType: TextInputType.name,
                       controller: _emailController,
+                      readOnly: true,
                       style: TextStyle(fontSize: fontSize),
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.email_outlined,
                           size: size.height * 0.022,
                         ),
-                        labelText: "Email",
+                        hintText: emailid == null ? "Email" : emailid,
                         errorText: _emailvalidate,
                         labelStyle: TextStyle(fontSize: labelSize),
                         contentPadding: EdgeInsets.only(
@@ -400,8 +402,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: size.height * 0.022,
                   ),
-
-//Otp
+                  //Otp
                   _isOtpSend == true
                       ? Container(
                           margin: EdgeInsets.only(
@@ -422,6 +423,7 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                               ),
                               labelText: 'Otp',
+                             
                               labelStyle: TextStyle(fontSize: labelSize),
                               contentPadding: EdgeInsets.only(
                                 top: 10,
@@ -481,12 +483,12 @@ class _EditProfileState extends State<EditProfile> {
     if (_nameController.text.isEmpty) {
       setState(() {
         _namevalidate = "Name Cannot be Empty";
-        _isvalidate = false;
+        _isvalidate = true;
       });
     } else {
       setState(() {
         _namevalidate = null;
-        _isvalidate = true;
+        _isvalidate = false;
       });
     }
 
@@ -494,53 +496,53 @@ class _EditProfileState extends State<EditProfile> {
     if (_lastNameController.text.isEmpty) {
       setState(() {
         _lastnamevalidate = "Last Name Cannot be empty";
-        _isvalidate = false;
+        _isvalidate = true;
       });
     } else {
       setState(() {
         _lastnamevalidate = null;
-        _isvalidate = true;
+        _isvalidate = false;
       });
     }
 
 // for Phone
 
-    if (_phoneController.text.isEmpty) {
-      setState(() {
-        _phonevalidate = "Phone Cannot be Empty ";
-        _isvalidate = false;
-      });
-    } else if (_phoneController.text.length < 10) {
-      setState(() {
-        _phonevalidate = "Phone number should be equal to 10 ";
-        _isvalidate = false;
-      });
-    } else {
-      setState(() {
-        _phonevalidate = null;
-        _isvalidate = true;
-      });
-    }
+    // if (_phoneController.text.isEmpty) {
+    //   setState(() {
+    //     _phonevalidate = "Phone Cannot be Empty ";
+    //     _isvalidate = false;
+    //   });
+    // } else if (_phoneController.text.length < 10) {
+    //   setState(() {
+    //     _phonevalidate = "Phone number should be equal to 10 ";
+    //     _isvalidate = false;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _phonevalidate = null;
+    //     _isvalidate = true;
+    //   });
+    // }
 
-    if (_emailController.text.isEmpty) {
-      setState(() {
-        _emailvalidate = "email cannot be empty";
-        _isvalidate = false;
-      });
-    } else if (!RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(_emailController.text)) {
-      setState(() {
-        _emailvalidate = "email should contain the @ symbol ";
-        _isvalidate = false;
-      });
-    } else {
-      setState(() {
-        _emailvalidate = null;
-        _isvalidate = true;
-      });
-    }
-    if (_isvalidate) {
+    // if (_emailController.text.isEmpty) {
+    //   setState(() {
+    //     _emailvalidate = "email cannot be empty";
+    //     _isvalidate = false;
+    //   });
+    // } else if (!RegExp(
+    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    //     .hasMatch(_emailController.text)) {
+    //   setState(() {
+    //     _emailvalidate = "email should contain the @ symbol ";
+    //     _isvalidate = false;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _emailvalidate = null;
+    //     _isvalidate = true;
+    //   });
+    // }
+    if (_isvalidate==false) {
       final prefs = await SharedPreferences.getInstance();
       _authorization = prefs.getString('sessionToken');
       _refreshtoken = prefs.getString('refreshToken');
@@ -548,16 +550,16 @@ class _EditProfileState extends State<EditProfile> {
       var response = await http.put(USER_API + 'updateProfile/$user', body: {
         'name': _nameController.text,
         'lastname': _lastNameController.text,
-        'phone': _phoneController.text,
-        'email': _emailController.text
+        'phone': phonenumber,
+        'email': emailid
       }, headers: {
         "authorization": _authorization,
         "refreshtoken": _refreshtoken
       });
-var responseData=jsonDecode(response.body);
+      var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         setState(() {
-          Fluttertoast.showToast(msg: "ok");
+          Fluttertoast.showToast(msg: "${responseData['message']}");
           _isOtpSend = false;
         });
       } else if (response.statusCode == 201) {
@@ -587,7 +589,7 @@ var responseData=jsonDecode(response.body);
       "authorization": _authorization,
       "refreshtoken": _refreshtoken
     });
-    var responseData=jsonDecode(response.body);
+    var responseData = jsonDecode(response.body);
     if (response.statusCode == 200) {
       setState(() {
         print(userid);

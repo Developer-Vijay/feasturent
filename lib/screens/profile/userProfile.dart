@@ -40,10 +40,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // int temp;
   // var email;
   // var photo;
+  var name;
   @override
   void initState() {
     super.initState();
+    setState(() {
+      getsession();
+    });
   }
+
+  getsession() async {}
 
   Widget _buildloginCheck() {
     return ListView(
