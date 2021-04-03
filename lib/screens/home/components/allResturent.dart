@@ -259,57 +259,70 @@ class _AllResturentState extends State<AllResturent> {
                                       SizedBox(
                                         height: size.height * 0.015,
                                       ),
-                                      snapshot.data[index]['avgRating'] == null
-                                          ? SizedBox()
-                                          : Container(
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    child: Text("⭐"),
-                                                  ),
-                                                  Text(
-                                                    snapshot.data[index]
-                                                            ['avgRating']
-                                                        .toString(),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            snapshot.data[index]['avgRating'] ==
+                                                    null
+                                                ? Text(
+                                                    "Not Rated",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.height * 0.016,
                                                         color: Colors.red,
                                                         fontWeight:
                                                             FontWeight.bold),
+                                                  )
+                                                : Container(
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                          child: Text("⭐"),
+                                                        ),
+                                                        Text(
+                                                          snapshot.data[index]
+                                                                  ['avgRating']
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  size.height *
+                                                                      0.016,
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Spacer(),
-                                                  couponDetatil == null
-                                                      ? SizedBox()
-                                                      : Image.asset(
-                                                          "assets/icons/discount_icon.jpg",
-                                                          height: size.height *
-                                                              0.02,
-                                                        ),
-                                                  couponDetatil == null
-                                                      ? SizedBox()
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                            right: 12.0,
-                                                          ),
-                                                          child: Text(
-                                                            couponDetatil,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize:
-                                                                    size.height *
-                                                                        0.016,
-                                                                color:
-                                                                    kTextColor),
-                                                          ),
-                                                        ),
-                                                ],
-                                              ),
-                                            ),
+                                            Spacer(),
+                                            couponDetatil == null
+                                                ? SizedBox()
+                                                : Image.asset(
+                                                    "assets/icons/discount_icon.jpg",
+                                                    height: size.height * 0.02,
+                                                  ),
+                                            couponDetatil == null
+                                                ? SizedBox()
+                                                : Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 12.0,
+                                                    ),
+                                                    child: Text(
+                                                      couponDetatil,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.016,
+                                                          color: kTextColor),
+                                                    ),
+                                                  ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ))

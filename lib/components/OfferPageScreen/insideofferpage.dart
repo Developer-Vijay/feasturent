@@ -391,7 +391,10 @@ class _OfferListPageState extends State<OfferListPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             restaurantDataCopy['avgRating'] == null
-                                ? SizedBox()
+                                ? Text(
+                                    "Not Rated",
+                                    style: offerRowHeadingStyle,
+                                  )
                                 : Column(
                                     children: [
                                       Row(
@@ -1256,17 +1259,17 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                         ? Row(
                                                                             children: [
                                                                               Text(
-                                                                                "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}, ",
+                                                                                "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}, ",
                                                                                 style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
                                                                               ),
                                                                               Text(
-                                                                                "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['offerId']}",
+                                                                                "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon']}",
                                                                                 style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
                                                                               ),
                                                                             ],
                                                                           )
                                                                         : Text(
-                                                                            "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}",
+                                                                            "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}",
                                                                             style:
                                                                                 TextStyle(fontSize: size.height * 0.015, color: kTextColor),
                                                                           ),

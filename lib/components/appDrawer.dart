@@ -11,6 +11,7 @@ import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class AppDrawer extends StatefulWidget {
   final int cStatus;
@@ -132,6 +133,15 @@ class _AppDrawerState extends State<AppDrawer> {
     }
   }
 
+  _launchURL() async {
+    const url = 'http:/feasturent.com';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -200,10 +210,7 @@ class _AppDrawerState extends State<AppDrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => WalletDesign(
-                          status: datastatus,
-                        )),
+                MaterialPageRoute(builder: (context) => WalletDesign()),
               );
               // Update the state of the app.
               // ...
@@ -230,20 +237,10 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.help_center),
-            title: Text('Help & Support'),
+            title: Text('Term & Condition'),
             dense: true,
             onTap: () {
-              // Update the state of the app.
-              // ...
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.info),
-            title: Text('About'),
-            dense: true,
-            onTap: () {
-              // Update the state of the app.
-              // ...
+              _launchURL();
             },
           ),
           ListTile(
@@ -251,8 +248,7 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Privacy Policy'),
             dense: true,
             onTap: () {
-              // Update the state of the app.
-              // ...
+              _launchURL();
             },
           ),
           widget.cStatus == 1

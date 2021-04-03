@@ -54,8 +54,10 @@ class ViewAllCategory extends StatelessWidget {
                                     image: imageProvider, fit: BoxFit.cover),
                               ),
                             ),
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
+                            placeholder: (context, url) => Image.asset(
+                              "assets/images/feasturenttemp.jpeg",
+                              fit: BoxFit.cover,
+                            ),
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
                           )

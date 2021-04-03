@@ -243,7 +243,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: size.width * 0.2,
+                                  width: size.width * 0.05,
                                 ),
                                 DottedLine(
                                   dashGapLength: 0,
@@ -261,7 +261,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                   //     top: size.height * 0.04, left: size.width * 0.019),
                                   child: Column(children: [
                                     Container(
-                                      width: size.width * 0.4,
+                                      width: size.width * 0.5,
                                       child: Text(
                                         "${snapshot.data[index]['OffersAndCoupon']['title']}",
                                         overflow: TextOverflow.ellipsis,
@@ -273,7 +273,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                       ),
                                     ),
                                     Container(
-                                      width: size.width * 0.4,
+                                      width: size.width * 0.5,
                                       child: Text(
                                         "${snapshot.data[index]['OffersAndCoupon']['description']}",
                                         overflow: TextOverflow.ellipsis,
@@ -511,21 +511,14 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                               SizedBox(
                                                 height: size.height * 0.015,
                                               ),
-                                              snapshot.data[index]
-                                                          ['avgRating'] ==
-                                                      null
-                                                  ? SizedBox()
-                                                  : Container(
-                                                      child: Row(
-                                                        children: [
-                                                          Container(
-                                                            child: Text("⭐"),
-                                                          ),
-                                                          Text(
-                                                            snapshot.data[index]
-                                                                    [
-                                                                    'avgRating']
-                                                                .toString(),
+                                              Container(
+                                                child: Row(
+                                                  children: [
+                                                    snapshot.data[index]
+                                                                ['avgRating'] ==
+                                                            null
+                                                        ? Text(
+                                                            "Not Rated",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                     size.height *
@@ -535,15 +528,45 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold),
+                                                          )
+                                                        : Container(
+                                                            child: Row(
+                                                              children: [
+                                                                Container(
+                                                                  child:
+                                                                      Text("⭐"),
+                                                                ),
+                                                                Text(
+                                                                  snapshot.data[
+                                                                          index]
+                                                                          [
+                                                                          'avgRating']
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          size.height *
+                                                                              0.016,
+                                                                      color: Colors
+                                                                          .red,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
-                                                          Spacer(),
-                                                          Image.asset(
+                                                    Spacer(),
+                                                    couponDetatil == null
+                                                        ? SizedBox()
+                                                        : Image.asset(
                                                             "assets/icons/discount_icon.jpg",
                                                             height:
                                                                 size.height *
                                                                     0.02,
                                                           ),
-                                                          Padding(
+                                                    couponDetatil == null
+                                                        ? SizedBox()
+                                                        : Padding(
                                                             padding:
                                                                 const EdgeInsets
                                                                     .only(
@@ -562,9 +585,9 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                       kTextColor),
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ))

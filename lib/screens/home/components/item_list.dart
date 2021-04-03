@@ -23,8 +23,7 @@ class _CategoriesListState extends State<CategoriesList> {
 
   var data = null;
   Future<List<dynamic>> fetchCategories() async {
-    var result =
-        await http.get(APP_ROUTES + 'getCategories?key=STATUS&id=2&status=1');
+    var result = await http.get(APP_ROUTES + 'getCategories?key=ALL');
     data = json.decode(result.body)['data'];
     return data;
   }
@@ -83,9 +82,15 @@ class _CategoriesListState extends State<CategoriesList> {
               future: fetchCategories(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  int legnth;
+                  if (snapshot.data.length > 15) {
+                    legnth = 15;
+                  } else {
+                    legnth = snapshot.data.length;
+                  }
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data.length,
+                    itemCount: legnth,
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
@@ -136,6 +141,11 @@ class _CategoriesListState extends State<CategoriesList> {
                                                 errorWidget:
                                                     (context, url, error) =>
                                                         Icon(Icons.error),
+                                                placeholder: (context, url) =>
+                                                    Image.asset(
+                                                  "assets/images/feasturenttemp.jpeg",
+                                                  fit: BoxFit.cover,
+                                                ),
                                               )
                                             : Image.asset(
                                                 "assets/images/feasturenttemp.jpeg",

@@ -49,23 +49,21 @@ class _HomePageBodyState extends State<HomePageBody> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    radius: size.height * 0.06,
-                    backgroundImage: AssetImage("assets/icons/feasturent.png"),
+                  Container(
+                    height: size.height * 0.1,
+                    width: size.width * 0.5,
+                    child: Image.asset(
+                      "assets/images/feasturent_app_logo.png",
+                    ),
                   ),
                   SizedBox(
-                    height: size.height * 0.02,
+                    height: size.height * 0.01,
                   ),
-                  Text(
-                    '''
-  Feasturent give opportunity 
-  to Experience the 
-  great food
-                       ''',
-                  )
+                  Text("Feasturent give opportunity"),
+                  Text("to Experience the "),
+                  Text("great food"),
                 ],
               ),
             ),
