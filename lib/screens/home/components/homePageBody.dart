@@ -17,7 +17,6 @@ class _HomePageBodyState extends State<HomePageBody> {
     super.initState();
   }
 
-  ScrollController _scrollController = ScrollController();
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   Future<Null> refreshList() async {
@@ -37,7 +36,6 @@ class _HomePageBodyState extends State<HomePageBody> {
       key: refreshKey,
       onRefresh: refreshList,
       child: ListView(
-        controller: _scrollController,
         children: [
           DiscountCard(),
           CategoryList(),

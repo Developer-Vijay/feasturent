@@ -25,8 +25,7 @@ class _AboutState extends State<About> {
         ], color: Colors.white, borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               Text(
                 "About",
@@ -39,7 +38,7 @@ class _AboutState extends State<About> {
                 height: 10,
               ),
               Text(
-              " ${data['name']} is located in ${data['Address']['address']}",
+                " ${data['name']} is located in ${data['Address']['address']}",
                 maxLines: 5,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),

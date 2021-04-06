@@ -54,53 +54,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildloginCheck() {
     return ListView(
       children: <Widget>[
-        Expanded(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: kSpacingUnit.w * 8,
+        Column(
+          children: <Widget>[
+            SizedBox(
+              height: kSpacingUnit.w * 5,
+            ),
+            Container(
+              height: kSpacingUnit.w * 10,
+              width: kSpacingUnit.w * 10,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Color(0xffF8F9FE),
+                child: ClipOval(
+                    child: photo == null
+                        ? Image.asset("assets/images/loginuser.png")
+                        : CachedNetworkImage(
+                            imageUrl: photo,
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          )),
               ),
-              Container(
-                height: kSpacingUnit.w * 10,
-                width: kSpacingUnit.w * 10,
-                child: Stack(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Color(0xffF8F9FE),
-                      child: ClipOval(
-                          child: photo == null
-                              ? Image.asset("assets/images/loginuser.png")
-                              : CachedNetworkImage(
-                                  imageUrl: photo,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                )),
-                    ),
-                    //CachedNetworkImageProvider('$photo')),
-                  ],
-                ),
-              ),
-              SizedBox(height: kSpacingUnit.w * 2),
-              Container(
-                  child: userName == null
-                      ? Text(
-                          "UserName",
-                          style: kTitleTextStyle,
-                        )
-                      : Text("$userName")),
-              SizedBox(height: kSpacingUnit.w * 2),
-              Container(
-                  child: emailid == null
-                      ? Text(
-                          "Email Id",
-                          style: kTitleTextStyle,
-                        )
-                      : Text("$emailid")),
-              SizedBox(height: kSpacingUnit.w * 2),
-            ],
-          ),
+              //CachedNetworkImageProvider('$photo')),
+            ),
+            SizedBox(height: kSpacingUnit.w * 2),
+            Container(
+                child: userName == null
+                    ? Text(
+                        "UserName",
+                        style: kTitleTextStyle,
+                      )
+                    : Text("$userName")),
+            SizedBox(height: kSpacingUnit.w * 2),
+            Container(
+                child: emailid == null
+                    ? Text(
+                        "Email Id",
+                        style: kTitleTextStyle,
+                      )
+                    : Text("$emailid")),
+            SizedBox(height: kSpacingUnit.w * 2),
+          ],
         ),
         ProfileListItem(
             icon: LineAwesomeIcons.user_shield,

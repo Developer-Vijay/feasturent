@@ -30,28 +30,6 @@ class _AppDrawerState extends State<AppDrawer> {
   @override
   void initState() {
     super.initState();
-    getWalletDetaile();
-    setState(() {
-      datastatus = widget.cStatus;
-    });
-  }
-
-  int datastatus;
-  var walletdetails;
-  Future getWalletDetaile() async {
-    final prefs = await SharedPreferences.getInstance();
-    var userid = prefs.getInt('userId');
-    String _authorization = prefs.getString('sessionToken');
-    var result = await http.get(
-        'http://18.223.208.214/api/payment/userWalletAndTransaction/$userid',
-        headers: {
-          "Content-type": "application/json",
-          "authorization": _authorization,
-        });
-    walletdetails = json.decode(result.body)['data'];
-    print(walletdetails);
-
-    return walletdetails;
   }
 
   bool isenabled = false;

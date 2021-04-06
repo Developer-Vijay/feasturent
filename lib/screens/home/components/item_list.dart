@@ -23,6 +23,9 @@ class _CategoriesListState extends State<CategoriesList> {
 
   var data = null;
   Future<List<dynamic>> fetchCategories() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  hitting api category");
+
     var result = await http.get(APP_ROUTES + 'getCategories?key=ALL');
     data = json.decode(result.body)['data'];
     return data;

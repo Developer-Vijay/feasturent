@@ -23,9 +23,13 @@ class _DiscountCardState extends State<DiscountCard> {
   int dataLenght;
 
   Future fetchHomeSliderLength() async {
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api");
+
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
     var data = json.decode(result.body)['data'];
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    print(data);
     if (data.isEmpty) {
       if (mounted) {
         setState(() {
@@ -58,6 +62,8 @@ class _DiscountCardState extends State<DiscountCard> {
   var homeOffers;
 
   Future<List<dynamic>> fetchHomeBanner() async {
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api");
+
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
     homeOffers = json.decode(result.body)['data'];
