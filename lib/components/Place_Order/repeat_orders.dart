@@ -436,31 +436,28 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: itemData1['orderStatus'] ==
                                               "DELIVERED"
-                                          ? Expanded(
-                                              flex: 1,
-                                              child: OutlineButton(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14)),
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      "Repeat Order",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ],
-                                                ),
-                                                textColor: Colors.blue,
-                                                borderSide: BorderSide(
-                                                    color: Colors.green,
-                                                    width: 2),
-                                                onPressed: () {
-                                                  checkout();
-                                                },
+                                          ? OutlineButton(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          14)),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    "Repeat Order",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
+                                              textColor: Colors.blue,
+                                              borderSide: BorderSide(
+                                                  color: Colors.green,
+                                                  width: 2),
+                                              onPressed: () {
+                                                checkout();
+                                              },
                                             )
                                           : SizedBox()),
                                   Padding(

@@ -12,7 +12,7 @@ int registerdUserId;
 const kBackgroundColor = Color(0xFFE4F0FA);
 
 //Api's
-const API_BASE_URL = 'http://18.223.208.214/api/';
+const API_BASE_URL = 'https://feasturent.in/api/';
 const AUTH_API = API_BASE_URL + 'auth/';
 const USER_API = API_BASE_URL + 'users/';
 const COMMON_API = API_BASE_URL + 'common/';

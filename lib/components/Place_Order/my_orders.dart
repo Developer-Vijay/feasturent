@@ -23,7 +23,6 @@ class _MyOrdersState extends State<MyOrders> {
   @override
   void initState() {
     super.initState();
-    refreshList();
   }
 
   List<String> cancelreason = [];

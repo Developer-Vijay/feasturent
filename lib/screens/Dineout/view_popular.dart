@@ -30,43 +30,43 @@ class ViewAllPopular extends StatelessWidget {
                                   data: data[index],
                                 ))));
                   },
-                  // child: Container(
-                  //   height: sized.height * 0.195,
-                  //   width: sized.height * 0.22,
-                  //   decoration: BoxDecoration(
-                  //     boxShadow: [
-                  //       BoxShadow(color: Colors.lightBlue[100], blurRadius: 20)
-                  //     ],
-                  //     borderRadius: BorderRadius.circular(10),
-                  //   ),
-                  //   child: data[index]['dineoutImages'].isNotEmpty
-                  //       ? CachedNetworkImage(
-                  //           imageUrl: S3_BASE_PATH +
-                  //               data[index]['dineoutImages'][0]['image'],
-                  //           imageBuilder: (context, imageProvider) => Container(
-                  //             height: sized.height * 0.195,
-                  //             width: sized.height * 0.22,
-                  //             decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(10),
-                  //               image: DecorationImage(
-                  //                   image: imageProvider, fit: BoxFit.cover),
-                  //             ),
-                  //           ),
-                  //           placeholder: (context, url) =>
-                  //               CircularProgressIndicator(),
-                  //           errorWidget: (context, url, error) =>
-                  //               Icon(Icons.error),
-                  //         )
-                  //       : Container(
-                  //           decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(10),
-                  //           ),
-                  //           child: Image.asset(
-                  //             "assets/images/feasturenttemp.jpeg",
-                  //             fit: BoxFit.cover,
-                  //           ),
-                  //         ),
-                  // ),
+                  child: Container(
+                    height: sized.height * 0.195,
+                    width: sized.height * 0.22,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(color: Colors.lightBlue[100], blurRadius: 20)
+                      ],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: data[index]['dineoutImages'] != null
+                        ? CachedNetworkImage(
+                            imageUrl: S3_BASE_PATH +
+                                data[index]['dineoutImages'][0]['image'],
+                            imageBuilder: (context, imageProvider) => Container(
+                              height: sized.height * 0.195,
+                              width: sized.height * 0.22,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
+                            ),
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          )
+                        : Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Image.asset(
+                              "assets/images/feasturenttemp.jpeg",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),

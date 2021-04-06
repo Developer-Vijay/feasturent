@@ -8,6 +8,7 @@ class CategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 categorylist");
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(

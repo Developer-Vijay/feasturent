@@ -44,7 +44,7 @@ class _PopularListState extends State<PopularList> {
       }
       print("data not here");
     } else {
-      print("data here");
+      print("data her e");
       if (data[0]['status'] == true) {
         if (mounted) {
           setState(() {
