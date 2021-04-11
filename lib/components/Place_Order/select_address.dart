@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:feasturent_costomer_app/components/AddressBook/addAddress.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/add_address.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
@@ -19,37 +21,123 @@ class _SelectAddressState extends State<SelectAddress> {
   var addressid;
   var addressdata;
   String _authorization;
-  var ordersData;
-  var total = 0;
+  int ordersData;
+  // var total = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   Future<void> refreshList() async {
     refreshKey.currentState.show();
     await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      getAddress();
-    });
+    // setState(() {
+    //   getAddress();
+    // });
     return null;
+  }
+
+  @override
+  void initState() {
+    getAddresslength();
+    super.initState();
   }
 
   Future deleteAddress(index, String id) async {
     final prefs = await SharedPreferences.getInstance();
-    addressid = ordersData[index]['id'];
+    addressid = 1;
 
     userid2 = prefs.getInt('userId');
-
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  delete orderaddress");
     _authorization = prefs.getString('sessionToken');
+    String _refreshtoken = prefs.getString('refreshToken');
+
     var response =
         await http.delete(USER_API + 'deleteOrderAdress/$addressid', headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
+      "refreshtoken": _refreshtoken,
     });
     if (response.statusCode == 200) {
-      Fluttertoast.showToast(msg: response.body);
+      Fluttertoast.showToast(msg: "Address deleted sucessfully");
       print(response.body);
 
       return response.body;
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       Fluttertoast.showToast(msg: "Unable to delete");
+    }
+  }
+
+  getAddresslength() async {
+    final prefs = await SharedPreferences.getInstance();
+    userid = prefs.getInt('userId');
+    _authorization = prefs.getString('sessionToken');
+    String _refreshtoken = prefs.getString('refreshToken');
+
+    print(userid);
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getorderaddress");
+    var response = await http.get(
+        USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid',
+        headers: {
+          "Content-type": "application/json",
+          "authorization": _authorization,
+          "refreshtoken": _refreshtoken,
+        });
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body)['data'];
+      if (mounted) {
+        ordersData = data.length;
+
+        setState(() {});
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        print(ordersData);
+      } else {
+        print("donr");
+      }
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     }
   }
 
@@ -57,15 +145,46 @@ class _SelectAddressState extends State<SelectAddress> {
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
+    String _refreshtoken = prefs.getString('refreshToken');
+
     print(userid);
-    var response = await http
-        .get(USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid', headers: {
-      "Content-type": "application/json",
-      "authorization": _authorization,
-    });
-    ordersData = json.decode(response.body)['data'];
-    total = ordersData.length;
-    return ordersData;
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getorderaddress");
+    var response = await http.get(
+        USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid',
+        headers: {
+          "Content-type": "application/json",
+          "authorization": _authorization,
+          "refreshtoken": _refreshtoken,
+        });
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body)['data'];
+
+      return data;
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
   }
 
   @override
@@ -121,40 +240,50 @@ class _SelectAddressState extends State<SelectAddress> {
                 height: 7,
                 color: Colors.grey,
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddAdresses()));
-                },
-                child: Container(
-                  height: size.height * 0.06,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: Colors.red,
-                          size: size.height * 0.025,
+              ordersData == null
+                  ? SizedBox()
+                  : ordersData >= 10
+                      ? SizedBox()
+                      : Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddAdress()));
+                              },
+                              child: Container(
+                                height: size.height * 0.06,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.add,
+                                        color: Colors.red,
+                                        size: size.height * 0.025,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        "Add Address",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: size.height * 0.0225),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              height: 7,
+                              color: Colors.grey,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Add Address",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: size.height * 0.0225),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Divider(
-                height: 7,
-                color: Colors.grey,
-              ),
               Row(
                 children: [
                   Container(
@@ -179,28 +308,13 @@ class _SelectAddressState extends State<SelectAddress> {
                 onRefresh: refreshList,
                 child: FutureBuilder<List<dynamic>>(
                     future: getAddress(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        if (ordersData.length >= 10) {
-                          total = 10;
-                        } else if (ordersData.length <= 10) {
-                          total = ordersData.length;
-                        }
                         return ListView.builder(
-                            itemCount: total,
+                            itemCount: snapshot.data.length,
                             itemBuilder: (context, index) {
                               return InkWell(
                                   onTap: () {
-                                    if (snapshot.data[index]['addressFor'] ==
-                                        "HOME") {
-                                      setState(() {
-                                        addresstype = 0;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        addresstype = 1;
-                                      });
-                                    }
                                     setState(() {
                                       addressID = snapshot.data[index]['id'];
                                       userNameWithNumber =
@@ -251,7 +365,7 @@ class _SelectAddressState extends State<SelectAddress> {
                                                                     ['id']
                                                                 .toString());
 
-                                                        getAddress();
+                                                        // refreshList();
                                                       });
                                                     }
                                                   },
@@ -291,29 +405,23 @@ class _SelectAddressState extends State<SelectAddress> {
                                                       const EdgeInsets.only(
                                                           right: 20),
                                                   child: Container(
-                                                    padding:
-                                                        const EdgeInsets.all(7),
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.lightBlue,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                    child: snapshot.data[index][
-                                                                'addressFor'] ==
-                                                            null
-                                                        ? Text(
-                                                            "Home",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          )
-                                                        : Text(
-                                                            "office",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                  ),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              7),
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Colors.lightBlue,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: Text(
+                                                        snapshot.data[index]
+                                                            ['addressFor'],
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      )),
                                                 ),
                                               ],
                                             ),

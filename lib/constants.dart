@@ -302,3 +302,19 @@ List<CancelOrderList> cancel = [
   CancelOrderList(title: "Mood Changed", value: false),
   CancelOrderList(title: "Hygiene issue", value: false),
 ];
+var donateAmount;
+
+class DonateList {
+  bool value = false;
+  int amount;
+
+  DonateList({this.value, this.amount});
+}
+
+List<DonateList> donate = [
+  DonateList(amount: 5, value: false),
+  DonateList(amount: 10, value: false),
+  DonateList(amount: 20, value: false),
+  DonateList(amount: 50, value: false),
+  DonateList(amount: 100, value: false),
+];

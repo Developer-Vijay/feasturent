@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,6 +136,9 @@ class _AddRatingPageState extends State<AddRatingPage> {
       userId = prefs.getInt('userId');
       authorization = prefs.getString('sessionToken');
       refreshToken = prefs.getString('refreshToken');
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  rating reviwe");
+
       var response = await http.post(COMMON_API + 'ratingReview', body: {
         "userId": "$userId",
         "vendorId": "${widget.data['vendorId']}",
@@ -147,6 +152,29 @@ class _AddRatingPageState extends State<AddRatingPage> {
       var responseData = json.decode(response.body);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "${responseData['message']}");
+      } else if (response.statusCode == 401) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove(
+          'name',
+        );
+        prefs.remove('sessionToken');
+        prefs.remove('refreshToken');
+        prefs.remove('userNumber');
+        prefs.remove('userProfile');
+        prefs.remove('customerName');
+        prefs.remove('userId');
+        prefs.remove('loginId');
+        prefs.remove('userEmail');
+        prefs.remove("loginBy");
+        takeUser = false;
+        emailid = null;
+        photo = null;
+        userName = null;
+
+        prefs.setBool("_isAuthenticate", false);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         Fluttertoast.showToast(msg: "${responseData['message']}");
       }

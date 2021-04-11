@@ -32,6 +32,9 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
 
   var restaurantData;
   Future<List<dynamic>> fetchAllRestaurant() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getresturent");
+
     var result = await http.get(
       APP_ROUTES +
           'getRestaurantInfos' +

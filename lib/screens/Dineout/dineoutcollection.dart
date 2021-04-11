@@ -27,6 +27,8 @@ class _CollectionsState extends State<Collections> {
 
   var responseData = null;
   Future<List> getdineouts() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineout");
     var response = await http.get(APP_ROUTES + 'dineout' + '?key=ALL');
     responseData = json.decode(response.body)['data'];
     return responseData;
@@ -34,7 +36,6 @@ class _CollectionsState extends State<Collections> {
 
   @override
   Widget build(BuildContext context) {
-    
     Size size = MediaQuery.of(context).size;
     return Padding(
         padding: const EdgeInsets.all(8.0),

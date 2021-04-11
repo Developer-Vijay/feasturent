@@ -136,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final geopostion = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
+      var speed = geopostion.speed;
       setState(() {
         latitude = geopostion.latitude;
         longitude = geopostion.longitude;
@@ -245,6 +246,9 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       print(takeUser);
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get users form server");
+
       var response = await http.get(
           USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),
           headers: {
@@ -484,9 +488,9 @@ class _HomeScreenState extends State<HomeScreen> {
               index: 0,
               height: sized.height * 0.08,
               items: <Widget>[
-                Icon(
-                  Icons.home_outlined,
-                  size: sized.height * 0.035,
+                SvgPicture.asset(
+                  "assets/icons/house.svg",
+                  height: sized.height * 0.035,
                 ),
                 SvgPicture.asset(
                   "assets/icons/offer_bn_outline.svg",
@@ -497,7 +501,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: sized.height * 0.035,
                 ),
                 SvgPicture.asset(
-                  "assets/icons/person.svg",
+                  "assets/icons/user.svg",
                   height: sized.height * 0.03,
                 ),
               ],

@@ -25,6 +25,9 @@ class _AllResturentState extends State<AllResturent> {
 
   var restaurantData;
   Future<List<dynamic>> fetchAllRestaurant() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
+
     var result = await http.get(
       APP_ROUTES +
           'getRestaurantInfos' +

@@ -68,6 +68,9 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
   var restaurantDataCopy;
   var restaurantMenu;
   Future<List<dynamic>> fetchMenues() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get menues");
+
     var result =
         await http.get(APP_ROUTES + 'getMenues?key=BYCATID&id=' + cateId);
     restaurantMenu = json.decode(result.body)['data'];
@@ -193,6 +196,11 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                                           'itemCount'] *
                                                                       data1[0][
                                                                           'itemPrice']);
+                                                              totalGst = totalGst -
+                                                                  (data1[0][
+                                                                          'itemCount'] *
+                                                                      data1[0][
+                                                                          'gst']);
                                                               price = price -
                                                                   (data1[0][
                                                                           'itemCount'] *
@@ -774,7 +782,8 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
           "Add".toString(),
           tpye,
           0,
-          data[index]['restaurantName']);
+          data[index]['restaurantName'],
+          data[index]['gstAmount']);
     });
   }
 

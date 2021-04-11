@@ -122,8 +122,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                 )),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-                left: 12.0, right: 12, top: 12, bottom: 12),
+            padding: const EdgeInsets.all(12),
             child: Container(
               height: size.height * 0.07,
               decoration: BoxDecoration(
@@ -192,6 +191,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                   borderRadius: BorderRadius.circular(10)),
               child: ListView(
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(6.0),
@@ -301,6 +301,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
       };
       var bookbody = json.encode(data);
       print(bookbody);
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  book table");
 
       var response =
           await http.post(APP_ROUTES + 'bookTable', body: bookbody, headers: {

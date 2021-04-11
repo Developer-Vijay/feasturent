@@ -1,19 +1,14 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/Bottomsheet/addbar.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/WishList/WishListDataBase/wishlist_service.dart';
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/screens/profile/components/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:http/http.dart' as http;
 
 class CategoryDetailPage extends StatefulWidget {
   final menuData;
@@ -496,7 +491,8 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
           "Add".toString(),
           tpye,
           0,
-          datamenu['restaurantName']);
+          datamenu['restaurantName'],
+          datamenu['gstAmount']);
     });
   }
 

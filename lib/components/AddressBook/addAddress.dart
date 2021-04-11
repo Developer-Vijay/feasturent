@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -621,10 +623,12 @@ class _AddAdressState extends State<AddAdress> {
       });
     }
 
-    if (_isValidate==true) {
+    if (_isValidate == true) {
       final prefs = await SharedPreferences.getInstance();
       _authorization = prefs.getString('sessionToken');
       userid = prefs.getInt('userId');
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  addOrderAddress");
 
       _refreshtoken = prefs.getString('refreshToken');
       var response = await http.post(USER_API + 'addOrderAddress', body: {
@@ -648,6 +652,29 @@ class _AddAdressState extends State<AddAdress> {
         Fluttertoast.showToast(msg: responsData['message']);
         Navigator.pop(
             context, MaterialPageRoute(builder: (context) => AddressList()));
+      } else if (response.statusCode == 401) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove(
+          'name',
+        );
+        prefs.remove('sessionToken');
+        prefs.remove('refreshToken');
+        prefs.remove('userNumber');
+        prefs.remove('userProfile');
+        prefs.remove('customerName');
+        prefs.remove('userId');
+        prefs.remove('loginId');
+        prefs.remove('userEmail');
+        prefs.remove("loginBy");
+        takeUser = false;
+        emailid = null;
+        photo = null;
+        userName = null;
+
+        prefs.setBool("_isAuthenticate", false);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         setState(() {
           Fluttertoast.showToast(msg: responsData['message']);

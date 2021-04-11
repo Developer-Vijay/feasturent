@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 import '../../constants.dart';
 

@@ -32,50 +32,107 @@ class _CartScreenState extends State<CartScreen> {
     getList();
   }
 
+  int deliverytime = 0;
   var resturantDataStatus;
   Future fetchRestaurantStatus(id) async {
-    print("****************** API hitting*********************");
+    print("******************  get resturent API hitting*********************");
     var result = await http.get(
         APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString());
-    var hours = DateTime.now().hour;
 
-    var mintue = DateTime.now().minute;
-    // var timeData = "$hours:$mintue" ;
-    // print(timeData);
-    setState(() {
-      resturantStatus = json.decode(result.body)['data'];
-      if (resturantStatus.isEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback(
-            (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-      } else {
-        if (resturantStatus['vendorInfo'][0]['user']['Setting'] == null) {
-          status = false;
+    if (mounted) {
+      setState(() {
+        resturantStatus = json.decode(result.body)['data'];
+
+        if (resturantStatus.isEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) =>
               _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
         } else {
-          status =
-              resturantStatus['vendorInfo'][0]['user']['Setting']['isActive'];
-          if (status == false) {
+          if (resturantStatus['vendorInfo'][0]['user']['Setting'] == null) {
+            status = false;
+            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
           } else {
-            setState(() {
-              resturantDataStatus = resturantStatus['vendorInfo'][0]['user'];
-            });
-            showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: (context) => PlaceOrder(
-                      data: resturantDataStatus,
-                    ));
+            status =
+                resturantStatus['vendorInfo'][0]['user']['Setting']['isActive'];
+            if (status == false) {
+            } else {
+              checkMenuAvailability(resturantStatus['vendorInfo'][0]['Menus']);
+
+              setState(() {
+                resturantDataStatus = resturantStatus['vendorInfo'][0]['user'];
+              });
+              print("#################### delivery time  $deliverytime");
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => PlaceOrder(
+                        deliveryTime: deliverytime,
+                        data: resturantDataStatus,
+                      ));
+            }
           }
         }
-      }
-    });
-    setState(() {
-      statusno = 0;
-    });
+      });
+      setState(() {
+        statusno = 0;
+      });
+    }
     // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
     return resturantStatus;
+  }
+
+  checkMenuAvailability(resData) async {
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    print("##########################################################");
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    print(resData);
+    int k = idCheck.length;
+    for (int i = 0; i <= k - 1; i++) {
+      int data = idCheck[i];
+      await services.sqliteIDquery(data).then((value) => fun(value));
+      int menuID;
+      setState(() {
+        menuID = data1[0]['menuItemId'];
+      });
+      // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      // print(
+      //     "################################     storage         $menuID         ##########################");
+      // print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      for (int j = 0; j <= resData.length - 1; j++) {
+        // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        // print(
+        //     "################################     server         ${resData[j]['id']}         ##########################");
+        // print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        if (resData[j]['id'] == menuID) {
+          int time = resData[j]['deliveryTime'];
+          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ $time");
+          if (time > deliverytime) {
+            setState(() {
+              deliverytime = time;
+            });
+          }
+          print(
+              "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   availabe  &&&&&&&&&&&&&&");
+
+          Fluttertoast.showToast(msg: " availabe");
+        } else {
+          print(
+              "&&&&&&&&&&&&&&&&&&&&&&&& Not availabe  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+
+          Fluttertoast.showToast(msg: "Not availabe");
+        }
+      }
+
+      print(
+          "***************************final menuID id $menuID*************************");
+    }
+  }
+
+  fun(value) {
+    setState(() {
+      data1 = value;
+    });
   }
 
   int statusno = 0;
@@ -193,6 +250,9 @@ class _CartScreenState extends State<CartScreen> {
                                         onTap: () {
                                           if (idCheck.isEmpty) {
                                             setState(() {
+                                              totalGst = totalGst +
+                                                  (users[index].itemCount *
+                                                      users[index].gst);
                                               totalPrice = totalPrice +
                                                   (users[index].itemCount *
                                                       users[index].itemPrice);
@@ -206,6 +266,9 @@ class _CartScreenState extends State<CartScreen> {
                                             if (idCheck
                                                 .contains(users[index].id)) {
                                               setState(() {
+                                                totalGst = totalGst -
+                                                    (users[index].itemCount *
+                                                        users[index].gst);
                                                 totalPrice = totalPrice -
                                                     (users[index].itemCount *
                                                         users[index].itemPrice);
@@ -217,6 +280,9 @@ class _CartScreenState extends State<CartScreen> {
                                               });
                                             } else {
                                               setState(() {
+                                                totalGst = totalGst +
+                                                    (users[index].itemCount *
+                                                        users[index].gst);
                                                 totalPrice = totalPrice +
                                                     (users[index].itemCount *
                                                         users[index].itemPrice);
@@ -297,6 +363,9 @@ class _CartScreenState extends State<CartScreen> {
                                                                       countSum =
                                                                           countSum -
                                                                               users[index].itemCount;
+                                                                      totalGst =
+                                                                          totalGst -
+                                                                              (users[index].itemCount * users[index].gst);
                                                                       totalPrice =
                                                                           totalPrice -
                                                                               (users[index].itemCount * users[index].itemPrice);
@@ -597,6 +666,9 @@ class _CartScreenState extends State<CartScreen> {
                                                                   sumtotal = sumtotal -
                                                                       users[index]
                                                                           .itemPrice;
+                                                                  totalGst = totalGst -
+                                                                      users[index]
+                                                                          .gst;
                                                                   totalPrice =
                                                                       totalPrice -
                                                                           users[index]
@@ -655,6 +727,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                               setState(() {
                                                                                 price = price - users[index].itemPrice;
                                                                                 countSum = countSum - users[index].itemCount;
+                                                                                totalGst = totalGst - users[index].gst;
                                                                                 totalPrice = totalPrice - users[index].itemPrice;
                                                                                 checkitem.remove(users[index].menuItemId.toString());
                                                                                 cart.setStringList('addedtocart', checkitem);
@@ -786,6 +859,10 @@ class _CartScreenState extends State<CartScreen> {
                                                                       .itemPrice;
 
                                                               countSum++;
+                                                              totalGst =
+                                                                  totalGst +
+                                                                      users[index]
+                                                                          .gst;
                                                               totalPrice =
                                                                   totalPrice +
                                                                       users[index]
@@ -1067,9 +1144,5 @@ class _CartScreenState extends State<CartScreen> {
         checkdata = 0;
       });
     }
-  }
-
-  fun(value) {
-    var data = value;
   }
 }

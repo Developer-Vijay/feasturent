@@ -30,8 +30,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
       physics: NeverScrollableScrollPhysics(),
       children: [
         Padding(
-          padding:
-              const EdgeInsets.only(left: 8, right: 30, top: 20, bottom: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
           child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -70,7 +69,6 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                       height: 4,
                     ),
                     Row(
-                      
                       children: [
                         Container(
                             child: data['avgCost'] != null
@@ -161,7 +159,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
             return Padding(
               padding: const EdgeInsets.only(
                 left: 8,
-                right: 30,
+                right: 8,
               ),
               child: Container(
                 decoration: BoxDecoration(
@@ -205,7 +203,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
           height: 30,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 8, right: 30),
+          padding: const EdgeInsets.only(left: 8, right: 8),
           child: Container(
               height: 60,
               decoration: BoxDecoration(
@@ -236,7 +234,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                     ),
                   ),
                   SizedBox(
-                    width: 40,
+                    width: size.width * 0.008,
                   ),
                   Container(
                       child: data['Address']['address'] != null

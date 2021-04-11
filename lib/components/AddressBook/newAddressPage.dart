@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/AddressBook/addAddress.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,7 +30,7 @@ class _AddressListState extends State<AddressList> {
     refreshKey.currentState.show();
     await Future.delayed(Duration(seconds: 2));
     setState(() {
-      myfuture = getAddress();
+      myfuture = getAddress(context);
     });
     return null;
   }
@@ -41,45 +43,103 @@ class _AddressListState extends State<AddressList> {
   var addressid;
   var addressdata;
 
-  Future deleteAddress(index, String id) async {
+  Future deleteAddress(index, String id, context) async {
     final prefs = await SharedPreferences.getInstance();
     addressid = ordersData[index]['id'];
 
     userid2 = prefs.getInt('userId');
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  deletOrderAddress");
+    String _refreshtoken = prefs.getString('refreshToken');
 
     _authorization = prefs.getString('sessionToken');
     var response =
         await http.delete(USER_API + 'deleteOrderAdress/$addressid', headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
+      "refreshtoken": _refreshtoken,
     });
     if (response.statusCode == 200) {
-      Fluttertoast.showToast(msg: response.body);
+      Fluttertoast.showToast(msg: "Address deleted sucessfully");
       print(response.body);
 
       return response.body;
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       Fluttertoast.showToast(msg: "Unable to delete");
     }
   }
 
   _getdata() async {
-    return await getAddress();
+    return await getAddress(context);
   }
 
-  Future<dynamic> getAddress() async {
+  Future<dynamic> getAddress(context) async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getOrderAddress");
+
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
+    String _refreshtoken = prefs.getString('refreshToken');
+
     _authorization = prefs.getString('sessionToken');
     var response = await http.get(
         USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid',
         headers: {
           "Content-type": "application/json",
           "authorization": _authorization,
+          "refreshtoken": _refreshtoken,
         });
     ordersData = json.decode(response.body)['data'];
     total = ordersData.length;
-    return ordersData;
+    if (response.statusCode == 200) {
+      return ordersData;
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
   }
 
   var ordersData;
@@ -240,9 +300,10 @@ class _AddressListState extends State<AddressList> {
                                                               snapshot
                                                                   .data[index]
                                                                       ['id']
-                                                                  .toString());
-                                                          myfuture =
-                                                              getAddress();
+                                                                  .toString(),
+                                                              context);
+                                                          myfuture = getAddress(
+                                                              context);
                                                         });
                                                       }
                                                     },
