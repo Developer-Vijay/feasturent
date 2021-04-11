@@ -774,7 +774,8 @@ class _WishlistState extends State<Wishlist> {
           "Add".toString(),
           tpye,
           0,
-          index.vendorName);
+          index.vendorName,
+          62);
     });
   }
 

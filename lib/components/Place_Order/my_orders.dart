@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.dart';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/repeat_orders.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -54,17 +56,43 @@ class _MyOrdersState extends State<MyOrders> {
     final prefs = await SharedPreferences.getInstance();
     var userid2 = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
+    String _refreshtoken = prefs.getString('refreshToken');
 
     var result = await http
         .get(APP_ROUTES + 'userOrders' + '?key=BYUSER&id=$userid2', headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
+      "refreshtoken": _refreshtoken,
     });
     ordersData = json.decode(result.body)['data'];
     datalength = ordersData.length;
     // refresh();
+    if (result.statusCode == 200) {
+      return ordersData;
+    } else if (result.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
 
-    return ordersData;
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
   }
 
   Timer placeTimer;
@@ -204,6 +232,11 @@ class _MyOrdersState extends State<MyOrders> {
                                                   .getString('sessionToken');
                                               _authorization = prefs
                                                   .getString('sessionToken');
+                                              String _refreshtoken = prefs
+                                                  .getString('refreshToken');
+
+                                              print(
+                                                  "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
 
                                               var response = await http.post(
                                                   APP_ROUTES +
@@ -211,13 +244,45 @@ class _MyOrdersState extends State<MyOrders> {
                                                       '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata',
                                                   headers: {
                                                     "authorization":
-                                                        _authorization
+                                                        _authorization,
+                                                    "refreshtoken":
+                                                        _refreshtoken,
                                                   });
                                               if (response.statusCode == 200) {
                                                 Fluttertoast.showToast(
                                                     msg: "ordercancelled");
                                                 Navigator.pop(context);
                                                 refreshList();
+                                              } else if (response.statusCode ==
+                                                  401) {
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.remove(
+                                                  'name',
+                                                );
+                                                prefs.remove('sessionToken');
+                                                prefs.remove('refreshToken');
+                                                prefs.remove('userNumber');
+                                                prefs.remove('userProfile');
+                                                prefs.remove('customerName');
+                                                prefs.remove('userId');
+                                                prefs.remove('loginId');
+                                                prefs.remove('userEmail');
+                                                prefs.remove("loginBy");
+                                                takeUser = false;
+                                                emailid = null;
+                                                photo = null;
+                                                userName = null;
+
+                                                prefs.setBool(
+                                                    "_isAuthenticate", false);
+
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LoginPage()));
                                               } else {
                                                 Fluttertoast.showToast(
                                                     msg:

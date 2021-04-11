@@ -683,7 +683,8 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
           "Add".toString(),
           tpye,
           0,
-          menuData['name']);
+          menuData['name'],
+          menuData['gstAmount']);
     });
   }
 

@@ -21,10 +21,12 @@ class _PopularListState extends State<PopularList> {
 
   var data = null;
   Future<List<dynamic>> fetchPopular() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getpopular menues");
+
     var result = await http.get(APP_ROUTES + 'getPopularMenues');
     data = json.decode(result.body)['data'];
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ $data");
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     return data;
   }
 

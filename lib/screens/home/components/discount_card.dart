@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -81,108 +81,67 @@ class _DiscountCardState extends State<DiscountCard> {
   Widget build(BuildContext context) {
     Size sized = MediaQuery.of(context).size;
     return dataLenght != 0
-        ? Center(
+        ? Container(
             child: FutureBuilder<List<dynamic>>(
                 future: fetchHomeBanner(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      width: double.infinity,
+                      margin: EdgeInsets.only(
+                        left: sized.width * 0.03,
+                        right: sized.width * 0.03,
+                      ),
                       height: sized.height * 0.22,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: CachedNetworkImageProvider(
-                              S3_BASE_PATH +
-                                  snapshot.data[0]['OffersAndCoupon']['image'],
-                            )),
-                      ),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFFFF961F).withOpacity(0.4),
-                              kPrimaryColor.withOpacity(0.3),
-                            ],
-                          ),
+                          borderRadius: BorderRadius.circular(10)),
+                      width: MediaQuery.of(context).size.width,
+                      child: Swiper(
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            padding: EdgeInsets.only(right: 5),
+                            width: double.infinity,
+                            height: sized.height * 0.22,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: CachedNetworkImageProvider(
+                                    S3_BASE_PATH +
+                                        snapshot.data[index]['OffersAndCoupon']
+                                            ['image'],
+                                  )),
+                            ),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFFF961F).withOpacity(0.4),
+                                    kPrimaryColor.withOpacity(0.3),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        pagination: SwiperPagination(
+                          alignment: Alignment.bottomCenter,
+                          builder: DotSwiperPaginationBuilder(
+                              color: Colors.grey[300], size: 6, activeSize: 12),
                         ),
-                        // child: Padding(
-                        //   padding: const EdgeInsets.all(20.0),
-                        //   child: Row(
-                        //     children: <Widget>[
-                        //       Expanded(flex: 1, child: SizedBox()),
-                        //       Expanded(
-                        //         flex: 1,
-                        //         child: RichText(
-                        //           text: TextSpan(
-                        //             style: TextStyle(color: Colors.white),
-                        //             children: [
-                        //               TextSpan(
-                        //                 text:
-                        //                     "${snapshot.data[0]['OffersAndCoupon']['title']} \n",
-                        //                 style: TextStyle(
-                        //                   fontSize: sized.height * 0.0275,
-                        //                 ),
-                        //               ),
-                        //               TextSpan(
-                        //                 text: snapshot.data[0]
-                        //                                 ['OffersAndCoupon']
-                        //                             ['couponDiscountType'] ==
-                        //                         "PERCENT"
-                        //                     ? ""
-                        //                     : "₹",
-                        //                 style: TextStyle(
-                        //                   fontSize: sized.height * 0.06,
-                        //                   fontWeight: FontWeight.bold,
-                        //                 ),
-                        //               ),
-                        //               TextSpan(
-                        //                 text: snapshot.data[0]
-                        //                         ['OffersAndCoupon']
-                        //                         ['couponDiscount']
-                        //                     .toString(),
-                        //                 style: TextStyle(
-                        //                   fontSize: sized.height * 0.06,
-                        //                   fontWeight: FontWeight.bold,
-                        //                 ),
-                        //               ),
-                        //               TextSpan(
-                        //                 text: snapshot.data[0]
-                        //                                 ['OffersAndCoupon']
-                        //                             ['couponDiscountType'] ==
-                        //                         "PERCENT"
-                        //                     ? "%\n"
-                        //                     : "\n",
-                        //                 style: TextStyle(
-                        //                   fontSize: sized.height * 0.06,
-                        //                   fontWeight: FontWeight.bold,
-                        //                 ),
-                        //               ),
-                        //               TextSpan(
-                        //                 text:
-                        //                     "${snapshot.data[0]['OffersAndCoupon']['description']} \n",
-                        //                 style: TextStyle(
-                        //                   fontSize: sized.height * 0.015,
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+                        itemCount: snapshot.data.length,
+                        itemWidth: 300,
+                        layout: SwiperLayout.DEFAULT,
                       ),
                     );
                   } else {
-                    return Padding(
-                        padding: EdgeInsets.only(top: 50, bottom: 50),
-                        child: CircularProgressIndicator());
+                    return Center(
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 50, bottom: 50),
+                          child: CircularProgressIndicator()),
+                    );
                   }
                 }))
-        : SizedBox();
+        : Center(child: SizedBox());
   }
 }

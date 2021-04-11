@@ -35,6 +35,9 @@ class _OtpCheckerState extends State<OtpChecker> {
   TextEditingController _otpController = new TextEditingController();
   //Verify user otp
   Future<void> _verifyOtp() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  verify otp");
+
     print("approved");
     var response = await http.post(AUTH_API + 'verifyOtp', body: {
       'otp': _otpController.text,
@@ -56,6 +59,9 @@ class _OtpCheckerState extends State<OtpChecker> {
 
   Future<void> resendtheotp() async {
     print(widget.resgUserId);
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  resend otp");
+
     var response = await http.get(
       AUTH_API + 'resendOtp/' + widget.resgUserId.toString(),
     );

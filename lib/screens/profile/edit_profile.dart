@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +21,7 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   File _image;
   var photo;
-  var emailid;
+  var emailidD;
   int user;
   var username;
   int userid;
@@ -43,7 +45,7 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       var takeUser = prefs.getString('loginBy');
       print(takeUser);
-      emailid = prefs.getString('userEmail');
+      emailidD = prefs.getString('userEmail');
       photo = prefs.getString('userProfile');
       username = prefs.getString('name');
       userid = prefs.getInt('userId');
@@ -274,7 +276,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: heightsize,
                   ),
-                   // Last Name TextField
+                  // Last Name TextField
                   Container(
                     margin: EdgeInsets.only(
                         left: leftRightMargin, right: leftRightMargin),
@@ -351,7 +353,8 @@ class _EditProfileState extends State<EditProfile> {
                       decoration: InputDecoration(
                         prefixIcon:
                             Icon(LineAwesomeIcons.phone, size: fontSize),
-                        hintText: phonenumber==null ? "Phone Number" :phonenumber,
+                        hintText:
+                            phonenumber == null ? "Phone Number" : phonenumber,
                         errorText: _phonevalidate,
                         labelStyle: TextStyle(fontSize: labelSize),
                         contentPadding: EdgeInsets.only(
@@ -384,7 +387,7 @@ class _EditProfileState extends State<EditProfile> {
                           Icons.email_outlined,
                           size: size.height * 0.022,
                         ),
-                        hintText: emailid == null ? "Email" : emailid,
+                        hintText: emailidD == null ? "Email" : emailidD,
                         errorText: _emailvalidate,
                         labelStyle: TextStyle(fontSize: labelSize),
                         contentPadding: EdgeInsets.only(
@@ -423,7 +426,6 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                               ),
                               labelText: 'Otp',
-                             
                               labelStyle: TextStyle(fontSize: labelSize),
                               contentPadding: EdgeInsets.only(
                                 top: 10,
@@ -542,16 +544,19 @@ class _EditProfileState extends State<EditProfile> {
     //     _isvalidate = true;
     //   });
     // }
-    if (_isvalidate==false) {
+    if (_isvalidate == false) {
       final prefs = await SharedPreferences.getInstance();
       _authorization = prefs.getString('sessionToken');
       _refreshtoken = prefs.getString('refreshToken');
       user = prefs.getInt('userId');
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  update profile");
+
       var response = await http.put(USER_API + 'updateProfile/$user', body: {
         'name': _nameController.text,
         'lastname': _lastNameController.text,
         'phone': phonenumber,
-        'email': emailid
+        'email': emailidD
       }, headers: {
         "authorization": _authorization,
         "refreshtoken": _refreshtoken
@@ -567,6 +572,29 @@ class _EditProfileState extends State<EditProfile> {
           Fluttertoast.showToast(msg: "${responseData['message']}");
           _isOtpSend = true;
         });
+      } else if (response.statusCode == 401) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove(
+          'name',
+        );
+        prefs.remove('sessionToken');
+        prefs.remove('refreshToken');
+        prefs.remove('userNumber');
+        prefs.remove('userProfile');
+        prefs.remove('customerName');
+        prefs.remove('userId');
+        prefs.remove('loginId');
+        prefs.remove('userEmail');
+        prefs.remove("loginBy");
+        takeUser = false;
+        emailid = null;
+        photo = null;
+        userName = null;
+
+        prefs.setBool("_isAuthenticate", false);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         setState(() {
           Fluttertoast.showToast(msg: "${responseData['message']}");
@@ -582,6 +610,9 @@ class _EditProfileState extends State<EditProfile> {
   Future<void> _verifyOtp() async {
     final prefs = await SharedPreferences.getInstance();
     user = prefs.getInt('userId');
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  profile opt hit api");
+
     var response = await http.post(AUTH_API + 'verifyOtp', body: {
       'otp': _otpController.text,
       'userId': userid.toString(),
@@ -599,6 +630,29 @@ class _EditProfileState extends State<EditProfile> {
           MaterialPageRoute(builder: (context) => UserProfilePage()),
         );
       });
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       Fluttertoast.showToast(msg: "${responseData['message']}");
       print(userid);

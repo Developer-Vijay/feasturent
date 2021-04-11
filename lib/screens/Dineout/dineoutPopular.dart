@@ -15,11 +15,11 @@ class PopularDininingLists extends StatefulWidget {
 }
 
 class _PopularDininingListsState extends State<PopularDininingLists> {
-  final popularimageslist = [
-    "https://media.gettyimages.com/photos/elegant-shopping-mall-picture-id182408547?s=2048x2048",
-    "https://media.gettyimages.com/photos/cafebar-in-moscow-picture-id1158221681?s=2048x2048",
-    "https://media.gettyimages.com/photos/family-in-a-cafe-picture-id1089596346?k=6&m=1089596346&s=612x612&w=0&h=w3lny9JWOUDIBTQbMVNVDBu48KMw316UANpAhPV0zdk=",
-  ];
+  // final popularimageslist = [
+  //   "https://media.gettyimages.com/photos/elegant-shopping-mall-picture-id182408547?s=2048x2048",
+  //   "https://media.gettyimages.com/photos/cafebar-in-moscow-picture-id1158221681?s=2048x2048",
+  //   "https://media.gettyimages.com/photos/family-in-a-cafe-picture-id1089596346?k=6&m=1089596346&s=612x612&w=0&h=w3lny9JWOUDIBTQbMVNVDBu48KMw316UANpAhPV0zdk=",
+  // ];
   @override
   void initState() {
     super.initState();
@@ -28,12 +28,15 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
   int status = 1;
   var responseData1;
   Future<List> getpopulardineouts() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
+
     var response = await http.get(APP_ROUTES + 'popularDineout');
 
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
       print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
       return responseData1;
     }

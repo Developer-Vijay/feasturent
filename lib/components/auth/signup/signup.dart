@@ -320,6 +320,9 @@ class _SignupPageState extends State<SignupPage> {
     }
 
     if (tncValue == true && _isValidate) {
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  signup");
+
       var response = await http.post(USER_API + 'signup', body: {
         'userName': _userNameController.text,
         'password': _passwordController.text,

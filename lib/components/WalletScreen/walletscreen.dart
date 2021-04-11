@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/appDrawer.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
@@ -42,18 +43,45 @@ class _WalletDesignState extends State<WalletDesign> {
     final prefs = await SharedPreferences.getInstance();
     var userid = prefs.getInt('userId');
     String _authorization = prefs.getString('sessionToken');
+    String _refreshtoken = prefs.getString('refreshToken');
+
     print("***************************************");
     print(_authorization);
-    var result = await http.get(
-        'http://18.223.208.214/api/payment/userWalletAndTransaction/$userid',
-        headers: {
-          "Content-type": "application/json",
-          "authorization": _authorization,
-        });
-    var walletdetails = json.decode(result.body)['data'];
-    print(walletdetails);
+    var result = await http
+        .get(PAYMENT_API + 'userWalletAndTransaction/$userid', headers: {
+      "Content-type": "application/json",
+      "authorization": _authorization,
+      "refreshtoken": _refreshtoken,
+    });
+    if (result.statusCode == 200) {
+      var walletdetails = json.decode(result.body)['data'];
+      print(walletdetails);
 
-    return walletdetails;
+      return walletdetails;
+    } else if (result.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
   }
 
   @override

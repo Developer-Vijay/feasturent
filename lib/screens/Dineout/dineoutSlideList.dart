@@ -1,4 +1,3 @@
-import 'package:feasturent_costomer_app/components/Filter/sortAndFilter.dart';
 import 'package:feasturent_costomer_app/screens/home/components/category_item.dart';
 import 'package:flutter/material.dart';
 

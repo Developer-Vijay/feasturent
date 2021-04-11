@@ -86,6 +86,9 @@ class _OfferListPageState extends State<OfferListPage> {
         WidgetsBinding.instance.addPostFrameCallback(
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
+        print(
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturent");
+
         var result = await http.get(APP_ROUTES +
             'getRestaurantInfos' +
             '?key=BYID&id=' +
@@ -95,21 +98,23 @@ class _OfferListPageState extends State<OfferListPage> {
         var mintue = DateTime.now().minute;
         // var timeData = "$hours:$mintue" ;
         // print(timeData);
-        setState(() {
-          resturantStatus = json.decode(result.body)['data'];
-          if (resturantStatus['vendorInfo'][0]['user']['Setting'] == null) {
-            status = false;
-            WidgetsBinding.instance.addPostFrameCallback((_) =>
-                _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-          } else {
-            status =
-                resturantStatus['vendorInfo'][0]['user']['Setting']['isActive'];
-            if (status == false) {
+        if (mounted) {
+          setState(() {
+            resturantStatus = json.decode(result.body)['data'];
+            if (resturantStatus['vendorInfo'][0]['user']['Setting'] == null) {
+              status = false;
               WidgetsBinding.instance.addPostFrameCallback((_) =>
                   _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+            } else {
+              status = resturantStatus['vendorInfo'][0]['user']['Setting']
+                  ['isActive'];
+              if (status == false) {
+                WidgetsBinding.instance.addPostFrameCallback((_) =>
+                    _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+              }
             }
-          }
-        });
+          });
+        }
       }
     }
 
@@ -762,6 +767,11 @@ class _OfferListPageState extends State<OfferListPage> {
                                                               countSum = countSum -
                                                                   data1[0][
                                                                       'itemCount'];
+                                                              totalGst = totalGst -
+                                                                  (data1[0][
+                                                                          'itemCount'] *
+                                                                      data1[0][
+                                                                          'gst']);
                                                               totalPrice = totalPrice -
                                                                   (data1[0][
                                                                           'itemCount'] *
@@ -1355,6 +1365,7 @@ class _OfferListPageState extends State<OfferListPage> {
         tpye,
         0,
         restaurantDataCopy['name'],
+        restaurantDataCopy['Menus'][index]['gstAmount'],
       );
     });
   }

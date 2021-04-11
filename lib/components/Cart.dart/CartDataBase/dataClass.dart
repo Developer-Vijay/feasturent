@@ -10,6 +10,7 @@ class AddToCart {
   int itemtype;
   int isSelected;
   String vendorName;
+  int gst;
 
   AddToCart(
       {this.id,
@@ -22,5 +23,6 @@ class AddToCart {
       this.vendorId,
       this.itemStatus,
       this.isSelected,
-      this.vendorName});
+      this.vendorName,
+      this.gst});
 }

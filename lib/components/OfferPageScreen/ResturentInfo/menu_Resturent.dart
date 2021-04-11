@@ -531,7 +531,8 @@ class _ResturentMenuState extends State<ResturentMenu> {
           "Add".toString(),
           tpye,
           0,
-          restaurantDataCopy['name']);
+          restaurantDataCopy['name'],
+          restaurantDataCopy['Menus'][index]['gstAmount']);
     });
   }
 

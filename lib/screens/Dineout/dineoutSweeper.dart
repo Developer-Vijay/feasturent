@@ -13,6 +13,9 @@ class Swipper extends StatefulWidget {
 class _SwipperState extends State<Swipper> {
   var responseData;
   Future getDineoutBanner() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  utiltsedineout");
+
     var response = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner');
     responseData = jsonDecode(response.body)['data'];

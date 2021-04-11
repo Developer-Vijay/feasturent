@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/otp.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
@@ -240,6 +241,10 @@ class _ResetPasswordState extends State<ResetPassword> {
       var userId = prefs.getInt('userId');
       print(userId);
       var _authorization = prefs.getString('sessionToken');
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  change PAssword");
+      String _refreshtoken = prefs.getString('refreshToken');
+
       final http.Response response =
           await http.post(AUTH_API + 'changePassword', body: {
         'oldPassword': _oldpasswordcontroller.text,
@@ -247,6 +252,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         "userId": "$userId"
       }, headers: {
         "authorization": _authorization,
+        "refreshtoken": _refreshtoken,
       });
       var responsedata = jsonDecode(response.body);
       print("hello");
@@ -256,6 +262,29 @@ class _ResetPasswordState extends State<ResetPassword> {
         Fluttertoast.showToast(msg: responsedata['message'].toString());
         Navigator.pop(context);
         Navigator.pop(context);
+      } else if (response.statusCode == 401) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove(
+          'name',
+        );
+        prefs.remove('sessionToken');
+        prefs.remove('refreshToken');
+        prefs.remove('userNumber');
+        prefs.remove('userProfile');
+        prefs.remove('customerName');
+        prefs.remove('userId');
+        prefs.remove('loginId');
+        prefs.remove('userEmail');
+        prefs.remove("loginBy");
+        takeUser = false;
+        emailid = null;
+        photo = null;
+        userName = null;
+
+        prefs.setBool("_isAuthenticate", false);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         print("error");
         Fluttertoast.showToast(msg: responsedata['message'].toString());

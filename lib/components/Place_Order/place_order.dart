@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/dataClass.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
@@ -14,10 +15,15 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
+import 'offer_bottom_Sheet.dart';
 
 class PlaceOrder extends StatefulWidget {
+  final resturentOfferData;
+  final deliveryTime;
   final data;
-  const PlaceOrder({Key key, this.data}) : super(key: key);
+  const PlaceOrder(
+      {Key key, this.data, this.deliveryTime, this.resturentOfferData})
+      : super(key: key);
   @override
   _PlaceOrderState createState() => _PlaceOrderState();
 }
@@ -33,7 +39,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
     refresh();
     dataForOffer = widget.data;
-    print(dataForOffer);
+    print("*******************************");
     getList();
   }
 
@@ -43,20 +49,21 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
   refresh() {
     placeTimer = Timer.periodic(Duration(seconds: 1), (_) {
+      print(
+          " ############ @@@@@@@@@@@@@@@@@@@@@@@@@@ ##################### @@@@@@@@@@@@@@ ########### @@@@@ timing updating ");
       placeTimer.cancel();
       if (mounted) {
         setState(() {});
-        refresh();
-        // Your state change code goes here
 
+        refresh();
       }
     });
   }
 
   @override
   void dispose() {
-    refresh();
-    placeTimer.cancel();
+    // refresh();
+    // placeTimer.cancel();
     super.dispose();
   }
 
@@ -170,8 +177,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     color: Colors.green,
                     size: size.height * 0.025,
                   ),
-                  Text("Delivery in "),
-                  Text("50 mins."),
+                  Text("Delivery in ETA "),
+                  Text("${widget.deliveryTime} mins."),
                 ],
               ),
             ),
@@ -265,6 +272,11 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                               countSum = countSum -
                                                                   users[index]
                                                                       .itemCount;
+                                                              totalGst = totalGst -
+                                                                  (users[index]
+                                                                          .itemCount *
+                                                                      users[index]
+                                                                          .gst);
                                                               totalPrice = totalPrice -
                                                                   (users[index]
                                                                           .itemCount *
@@ -533,6 +545,11 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                   totalPrice -
                                                                       users[index]
                                                                           .itemPrice;
+                                                              totalGst =
+                                                                  totalGst -
+                                                                      users[index]
+                                                                          .gst;
+
                                                               services.decrementItemCounter(
                                                                   users[index]
                                                                       .id,
@@ -596,6 +613,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                                 countSum - users[index].itemCount;
                                                                             totalPrice =
                                                                                 totalPrice - users[index].itemPrice;
+                                                                            totalGst =
+                                                                                totalGst - users[index].gst;
                                                                             cart.setInt('price',
                                                                                 price);
                                                                             services.deleteUser(users[index].id);
@@ -657,6 +676,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                               totalPrice +
                                                                   users[index]
                                                                       .itemPrice;
+                                                          totalGst = totalGst +
+                                                              users[index].gst;
                                                           cart.setInt(
                                                               'price', price);
                                                         });
@@ -697,6 +718,166 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     height: size.height * 0.15,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Donate",
+                          style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: size.height * 0.03),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                DonationFunction(0);
+                              },
+                              onDoubleTap: () {
+                                setState(() {
+                                  donate[0].value = false;
+                                  donateAmount = 0;
+                                });
+                              },
+                              child: Container(
+                                height: size.height * 0.06,
+                                width: size.width * 0.12,
+                                decoration: BoxDecoration(
+                                  color: donate[0].value == false
+                                      ? Colors.white
+                                      : Colors.blue[200],
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(color: Colors.black54),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "₹ ${donate[0].amount}",
+                                  style: TextStyle(color: Colors.black54),
+                                )),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                DonationFunction(1);
+                              },
+                              onDoubleTap: () {
+                                setState(() {
+                                  donate[1].value = false;
+                                  donateAmount = 0;
+                                });
+                              },
+                              child: Container(
+                                height: size.height * 0.06,
+                                width: size.width * 0.12,
+                                decoration: BoxDecoration(
+                                  color: donate[1].value == false
+                                      ? Colors.white
+                                      : Colors.blue[200],
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(color: Colors.black54),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "₹ ${donate[1].amount}",
+                                  style: TextStyle(color: Colors.black54),
+                                )),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                DonationFunction(2);
+                              },
+                              onDoubleTap: () {
+                                setState(() {
+                                  donate[2].value = false;
+                                  donateAmount = 0;
+                                });
+                              },
+                              child: Container(
+                                height: size.height * 0.06,
+                                width: size.width * 0.12,
+                                decoration: BoxDecoration(
+                                  color: donate[2].value == false
+                                      ? Colors.white
+                                      : Colors.blue[200],
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(color: Colors.black54),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "₹ ${donate[2].amount}",
+                                  style: TextStyle(color: Colors.black54),
+                                )),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                DonationFunction(3);
+                              },
+                              onDoubleTap: () {
+                                setState(() {
+                                  donate[3].value = false;
+                                  donateAmount = 0;
+                                });
+                              },
+                              child: Container(
+                                height: size.height * 0.06,
+                                width: size.width * 0.12,
+                                decoration: BoxDecoration(
+                                  color: donate[3].value == false
+                                      ? Colors.white
+                                      : Colors.blue[200],
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(color: Colors.black54),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "₹ ${donate[3].amount}",
+                                  style: TextStyle(color: Colors.black54),
+                                )),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                DonationFunction(4);
+                              },
+                              onDoubleTap: () {
+                                setState(() {
+                                  donate[4].value = false;
+                                  donateAmount = 0;
+                                });
+                              },
+                              child: Container(
+                                height: size.height * 0.06,
+                                width: size.width * 0.12,
+                                decoration: BoxDecoration(
+                                  color: donate[4].value == false
+                                      ? Colors.white
+                                      : Colors.blue[200],
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(color: Colors.black54),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "₹ ${donate[4].amount}",
+                                  style: TextStyle(color: Colors.black54),
+                                )),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: size.height * 0.15,
                     color: Colors.blue[50],
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -722,14 +903,15 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               onTap: () {
                                 if (dataForOffer['OffersAndCoupons'].isEmpty) {
                                   Fluttertoast.showToast(
-                                      msg: "No offer avialable..");
+                                      msg: "No offer avialable.. ");
                                 } else {
                                   showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
                                       context: context,
-                                      builder: (context) => OnOfferBottomSheet(
-                                            data:
-                                                dataForOffer['OffersAndCoupons']
-                                                    [0],
+                                      builder: (context) => OfferForPlaceOrder(
+                                            data: dataForOffer[
+                                                'OffersAndCoupons'],
                                           ));
                                 }
                               },
@@ -761,7 +943,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           Expanded(
                               flex: 3,
                               child: Text(
-                                "₹$totalPrice.00",
+                                "₹${totalPrice - totalGst}.00",
                                 textDirection: TextDirection.rtl,
                               )),
                         ],
@@ -786,12 +968,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
                       ),
                       Row(
                         children: [
-                          Expanded(flex: 9, child: Text("Delivery Charges")),
+                          Expanded(flex: 9, child: Text("GST Added")),
                           Expanded(flex: 5, child: SizedBox()),
                           Expanded(
                               flex: 3,
                               child: Text(
-                                "00.00",
+                                "₹$totalGst.00",
                                 textDirection: TextDirection.rtl,
                               )),
                         ],
@@ -1000,6 +1182,18 @@ class _PlaceOrderState extends State<PlaceOrder> {
         ],
       ),
     );
+  }
+
+  DonationFunction(data) {
+    for (int i = 0; i <= donate.length - 1; i++) {
+      setState(() {
+        donate[i].value = false;
+      });
+    }
+    setState(() {
+      donate[data].value = true;
+      donateAmount = donate[data].amount;
+    });
   }
 
   checkAddress(size) {
@@ -1253,6 +1447,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       int menuIdRemove = data2[0]['menuItemId'];
 
       setState(() {
+        totalGst = 0;
         countSum = 0;
         totalPrice = 0;
         price = price - (menuQtyRemove * menuPriceRemove);
@@ -1282,9 +1477,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       "userId": "$userid",
       "addressId": addressID,
       "orderPrice": "$totalPrice.00",
-      "gst": "107.82",
-      "discountPrice": "50",
-      "offerId": "1",
+      "gst": "$totalGst.00",
+      "discountPrice": "0",
+      "offerId": "0",
       "paymentMode": "WALLET",
       "razorpay_payment_id": null,
       "razo rpay_order_id": null,
@@ -1299,6 +1494,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     print("*****************************************");
 
     print(requestBody);
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
 
     var response =
         await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
@@ -1316,6 +1513,29 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
       });
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       print(responseData['message']);
       Navigator.pop(context);
@@ -1336,7 +1556,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       "userId": "$userid",
       "addressId": addressID,
       "orderPrice": "$totalPrice.00",
-      "gst": "107.82",
+      "gst": "$totalGst",
       "discountPrice": "0",
       "offerId": "1",
       "paymentMode": "CASH",
@@ -1353,7 +1573,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     print("*****************************************");
 
     print(requestBody);
-
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
     var response =
         await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
       "authorization": _authorization,
@@ -1362,15 +1583,39 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     });
     print(response.statusCode);
 
-    var responseData = jsonDecode(response.body);
-
     if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+
       removeDataFromCart();
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
       });
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
+      print(response.statusCode);
       Fluttertoast.showToast(msg: "Something went Wrong");
     }
   }
@@ -1411,8 +1656,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       "userId": "$userid",
       "addressId": addressID,
       "orderPrice": "$totalPrice.00",
-      "gst": "107.82",
-      "discountPrice": "50",
+      "gst": "$totalGst.00",
+      "discountPrice": "0",
       "offerId": "1",
       "paymentMode": "ONLINE",
       "razorpay_payment_id": "$responsepaymentid",
@@ -1420,7 +1665,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       "razorpay_signature": "$responsesignature"
     };
     var requestBody = jsonEncode(data);
-
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
     var response =
         await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
       "authorization": _authorization,
@@ -1428,14 +1674,37 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       "Content-Type": "application/json"
     });
 
-    var responseData = jsonDecode(response.body);
-
     if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+
       removeDataFromCart();
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
       });
+    } else if (response.statusCode == 401) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(
+        'name',
+      );
+      prefs.remove('sessionToken');
+      prefs.remove('refreshToken');
+      prefs.remove('userNumber');
+      prefs.remove('userProfile');
+      prefs.remove('customerName');
+      prefs.remove('userId');
+      prefs.remove('loginId');
+      prefs.remove('userEmail');
+      prefs.remove("loginBy");
+      takeUser = false;
+      emailid = null;
+      photo = null;
+      userName = null;
+
+      prefs.setBool("_isAuthenticate", false);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       Fluttertoast.showToast(msg: "Something went Wrong");
     }

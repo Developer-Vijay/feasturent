@@ -18,6 +18,7 @@ class UserServices {
     int itemtype,
     int isSelected,
     String vendorName,
+    int gst,
   ) {
     DBHelper.insert('addToCartData', {
       'itemPrice': itemPrice,
@@ -30,6 +31,7 @@ class UserServices {
       'itemtype': itemtype,
       'isSelected': isSelected,
       'vendorName': vendorName,
+      'gst': gst
     });
   }
 
@@ -47,7 +49,8 @@ class UserServices {
             itemStatus: item['itemStatus'],
             itemtype: item['itemtype'],
             isSelected: item['isSelected'],
-            vendorName: item['vendorName']))
+            vendorName: item['vendorName'],
+            gst: item['gst']))
         .toList();
   }
 
@@ -111,18 +114,18 @@ class UserServices {
   }
 
   void updateUser(
-    int id,
-    int itemPrice,
-    int itemCount,
-    int vendorId,
-    int menuItemId,
-    String imagePath,
-    String itemName,
-    String itemStatus,
-    int itemtype,
-    int isSelected,
-    String vendorName,
-  ) {
+      int id,
+      int itemPrice,
+      int itemCount,
+      int vendorId,
+      int menuItemId,
+      String imagePath,
+      String itemName,
+      String itemStatus,
+      int itemtype,
+      int isSelected,
+      String vendorName,
+      int gst) {
     DBHelper.updateData('addToCartData', id, {
       'itemPrice': itemPrice,
       'itemCount': itemCount,
@@ -134,6 +137,7 @@ class UserServices {
       'itemtype': itemtype,
       'isSelected': isSelected,
       'vendorName': vendorName,
+      'gst': gst,
     });
   }
 }

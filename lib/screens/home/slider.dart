@@ -575,7 +575,8 @@ class _FoodSliderState extends State<FoodSlider> {
           "Add".toString(),
           tpye,
           0,
-          widget.restaurentName);
+          widget.restaurentName,
+          datamenu['gstAmount']);
     });
   }
 
