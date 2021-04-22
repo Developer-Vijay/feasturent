@@ -28,540 +28,709 @@ class PlaceOrder extends StatefulWidget {
   _PlaceOrderState createState() => _PlaceOrderState();
 }
 
-int price = 0;
-
 class _PlaceOrderState extends State<PlaceOrder> {
   final services = UserServices();
   @override
   void initState() {
     super.initState();
     createstorage();
-
-    refresh();
     dataForOffer = widget.data;
-    print("*******************************");
-    getList();
   }
 
   var dataForOffer;
 
-  Timer placeTimer;
-
-  refresh() {
-    placeTimer = Timer.periodic(Duration(seconds: 1), (_) {
-      print(
-          " ############ @@@@@@@@@@@@@@@@@@@@@@@@@@ ##################### @@@@@@@@@@@@@@ ########### @@@@@ timing updating ");
-      placeTimer.cancel();
-      if (mounted) {
-        setState(() {});
-
-        refresh();
-      }
-    });
-  }
-
   @override
   void dispose() {
-    // refresh();
-    // placeTimer.cancel();
     super.dispose();
   }
 
-  List<String> checkitem = [];
-  getList() async {
-    final SharedPreferences cart = await SharedPreferences.getInstance();
-    setState(() {
-      checkitem = cart.getStringList('addedtocart');
-    });
-    print("list");
-    print(checkitem);
+  callingLoader() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
   }
+
+  List<String> checkitem = [];
 
   createstorage() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
-      price = cart.getInt('price');
+      checkitem = cart.getStringList('addedtocart');
+      totalprice1 = cart.getInt('TotalPrice');
+      gsttotal1 = cart.getInt('TotalGst');
+      totalcount1 = cart.getInt('TotalCount');
+      vendorId1 = cart.getInt('VendorId');
     });
+    if (offerid != 0) {
+      int k = dataForOffer['OffersAndCoupons'].length - 1;
+      for (int i = 0; i <= k; i++) {
+        if (offerid == dataForOffer['OffersAndCoupons'][i]['id']) {
+          if (dataForOffer['OffersAndCoupons'][i]['discount'] == null) {
+            if (dataForOffer['OffersAndCoupons'][i]['couponDiscountType'] ==
+                "PERCENT") {
+              setState(() {
+                discount = (totalprice1 *
+                        dataForOffer['OffersAndCoupons'][i]['couponDiscount']) /
+                    100;
+              });
+              print("coupon percent discount $discount");
+            } else {
+              if (totalprice1 <
+                  double.parse(dataForOffer['OffersAndCoupons'][i]
+                          ['couponDiscount']
+                      .toString())) {
+                setState(() {
+                  discount = double.parse(totalprice1.toString());
+                });
+              } else {
+                setState(() {
+                  discount = double.parse(dataForOffer['OffersAndCoupons'][i]
+                          ['couponDiscount']
+                      .toString());
+                });
+              }
+            }
+          } else {
+            if (dataForOffer['OffersAndCoupons'][i]['discountType'] ==
+                "PERCENT") {
+              setState(() {
+                discount = (totalprice1 *
+                        dataForOffer['OffersAndCoupons'][i]['discount']) /
+                    100;
+              });
+            } else {
+              if (totalprice1 <
+                  double.parse(dataForOffer['OffersAndCoupons'][i]['discount']
+                      .toString())) {
+                setState(() {
+                  discount = double.parse(totalprice1.toString());
+                });
+              } else {
+                setState(() {
+                  discount = double.parse(dataForOffer['OffersAndCoupons'][i]
+                          ['discount']
+                      .toString());
+                });
+              }
+            }
+          }
+        }
+      }
+    } else {
+      setState(() {
+        discount = 0;
+      });
+    }
+    print("list");
+    print(checkitem);
   }
 
-  onGoBack(dynamic value) {
-    print("hello data refresh");
-    setState(() {});
+  int gsttotal1;
+  int totalprice1;
+  int totalcount1;
+  int vendorId1;
+
+  fun(value) {
+    setState(() {
+      data1 = value;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-      height: size.height * 0.75,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.pop(context, () {
-                  setState(() {});
-                });
-              },
-              child: Icon(
-                Icons.clear,
+    return WillPopScope(
+      // ignore: missing_return
+      onWillPop: () {
+        setState(() {
+          discount = 0;
+          offerid = 0;
+        });
+        Navigator.pop(context, true);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        height: size.height * 0.75,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    discount = 0;
+                    offerid = 0;
+                  });
+                  Navigator.pop(context, true);
+                },
+                child: Icon(
+                  Icons.clear,
+                ),
               ),
             ),
-          ),
-          Container(
-            height: size.height * 0.06,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Icon(
-                      Icons.location_on,
+            Container(
+              height: size.height * 0.06,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.green,
+                        size: size.height * 0.025,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Text(
+                      "Delivery at-",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    Expanded(
+                      flex: 9,
+                      child: Text(
+                        "$addAddress",
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Expanded(
+                        flex: 2,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_drop_down_rounded,
+                            ),
+                            onPressed: () async {
+                              final result = await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) => SelectAddress());
+                              if (result) {
+                                setState(() {});
+                                createstorage();
+                              }
+                            })),
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              height: 7,
+              color: Colors.grey,
+            ),
+            Container(
+              height: size.height * 0.06,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.timer_rounded,
                       color: Colors.green,
                       size: size.height * 0.025,
                     ),
-                  ),
-                  SizedBox(
-                    width: 2,
-                  ),
-                  Text(
-                    "Delivery at-",
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  Expanded(
-                    flex: 9,
-                    child: Text(
-                      "$addAddress",
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Expanded(
-                      flex: 2,
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_drop_down_rounded,
-                          ),
-                          onPressed: () {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (context) => SelectAddress());
-                          })),
-                ],
+                    Text("Estimated time of delivery "),
+                    Text("${widget.deliveryTime} mins."),
+                  ],
+                ),
               ),
             ),
-          ),
-          Divider(
-            height: 7,
-            color: Colors.grey,
-          ),
-          Container(
-            height: size.height * 0.06,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
+            Divider(
+              height: 7,
+              color: Colors.grey,
+            ),
+            Expanded(
+              child: ListView(
                 children: [
-                  Icon(
-                    Icons.timer_rounded,
-                    color: Colors.green,
-                    size: size.height * 0.025,
-                  ),
-                  Text("Delivery in ETA "),
-                  Text("${widget.deliveryTime} mins."),
-                ],
-              ),
-            ),
-          ),
-          Divider(
-            height: 7,
-            color: Colors.grey,
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                FutureBuilder(
-                    future: services.fetchUsers(),
-                    builder: (ctx, snap) {
-                      List<AddToCart> users = snap.data;
-                      if (!snap.hasData) {
-                        return Center(
-                          child: Text('No data found'),
-                        );
-                      } else {
-                        return ListView.builder(
-                            itemCount: users.length,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (
-                              context,
-                              index,
-                            ) {
-                              if (idCheck.contains(users[index].id)) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: InkWell(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 2,
-                                                color: Colors.blue[50],
-                                                offset: Offset(1, 4),
-                                                spreadRadius: 2)
-                                          ]),
-                                      child: Dismissible(
-                                        direction: DismissDirection.endToStart,
-                                        // ignore: missing_return
-                                        confirmDismiss: (direction) async {
-                                          if (direction ==
-                                              DismissDirection.endToStart) {
-                                            final bool res = await showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    content: Text(
-                                                        "Are you sure you want to delete ${users[index].itemName}?"),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                        child: Text(
-                                                          "Cancel",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black),
+                  FutureBuilder(
+                      future: services.fetchUsers(),
+                      builder: (ctx, snap) {
+                        List<AddToCart> users = snap.data;
+                        if (!snap.hasData) {
+                          return Center(
+                            child: Text('No data found'),
+                          );
+                        } else {
+                          return ListView.builder(
+                              itemCount: users.length,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (
+                                context,
+                                index,
+                              ) {
+                                {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 2,
+                                                  color: Colors.blue[50],
+                                                  offset: Offset(1, 4),
+                                                  spreadRadius: 2)
+                                            ]),
+                                        child: Dismissible(
+                                          direction:
+                                              DismissDirection.endToStart,
+                                          // ignore: missing_return
+                                          confirmDismiss: (direction) async {
+                                            if (direction ==
+                                                DismissDirection.endToStart) {
+                                              final bool res = await showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      content: Text(
+                                                          "Are you sure you want to delete ${users[index].itemName}?"),
+                                                      actions: <Widget>[
+                                                        FlatButton(
+                                                          child: Text(
+                                                            "Cancel",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                          onPressed: () {
+                                                            print(users[index]
+                                                                .id);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
                                                         ),
-                                                        onPressed: () {
-                                                          print(
-                                                              users[index].id);
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                      ),
-                                                      FlatButton(
-                                                        child: Text(
-                                                          "Delete",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red),
+                                                        FlatButton(
+                                                          child: Text(
+                                                            "Delete",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.red),
+                                                          ),
+                                                          onPressed: () async {
+                                                            callingLoader();
+
+                                                            final SharedPreferences
+                                                                cart =
+                                                                await SharedPreferences
+                                                                    .getInstance();
+                                                            int totalprice =
+                                                                cart.getInt(
+                                                                    'TotalPrice');
+                                                            int gsttotal =
+                                                                cart.getInt(
+                                                                    'TotalGst');
+                                                            int totalcount =
+                                                                cart.getInt(
+                                                                    'TotalCount');
+                                                            int vendorId =
+                                                                cart.getInt(
+                                                                    'VendorId');
+
+                                                            if (users[index]
+                                                                    .itemCount ==
+                                                                totalcount) {
+                                                              setState(() {
+                                                                totalcount =
+                                                                    totalcount -
+                                                                        users[index]
+                                                                            .itemCount;
+                                                                gsttotal = gsttotal -
+                                                                    (users[index]
+                                                                            .itemCount *
+                                                                        users[index]
+                                                                            .gst);
+                                                                totalprice = totalprice -
+                                                                    (users[index]
+                                                                            .itemCount *
+                                                                        users[index]
+                                                                            .itemPrice);
+                                                                vendorId = 0;
+
+                                                                cart.setInt(
+                                                                    'VendorId',
+                                                                    vendorId);
+                                                                cart.setInt(
+                                                                    'TotalPrice',
+                                                                    totalprice);
+                                                                cart.setInt(
+                                                                    'TotalGst',
+                                                                    gsttotal);
+                                                                cart.setInt(
+                                                                    'TotalCount',
+                                                                    totalcount);
+                                                                services.deleteUser(
+                                                                    users[index]
+                                                                        .menuItemId);
+                                                                checkitem.remove(users[
+                                                                        index]
+                                                                    .menuItemId
+                                                                    .toString());
+                                                                print(
+                                                                    checkitem);
+                                                                cart.setStringList(
+                                                                    'addedtocart',
+                                                                    checkitem);
+                                                                print(
+                                                                    checkitem);
+                                                              });
+                                                            } else {
+                                                              setState(() {
+                                                                totalcount =
+                                                                    totalcount -
+                                                                        users[index]
+                                                                            .itemCount;
+                                                                gsttotal = gsttotal -
+                                                                    (users[index]
+                                                                            .itemCount *
+                                                                        users[index]
+                                                                            .gst);
+                                                                totalprice = totalprice -
+                                                                    (users[index]
+                                                                            .itemCount *
+                                                                        users[index]
+                                                                            .itemPrice);
+
+                                                                cart.setInt(
+                                                                    'TotalPrice',
+                                                                    totalprice);
+                                                                cart.setInt(
+                                                                    'TotalGst',
+                                                                    gsttotal);
+                                                                cart.setInt(
+                                                                    'TotalCount',
+                                                                    totalcount);
+                                                                services.deleteUser(
+                                                                    users[index]
+                                                                        .menuItemId);
+                                                                checkitem.remove(users[
+                                                                        index]
+                                                                    .menuItemId
+                                                                    .toString());
+                                                                print(
+                                                                    checkitem);
+                                                                cart.setStringList(
+                                                                    'addedtocart',
+                                                                    checkitem);
+                                                                print(
+                                                                    checkitem);
+                                                              });
+                                                            }
+                                                            await Future
+                                                                .delayed(
+                                                                    Duration(
+                                                                        seconds:
+                                                                            1));
+                                                            setState(() {});
+                                                            createstorage();
+
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
                                                         ),
-                                                        onPressed: () async {
+                                                      ],
+                                                    );
+                                                  });
+                                              return res;
+                                            }
+                                          },
+                                          key: ValueKey(index),
+                                          background: Container(
+                                            color: Colors.red,
+                                            padding: EdgeInsets.only(right: 10),
+                                            alignment: Alignment.centerRight,
+                                            child: Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                      width: size.width * 0.69,
+                                                      height:
+                                                          size.height * 0.128,
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            flex: 0,
+                                                            child: Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .topLeft,
+                                                                height:
+                                                                    size.height *
+                                                                        0.2,
+                                                                child:
+                                                                    Container(
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              4,
+                                                                          top:
+                                                                              4),
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    child: users[index].imagePath !=
+                                                                            null
+                                                                        ? CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                S3_BASE_PATH + users[index].imagePath,
+                                                                            height:
+                                                                                size.height * 0.1,
+                                                                            width:
+                                                                                size.width * 0.26,
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            placeholder: (context, url) =>
+                                                                                Center(child: CircularProgressIndicator()),
+                                                                            errorWidget: (context, url, error) =>
+                                                                                Icon(Icons.error),
+                                                                          )
+                                                                        : Image
+                                                                            .asset(
+                                                                            "assets/images/feasturenttemp.jpeg",
+                                                                            height:
+                                                                                size.height * 0.1,
+                                                                            width:
+                                                                                size.width * 0.26,
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
+                                                                  ),
+                                                                )),
+                                                          ),
+                                                          Expanded(
+                                                              child: Container(
+                                                            margin: EdgeInsets.only(
+                                                                left:
+                                                                    size.width *
+                                                                        0.01),
+                                                            height:
+                                                                size.height *
+                                                                    0.2,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  margin:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    top: 6,
+                                                                  ),
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Container(
+                                                                        width: size.width *
+                                                                            0.3,
+                                                                        child:
+                                                                            Text(
+                                                                          users[index]
+                                                                              .itemName,
+                                                                          maxLines:
+                                                                              2,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.black,
+                                                                              fontSize: 14),
+                                                                        ),
+                                                                      ),
+                                                                      Spacer(),
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(right: 12),
+                                                                          child: users[index].itemtype == 3
+                                                                              ? CachedNetworkImage(
+                                                                                  imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
+                                                                                  height: size.height * 0.016,
+                                                                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                )
+                                                                              : users[index].itemtype == 2
+                                                                                  ? Container(
+                                                                                      child: Image.asset(
+                                                                                      "assets/images/eggeterian.png",
+                                                                                      height: size.height * 0.016,
+                                                                                    ))
+                                                                                  : Container(
+                                                                                      child: CachedNetworkImage(
+                                                                                        imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
+                                                                                        height: size.height * 0.016,
+                                                                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                      ),
+                                                                                    ))
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Container(
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Container(
+                                                                          child:
+                                                                              Text("⭐")),
+                                                                      Text(
+                                                                        "3.0",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                15,
+                                                                            color:
+                                                                                Colors.red,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            45,
+                                                                      ),
+                                                                      Text(
+                                                                        "₹ ${users[index].itemPrice}",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            20,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )),
+                                                        ],
+                                                      )),
+                                                ],
+                                              ),
+                                              Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                padding:
+                                                    EdgeInsets.only(right: 0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 2,
+                                                        spreadRadius: 2,
+                                                        color: Colors.grey[300],
+                                                        offset: Offset(0, 3))
+                                                  ],
+                                                ),
+                                                margin: EdgeInsets.only(
+                                                    right: size.width * 0.0),
+                                                child: ButtonBar(
+                                                  buttonPadding:
+                                                      EdgeInsets.all(3),
+                                                  children: [
+                                                    InkWell(
+                                                        onTap: () async {
                                                           final SharedPreferences
                                                               cart =
                                                               await SharedPreferences
                                                                   .getInstance();
-                                                          price = cart
-                                                              .getInt('price');
-                                                          if (idCheck.contains(
-                                                              users[index]
-                                                                  .id)) {
-                                                            setState(() {
-                                                              countSum = countSum -
-                                                                  users[index]
-                                                                      .itemCount;
-                                                              totalGst = totalGst -
-                                                                  (users[index]
-                                                                          .itemCount *
-                                                                      users[index]
-                                                                          .gst);
-                                                              totalPrice = totalPrice -
-                                                                  (users[index]
-                                                                          .itemCount *
-                                                                      users[index]
-                                                                          .itemPrice);
-                                                              price = price -
-                                                                  (users[index]
-                                                                          .itemCount *
-                                                                      users[index]
-                                                                          .itemPrice);
-                                                              cart.setInt(
-                                                                  'price',
-                                                                  price);
-                                                              services.deleteUser(
-                                                                  users[index]
-                                                                      .id);
-                                                              idCheck.remove(
-                                                                  users[index]
-                                                                      .id);
-                                                              vendorIdCheck
-                                                                  .remove(users[
-                                                                          index]
-                                                                      .vendorId);
-                                                              checkitem.remove(
-                                                                  users[index]
-                                                                      .menuItemId
-                                                                      .toString());
-                                                              print(checkitem);
-                                                              cart.setStringList(
-                                                                  'addedtocart',
-                                                                  checkitem);
-                                                            });
+                                                          int totalprice =
+                                                              cart.getInt(
+                                                                  'TotalPrice');
+                                                          int gsttotal =
+                                                              cart.getInt(
+                                                                  'TotalGst');
+                                                          int totalcount =
+                                                              cart.getInt(
+                                                                  'TotalCount');
+                                                          int vendorId =
+                                                              cart.getInt(
+                                                                  'VendorId');
 
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                            return res;
-                                          }
-                                        },
-                                        key: ValueKey(index),
-                                        background: Container(
-                                          color: Colors.red,
-                                          padding: EdgeInsets.only(right: 10),
-                                          alignment: Alignment.centerRight,
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                    width: size.width * 0.69,
-                                                    height: size.height * 0.128,
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          flex: 0,
-                                                          child: Container(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .topLeft,
-                                                              height:
-                                                                  size.height *
-                                                                      0.2,
-                                                              child: Container(
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        left: 4,
-                                                                        right:
-                                                                            4,
-                                                                        top: 4),
-                                                                child:
-                                                                    ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                  child: users[index]
-                                                                              .imagePath !=
-                                                                          null
-                                                                      ? CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              S3_BASE_PATH + users[index].imagePath,
-                                                                          height:
-                                                                              size.height * 0.1,
-                                                                          width:
-                                                                              size.width * 0.26,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                          placeholder: (context, url) =>
-                                                                              Center(child: CircularProgressIndicator()),
-                                                                          errorWidget: (context, url, error) =>
-                                                                              Icon(Icons.error),
-                                                                        )
-                                                                      : Image
-                                                                          .asset(
-                                                                          "assets/images/feasturenttemp.jpeg",
-                                                                          height:
-                                                                              size.height * 0.1,
-                                                                          width:
-                                                                              size.width * 0.26,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                ),
-                                                              )),
-                                                        ),
-                                                        Expanded(
-                                                            child: Container(
-                                                          margin: EdgeInsets.only(
-                                                              left: size.width *
-                                                                  0.01),
-                                                          height:
-                                                              size.height * 0.2,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Container(
-                                                                margin:
-                                                                    EdgeInsets
-                                                                        .only(
-                                                                  top: 6,
-                                                                ),
-                                                                child: Row(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      users[index]
-                                                                          .itemName,
-                                                                      style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontSize:
-                                                                              14),
-                                                                    ),
-                                                                    Spacer(),
-                                                                    Padding(
-                                                                        padding: const EdgeInsets.only(
-                                                                            right:
-                                                                                12),
-                                                                        child: users[index].itemtype ==
-                                                                                3
-                                                                            ? CachedNetworkImage(
-                                                                                imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
-                                                                                height: size.height * 0.016,
-                                                                                errorWidget: (context, url, error) => Icon(Icons.error),
-                                                                              )
-                                                                            : users[index].itemtype == 2
-                                                                                ? Container(
-                                                                                    child: Image.asset(
-                                                                                    "assets/images/eggeterian.png",
-                                                                                    height: size.height * 0.016,
-                                                                                  ))
-                                                                                : Container(
-                                                                                    child: CachedNetworkImage(
-                                                                                      imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
-                                                                                      height: size.height * 0.016,
-                                                                                      errorWidget: (context, url, error) => Icon(Icons.error),
-                                                                                    ),
-                                                                                  ))
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              Container(
-                                                                child: Row(
-                                                                  children: [
-                                                                    Container(
-                                                                        child: Text(
-                                                                            "⭐")),
-                                                                    Text(
-                                                                      "3.0",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              15,
-                                                                          color: Colors
-                                                                              .red,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width: 45,
-                                                                    ),
-                                                                    Text(
-                                                                      "₹ ${users[index].itemPrice}",
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width: 20,
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )),
-                                                      ],
-                                                    )),
-                                              ],
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              padding:
-                                                  EdgeInsets.only(right: 0),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      blurRadius: 2,
-                                                      spreadRadius: 2,
-                                                      color: Colors.grey[300],
-                                                      offset: Offset(0, 3))
-                                                ],
-                                              ),
-                                              margin: EdgeInsets.only(
-                                                  right: size.width * 0.0),
-                                              child: ButtonBar(
-                                                buttonPadding:
-                                                    EdgeInsets.all(3),
-                                                children: [
-                                                  InkWell(
-                                                      onTap: () async {
-                                                        final SharedPreferences
-                                                            cart =
-                                                            await SharedPreferences
-                                                                .getInstance();
-                                                        if (idCheck.contains(
-                                                            users[index].id)) {
                                                           if (users[index]
                                                                   .itemCount >
                                                               1) {
-                                                            setState(() {
-                                                              countSum--;
+                                                            callingLoader();
 
-                                                              sumtotal = sumtotal -
-                                                                  users[index]
-                                                                      .itemPrice;
-                                                              totalPrice =
-                                                                  totalPrice -
-                                                                      users[index]
-                                                                          .itemPrice;
-                                                              totalGst =
-                                                                  totalGst -
+                                                            setState(() {
+                                                              totalcount--;
+
+                                                              gsttotal =
+                                                                  gsttotal -
                                                                       users[index]
                                                                           .gst;
-
+                                                              totalprice =
+                                                                  totalprice -
+                                                                      users[index]
+                                                                          .itemPrice;
                                                               services.decrementItemCounter(
                                                                   users[index]
                                                                       .id,
                                                                   users[index]
                                                                       .itemCount);
-                                                              price = price -
-                                                                  users[index]
-                                                                      .itemPrice;
+
                                                               cart.setInt(
-                                                                  'price',
-                                                                  price);
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
                                                             });
+                                                            await Future
+                                                                .delayed(
+                                                                    Duration(
+                                                                        seconds:
+                                                                            1));
+                                                            setState(() {});
+                                                            Navigator.pop(
+                                                                context);
                                                           } else if (users[
                                                                       index]
                                                                   .itemCount ==
@@ -599,587 +768,668 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                         ),
                                                                         onPressed:
                                                                             () async {
+                                                                          callingLoader();
+
                                                                           final SharedPreferences
                                                                               cart =
                                                                               await SharedPreferences.getInstance();
-                                                                          price =
-                                                                              cart.getInt('price');
-                                                                          // Delete the item from DB etc..
-                                                                          setState(
-                                                                              () {
-                                                                            price =
-                                                                                price - users[index].itemPrice;
-                                                                            countSum =
-                                                                                countSum - users[index].itemCount;
-                                                                            totalPrice =
-                                                                                totalPrice - users[index].itemPrice;
-                                                                            totalGst =
-                                                                                totalGst - users[index].gst;
-                                                                            cart.setInt('price',
-                                                                                price);
-                                                                            services.deleteUser(users[index].id);
-                                                                            idCheck.remove(users[index].id);
-                                                                            vendorIdCheck.remove(users[index].vendorId);
-                                                                            checkitem.remove(users[index].menuItemId.toString());
-                                                                            print(checkitem);
-                                                                            cart.setStringList('addedtocart',
-                                                                                checkitem);
-                                                                          });
+                                                                          int totalprice =
+                                                                              cart.getInt('TotalPrice');
+                                                                          int gsttotal =
+                                                                              cart.getInt('TotalGst');
+                                                                          int totalcount =
+                                                                              cart.getInt('TotalCount');
+                                                                          int vendorId =
+                                                                              cart.getInt('VendorId');
 
-                                                                          Navigator.pop(
-                                                                              context,
-                                                                              () {
-                                                                            setState(() {});
-                                                                          });
+                                                                          if (users[index].itemCount ==
+                                                                              totalcount) {
+                                                                            setState(() {
+                                                                              totalcount = totalcount - users[index].itemCount;
+                                                                              gsttotal = gsttotal - (users[index].itemCount * users[index].gst);
+                                                                              totalprice = totalprice - (users[index].itemCount * users[index].itemPrice);
+                                                                              vendorId = 0;
+
+                                                                              cart.setInt('VendorId', vendorId);
+                                                                              cart.setInt('TotalPrice', totalprice);
+                                                                              cart.setInt('TotalGst', gsttotal);
+                                                                              cart.setInt('TotalCount', totalcount);
+                                                                              services.deleteUser(users[index].menuItemId);
+                                                                              checkitem.remove(users[index].menuItemId.toString());
+                                                                              print(checkitem);
+                                                                              cart.setStringList('addedtocart', checkitem);
+                                                                              print(checkitem);
+                                                                            });
+                                                                          } else {
+                                                                            setState(() {
+                                                                              totalcount = totalcount - users[index].itemCount;
+                                                                              gsttotal = gsttotal - (users[index].itemCount * users[index].gst);
+                                                                              totalprice = totalprice - (users[index].itemCount * users[index].itemPrice);
+
+                                                                              cart.setInt('TotalPrice', totalprice);
+                                                                              cart.setInt('TotalGst', gsttotal);
+                                                                              cart.setInt('TotalCount', totalcount);
+                                                                              services.deleteUser(users[index].menuItemId);
+                                                                              checkitem.remove(users[index].menuItemId.toString());
+                                                                              print(checkitem);
+                                                                              cart.setStringList('addedtocart', checkitem);
+                                                                              print(checkitem);
+                                                                            });
+                                                                          }
+                                                                          await Future.delayed(
+                                                                              Duration(seconds: 1));
+                                                                          setState(
+                                                                              () {});
+                                                                          createstorage();
+
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                          Navigator.of(context)
+                                                                              .pop();
                                                                         },
                                                                       ),
                                                                     ],
                                                                   );
                                                                 });
                                                           }
-                                                        }
-                                                      },
-                                                      child:
-                                                          Icon(Icons.remove)),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                      "${users[index].itemCount}",
-                                                      style: TextStyle(
-                                                          color: Colors.black)),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  InkWell(
-                                                    child: Icon(Icons.add),
-                                                    onTap: () async {
-                                                      final SharedPreferences
-                                                          cart =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      if (idCheck.contains(
-                                                          users[index].id)) {
-                                                        setState(() {
-                                                          services
-                                                              .incrementItemCounter(
-                                                                  users[index]
-                                                                      .id,
-                                                                  users[index]
-                                                                      .itemCount);
-                                                          price = price +
-                                                              users[index]
-                                                                  .itemPrice;
+                                                          createstorage();
+                                                        },
+                                                        child:
+                                                            Icon(Icons.remove)),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                        "${users[index].itemCount}",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black)),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    InkWell(
+                                                      child: Icon(Icons.add),
+                                                      onTap: () async {
+                                                        callingLoader();
 
-                                                          countSum++;
-                                                          totalPrice =
-                                                              totalPrice +
+                                                        final SharedPreferences
+                                                            cart =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        int totalprice =
+                                                            cart.getInt(
+                                                                'TotalPrice');
+                                                        int gsttotal = cart
+                                                            .getInt('TotalGst');
+                                                        int totalcount =
+                                                            cart.getInt(
+                                                                'TotalCount');
+                                                        int vendorId = cart
+                                                            .getInt('VendorId');
+
+                                                        setState(() {
+                                                          totalcount++;
+
+                                                          gsttotal = gsttotal +
+                                                              users[index].gst;
+                                                          totalprice =
+                                                              totalprice +
                                                                   users[index]
                                                                       .itemPrice;
-                                                          totalGst = totalGst +
-                                                              users[index].gst;
-                                                          cart.setInt(
-                                                              'price', price);
-                                                        });
-                                                      } else {
-                                                        setState(() {
                                                           services
                                                               .incrementItemCounter(
                                                                   users[index]
                                                                       .id,
                                                                   users[index]
-                                                                      .itemCount);
-                                                          price = price +
-                                                              users[index]
-                                                                  .itemPrice;
+                                                                      .itemCount)
+                                                              .then((value) =>
+                                                                  fun(value));
+
                                                           cart.setInt(
-                                                              'price', price);
+                                                              'TotalPrice',
+                                                              totalprice);
+                                                          cart.setInt(
+                                                              'TotalGst',
+                                                              gsttotal);
+                                                          cart.setInt(
+                                                              'TotalCount',
+                                                              totalcount);
                                                         });
-                                                      }
-                                                    },
-                                                  ),
-                                                ],
+                                                        await Future.delayed(
+                                                            Duration(
+                                                                seconds: 1));
+                                                        setState(() {});
+                                                        print(
+                                                            "@@@@@@@hjjjjjjjjjjjjjjjjjj@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                                        Navigator.pop(context);
+                                                        createstorage();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              } else {
-                                return SizedBox();
-                              }
-                            });
-                      }
-                    }),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: size.height * 0.15,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Donate",
-                          style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: size.height * 0.03),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                DonationFunction(0);
-                              },
-                              onDoubleTap: () {
-                                setState(() {
-                                  donate[0].value = false;
-                                  donateAmount = 0;
-                                });
-                              },
-                              child: Container(
-                                height: size.height * 0.06,
-                                width: size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  color: donate[0].value == false
-                                      ? Colors.white
-                                      : Colors.blue[200],
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  "₹ ${donate[0].amount}",
-                                  style: TextStyle(color: Colors.black54),
-                                )),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                DonationFunction(1);
-                              },
-                              onDoubleTap: () {
-                                setState(() {
-                                  donate[1].value = false;
-                                  donateAmount = 0;
-                                });
-                              },
-                              child: Container(
-                                height: size.height * 0.06,
-                                width: size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  color: donate[1].value == false
-                                      ? Colors.white
-                                      : Colors.blue[200],
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  "₹ ${donate[1].amount}",
-                                  style: TextStyle(color: Colors.black54),
-                                )),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                DonationFunction(2);
-                              },
-                              onDoubleTap: () {
-                                setState(() {
-                                  donate[2].value = false;
-                                  donateAmount = 0;
-                                });
-                              },
-                              child: Container(
-                                height: size.height * 0.06,
-                                width: size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  color: donate[2].value == false
-                                      ? Colors.white
-                                      : Colors.blue[200],
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  "₹ ${donate[2].amount}",
-                                  style: TextStyle(color: Colors.black54),
-                                )),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                DonationFunction(3);
-                              },
-                              onDoubleTap: () {
-                                setState(() {
-                                  donate[3].value = false;
-                                  donateAmount = 0;
-                                });
-                              },
-                              child: Container(
-                                height: size.height * 0.06,
-                                width: size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  color: donate[3].value == false
-                                      ? Colors.white
-                                      : Colors.blue[200],
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  "₹ ${donate[3].amount}",
-                                  style: TextStyle(color: Colors.black54),
-                                )),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                DonationFunction(4);
-                              },
-                              onDoubleTap: () {
-                                setState(() {
-                                  donate[4].value = false;
-                                  donateAmount = 0;
-                                });
-                              },
-                              child: Container(
-                                height: size.height * 0.06,
-                                width: size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  color: donate[4].value == false
-                                      ? Colors.white
-                                      : Colors.blue[200],
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  "₹ ${donate[4].amount}",
-                                  style: TextStyle(color: Colors.black54),
-                                )),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: size.height * 0.15,
-                    color: Colors.blue[50],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Offers",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
-                        ),
-                        Row(
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl:
-                                  'https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg',
-                              height: size.height * 0.045,
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
-                            Text("Select a promo code"),
-                            Spacer(),
-                            InkWell(
-                              onTap: () {
-                                if (dataForOffer['OffersAndCoupons'].isEmpty) {
-                                  Fluttertoast.showToast(
-                                      msg: "No offer avialable.. ");
-                                } else {
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      context: context,
-                                      builder: (context) => OfferForPlaceOrder(
-                                            data: dataForOffer[
-                                                'OffersAndCoupons'],
-                                          ));
+                                  );
                                 }
-                              },
-                              child: Container(
-                                height: 25,
-                                width: 100,
-                                child: Center(
-                                  child: Text(
-                                    "View offers",
-                                    style: TextStyle(color: Colors.red),
+                              });
+                        }
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      height: size.height * 0.15,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            " Donation for Social cause",
+                            style: TextStyle(
+                                // fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: size.height * 0.03),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (donate[0].value == false) {
+                                    DonationFunction(0);
+                                  } else {
+                                    setState(() {
+                                      donate[0].value = false;
+                                      donateAmount = 0;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.12,
+                                  decoration: BoxDecoration(
+                                    color: donate[0].value == false
+                                        ? Colors.white
+                                        : Colors.blue[200],
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.black54),
                                   ),
+                                  child: Center(
+                                      child: Text(
+                                    "₹ ${donate[0].amount}",
+                                    style: TextStyle(color: Colors.black54),
+                                  )),
                                 ),
                               ),
-                            )
-                          ],
-                        )
-                      ],
+                              InkWell(
+                                onTap: () {
+                                  if (donate[1].value == false) {
+                                    DonationFunction(1);
+                                  } else {
+                                    setState(() {
+                                      donate[1].value = false;
+                                      donateAmount = 0;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.12,
+                                  decoration: BoxDecoration(
+                                    color: donate[1].value == false
+                                        ? Colors.white
+                                        : Colors.blue[200],
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.black54),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    "₹ ${donate[1].amount}",
+                                    style: TextStyle(color: Colors.black54),
+                                  )),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  if (donate[2].value == false) {
+                                    DonationFunction(2);
+                                  } else {
+                                    setState(() {
+                                      donate[2].value = false;
+                                      donateAmount = 0;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.12,
+                                  decoration: BoxDecoration(
+                                    color: donate[2].value == false
+                                        ? Colors.white
+                                        : Colors.blue[200],
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.black54),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    "₹ ${donate[2].amount}",
+                                    style: TextStyle(color: Colors.black54),
+                                  )),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  if (donate[3].value == false) {
+                                    DonationFunction(3);
+                                  } else {
+                                    setState(() {
+                                      donate[3].value = false;
+                                      donateAmount = 0;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.12,
+                                  decoration: BoxDecoration(
+                                    color: donate[3].value == false
+                                        ? Colors.white
+                                        : Colors.blue[200],
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.black54),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    "₹ ${donate[3].amount}",
+                                    style: TextStyle(color: Colors.black54),
+                                  )),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  if (donate[4].value == false) {
+                                    DonationFunction(4);
+                                  } else {
+                                    setState(() {
+                                      donate[4].value = false;
+                                      donateAmount = 0;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.12,
+                                  decoration: BoxDecoration(
+                                    color: donate[4].value == false
+                                        ? Colors.white
+                                        : Colors.blue[200],
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.black54),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    "₹ ${donate[4].amount}",
+                                    style: TextStyle(color: Colors.black54),
+                                  )),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      Row(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      height: size.height * 0.15,
+                      color: Colors.blue[50],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(flex: 9, child: Text("Price")),
-                          Expanded(flex: 5, child: SizedBox()),
-                          Expanded(
-                              flex: 3,
-                              child: Text(
-                                "₹${totalPrice - totalGst}.00",
-                                textDirection: TextDirection.rtl,
-                              )),
+                          Text(
+                            "Offers",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                          dataForOffer['OffersAndCoupons'].isEmpty
+                              ? Text("No offer avialable.. ")
+                              : Row(
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl:
+                                          'https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg',
+                                      height: size.height * 0.045,
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                    Text("Select a promo code"),
+                                    Spacer(),
+                                    InkWell(
+                                      onTap: () async {
+                                        if (dataForOffer['OffersAndCoupons']
+                                            .isEmpty) {
+                                          Fluttertoast.showToast(
+                                              msg: "No offer avialable.. ");
+                                        } else {
+                                          final result =
+                                              await showModalBottomSheet(
+                                                  isScrollControlled: true,
+                                                  isDismissible: false,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      OfferForPlaceOrder(
+                                                        data: dataForOffer[
+                                                            'OffersAndCoupons'],
+                                                      ));
+                                          if (result == 0) {
+                                            setState(() {
+                                              offerid = result;
+                                              createstorage();
+                                            });
+                                          } else {
+                                            setState(() {
+                                              offerid = result;
+                                              createstorage();
+                                            });
+                                          }
+                                          print("reulyt $result");
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 25,
+                                        width: 100,
+                                        child: Center(
+                                          child: Text(
+                                            "View offers",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
                         ],
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(flex: 9, child: Text("Discount Offer")),
-                          Expanded(flex: 5, child: SizedBox()),
-                          Expanded(
-                              flex: 3,
-                              child: Text(
-                                "00.00",
-                                textDirection: TextDirection.rtl,
-                              )),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(flex: 9, child: Text("GST Added")),
-                          Expanded(flex: 5, child: SizedBox()),
-                          Expanded(
-                              flex: 3,
-                              child: Text(
-                                "₹$totalGst.00",
-                                textDirection: TextDirection.rtl,
-                              )),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                              flex: 9,
-                              child: Text(
-                                "Grand Total",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: size.height * 0.0276),
-                              )),
-                          Expanded(flex: 5, child: SizedBox()),
-                          Expanded(
-                              flex: 4,
-                              child: Text(
-                                "$totalPrice.00",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: size.height * 0.0273),
-                                textDirection: TextDirection.rtl,
-                              )),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: size.height * 0.1,
-                    color: Colors.blue[50],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Ordering for",
-                        ),
-                        Text(
-                          "$userNameWithNumber",
-                          style: TextStyle(
-                              fontSize: size.height * 0.023,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-            flex: 16,
-          ),
-          Expanded(
-            child: Container(
-              child: Row(
-                children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10.0, bottom: 5.0),
-                    width: size.width * 0.35,
-                    height: size.height * 0.2,
+                    padding: EdgeInsets.all(10),
                     child: Column(
                       children: [
                         Row(
                           children: [
-                            Text("Pay Using"),
-                            dataForOffer['Setting']['isCod'] == null
-                                ? PopupMenuButton(
-                                    padding: EdgeInsets.all(10),
-                                    icon: Icon(Icons.arrow_drop_down),
-                                    onSelected: (value) {
-                                      if (value == 0) {
-                                        setState(() {
-                                          paymentMode = "Online Mode";
-                                        });
-                                      } else if (value == 1) {
-                                        setState(() {
-                                          paymentMode = "Cash On Delivery";
-                                        });
-                                      } else if (value == 2) {
-                                        setState(() {
-                                          paymentMode = "Wallet";
-                                        });
-                                      }
-                                    },
-                                    itemBuilder: (BuildContext) => [
-                                      PopupMenuItem(
-                                        child: Text("Online Mode"),
-                                        value: 0,
-                                      ),
-                                      PopupMenuItem(
-                                        child: Text("Cash On Delivery"),
-                                        value: 1,
-                                      ),
-                                      PopupMenuItem(
-                                        child: Text("Wallet"),
-                                        value: 2,
-                                      ),
-                                    ],
-                                  )
-                                : dataForOffer['Setting']['isCod'] == true
-                                    ? PopupMenuButton(
-                                        padding: EdgeInsets.all(10),
-                                        icon: Icon(Icons.arrow_drop_down),
-                                        onSelected: (value) {
-                                          if (value == 0) {
-                                            setState(() {
-                                              paymentMode = "Online Mode";
-                                            });
-                                          } else if (value == 1) {
-                                            setState(() {
-                                              paymentMode = "Cash On Delivery";
-                                            });
-                                          } else if (value == 2) {
-                                            setState(() {
-                                              paymentMode = "Wallet";
-                                            });
-                                          }
-                                        },
-                                        itemBuilder: (BuildContext) => [
-                                          PopupMenuItem(
-                                            child: Text("Online Mode"),
-                                            value: 0,
-                                          ),
-                                          PopupMenuItem(
-                                            child: Text("Cash On Delivery"),
-                                            value: 1,
-                                          ),
-                                          PopupMenuItem(
-                                            child: Text("Wallet"),
-                                            value: 2,
-                                          ),
-                                        ],
-                                      )
-                                    : PopupMenuButton(
-                                        padding: EdgeInsets.all(10),
-                                        icon: Icon(Icons.arrow_drop_down),
-                                        onSelected: (value) {
-                                          if (value == 0) {
-                                            setState(() {
-                                              paymentMode = "Online Mode";
-                                            });
-                                          } else if (value == 2) {
-                                            setState(() {
-                                              paymentMode = "Wallet";
-                                            });
-                                          }
-                                        },
-                                        itemBuilder: (BuildContext) => [
-                                          PopupMenuItem(
-                                            child: Text("Online Mode"),
-                                            value: 0,
-                                          ),
-                                          PopupMenuItem(
-                                            child: Text("Wallet"),
-                                            value: 2,
-                                          ),
-                                        ],
-                                      )
+                            Expanded(flex: 9, child: Text("Price")),
+                            Expanded(flex: 5, child: SizedBox()),
+                            Expanded(
+                                flex: 3,
+                                child: Text(
+                                  "₹${totalprice1 - gsttotal1}.0",
+                                  textDirection: TextDirection.rtl,
+                                )),
                           ],
                         ),
-                        Text(paymentMode),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(flex: 9, child: Text("Discount Offer")),
+                            Expanded(flex: 5, child: SizedBox()),
+                            Expanded(
+                                flex: 3,
+                                child: Text(
+                                  "₹$discount -",
+                                  textDirection: TextDirection.rtl,
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(flex: 9, child: Text("GST Added")),
+                            Expanded(flex: 5, child: SizedBox()),
+                            Expanded(
+                                flex: 3,
+                                child: Text(
+                                  "₹$gsttotal1.0",
+                                  textDirection: TextDirection.rtl,
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(flex: 9, child: Text("Donation")),
+                            Expanded(flex: 5, child: SizedBox()),
+                            Expanded(
+                                flex: 3,
+                                child: Text(
+                                  "₹$donateAmount.0",
+                                  textDirection: TextDirection.rtl,
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                                flex: 9,
+                                child: Text(
+                                  "Grand Total",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: size.height * 0.0276),
+                                )),
+                            Expanded(flex: 5, child: SizedBox()),
+                            Expanded(
+                                flex: 4,
+                                child: Text(
+                                  "₹${totalprice1 + donateAmount - discount}",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: size.height * 0.0273),
+                                  textDirection: TextDirection.rtl,
+                                )),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                  Spacer(),
-                  InkWell(
-                      onTap: () {
-                        if (userNameWithNumber == "Select Delivery Address") {
-                          showModalBottomSheet(
-                              isScrollControlled: true,
-                              elevation: 2,
-                              backgroundColor: Colors.transparent,
-                              context: context,
-                              builder: (context) => SelectAddress());
-                        } else {
-                          if (totalPrice != 0) {
-                            showModalBottomSheet(
-                                enableDrag: false,
-                                isDismissible: false,
-                                isScrollControlled: false,
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (context) => PlaceOrderCheck());
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Please select any item to place order");
-                          }
-                        }
-                      },
-                      child: checkAddress(size))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      height: size.height * 0.1,
+                      color: Colors.blue[50],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ordering for",
+                          ),
+                          Text(
+                            "$userNameWithNumber",
+                            style: TextStyle(
+                                fontSize: size.height * 0.023,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
+              flex: 16,
             ),
-            flex: 4,
-          ),
-        ],
+            Expanded(
+              child: Container(
+                child: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 10.0, bottom: 5.0),
+                      width: size.width * 0.35,
+                      height: size.height * 0.2,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text("Pay Using"),
+                              dataForOffer['Setting']['isCod'] == null
+                                  ? PopupMenuButton(
+                                      padding: EdgeInsets.all(10),
+                                      icon: Icon(Icons.arrow_drop_down),
+                                      onSelected: (value) {
+                                        if (value == 0) {
+                                          setState(() {
+                                            paymentMode = "Online Mode";
+                                          });
+                                        } else if (value == 1) {
+                                          setState(() {
+                                            paymentMode = "Cash On Delivery";
+                                          });
+                                        } else if (value == 2) {
+                                          setState(() {
+                                            paymentMode = "Wallet";
+                                          });
+                                        }
+                                      },
+                                      itemBuilder: (BuildContext) => [
+                                        PopupMenuItem(
+                                          child: Text("Online Mode"),
+                                          value: 0,
+                                        ),
+                                        PopupMenuItem(
+                                          child: Text("Cash On Delivery"),
+                                          value: 1,
+                                        ),
+                                        PopupMenuItem(
+                                          child: Text("Wallet"),
+                                          value: 2,
+                                        ),
+                                      ],
+                                    )
+                                  : dataForOffer['Setting']['isCod'] == true
+                                      ? PopupMenuButton(
+                                          padding: EdgeInsets.all(10),
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          onSelected: (value) {
+                                            if (value == 0) {
+                                              setState(() {
+                                                paymentMode = "Online Mode";
+                                              });
+                                            } else if (value == 1) {
+                                              setState(() {
+                                                paymentMode =
+                                                    "Cash On Delivery";
+                                              });
+                                            } else if (value == 2) {
+                                              setState(() {
+                                                paymentMode = "Wallet";
+                                              });
+                                            }
+                                          },
+                                          itemBuilder: (BuildContext) => [
+                                            PopupMenuItem(
+                                              child: Text("Online Mode"),
+                                              value: 0,
+                                            ),
+                                            PopupMenuItem(
+                                              child: Text("Cash On Delivery"),
+                                              value: 1,
+                                            ),
+                                            PopupMenuItem(
+                                              child: Text("Wallet"),
+                                              value: 2,
+                                            ),
+                                          ],
+                                        )
+                                      : PopupMenuButton(
+                                          padding: EdgeInsets.all(10),
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          onSelected: (value) {
+                                            if (value == 0) {
+                                              setState(() {
+                                                paymentMode = "Online Mode";
+                                              });
+                                            } else if (value == 2) {
+                                              setState(() {
+                                                paymentMode = "Wallet";
+                                              });
+                                            }
+                                          },
+                                          itemBuilder: (BuildContext) => [
+                                            PopupMenuItem(
+                                              child: Text("Online Mode"),
+                                              value: 0,
+                                            ),
+                                            PopupMenuItem(
+                                              child: Text("Wallet"),
+                                              value: 2,
+                                            ),
+                                          ],
+                                        )
+                            ],
+                          ),
+                          Text(paymentMode),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                        onTap: () async {
+                          if (userNameWithNumber == "Select Delivery Address") {
+                            final result = await showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) => SelectAddress());
+                            if (result) {
+                              setState(() {});
+                              createstorage();
+                            }
+                          } else {
+                            if (totalprice1 != 0) {
+                              showModalBottomSheet(
+                                  enableDrag: false,
+                                  isDismissible: false,
+                                  isScrollControlled: false,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) => PlaceOrderCheck());
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Please select any item to place order");
+                            }
+                          }
+                        },
+                        child: checkAddress(size))
+                  ],
+                ),
+              ),
+              flex: 4,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1237,7 +1487,7 @@ step''',
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("₹$totalPrice.00",
+                  Text("₹${totalprice1 + donateAmount - discount}",
                       style: TextStyle(
                         color: Colors.white,
                       )),
@@ -1297,7 +1547,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                 FlatButton(
                   child: Text("Yes"),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, true);
                   },
                 ),
                 FlatButton(
@@ -1318,23 +1568,19 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     placePrecent = 0;
                     placeValue = 0;
                     Navigator.pop(context);
-                    Navigator.pop(context, () {
-                      setState(() {});
-                    });
+                    Navigator.pop(context, true);
                   },
                 )
               ],
             ));
   }
 
-  var vendorId;
   @override
   void initState() {
     getList();
     getMenuDetails();
 
-    vendorId = vendorIdCheck[0].toString();
-    print(vendorId);
+    createstorage();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -1376,14 +1622,35 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     super.initState();
   }
 
+  createstorage() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      totalprice1 = cart.getInt('TotalPrice');
+      gsttotal1 = cart.getInt('TotalGst');
+      totalcount1 = cart.getInt('TotalCount');
+      vendorId1 = cart.getInt('VendorId');
+    });
+  }
+
+  int gsttotal1;
+  int totalprice1;
+  int totalcount1;
+  int vendorId1;
+
   final services = UserServices();
   String jsonTags;
   getMenuDetails() async {
-    int k = idCheck.length;
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      checkitem = cart.getStringList('addedtocart');
+    });
+    int k = checkitem.length;
+    print(
+        "++++++++++++++++++++++++++++++++++++++++++++++++  string list length $k");
     for (int i = 0; i <= k - 1; i++) {
       print("ID:-$i");
-      int data = idCheck[i];
-      await services.sqliteIDquery(data).then((value) => fun(value));
+      var data = int.parse(checkitem[i]);
+      await services.data(data).then((value) => fun(value));
       String menuName = data1[0]['itemName'];
 
       int menuID = data1[0]['menuItemId'];
@@ -1428,9 +1695,13 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   List<MenuData> menuidAndQty = [];
 
   removeDataFromCart() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    setState(() {
+      checkitem = cart.getStringList('addedtocart');
+    });
     print(
         "*********************************   idcheck length********    ${idCheck.length}");
-    int k = idCheck.length;
+    int k = checkitem.length;
     print("*********************************   k length********    $k");
     for (int i = 0; i <= k - 1; i++) {
       print("*********************************   for loop stated********");
@@ -1438,29 +1709,29 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       print("ID:-$i");
       final SharedPreferences cart = await SharedPreferences.getInstance();
 
-      int data = idCheck[i];
-      await services.sqliteIDquery(data).then((value) => func(value));
-
-      int menuPriceRemove = data2[0]['itemPrice'];
-      int menuQtyRemove = data2[0]['itemCount'];
-      int vendorIdRemove = data2[0]['vendorId'];
-      int menuIdRemove = data2[0]['menuItemId'];
+      var data = int.parse(checkitem[i]);
+      await services.data(data).then((value) => func(value));
 
       setState(() {
-        totalGst = 0;
-        countSum = 0;
-        totalPrice = 0;
-        price = price - (menuQtyRemove * menuPriceRemove);
-        cart.setInt('price', price);
         services.deleteUser(data);
-        vendorIdCheck.remove(vendorIdRemove);
-        checkitem.remove(menuIdRemove.toString());
-        print(checkitem);
-        cart.setStringList('addedtocart', checkitem);
       });
     }
     setState(() {
-      idCheck.clear();
+      gsttotal1 = 0;
+      totalcount1 = 0;
+      totalprice1 = 0;
+      discount = 0;
+      offerid = 0;
+      vendorId1 = 0;
+      cart.setInt('VendorId', vendorId1);
+
+      cart.setInt('TotalPrice', totalprice1);
+      cart.setInt('TotalGst', gsttotal1);
+      cart.setInt('TotalCount', totalcount1);
+
+      checkitem.clear();
+      print(checkitem);
+      cart.setStringList('addedtocart', checkitem);
     });
   }
 
@@ -1473,13 +1744,14 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
       "menuId": menuidAndQty,
-      "vendorId": "$vendorId",
+      "vendorId": "$vendorId1",
       "userId": "$userid",
       "addressId": addressID,
-      "orderPrice": "$totalPrice.00",
-      "gst": "$totalGst.00",
-      "discountPrice": "0",
-      "offerId": "0",
+      "orderPrice": "$totalprice1.00",
+      "donation": "$donateAmount",
+      "gst": "$gsttotal1.00",
+      "discountPrice": "$discount",
+      "offerId": "$offerid",
       "paymentMode": "WALLET",
       "razorpay_payment_id": null,
       "razo rpay_order_id": null,
@@ -1552,13 +1824,14 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
       "menuId": menuidAndQty,
-      "vendorId": "$vendorId",
+      "vendorId": "$vendorId1",
       "userId": "$userid",
       "addressId": addressID,
-      "orderPrice": "$totalPrice.00",
-      "gst": "$totalGst",
-      "discountPrice": "0",
-      "offerId": "1",
+      "orderPrice": "$totalprice1.00",
+      "donation": "$donateAmount",
+      "gst": "$gsttotal1",
+      "discountPrice": "$discount",
+      "offerId": "$offerid",
       "paymentMode": "CASH",
       "razorpay_payment_id": null,
       "razo rpay_order_id": null,
@@ -1627,9 +1900,10 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   }
 
   Future<void> _checkout() async {
+    var amount = totalprice1 + donateAmount - discount;
     var options = {
       'key': 'rzp_test_7iDSklI4oMeTUd',
-      'amount': num.parse(totalPrice.toString()) * 100,
+      'amount': num.parse(amount.toString()) * 100,
       'name': usernamed,
       'description': 'Tasty',
       'prefill': {'contact': phonenumber, 'email': emailid}
@@ -1652,13 +1926,14 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
       "menuId": menuidAndQty,
-      "vendorId": "$vendorId",
+      "vendorId": "$vendorId1",
       "userId": "$userid",
       "addressId": addressID,
-      "orderPrice": "$totalPrice.00",
-      "gst": "$totalGst.00",
-      "discountPrice": "0",
-      "offerId": "1",
+      "orderPrice": "$totalprice1.00",
+      "donation": "$donateAmount",
+      "gst": "$gsttotal1.00",
+      "discountPrice": "$discount",
+      "offerId": "$offerid",
       "paymentMode": "ONLINE",
       "razorpay_payment_id": "$responsepaymentid",
       "razo rpay_order_id": "$responseorderid",
@@ -1716,21 +1991,21 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       print(response.code);
       print(response.message);
       Navigator.pop(context, PlaceOrder());
-      showDialog(
-          context: context,
-          child: new AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            title: new Text(
-              "Payment Failed",
-              style: TextStyle(
-                  color: Colors.red[700], fontWeight: FontWeight.bold),
-            ),
-            content: new Text(
-              "Something Went Wrong",
-            ),
-          ));
+      showDialog(context: context, builder: dialogFunction());
     });
+  }
+
+  dialogFunction() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      title: new Text(
+        "Payment Failed",
+        style: TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold),
+      ),
+      content: new Text(
+        "Something Went Wrong",
+      ),
+    );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -1797,7 +2072,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Spacer(),
-                      Text("PAY USING ( ₹$totalPrice)"),
+                      Text(
+                          "PAY USING with GST ( ₹${totalprice1 + donateAmount - discount})"),
                       Spacer(),
                       Text(
                         paymentMode,
@@ -1846,9 +2122,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(
                       onTap: () {
-                        Navigator.pop(context, () {
-                          setState(() {});
-                        });
+                        Navigator.pop(context, true);
                         placeTimer.cancel();
                         placePrecent = 0;
                         placeValue = 0;

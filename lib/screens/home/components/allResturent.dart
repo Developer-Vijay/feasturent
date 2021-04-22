@@ -38,8 +38,13 @@ class _AllResturentState extends State<AllResturent> {
           longitude.toString(),
     );
     print(_authorization);
-    restaurantData = json.decode(result.body)['data']['vendorInfo'];
-    return restaurantData;
+    restaurantData = json.decode(result.body)['data'];
+    if (restaurantData.isEmpty) {
+      return restaurantData;
+    } else {
+      restaurantData = restaurantData;
+      return restaurantData;
+    }
   }
 
   @override
@@ -100,6 +105,7 @@ class _AllResturentState extends State<AllResturent> {
               } else if (restaurantData.length <= 10) {
                 listlength = restaurantData.length;
               }
+
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
@@ -124,7 +130,7 @@ class _AllResturentState extends State<AllResturent> {
                       }
 
                       couponDetatil =
-                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol off";
                     } else {
                       String symbol;
                       if (snapshot.data[index]['user']['OffersAndCoupons'][0]
@@ -136,9 +142,40 @@ class _AllResturentState extends State<AllResturent> {
                       }
 
                       couponDetatil =
-                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                     }
                   }
+                  // if (snapshot
+                  //     .data[index]['user']['OffersAndCoupons'].isEmpty) {
+                  // } else {
+                  //   if (snapshot.data[index]['user']['OffersAndCoupons'][0]
+                  //           ['discount'] ==
+                  //       null) {
+                  //     String symbol;
+                  //     if (snapshot.data[index]['user']['OffersAndCoupons'][0]
+                  //             ['couponDiscountType'] ==
+                  //         "PERCENT") {
+                  //       symbol = "%";
+                  //     } else {
+                  //       symbol = "₹";
+                  //     }
+
+                  //     couponDetatil =
+                  //         "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                  //   } else {
+                  //     String symbol;
+                  //     if (snapshot.data[index]['user']['OffersAndCoupons'][0]
+                  //             ['discountType'] ==
+                  //         "PERCENT") {
+                  //       symbol = "%";
+                  //     } else {
+                  //       symbol = "₹";
+                  //     }
+
+                  //     couponDetatil =
+                  //         "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
+                  //   }
+                  // }
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -268,7 +305,7 @@ class _AllResturentState extends State<AllResturent> {
                                             snapshot.data[index]['avgRating'] ==
                                                     null
                                                 ? Text(
-                                                    "Not Rated",
+                                                    "⭐1",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.height * 0.016,

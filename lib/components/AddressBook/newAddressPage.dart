@@ -24,6 +24,11 @@ class _AddressListState extends State<AddressList> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   Future<void> refreshList() async {
@@ -112,7 +117,9 @@ class _AddressListState extends State<AddressList> {
           "authorization": _authorization,
           "refreshtoken": _refreshtoken,
         });
-    ordersData = json.decode(response.body)['data'];
+    setState(() {
+      ordersData = json.decode(response.body)['data'];
+    });
     total = ordersData.length;
     if (response.statusCode == 200) {
       return ordersData;
@@ -183,11 +190,16 @@ class _AddressListState extends State<AddressList> {
                       ? FlatButton(
                           onPressed: () {},
                           child: InkWell(
-                            onTap: () {
-                              Navigator.push(
+                            onTap: () async {
+                              final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => AddAdress()));
+                              if (result) {
+                                setState(() {
+                                  refreshList();
+                                });
+                              }
                             },
                             child: Container(
                               margin: EdgeInsets.only(left: 5, right: 5),

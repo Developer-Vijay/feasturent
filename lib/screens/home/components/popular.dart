@@ -219,12 +219,18 @@ class _PopularListState extends State<PopularList> {
                             SizedBox(
                               height: size.height * 0.01,
                             ),
-                            Text(
-                              snap.data[index]['title'],
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: size.height * 0.014),
+                            Container(
+                              width: size.width * 0.2,
+                              child: Center(
+                                child: Text(
+                                  snap.data[index]['title'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: size.height * 0.014),
+                                ),
+                              ),
                             )
                           ],
                         );

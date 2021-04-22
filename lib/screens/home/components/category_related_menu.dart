@@ -100,18 +100,22 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                           {
                             int tpye = 0;
                             return InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 var menuD;
                                 setState(() {
                                   menuD = snapshot.data[index];
                                 });
-                                Navigator.push(
+                                final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             CategoryDetailPage(
                                               menuData: menuD,
                                             )));
+                                if (result) {
+                                  setState(() {});
+                                  getList();
+                                }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 14),
@@ -163,63 +167,75 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                       ),
                                                       onPressed: () async {
                                                         callingLoader();
+
                                                         await services
                                                             .data(snapshot
                                                                     .data[index]
                                                                 ['menuId'])
                                                             .then((value) =>
                                                                 fun(value));
+
                                                         final SharedPreferences
                                                             cart =
                                                             await SharedPreferences
                                                                 .getInstance();
-                                                        price = cart
-                                                            .getInt('price');
+                                                        int totalprice =
+                                                            cart.getInt(
+                                                                'TotalPrice');
+                                                        int gsttotal = cart
+                                                            .getInt('TotalGst');
+                                                        int totalcount =
+                                                            cart.getInt(
+                                                                'TotalCount');
+                                                        int vendorId = cart
+                                                            .getInt('VendorId');
+
                                                         if (checkitem
-                                                                .isNotEmpty ||
+                                                                .isNotEmpty &&
                                                             checkitem.contains(
-                                                                snapshot.data[
-                                                                        index][
-                                                                    'menuId'])) {
-                                                          if (idCheck.contains(
-                                                              data1[0]['id'])) {
+                                                                snapshot
+                                                                    .data[index]
+                                                                        [
+                                                                        'menuId']
+                                                                    .toString())) {
+                                                          if (data1[0][
+                                                                  'itemCount'] ==
+                                                              totalcount) {
                                                             setState(() {
                                                               snackBarData =
                                                                   "${snapshot.data[index]['title']} is remove from cart";
-                                                            });
-                                                            setState(() {
-                                                              countSum = countSum -
-                                                                  data1[0][
-                                                                      'itemCount'];
-                                                              totalPrice = totalPrice -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
+                                                              totalcount =
+                                                                  totalcount -
                                                                       data1[0][
-                                                                          'itemPrice']);
-                                                              totalGst = totalGst -
+                                                                          'itemCount'];
+                                                              gsttotal = gsttotal -
                                                                   (data1[0][
                                                                           'itemCount'] *
                                                                       data1[0][
                                                                           'gst']);
-                                                              price = price -
+                                                              totalprice = totalprice -
                                                                   (data1[0][
                                                                           'itemCount'] *
                                                                       data1[0][
                                                                           'itemPrice']);
+                                                              vendorId = 0;
                                                               cart.setInt(
-                                                                  'price',
-                                                                  price);
-                                                              services
-                                                                  .deleteUser(
-                                                                      data1[0][
-                                                                          'id']);
-                                                              idCheck.remove(
-                                                                  data1[0]
-                                                                      ['id']);
-                                                              vendorIdCheck
-                                                                  .remove(data1[
-                                                                          0][
-                                                                      'vendorId']);
+                                                                  'VendorId',
+                                                                  vendorId);
+                                                              cart.setInt(
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
+
+                                                              // vendorIdCheck
+                                                              //     .remove(data1[
+                                                              //             0][
+                                                              //         'vendorId']);
                                                               checkitem.remove(data1[
                                                                           0][
                                                                       'menuItemId']
@@ -228,17 +244,43 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                               cart.setStringList(
                                                                   'addedtocart',
                                                                   checkitem);
+                                                              services.deleteUser(
+                                                                  data1[0][
+                                                                      'menuItemId']);
                                                             });
                                                           } else {
                                                             setState(() {
                                                               snackBarData =
                                                                   "${snapshot.data[index]['title']} is remove from cart";
-                                                            });
-                                                            setState(() {
-                                                              services
-                                                                  .deleteUser(
+                                                              totalcount =
+                                                                  totalcount -
                                                                       data1[0][
-                                                                          'id']);
+                                                                          'itemCount'];
+                                                              gsttotal = gsttotal -
+                                                                  (data1[0][
+                                                                          'itemCount'] *
+                                                                      data1[0][
+                                                                          'gst']);
+                                                              totalprice = totalprice -
+                                                                  (data1[0][
+                                                                          'itemCount'] *
+                                                                      data1[0][
+                                                                          'itemPrice']);
+
+                                                              cart.setInt(
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
+
+                                                              // vendorIdCheck
+                                                              //     .remove(data1[
+                                                              //             0][
+                                                              //         'vendorId']);
                                                               checkitem.remove(data1[
                                                                           0][
                                                                       'menuItemId']
@@ -247,15 +289,9 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                               cart.setStringList(
                                                                   'addedtocart',
                                                                   checkitem);
-                                                              print(checkitem);
-                                                              price = price -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
-                                                                      data1[0][
-                                                                          'itemPrice']);
-                                                              cart.setInt(
-                                                                  'price',
-                                                                  price);
+                                                              services.deleteUser(
+                                                                  data1[0][
+                                                                      'menuItemId']);
                                                             });
                                                           }
                                                         } else {
@@ -357,6 +393,14 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                           cart =
                                                           await SharedPreferences
                                                               .getInstance();
+                                                      int totalprice = cart
+                                                          .getInt('TotalPrice');
+                                                      int gsttotal = cart
+                                                          .getInt('TotalGst');
+                                                      int totalcount = cart
+                                                          .getInt('TotalCount');
+                                                      int vendorId = cart
+                                                          .getInt('VendorId');
                                                       if (snapshot.data[index]
                                                               ['isNonVeg'] ==
                                                           false) {
@@ -377,55 +421,131 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                               ['menuId'])
                                                           .then((value) =>
                                                               fun(value));
-                                                      if (data1.isEmpty) {
-                                                        setState(() {
-                                                          var data =
-                                                              snapshot.data;
-                                                          itemAddToCart(index,
-                                                              tpye, data);
-                                                          setState(() {
-                                                            snackBarData =
-                                                                "${snapshot.data[index]['title']} is added to cart";
-                                                          });
-                                                          checkitem.add(snapshot
-                                                              .data[index]
-                                                                  ['menuId']
-                                                              .toString());
-                                                          cart.setStringList(
-                                                              'addedtocart',
-                                                              checkitem);
-                                                        });
-                                                      } else {
-                                                        if (data1[0]
-                                                                ['itemName'] !=
-                                                            snapshot.data[index]
-                                                                ['title']) {
-                                                          setState(() {
-                                                            snackBarData =
-                                                                "${snapshot.data[index]['title']} is added to cart";
-                                                          });
+                                                      if (vendorId == 0 ||
+                                                          vendorId ==
+                                                              snapshot.data[
+                                                                      index][
+                                                                  'vendorId']) {
+                                                        if (data1.isEmpty) {
                                                           setState(() {
                                                             var data =
                                                                 snapshot.data;
-
                                                             itemAddToCart(index,
                                                                 tpye, data);
+                                                            setState(() {
+                                                              snackBarData =
+                                                                  "${snapshot.data[index]['title']} is added to cart";
+
+                                                              totalcount =
+                                                                  totalcount +
+                                                                      1;
+                                                              gsttotal = gsttotal +
+                                                                  snapshot.data[
+                                                                          index]
+                                                                      [
+                                                                      'gstAmount'];
+                                                              totalprice = totalprice +
+                                                                  snapshot.data[
+                                                                          index]
+                                                                      [
+                                                                      'totalPrice'];
+
+                                                              vendorId = snapshot
+                                                                          .data[
+                                                                      index]
+                                                                  ['vendorId'];
+                                                              cart.setInt(
+                                                                  'VendorId',
+                                                                  vendorId);
+                                                              cart.setInt(
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
+                                                            });
+
                                                             checkitem.add(snapshot
                                                                 .data[index]
-                                                                    ['menuID']
+                                                                    ['menuId']
                                                                 .toString());
                                                             cart.setStringList(
                                                                 'addedtocart',
                                                                 checkitem);
                                                           });
                                                         } else {
-                                                          setState(() {
-                                                            snackBarData =
-                                                                "${snapshot.data[index]['title']} is already added to cart";
-                                                          });
+                                                          if (data1[0][
+                                                                  'itemName'] !=
+                                                              snapshot.data[
+                                                                      index]
+                                                                  ['title']) {
+                                                            setState(() {
+                                                              var data =
+                                                                  snapshot.data;
+                                                              itemAddToCart(
+                                                                  index,
+                                                                  tpye,
+                                                                  data);
+                                                              setState(() {
+                                                                snackBarData =
+                                                                    "${snapshot.data[index]['title']} is added to cart";
 
-                                                          print("match");
+                                                                totalcount =
+                                                                    totalcount +
+                                                                        1;
+                                                                gsttotal = gsttotal +
+                                                                    snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'gstAmount'];
+                                                                totalprice = totalprice +
+                                                                    snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'totalPrice'];
+
+                                                                vendorId = snapshot
+                                                                            .data[
+                                                                        index][
+                                                                    'vendorId'];
+                                                                cart.setInt(
+                                                                    'VendorId',
+                                                                    vendorId);
+                                                                cart.setInt(
+                                                                    'TotalPrice',
+                                                                    totalprice);
+                                                                cart.setInt(
+                                                                    'TotalGst',
+                                                                    gsttotal);
+                                                                cart.setInt(
+                                                                    'TotalCount',
+                                                                    totalcount);
+                                                              });
+
+                                                              checkitem.add(snapshot
+                                                                  .data[index]
+                                                                      ['menuId']
+                                                                  .toString());
+                                                              cart.setStringList(
+                                                                  'addedtocart',
+                                                                  checkitem);
+                                                            });
+                                                          } else {
+                                                            setState(() {
+                                                              snackBarData =
+                                                                  "${snapshot.data[index]['title']} is already added to cart";
+                                                            });
+
+                                                            print("match");
+                                                          }
                                                         }
+                                                      } else {
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                "Please Add order from Single Resturent");
                                                       }
                                                     },
                                                     color: Colors.white,
@@ -595,9 +715,8 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                               0.006,
                                                         ),
                                                         Text(
-                                                          snapshot.data[index]
-                                                                  ['categories']
-                                                              ['name'],
+                                                          snapshot.data[index][
+                                                              'restaurantName'],
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.height *
@@ -742,12 +861,16 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                 FlatButton(
                                   textColor: Colors.redAccent,
                                   child: Text("View Cart"),
-                                  onPressed: () {
-                                    Navigator.push(
+                                  onPressed: () async {
+                                    final result = await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 CartScreen()));
+                                    if (result) {
+                                      setState(() {});
+                                      getList();
+                                    }
                                   },
                                 ),
                               ],
@@ -766,10 +889,10 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
   itemAddToCart(index, tpye, data) async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
 
-    var sum = cart.getInt('price');
-    sum = sum + data[index]['totalPrice'];
-    cart.setInt('price', sum);
-    print(sum);
+    // var sum = cart.getInt('price');
+    // sum = sum + data[index]['totalPrice'];
+    // cart.setInt('price', sum);
+    // print(sum);
     setState(() {
       // itemCount.add(value);
       services.saveUser(

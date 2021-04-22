@@ -8,7 +8,7 @@ class WishListDBhelper {
     return sql.openDatabase(path.join(dbPath, 'wishListDat.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE wishListDat(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, itemPrice INTEGER, itemCount INTEGER, vendorId INTEGER, menuItemId INTEGER, imagePath TEXT, itemName TEXT, itemStatus TEXT, itemtype INTEGER, isSelected INTEGER, vendorName TEXT)');
+          'CREATE TABLE wishListDat(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, itemPrice INTEGER, itemCount INTEGER, vendorId INTEGER, menuItemId INTEGER, imagePath TEXT, itemName TEXT, itemStatus TEXT, itemtype INTEGER, isSelected INTEGER, vendorName TEXT, gst INTEGER)');
     }, version: 1);
   }
 

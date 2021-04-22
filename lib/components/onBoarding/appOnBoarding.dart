@@ -38,7 +38,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         await SharedPreferences.getInstance();
     locationShared.setString('tempLocation', "Fetching location...");
     final SharedPreferences cart = await SharedPreferences.getInstance();
-    cart.setInt('price', 0);
+    cart.setInt('TotalGst', 0);
+    cart.setInt('TotalPrice', 0);
+    cart.setInt('VendorId', 0);
+    cart.setInt('TotalCount', 0);
     cart.setStringList('addedtocart', itemAdded);
   }
 
@@ -78,7 +81,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
         resizeToAvoidBottomInset: false,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,

@@ -22,6 +22,22 @@ class _WishlistState extends State<Wishlist> {
     getList();
   }
 
+  callingLoader() {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
+  }
+
   final services = UserServices();
   int _index1 = 0;
   final wishListServices = WishListService();
@@ -223,8 +239,15 @@ class _WishlistState extends State<Wishlist> {
                                 return res;
                               } else if (direction ==
                                   DismissDirection.startToEnd) {
+                                callingLoader();
+
                                 final SharedPreferences cart =
                                     await SharedPreferences.getInstance();
+
+                                int totalprice = cart.getInt('TotalPrice');
+                                int gsttotal = cart.getInt('TotalGst');
+                                int totalcount = cart.getInt('TotalCount');
+                                int vendorId = cart.getInt('VendorId');
                                 setState(() {
                                   tpye = users[index].itemtype;
                                 });
@@ -232,60 +255,200 @@ class _WishlistState extends State<Wishlist> {
                                 await services
                                     .data(users[index].menuItemId)
                                     .then((value) => fun(value));
-                                if (dataWishList.isEmpty) {
-                                  setState(() {
-                                    itemAddToCart(users[index], tpye);
-                                    Fluttertoast.showToast(
-                                        msg: "${users[index].itemName} Added");
-                                    checkdata.add(
-                                        users[index].menuItemId.toString());
-                                    cart.setStringList(
-                                        'addedtocart', checkdata);
-                                  });
 
-                                  final snackBar = SnackBar(
-                                    duration: Duration(seconds: 1),
-                                    backgroundColor:
-                                        Colors.lightBlueAccent[200],
-                                    content: Text(
-                                        "${users[index].itemName} is added to cart"),
-                                    action: SnackBarAction(
-                                      textColor: Colors.redAccent,
-                                      label: "View Cart",
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CartScreen()));
-                                      },
-                                    ),
-                                  );
-
-                                  Scaffold.of(context).showSnackBar(snackBar);
-                                } else {
-                                  if (dataWishList[0]['itemName'] !=
-                                      users[index].itemName) {
+                                if (vendorId == 0 ||
+                                    vendorId == users[index].vendorId) {
+                                  if (data1.isEmpty) {
                                     setState(() {
                                       itemAddToCart(users[index], tpye);
                                       checkdata.add(
                                           users[index].menuItemId.toString());
+
+                                      totalcount = totalcount + 1;
+                                      gsttotal = gsttotal + users[index].gst;
+                                      totalprice =
+                                          totalprice + users[index].itemPrice;
+
+                                      vendorId = users[index].vendorId;
+                                      cart.setInt('VendorId', vendorId);
+                                      cart.setInt('TotalPrice', totalprice);
+                                      cart.setInt('TotalGst', gsttotal);
+                                      cart.setInt('TotalCount', totalcount);
+
                                       cart.setStringList(
                                           'addedtocart', checkdata);
+                                      final snackBar = SnackBar(
+                                        duration: Duration(seconds: 1),
+                                        backgroundColor:
+                                            Colors.lightBlueAccent[200],
+                                        content: Text(
+                                            "${users[index].itemName} is added to cart"),
+                                        action: SnackBarAction(
+                                          textColor: Colors.redAccent,
+                                          label: "View Cart",
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CartScreen()));
+                                          },
+                                        ),
+                                      );
+
+                                      Scaffold.of(context)
+                                          .showSnackBar(snackBar);
+                                      // snackBarData =
+                                      //     "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
                                     });
 
-                                    Fluttertoast.showToast(msg: "Item Added");
+                                    // Scaffold.of(context)
+                                    //     .showSnackBar(snackBar);
                                   } else {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "${users[index].itemName} is already added");
+                                    if (data1[0]['itemName'] !=
+                                        users[index].itemName) {
+                                      setState(() {
+                                        itemAddToCart(index, tpye);
+                                        checkdata.add(
+                                            users[index].menuItemId.toString());
 
-                                    print("match");
+                                        totalcount = totalcount + 1;
+                                        gsttotal = gsttotal + users[index].gst;
+                                        totalprice =
+                                            totalprice + users[index].itemPrice;
+
+                                        vendorId = users[index].vendorId;
+                                        cart.setInt('VendorId', vendorId);
+                                        cart.setInt('TotalPrice', totalprice);
+                                        cart.setInt('TotalGst', gsttotal);
+                                        cart.setInt('TotalCount', totalcount);
+
+                                        cart.setStringList(
+                                            'addedtocart', checkdata);
+                                        final snackBar = SnackBar(
+                                          duration: Duration(seconds: 1),
+                                          backgroundColor:
+                                              Colors.lightBlueAccent[200],
+                                          content: Text(
+                                              "${users[index].itemName} is added to cart"),
+                                          action: SnackBarAction(
+                                            textColor: Colors.redAccent,
+                                            label: "View Cart",
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CartScreen()));
+                                            },
+                                          ),
+                                        );
+
+                                        Scaffold.of(context)
+                                            .showSnackBar(snackBar);
+                                        // snackBarData =
+                                        //     "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
+                                      });
+                                    } else {
+                                      setState(() {
+                                        final snackBar = SnackBar(
+                                          duration: Duration(seconds: 1),
+                                          backgroundColor:
+                                              Colors.lightBlueAccent[200],
+                                          content: Text(
+                                              "${users[index].itemName} is already added to cart"),
+                                          action: SnackBarAction(
+                                            textColor: Colors.redAccent,
+                                            label: "View Cart",
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CartScreen()));
+                                            },
+                                          ),
+                                        );
+
+                                        Scaffold.of(context)
+                                            .showSnackBar(snackBar);
+                                        // snackBarData =
+                                        //     "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
+                                      });
+                                      print("match");
+                                    }
                                   }
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          "Please Add order from Single Resturent");
                                 }
 
-                                Fluttertoast.showToast(
-                                    msg: "Item added to Cart");
+                                Navigator.pop(context);
+
+                                //   final SharedPreferences cart =
+                                //       await SharedPreferences.getInstance();
+                                //   setState(() {
+                                //     tpye = users[index].itemtype;
+                                //   });
+
+                                //   await services
+                                //       .data(users[index].menuItemId)
+                                //       .then((value) => fun(value));
+                                //   if (dataWishList.isEmpty) {
+                                //     setState(() {
+                                //       itemAddToCart(users[index], tpye);
+                                //       Fluttertoast.showToast(
+                                //           msg: "${users[index].itemName} Added");
+                                //       checkdata.add(
+                                //           users[index].menuItemId.toString());
+                                //       cart.setStringList(
+                                //           'addedtocart', checkdata);
+                                //     });
+
+                                //     final snackBar = SnackBar(
+                                //       duration: Duration(seconds: 1),
+                                //       backgroundColor:
+                                //           Colors.lightBlueAccent[200],
+                                //       content: Text(
+                                //           "${users[index].itemName} is added to cart"),
+                                //       action: SnackBarAction(
+                                //         textColor: Colors.redAccent,
+                                //         label: "View Cart",
+                                //         onPressed: () {
+                                //           Navigator.push(
+                                //               context,
+                                //               MaterialPageRoute(
+                                //                   builder: (context) =>
+                                //                       CartScreen()));
+                                //         },
+                                //       ),
+                                //     );
+
+                                //     Scaffold.of(context).showSnackBar(snackBar);
+                                //   } else {
+                                //     if (dataWishList[0]['itemName'] !=
+                                //         users[index].itemName) {
+                                //       setState(() {
+                                //         itemAddToCart(users[index], tpye);
+                                //         checkdata.add(
+                                //             users[index].menuItemId.toString());
+                                //         cart.setStringList(
+                                //             'addedtocart', checkdata);
+                                //       });
+
+                                //       Fluttertoast.showToast(msg: "Item Added");
+                                //     } else {
+                                //       Fluttertoast.showToast(
+                                //           msg:
+                                //               "${users[index].itemName} is already added");
+
+                                //       print("match");
+                                //     }
+                                //   }
+
+                                //   Fluttertoast.showToast(
+                                //       msg: "Item added to Cart");
                               }
                             },
 
@@ -758,10 +921,10 @@ class _WishlistState extends State<Wishlist> {
   itemAddToCart(index, tpye) async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
 
-    var sum = cart.getInt('price');
-    sum = sum + index.itemPrice;
-    cart.setInt('price', sum);
-    print(sum);
+    // var sum = cart.getInt('price');
+    // sum = sum + index.itemPrice;
+    // cart.setInt('price', sum);
+    // print(sum);
     setState(() {
       // itemCount.add(value)
       services.saveUser(

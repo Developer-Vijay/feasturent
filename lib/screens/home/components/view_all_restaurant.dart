@@ -31,8 +31,6 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
         ),
         body: ListView.builder(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
           itemCount: restaurantData.length,
           itemBuilder: (context, index) {
             var couponDetatil;
@@ -52,7 +50,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                 }
 
                 couponDetatil =
-                    "${restaurantData[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                    "${restaurantData[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol off";
               } else {
                 String symbol;
                 if (restaurantData[index]['user']['OffersAndCoupons'][0]
@@ -64,9 +62,42 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                 }
 
                 couponDetatil =
-                    "${restaurantData[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                    "${restaurantData[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
               }
             }
+
+            // var couponDetatil;
+
+            // if (restaurantData[index]['user']['OffersAndCoupons'].isEmpty) {
+            // } else {
+            //   if (restaurantData[index]['user']['OffersAndCoupons'][0]
+            //           ['discount'] ==
+            //       null) {
+            //     String symbol;
+            //     if (restaurantData[index]['user']['OffersAndCoupons'][0]
+            //             ['couponDiscountType'] ==
+            //         "PERCENT") {
+            //       symbol = "%";
+            //     } else {
+            //       symbol = "₹";
+            //     }
+
+            //     couponDetatil =
+            //         "${restaurantData[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
+            //   } else {
+            //     String symbol;
+            //     if (restaurantData[index]['user']['OffersAndCoupons'][0]
+            //             ['discountType'] ==
+            //         "PERCENT") {
+            //       symbol = "%";
+            //     } else {
+            //       symbol = "₹";
+            //     }
+
+            //     couponDetatil =
+            //         "${restaurantData[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
+            //   }
+            // }
             return InkWell(
               onTap: () {
                 Navigator.push(
@@ -188,7 +219,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                     children: [
                                       restaurantData[index]['avgRating'] == null
                                           ? Text(
-                                              "Not Rated",
+                                              "⭐1",
                                               style: TextStyle(
                                                   fontSize: size.height * 0.016,
                                                   color: Colors.red,

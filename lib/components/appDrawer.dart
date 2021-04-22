@@ -8,6 +8,7 @@ import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass
 import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
+import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,7 +33,7 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   bool isenabled = false;
-  loginCheckForData() {
+  loginCheckForData(size) {
     if (widget.cStatus == 1) {
       return Container(
         child: Column(
@@ -42,16 +43,18 @@ class _AppDrawerState extends State<AppDrawer> {
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Color(0xffF8F9FE),
-                child: ClipOval(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
                     child: widget.cProfile == null
                         ? Image.asset("assets/images/loginuser.png")
                         : CachedNetworkImage(
-                            imageUrl: widget.cProfile,
-                            fit: BoxFit.cover,
+                            imageUrl: S3_BASE_PATH + widget.cProfile,
+                            fit: BoxFit.fill,
+                            width: size.width * 0.33,
                             placeholder: (context, url) =>
                                 Center(child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) => Image.asset(
-                              "assets/images/feasturenttemp.jpeg",
+                              "assets/images/loginuser.png",
                               fit: BoxFit.cover,
                             ),
                           )),
@@ -121,6 +124,8 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
@@ -131,13 +136,16 @@ class _AppDrawerState extends State<AppDrawer> {
               decoration: BoxDecoration(
                 color: Color(0xFF3498E5),
               ),
-              child: loginCheckForData()),
+              child: loginCheckForData(size)),
           SizedBox(
             height: 10,
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text('Home'),
+            title: Text(
+              'Home',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             dense: true,
             selected: true,
             onTap: () {
@@ -148,7 +156,10 @@ class _AppDrawerState extends State<AppDrawer> {
           widget.cStatus == 1
               ? ListTile(
                   leading: Icon(Icons.article),
-                  title: Text('MyOrders'),
+                  title: Text(
+                    'MyOrders',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   dense: true,
                   onTap: () {
                     Navigator.push(context,
@@ -160,7 +171,10 @@ class _AppDrawerState extends State<AppDrawer> {
               : SizedBox(),
           ListTile(
             leading: Icon(Icons.favorite),
-            title: Text('Wishlist'),
+            title: Text(
+              'Wishlist',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             dense: true,
             onTap: () {
               Navigator.push(
@@ -171,7 +185,10 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.shopping_cart),
-            title: Text('Cart'),
+            title: Text(
+              'Cart',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             dense: true,
             onTap: () {
               Navigator.push(context,
@@ -182,7 +199,10 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.account_balance_wallet),
-            title: Text('Wallet'),
+            title: Text(
+              'Wallet',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             dense: true,
             onTap: () {
               Navigator.push(
@@ -201,7 +221,10 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Settings'),
+            title: Text(
+              'Settings',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             dense: true,
             onTap: () {
               Navigator.push(
@@ -214,7 +237,10 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.help_center),
-            title: Text('Term & Condition'),
+            title: Text(
+              'Term & Condition',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             dense: true,
             onTap: () {
               _launchURL();
@@ -222,7 +248,10 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.privacy_tip),
-            title: Text('Privacy Policy'),
+            title: Text(
+              'Privacy Policy',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             dense: true,
             onTap: () {
               _launchURL();
@@ -231,7 +260,10 @@ class _AppDrawerState extends State<AppDrawer> {
           widget.cStatus == 1
               ? ListTile(
                   leading: Icon(Icons.logout),
-                  title: Text('Logout'),
+                  title: Text(
+                    'Logout',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   dense: true,
                   onTap: () async {
                     return showDialog(

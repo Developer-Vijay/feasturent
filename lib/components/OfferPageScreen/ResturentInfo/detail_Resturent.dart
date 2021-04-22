@@ -176,12 +176,19 @@ class _DetailResturentState extends State<DetailResturent> {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  Text(
-                                    "1.5Km",
-                                    style: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: size.height * 0.016),
-                                  )
+                                  data['distance'] == null
+                                      ? Text(
+                                          "Not Avialable",
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: size.height * 0.016),
+                                        )
+                                      : Text(
+                                          "${data['distance'].toInt()}Km",
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: size.height * 0.016),
+                                        )
                                 ],
                               ),
                             ),

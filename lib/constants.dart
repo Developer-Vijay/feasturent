@@ -302,7 +302,7 @@ List<CancelOrderList> cancel = [
   CancelOrderList(title: "Mood Changed", value: false),
   CancelOrderList(title: "Hygiene issue", value: false),
 ];
-var donateAmount;
+var donateAmount = 0;
 
 class DonateList {
   bool value = false;
@@ -317,4 +317,26 @@ List<DonateList> donate = [
   DonateList(amount: 20, value: false),
   DonateList(amount: 50, value: false),
   DonateList(amount: 100, value: false),
+];
+
+int offerid = 0;
+double discount = 0;
+List color = [
+  Color(0xFFf1635c),
+  Color(0xFF392d7a),
+  Color(0xFF51ba64),
+  Color(0xFF6e588a),
+  Color(0xFF660143),
+  Color(0xFF015196),
+  Color(0xFFfcdc4c),
+];
+
+List colors = [
+  Color(0xFFF9C0BD),
+  Color(0xFF9C96BC),
+  Color(0xFFA8DCB1),
+  Color(0xFFB6ABC4),
+  Color(0xFFB382A2),
+  Color(0xFF80A8CA),
+  Color(0xFFFDEDA5),
 ];

@@ -46,35 +46,40 @@ class _ResturentDetailState extends State<ResturentDetail> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: appbarText(),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context, true);
+      },
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: appbarText(),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.details_outlined),
+                label: 'Details',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.menu_rounded),
+                label: 'Menu',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.rate_review_outlined),
+                label: 'Review',
+              ),
+            ],
+            currentIndex: _page,
+            selectedItemColor: Colors.amber[800],
+            onTap: (index) {
+              setState(() {
+                _page = index;
+              });
+            },
+          ),
+          body: tabPages[_page],
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.details_outlined),
-              label: 'Details',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_rounded),
-              label: 'Menu',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.rate_review_outlined),
-              label: 'Review',
-            ),
-          ],
-          currentIndex: _page,
-          selectedItemColor: Colors.amber[800],
-          onTap: (index) {
-            setState(() {
-              _page = index;
-            });
-          },
-        ),
-        body: tabPages[_page],
       ),
     );
   }

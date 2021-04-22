@@ -98,7 +98,6 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text(widget.data['name']),
       ),
@@ -206,6 +205,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: TextField(
+                      maxLength: 10,
                       controller: _phoneController,
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.w600),
@@ -278,6 +278,11 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     if (_phoneController.text.isEmpty) {
       setState(() {
         _phoneValidate = "Please Enter the Mobile Number";
+        _isValidate = false;
+      });
+    } else if (_phoneController.text.length != 10) {
+      setState(() {
+        _phoneValidate = "Mobile Number should be 10 digits";
         _isValidate = false;
       });
     } else {
