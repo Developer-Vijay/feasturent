@@ -23,6 +23,8 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 
 class HomeScreen extends StatefulWidget {
+  final index;
+  const HomeScreen({Key key, this.index}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -32,12 +34,25 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      tempoaryData = widget.index;
+    });
+    changePage();
     takeLocation();
     getSession();
     getCurrentLocation();
     fetchwelcomeBanner();
   }
 
+  changePage() async {
+    if (tempoaryData == null) {
+      _page = 0;
+    } else {
+      _page = tempoaryData;
+    }
+  }
+
+  var tempoaryData;
   var tempdata;
 
   var homeBanner;
@@ -96,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ));
   }
 
-  int _page = 0;
+  int _page;
   List<Widget> tabPages = [
     HomePageBody(),
     OfferPageScreen(),
@@ -121,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return showDialog(
         context: context,
         barrierDismissible: false,
-        child: _showOffers(data),
+        builder: _showOffers(data),
       );
     }
   }
@@ -485,7 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 cEmail: _customerEmail),
             bottomNavigationBar: CurvedNavigationBar(
               animationDuration: Duration(milliseconds: 200),
-              index: 0,
+              index: _page,
               height: sized.height * 0.08,
               items: <Widget>[
                 SvgPicture.asset(

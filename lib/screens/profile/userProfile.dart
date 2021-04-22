@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   getsession() async {}
 
-  Widget _buildloginCheck() {
+  Widget _buildloginCheck(size) {
     return ListView(
       children: <Widget>[
         Column(
@@ -65,14 +65,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Color(0xffF8F9FE),
-                child: ClipOval(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
                     child: photo == null
                         ? Image.asset("assets/images/loginuser.png")
                         : CachedNetworkImage(
-                            imageUrl: photo,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                            imageUrl: S3_BASE_PATH + photo,
+                            fit: BoxFit.fill,
+                            width: size.width * 0.33,
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Image.asset(
+                              "assets/images/loginuser.png",
+                              fit: BoxFit.cover,
+                            ),
                           )),
               ),
               //CachedNetworkImageProvider('$photo')),
@@ -194,6 +200,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
     return ThemeSwitchingArea(
       child: Builder(
@@ -204,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                     child: Container(
                         child: takeUser == true
-                            ? _buildloginCheck()
+                            ? _buildloginCheck(size)
                             : _buildElseCheck()))
               ],
             ),

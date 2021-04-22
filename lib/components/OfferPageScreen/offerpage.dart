@@ -45,7 +45,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
           longitude.toString(),
     );
     print("data fetch");
-    restaurantData = json.decode(result.body)['data']['vendorInfo'];
+    restaurantData = json.decode(result.body)['data'];
     return restaurantData;
   }
 
@@ -257,6 +257,9 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                   lineLength: size.height * 0.08,
                                   direction: Axis.vertical,
                                 ),
+                                SizedBox(
+                                  width: size.width * 0.05,
+                                ),
                                 Container(
                                   height: size.height * 0.08,
                                   alignment: Alignment.topCenter,
@@ -264,7 +267,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                   //     top: size.height * 0.04, left: size.width * 0.019),
                                   child: Column(children: [
                                     Container(
-                                      width: size.width * 0.5,
+                                      width: size.width * 0.45,
                                       child: Text(
                                         "${snapshot.data[index]['OffersAndCoupon']['title']}",
                                         overflow: TextOverflow.ellipsis,
@@ -276,7 +279,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                       ),
                                     ),
                                     Container(
-                                      width: size.width * 0.5,
+                                      width: size.width * 0.45,
                                       child: Text(
                                         "${snapshot.data[index]['OffersAndCoupon']['description']}",
                                         overflow: TextOverflow.ellipsis,
@@ -358,7 +361,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                             }
 
                             couponDetatil =
-                                "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                                "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol off";
                           } else {
                             String symbol;
                             if (snapshot.data[index]['user']['OffersAndCoupons']
@@ -370,7 +373,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                             }
 
                             couponDetatil =
-                                "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
+                                "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                           }
                           return InkWell(
                             onTap: () {
@@ -521,7 +524,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                 ['avgRating'] ==
                                                             null
                                                         ? Text(
-                                                            "Not Rated",
+                                                            "⭐1",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                     size.height *

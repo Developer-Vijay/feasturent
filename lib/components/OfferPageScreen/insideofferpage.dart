@@ -101,13 +101,12 @@ class _OfferListPageState extends State<OfferListPage> {
         if (mounted) {
           setState(() {
             resturantStatus = json.decode(result.body)['data'];
-            if (resturantStatus['vendorInfo'][0]['user']['Setting'] == null) {
+            if (resturantStatus[0]['user']['Setting'] == null) {
               status = false;
               WidgetsBinding.instance.addPostFrameCallback((_) =>
                   _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
             } else {
-              status = resturantStatus['vendorInfo'][0]['user']['Setting']
-                  ['isActive'];
+              status = resturantStatus[0]['user']['Setting']['isActive'];
               if (status == false) {
                 WidgetsBinding.instance.addPostFrameCallback((_) =>
                     _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
@@ -224,9 +223,9 @@ class _OfferListPageState extends State<OfferListPage> {
                                             .length,
                                     itemBuilder: (context, index) {
                                       return InkWell(
-                                        onTap: () {
+                                        onTap: () async {
                                           Navigator.pop(context);
-                                          Navigator.push(
+                                          final result = await Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
@@ -238,6 +237,10 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   menudata: restaurantDataCopy,
                                                 ),
                                               ));
+                                          if (result) {
+                                            setState(() {});
+                                            getList();
+                                          }
                                         },
                                         child: ListTile(
                                           enabled: true,
@@ -275,8 +278,8 @@ class _OfferListPageState extends State<OfferListPage> {
                         fontWeight: FontWeight.bold,
                         fontSize: size.height * 0.017),
                   ),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ResturentDetail(
@@ -286,6 +289,10 @@ class _OfferListPageState extends State<OfferListPage> {
                           //   arguments: restaurantDataCopy,
                           // ),
                         ));
+                    if (result) {
+                      setState(() {});
+                      getList();
+                    }
                   },
                 )
               ],
@@ -396,9 +403,44 @@ class _OfferListPageState extends State<OfferListPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             restaurantDataCopy['avgRating'] == null
-                                ? Text(
-                                    "Not Rated",
-                                    style: offerRowHeadingStyle,
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(left: 10),
+                                            child: SmoothStarRating(
+                                                allowHalfRating: false,
+                                                onRated: (v) {
+                                                  Text("23");
+                                                },
+                                                starCount: 1,
+                                                rating: 5.0,
+                                                size: size.height * 0.025,
+                                                isReadOnly: true,
+                                                defaultIconData:
+                                                    Icons.star_border_outlined,
+                                                filledIconData: Icons.star,
+                                                halfFilledIconData:
+                                                    Icons.star_border,
+                                                color: Colors.black,
+                                                borderColor: Colors.black,
+                                                spacing: 0.0),
+                                          ),
+                                          Text(
+                                            "1",
+                                            style: offerRowHeadingStyle,
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(
+                                              left: size.width * 0.04),
+                                          child: Text(
+                                            "Taste 20%",
+                                            style: offerCommonStyle,
+                                          ))
+                                    ],
                                   )
                                 : Column(
                                     children: [
@@ -480,7 +522,17 @@ class _OfferListPageState extends State<OfferListPage> {
                               ],
                             ),
                             restaurantDataCopy['avgCost'] == null
-                                ? SizedBox()
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        right: size.width * 0.02),
+                                    child: Column(
+                                      children: [
+                                        Text("₹ 250",
+                                            style: offerRowHeadingStyle),
+                                        Text("Cost for one")
+                                      ],
+                                    ),
+                                  )
                                 : Container(
                                     margin: EdgeInsets.only(
                                         right: size.width * 0.02),
@@ -515,6 +567,44 @@ class _OfferListPageState extends State<OfferListPage> {
                                       .length,
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (context, index) {
+                                    var couponDetatil;
+
+                                    if (restaurantDataCopy['user']
+                                            ['OffersAndCoupons']
+                                        .isEmpty) {
+                                    } else {
+                                      if (restaurantDataCopy['user']
+                                                  ['OffersAndCoupons'][index]
+                                              ['discount'] ==
+                                          null) {
+                                        String symbol;
+                                        if (restaurantDataCopy['user']
+                                                    ['OffersAndCoupons'][index]
+                                                ['couponDiscountType'] ==
+                                            "PERCENT") {
+                                          symbol = "%";
+                                        } else {
+                                          symbol = "₹";
+                                        }
+
+                                        couponDetatil =
+                                            "${restaurantDataCopy['user']['OffersAndCoupons'][index]['couponDiscount']}$symbol off";
+                                      } else {
+                                        String symbol;
+                                        if (restaurantDataCopy['user']
+                                                    ['OffersAndCoupons'][index]
+                                                ['discountType'] ==
+                                            "PERCENT") {
+                                          symbol = "%";
+                                        } else {
+                                          symbol = "₹";
+                                        }
+
+                                        couponDetatil =
+                                            "${restaurantDataCopy['user']['OffersAndCoupons'][index]['discount']}$symbol off";
+                                      }
+                                    }
+
                                     return InkWell(
                                       onTap: () {
                                         showModalBottomSheet(
@@ -525,6 +615,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                               'user']
                                                           ['OffersAndCoupons']
                                                       [index],
+                                                  amount: couponDetatil,
                                                 ));
                                       },
                                       child: Container(
@@ -564,7 +655,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                     left: size.width * 0.002,
                                                     top: size.height * 0.01),
                                                 child: Text(
-                                                  "${restaurantDataCopy['user']['OffersAndCoupons'][index]['description']}",
+                                                  "${restaurantDataCopy['user']['OffersAndCoupons'][index]['title']}",
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -583,9 +674,10 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   left: size.width * 0.08,
                                                   top: size.height * 0.002),
                                               child: Text(
-                                                "Use ${restaurantDataCopy['user']['OffersAndCoupons'][index]['coupon']}",
+                                                couponDetatil,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
+                                                    color: Colors.black,
                                                     fontSize:
                                                         size.height * 0.014),
                                               ))
@@ -667,20 +759,24 @@ class _OfferListPageState extends State<OfferListPage> {
                             int tpye = 0;
 
                             return InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 var menuD;
+                                var name;
                                 setState(() {
                                   menuD = restaurantDataCopy['Menus'][index];
+                                  name = restaurantDataCopy['name'];
                                 });
-                                Navigator.push(
+                                final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => FoodSlider(
-                                              menuData: menuD,
-                                              menuStatus: status,
-                                              restaurentName:
-                                                  restaurantDataCopy['name'],
-                                            )));
+                                            menuData: menuD,
+                                            menuStatus: status,
+                                            restaurentName: name)));
+                                if (result) {
+                                  setState(() {});
+                                  getList();
+                                }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 14),
@@ -749,8 +845,17 @@ class _OfferListPageState extends State<OfferListPage> {
                                                             cart =
                                                             await SharedPreferences
                                                                 .getInstance();
-                                                        price = cart
-                                                            .getInt('price');
+                                                        int totalprice =
+                                                            cart.getInt(
+                                                                'TotalPrice');
+                                                        int gsttotal = cart
+                                                            .getInt('TotalGst');
+                                                        int totalcount =
+                                                            cart.getInt(
+                                                                'TotalCount');
+                                                        int vendorId = cart
+                                                            .getInt('VendorId');
+
                                                         if (checkdata
                                                                 .isNotEmpty &&
                                                             checkdata.contains(
@@ -759,43 +864,39 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                         [
                                                                         index]['id']
                                                                     .toString())) {
-                                                          if (idCheck.contains(
-                                                              data1[0]['id'])) {
+                                                          if (data1[0][
+                                                                  'itemCount'] ==
+                                                              totalcount) {
                                                             setState(() {
                                                               snackBarData =
                                                                   "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-                                                              countSum = countSum -
-                                                                  data1[0][
-                                                                      'itemCount'];
-                                                              totalGst = totalGst -
+                                                              totalcount =
+                                                                  totalcount -
+                                                                      data1[0][
+                                                                          'itemCount'];
+                                                              gsttotal = gsttotal -
                                                                   (data1[0][
                                                                           'itemCount'] *
                                                                       data1[0][
                                                                           'gst']);
-                                                              totalPrice = totalPrice -
+                                                              totalprice = totalprice -
                                                                   (data1[0][
                                                                           'itemCount'] *
                                                                       data1[0][
                                                                           'itemPrice']);
-                                                              price = price -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
-                                                                      data1[0][
-                                                                          'itemPrice']);
+                                                              vendorId = 0;
                                                               cart.setInt(
-                                                                  'price',
-                                                                  price);
-                                                              services
-                                                                  .deleteUser(
-                                                                      data1[0][
-                                                                          'id']);
-                                                              idCheck.remove(
-                                                                  data1[0]
-                                                                      ['id']);
-                                                              vendorIdCheck
-                                                                  .remove(data1[
-                                                                          0][
-                                                                      'vendorId']);
+                                                                  'VendorId',
+                                                                  vendorId);
+                                                              cart.setInt(
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
                                                               checkdata.remove(data1[
                                                                           0][
                                                                       'menuItemId']
@@ -804,15 +905,38 @@ class _OfferListPageState extends State<OfferListPage> {
                                                               cart.setStringList(
                                                                   'addedtocart',
                                                                   checkdata);
+                                                              services.deleteUser(
+                                                                  data1[0][
+                                                                      'menuItemId']);
                                                             });
                                                           } else {
                                                             setState(() {
                                                               snackBarData =
                                                                   "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-                                                              services
-                                                                  .deleteUser(
+                                                              totalcount =
+                                                                  totalcount -
                                                                       data1[0][
-                                                                          'id']);
+                                                                          'itemCount'];
+                                                              gsttotal = gsttotal -
+                                                                  (data1[0][
+                                                                          'itemCount'] *
+                                                                      data1[0][
+                                                                          'gst']);
+                                                              totalprice = totalprice -
+                                                                  (data1[0][
+                                                                          'itemCount'] *
+                                                                      data1[0][
+                                                                          'itemPrice']);
+
+                                                              cart.setInt(
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
                                                               checkdata.remove(data1[
                                                                           0][
                                                                       'menuItemId']
@@ -821,15 +945,9 @@ class _OfferListPageState extends State<OfferListPage> {
                                                               cart.setStringList(
                                                                   'addedtocart',
                                                                   checkdata);
-                                                              print(checkdata);
-                                                              price = price -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
-                                                                      data1[0][
-                                                                          'itemPrice']);
-                                                              cart.setInt(
-                                                                  'price',
-                                                                  price);
+                                                              services.deleteUser(
+                                                                  data1[0][
+                                                                      'menuItemId']);
                                                             });
                                                           }
                                                         } else {
@@ -933,11 +1051,24 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   right: size.width * 0.058,
                                                   child: MaterialButton(
                                                     onPressed: () async {
+                                                      callingLoader();
+
                                                       if (status == true) {
                                                         final SharedPreferences
                                                             cart =
                                                             await SharedPreferences
                                                                 .getInstance();
+
+                                                        int totalprice =
+                                                            cart.getInt(
+                                                                'TotalPrice');
+                                                        int gsttotal = cart
+                                                            .getInt('TotalGst');
+                                                        int totalcount =
+                                                            cart.getInt(
+                                                                'TotalCount');
+                                                        int vendorId = cart
+                                                            .getInt('VendorId');
                                                         if (restaurantDataCopy[
                                                                         'Menus']
                                                                     [index]
@@ -962,36 +1093,15 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                 [index]['id'])
                                                             .then((value) =>
                                                                 fun(value));
-                                                        if (data1.isEmpty) {
-                                                          setState(() {
-                                                            snackBarData =
-                                                                "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
-                                                            itemAddToCart(
-                                                                index, tpye);
 
-                                                            checkdata.add(
+                                                        if (vendorId == 0 ||
+                                                            vendorId ==
                                                                 restaurantDataCopy[
                                                                             'Menus']
-                                                                        [
-                                                                        index]['id']
-                                                                    .toString());
-                                                            cart.setStringList(
-                                                                'addedtocart',
-                                                                checkdata);
-                                                          });
-
-                                                          // Scaffold.of(context)
-                                                          //     .showSnackBar(snackBar);
-                                                        } else {
-                                                          if (data1[0][
-                                                                  'itemName'] !=
-                                                              restaurantDataCopy[
-                                                                          'Menus']
-                                                                      [index]
-                                                                  ['title']) {
+                                                                        [index][
+                                                                    'vendorId']) {
+                                                          if (data1.isEmpty) {
                                                             setState(() {
-                                                              snackBarData =
-                                                                  "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
                                                               itemAddToCart(
                                                                   index, tpye);
                                                               checkdata.add(restaurantDataCopy[
@@ -999,23 +1109,129 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                       [
                                                                       index]['id']
                                                                   .toString());
+
+                                                              totalcount =
+                                                                  totalcount +
+                                                                      1;
+                                                              gsttotal = gsttotal +
+                                                                  restaurantDataCopy[
+                                                                              'Menus']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'gstAmount'];
+                                                              totalprice = totalprice +
+                                                                  restaurantDataCopy[
+                                                                              'Menus']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'totalPrice'];
+
+                                                              vendorId =
+                                                                  restaurantDataCopy[
+                                                                              'Menus']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'vendorId'];
+                                                              cart.setInt(
+                                                                  'VendorId',
+                                                                  vendorId);
+                                                              cart.setInt(
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
+
                                                               cart.setStringList(
                                                                   'addedtocart',
                                                                   checkdata);
-                                                            });
-                                                          } else {
-                                                            setState(() {
                                                               snackBarData =
-                                                                  "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
+                                                                  "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
                                                             });
-                                                            print("match");
+
+                                                            // Scaffold.of(context)
+                                                            //     .showSnackBar(snackBar);
+                                                          } else {
+                                                            if (data1[0][
+                                                                    'itemName'] !=
+                                                                restaurantDataCopy[
+                                                                            'Menus']
+                                                                        [index]
+                                                                    ['title']) {
+                                                              setState(() {
+                                                                itemAddToCart(
+                                                                    index,
+                                                                    tpye);
+                                                                checkdata.add(restaurantDataCopy[
+                                                                            'Menus']
+                                                                        [
+                                                                        index]['id']
+                                                                    .toString());
+
+                                                                totalcount =
+                                                                    totalcount +
+                                                                        1;
+                                                                gsttotal = gsttotal +
+                                                                    restaurantDataCopy['Menus']
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        'gstAmount'];
+                                                                totalprice = totalprice +
+                                                                    restaurantDataCopy['Menus']
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        'totalPrice'];
+
+                                                                vendorId = restaurantDataCopy[
+                                                                            'Menus']
+                                                                        [index][
+                                                                    'vendorId'];
+                                                                cart.setInt(
+                                                                    'VendorId',
+                                                                    vendorId);
+                                                                cart.setInt(
+                                                                    'TotalPrice',
+                                                                    totalprice);
+                                                                cart.setInt(
+                                                                    'TotalGst',
+                                                                    gsttotal);
+                                                                cart.setInt(
+                                                                    'TotalCount',
+                                                                    totalcount);
+
+                                                                cart.setStringList(
+                                                                    'addedtocart',
+                                                                    checkdata);
+                                                                snackBarData =
+                                                                    "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
+                                                              });
+                                                            } else {
+                                                              setState(() {
+                                                                snackBarData =
+                                                                    "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
+                                                              });
+                                                              print("match");
+                                                            }
                                                           }
+                                                        } else {
+                                                          Fluttertoast.showToast(
+                                                              msg:
+                                                                  "Please Add order from Single Resturent");
                                                         }
                                                       } else {
                                                         Fluttertoast.showToast(
                                                             msg:
                                                                 "Not taking orders now");
                                                       }
+                                                      Navigator.pop(context);
                                                     },
                                                     color: Colors.white,
                                                     minWidth: size.width * 0.16,
@@ -1090,19 +1306,27 @@ class _OfferListPageState extends State<OfferListPage> {
                                                             size.height * 0.01),
                                                     child: Row(
                                                       children: [
-                                                        Text(
-                                                          restaurantDataCopy[
-                                                                  'Menus']
-                                                              [index]['title'],
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize:
-                                                                  size.height *
-                                                                      0.019),
+                                                        Container(
+                                                          width:
+                                                              size.width * 0.5,
+                                                          child: Text(
+                                                            restaurantDataCopy[
+                                                                        'Menus']
+                                                                    [index]
+                                                                ['title'],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize:
+                                                                    size.height *
+                                                                        0.019),
+                                                          ),
                                                         ),
                                                         Spacer(),
                                                         Padding(
@@ -1156,47 +1380,50 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   SizedBox(
                                                       height:
                                                           size.height * 0.005),
-                                                  Container(
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          child: restaurantDataCopy['Menus']
-                                                                              [
-                                                                              index]
-                                                                          [
-                                                                          'Category']
-                                                                      [
-                                                                      'iconImage'] ==
-                                                                  "null"
-                                                              ? Image.asset(
-                                                                  "assets/icons/discount_icon.jpg",
-                                                                  height:
-                                                                      size.height *
-                                                                          0.02,
-                                                                )
-                                                              : SizedBox(),
-                                                        ),
-                                                        SizedBox(
-                                                          width: size.width *
-                                                              0.006,
-                                                        ),
-                                                        Text(
-                                                          restaurantDataCopy[
-                                                                          'Menus']
-                                                                      [index]
-                                                                  ['Category']
-                                                              ['name'],
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  size.height *
-                                                                      0.014,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  // Container(
+                                                  //   child: Row(
+                                                  //     children: [
+                                                  //       Container(
+                                                  //         child: restaurantDataCopy['Menus']
+                                                  //                             [
+                                                  //                             index]
+                                                  //                         [
+                                                  //                         'vendorCategoryId']
+                                                  //                      ==
+                                                  //                 "null"
+                                                  //             ? Image.asset(
+                                                  //                 "assets/icons/discount_icon.jpg",
+                                                  //                 height:
+                                                  //                     size.height *
+                                                  //                         0.02,
+                                                  //               )
+                                                  //             : SizedBox(),
+                                                  //       ),
+                                                  //       SizedBox(
+                                                  //         width: size.width *
+                                                  //             0.006,
+                                                  //       ),
+                                                  //       Text(restaurantDataCopy[
+                                                  //                         'Menus']
+                                                  //                     [index]
+                                                  //                 ['Category']
+                                                  //             ['name'],
+                                                  //         restaurantDataCopy[
+                                                  //                         'Menus']
+                                                  //                     [index]
+                                                  //                 ['Category']
+                                                  //             ['name'],
+                                                  //         style: TextStyle(
+                                                  //             fontSize:
+                                                  //                 size.height *
+                                                  //                     0.014,
+                                                  //             fontWeight:
+                                                  //                 FontWeight
+                                                  //                     .bold),
+                                                  //       ),
+                                                  //     ],
+                                                  //   ),
+                                                  // ),
                                                   SizedBox(
                                                     height: size.height * 0.002,
                                                   ),
@@ -1329,11 +1556,15 @@ class _OfferListPageState extends State<OfferListPage> {
                           FlatButton(
                             textColor: Colors.redAccent,
                             child: Text("View Cart"),
-                            onPressed: () {
-                              Navigator.push(
+                            onPressed: () async {
+                              final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => CartScreen()));
+                              if (result) {
+                                setState(() {});
+                                getList();
+                              }
                             },
                           ),
                         ],
@@ -1348,10 +1579,10 @@ class _OfferListPageState extends State<OfferListPage> {
   itemAddToCart(index, tpye) async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
 
-    var sum = cart.getInt('price');
-    sum = sum + restaurantDataCopy['Menus'][index]['totalPrice'];
-    cart.setInt('price', sum);
-    print(sum);
+    // var sum = cart.getInt('price');
+    // sum = sum + restaurantDataCopy['Menus'][index]['totalPrice'];
+    // cart.setInt('price', sum);
+    // print(sum);
     setState(() {
       // itemCount.add(value)
       services.saveUser(

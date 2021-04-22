@@ -14,12 +14,12 @@ class Collections extends StatefulWidget {
 class _CollectionsState extends State<Collections> {
   final _textstyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14);
-  List collectionImage = [
-    "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
-    "https://media.gettyimages.com/photos/enjoying-lunch-with-friends-picture-id1171787426?k=6&m=1171787426&s=612x612&w=0&h=cvdOLV4T-QGC60hZT4p8u7FHPHsUKA12FnswVCL2WB4=",
-    "https://media.gettyimages.com/photos/heres-to-tonight-picture-id868935172?k=6&m=868935172&s=612x612&w=0&h=MjBYXm7f229lyNXsWqcSnmlouGWrfsNDYhQCiPJ0V6g=",
-    "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
-  ];
+  // List collectionImage = [
+  //   "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
+  //   "https://media.gettyimages.com/photos/enjoying-lunch-with-friends-picture-id1171787426?k=6&m=1171787426&s=612x612&w=0&h=cvdOLV4T-QGC60hZT4p8u7FHPHsUKA12FnswVCL2WB4=",
+  //   "https://media.gettyimages.com/photos/heres-to-tonight-picture-id868935172?k=6&m=868935172&s=612x612&w=0&h=MjBYXm7f229lyNXsWqcSnmlouGWrfsNDYhQCiPJ0V6g=",
+  //   "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
+  // ];
   @override
   void initState() {
     super.initState();
@@ -30,8 +30,16 @@ class _CollectionsState extends State<Collections> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineout");
     var response = await http.get(APP_ROUTES + 'dineout' + '?key=ALL');
-    responseData = json.decode(response.body)['data'];
-    return responseData;
+    if (response.statusCode == 200) {
+      responseData = json.decode(response.body)['data'];
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+      return responseData;
+    } else if (response.statusCode == 204) {
+      responseData = [];
+      return responseData;
+    }
   }
 
   @override
@@ -49,9 +57,7 @@ class _CollectionsState extends State<Collections> {
                   child: Text(
                     "Best Collections",
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: size.height * 0.018,
-                        fontWeight: FontWeight.w700),
+                        fontWeight: FontWeight.bold, color: kTextColor),
                   ),
                 ),
                 Spacer(),
@@ -94,102 +100,99 @@ class _CollectionsState extends State<Collections> {
                 // ignore: missing_return
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DineoutDetailPage(
-                                            data: snapshot.data[index],
-                                          )));
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.only(
-                                left: size.width * 0.04,
-                              ),
-                              height: size.height * 0.2,
-                              width: size.width * 0.34,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  image: snapshot.data[index]['dineoutImages']
-                                          .isNotEmpty
-                                      ? DecorationImage(
-                                          image: CachedNetworkImageProvider(
-                                              S3_BASE_PATH +
-                                                  snapshot.data[index]
-                                                          ['dineoutImages'][0]
-                                                      ['image']),
-                                          // collectionImage[index],
-                                          fit: BoxFit.cover)
-                                      : DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/NoImage.png.jpeg'),
-                                          fit: BoxFit.cover)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
+                    return snapshot.data.isEmpty
+                        ? SizedBox(
+                            child: Center(
+                              child: Text("No data Available"),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: snapshot.data.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DineoutDetailPage(
+                                                  data: snapshot.data[index],
+                                                )));
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
                                     margin: EdgeInsets.only(
-                                        top: size.height * 0.143),
-                                    alignment: Alignment.bottomLeft,
-                                    child: RichText(
-                                      text: TextSpan(
-                                          style: TextStyle(
-                                            color: Colors.white,
+                                      left: size.width * 0.04,
+                                    ),
+                                    height: size.height * 0.2,
+                                    width: size.width * 0.34,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        image: snapshot
+                                                .data[index]['dineoutImages']
+                                                .isNotEmpty
+                                            ? DecorationImage(
+                                                image: CachedNetworkImageProvider(
+                                                    S3_BASE_PATH +
+                                                        snapshot.data[index][
+                                                                'dineoutImages']
+                                                            [0]['image']),
+                                                // collectionImage[index],
+                                                fit: BoxFit.cover)
+                                            : DecorationImage(
+                                                image: CachedNetworkImageProvider(
+                                                    "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/u/y/p20941-15700828565d959028e9f28.jpg?tr=tr:n-medium"),
+                                                // collectionImage[index],
+                                                fit: BoxFit.cover)),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: size.height * 0.062,
+                                          color: Colors.black.withOpacity(0.4),
+                                          margin: EdgeInsets.only(
+                                              top: size.height * 0.143),
+                                          padding:
+                                              EdgeInsets.only(left: 5, top: 10),
+                                          alignment: Alignment.topLeft,
+                                          child: RichText(
+                                            text: TextSpan(
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                children: [
+                                                  TextSpan(
+                                                      text:
+                                                          " ${snapshot.data[index]['name']}\n",
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.022,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  TextSpan(
+                                                      text:
+                                                          " ${snapshot.data[index]['Address']['city']}",
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.018,
+                                                          fontWeight:
+                                                              FontWeight.w600)),
+                                                ]),
                                           ),
-                                          children: [
-                                            TextSpan(
-                                                text:
-                                                    " ${snapshot.data[index]['name']}",
-                                                style: snapshot
-                                                        .data[index][
-                                                            'restaurantMenuImages']
-                                                        .isNotEmpty
-                                                    ? TextStyle(
-                                                        shadows: [
-                                                            Shadow(
-                                                                color: Colors
-                                                                    .black,
-                                                                offset: Offset(
-                                                                    2, 6),
-                                                                blurRadius: 3)
-                                                          ],
-                                                        fontSize:
-                                                            size.height * 0.02,
-                                                        fontWeight:
-                                                            FontWeight.w600)
-                                                    : TextStyle(
-                                                        color: Colors.black,
-                                                        shadows: [],
-                                                        fontSize:
-                                                            size.height * 0.02,
-                                                        fontWeight:
-                                                            FontWeight.w900)),
-                                            // TextSpan(
-                                            //     text: " 168 Places",
-                                            //     style: TextStyle(
-                                            //         fontSize:
-                                            //             size.height * 0.018,
-                                            //         fontWeight:
-                                            //             FontWeight.w600)
-                                            // ),
-                                          ]),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
+                                ),
+                              );
+                            },
+                          );
                   }
                   // else if (snapshot.data == null) {
                   //   return

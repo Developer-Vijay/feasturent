@@ -122,7 +122,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
         TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
     return Scaffold(
         appBar: AppBar(
-          title: Text("Order Details"),
+          title: Text("Order Summary"),
         ),
         body: Column(
           children: [
@@ -149,10 +149,6 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                           ),
                         ),
                       ),
-                      Divider(
-                        color: Colors.black45,
-                        thickness: 1,
-                      ),
                       SizedBox(
                         height: 5,
                       ),
@@ -161,132 +157,89 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          DateTime _timed =
-                              DateTime.parse(itemData1['createdAt']);
-                          var data1 = _timed.toLocal();
+                          // DateTime _timed =
+                          //     DateTime.parse(itemData1['createdAt']);
+                          // var data1 = _timed.toLocal();
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
+                              Divider(
+                                color: Colors.black38,
+                                thickness: 0.8,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "${itemData1['orderMenues'][index]['Menu']['title']}",
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${itemData1['orderMenues'][index]['Menu']['title']}",
+                                        style: item,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5)),
+                                                color: Colors.grey[400]),
+                                            padding: EdgeInsets.only(
+                                                top: 2,
+                                                left: 2,
+                                                right: 5,
+                                                bottom: 2),
+                                            margin: EdgeInsets.only(top: 8),
+                                            child: Text(
+                                              "${itemData1['orderMenues'][index]['quantity']} ",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600),
+                                              textDirection: TextDirection.rtl,
+                                            ),
+                                          ),
+                                          Text(" * ",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.grey[400],
+                                                  fontWeight: FontWeight.w600)),
+                                          Text(
+                                              "₹ ${itemData1['orderMenues'][index]['Menu']['price']}",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.grey[400],
+                                                  fontWeight: FontWeight.w600)),
+                                          Spacer(),
+                                          Text(
+                                              "₹ ${(itemData1['orderMenues'][index]['Menu']['price'] * itemData1['orderMenues'][index]['quantity'])}",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600)),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "GST added",
                                             style: item,
                                           ),
-                                        ),
-                                        Spacer(),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "${itemData1['orderMenues'][index]['Menu']['price']} ₹",
-                                            style: itemPrice,
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Divider(
-                                      color: Colors.black45,
-                                      thickness: 1,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            "Quantity",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black45,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 8.0, top: 8),
-                                          child: Text(
-                                            "${itemData1['orderMenues'][index]['quantity']} ",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.w600),
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(),
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            "gst",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 8.0, top: 8),
-                                          child: Text(
-                                            "${itemData1['orderMenues'][index]['Menu']['gstAmount'].toString()} ₹",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600),
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: size.height * 0.01,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            "Total",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 8.0, top: 8),
-                                          child: Text(
-                                            " ${itemData1['orderMenues'][index]['quantity']} ₹ ",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600),
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Divider(
-                                color: Colors.black45,
-                                thickness: 1,
+                                          Spacer(),
+                                          Text(
+                                              "₹ ${(itemData1['orderMenues'][index]['Menu']['gstAmount'] * itemData1['orderMenues'][index]['quantity'])}",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600)),
+                                        ],
+                                      )
+                                    ]),
                               ),
                               SizedBox(
                                 height: 5,
@@ -295,6 +248,66 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                           );
                         },
                       ),
+                      Divider(
+                        color: Colors.black38,
+                        thickness: 0.8,
+                      ),
+                      itemData1['donation'] == 0
+                          ? SizedBox()
+                          : Container(
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Donation",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "${itemData1['donation']} ₹ +",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                      textDirection: TextDirection.rtl,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                      itemData1['discountPrice'] == 0
+                          ? SizedBox()
+                          : Container(
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Discount Price",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "${itemData1['discountPrice']} ₹ -",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                      textDirection: TextDirection.rtl,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                       Container(
                         child: Row(
                           children: [
@@ -311,7 +324,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "${itemData1['orderPrice']} ₹",
+                                "${(itemData1['orderPrice'] - itemData1['discountPrice'] + itemData1['donation'])} ₹",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
@@ -338,7 +351,7 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "order Number",
+                          "Order Number",
                           style: orderHeading,
                         ),
                       ),
@@ -346,6 +359,23 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
                           "${itemData1['id'].toString()}",
+                          style: orderdetails,
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          "Resturent Name",
+                          style: orderHeading,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          "Not available",
                           style: orderdetails,
                         ),
                       ),
@@ -441,6 +471,13 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                                                   color: Colors.green,
                                                   width: 2),
                                               onPressed: () {
+                                                if (itemData1[
+                                                        'discountPrice'] !=
+                                                    0) {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Discount will not add in total amount");
+                                                }
                                                 showModalBottomSheet(
                                                     isScrollControlled: true,
                                                     backgroundColor:
@@ -647,14 +684,17 @@ class _BottomRepeatSheetState extends State<BottomRepeatSheet> {
           ),
           Spacer(),
           InkWell(
-              onTap: () {
+              onTap: () async {
                 if (userNameWithNumber == "Select Delivery Address") {
-                  showModalBottomSheet(
+                  final result = await showModalBottomSheet(
                       isScrollControlled: true,
                       elevation: 2,
                       backgroundColor: Colors.transparent,
                       context: context,
                       builder: (context) => SelectAddress());
+                  if (result) {
+                    setState(() {});
+                  }
                 } else {
                   showModalBottomSheet(
                       enableDrag: false,
@@ -714,7 +754,7 @@ step''',
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("₹${data['orderPrice']}.00",
+                  Text("₹${(data['orderPrice'] + data['donation'])}.00",
                       style: TextStyle(
                         color: Colors.white,
                       )),
@@ -835,7 +875,7 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
   getMenuDetails() async {
     int k = itemData1['orderMenues'].length;
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ $k");
-    for (int i = 1; i <= k - 1; i++) {
+    for (int i = 0; i <= k - 1; i++) {
       print("ID:-$i");
       // int data = idCheck[i];
       // await services.sqliteIDquery(data).then((value) => fun(value));
@@ -882,6 +922,7 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
       "gst": "${itemData1['gst']}",
       "discountPrice": "0",
       "offerId": "0",
+      "donation": "${itemData1['donation']}",
       "paymentMode": "WALLET",
       "razorpay_payment_id": null,
       "razo rpay_order_id": null,
@@ -959,6 +1000,7 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
       "gst": "${itemData1['gst']}",
       "discountPrice": "0",
       "offerId": "0",
+      "donation": "${itemData1['donation']}",
       "paymentMode": "CASH",
       "razorpay_payment_id": null,
       "razo rpay_order_id": null,
@@ -1023,9 +1065,10 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
     var phone = prefs.getString('userNumber');
     var email = prefs.getString('userEmail');
     var name = prefs.getString('name');
+    var price = (itemData1['orderPrice'] + itemData1['donation']);
     var options = {
       'key': 'rzp_test_7iDSklI4oMeTUd',
-      'amount': num.parse(itemData1['orderPrice'].toString()) * 100,
+      'amount': num.parse(price.toString()) * 100,
       'name': "$name",
       'description': 'Tasty',
       'prefill': {'contact': "$phone", 'email': "$email"}
@@ -1055,6 +1098,7 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
       "gst": "${itemData1['gst']}",
       "discountPrice": "0",
       "offerId": "0",
+      "donation": "${itemData1['donation']}",
       "paymentMode": "ONLINE",
       "razorpay_payment_id": "$responsepaymentid",
       "razo rpay_order_id": "$responseorderid",
@@ -1111,21 +1155,21 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
       print(response.code);
       print(response.message);
       Navigator.pop(context, PlaceOrder());
-      showDialog(
-          context: context,
-          child: new AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            title: new Text(
-              "Payment Failed",
-              style: TextStyle(
-                  color: Colors.red[700], fontWeight: FontWeight.bold),
-            ),
-            content: new Text(
-              "Something Went Wrong",
-            ),
-          ));
+      showDialog(context: context, builder: dialogFunction());
     });
+  }
+
+  dialogFunction() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      title: new Text(
+        "Payment Failed",
+        style: TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold),
+      ),
+      content: new Text(
+        "Something Went Wrong",
+      ),
+    );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -1192,7 +1236,8 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Spacer(),
-                      Text("PAY USING ( ₹${itemData1['orderPrice']}.00)"),
+                      Text(
+                          "PAY USING ( ₹${(itemData1['orderPrice'] + itemData1['donation'])}.00)"),
                       Spacer(),
                       Text(
                         paymentMode,

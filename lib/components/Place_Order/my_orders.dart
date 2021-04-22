@@ -5,6 +5,7 @@ import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.d
 import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/repeat_orders.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -53,6 +54,8 @@ class _MyOrdersState extends State<MyOrders> {
   var orderId;
   var timeised;
   Future<List<dynamic>> fetchOrders() async {
+    print(
+        " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api order get");
     final prefs = await SharedPreferences.getInstance();
     var userid2 = prefs.getInt('userId');
     _authorization = prefs.getString('sessionToken');
@@ -65,6 +68,7 @@ class _MyOrdersState extends State<MyOrders> {
       "refreshtoken": _refreshtoken,
     });
     ordersData = json.decode(result.body)['data'];
+    print(ordersData);
     datalength = ordersData.length;
     // refresh();
     if (result.statusCode == 200) {
@@ -164,6 +168,57 @@ class _MyOrdersState extends State<MyOrders> {
                 future: fetchOrders(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    print("data reci0");
+                    if (snapshot.data.isEmpty) {
+                      print("data null reci0");
+
+                      return Center(
+                        child: Column(
+                          children: [
+                            Container(
+                                child: Image(
+                              image: AssetImage(
+                                "assets/images/noorder.JPG",
+                              ),
+                              height: size.height * 0.45,
+                            )),
+                            Text(
+                              "No Orders Yet...",
+                              style: TextStyle(
+                                  fontSize: size.height * 0.035,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.025,
+                            ),
+                            Text(
+                              '''  Your MyOrders is empty.
+        Place order first''',
+                              style: TextStyle(
+                                  // fontSize: size.height * 0.035,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.1,
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScreen()));
+                              },
+                              child: Text("Explore Now"),
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              color: Colors.blue[600],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                     return ListView.builder(
                         controller: _scrollController,
                         shrinkWrap: true,
@@ -368,9 +423,11 @@ class _MyOrdersState extends State<MyOrders> {
                                                                         'orderMenues']
                                                                     [0]['Menu']
                                                                 ['image1'],
-                                                        fit: BoxFit.contain,
+                                                        fit: BoxFit.fill,
                                                         height:
-                                                            size.height * 0.08,
+                                                            size.height * 0.1,
+                                                        width:
+                                                            size.width * 0.26,
                                                         errorWidget: (context,
                                                                 url, error) =>
                                                             Icon(Icons.error),
@@ -385,7 +442,8 @@ class _MyOrdersState extends State<MyOrders> {
                                                       ),
                                               ),
                                             ),
-                                            Padding(
+                                            Container(
+                                              width: size.width * 0.5,
                                               padding: const EdgeInsets.only(
                                                   left: 12.0),
                                               child:
@@ -433,7 +491,7 @@ class _MyOrdersState extends State<MyOrders> {
                                               padding: const EdgeInsets.only(
                                                   right: 12.0),
                                               child: Text(
-                                                " ${snapshot.data[index]['orderPrice']} ₹",
+                                                " ${(snapshot.data[index]['orderPrice'] + snapshot.data[index]['donation'] - snapshot.data[index]['discountPrice'])} ₹",
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight:
@@ -712,12 +770,6 @@ class _MyOrdersState extends State<MyOrders> {
                         )
                       ],
                     )));
-                  } else if (snapshot.hasData == null) {
-                    return Center(
-                        child: Container(
-                            child: Image(
-                                image: AssetImage(
-                                    "assets/images/NoImage.png.jpeg"))));
                   } else {
                     return Container(
                       margin: EdgeInsets.only(left: 18),

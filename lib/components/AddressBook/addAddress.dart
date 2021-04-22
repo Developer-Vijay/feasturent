@@ -111,8 +111,11 @@ class _AddAdressState extends State<AddAdress> {
 
   Future<void> getlocation() async {
     try {
+      final geopos = await Geolocator.checkPermission();
+      print(geopos);
       final geopostion = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
+      print(geopostion);
       setState(() {
         latadd = geopostion.latitude;
         longadd = geopostion.longitude;
@@ -172,9 +175,7 @@ class _AddAdressState extends State<AddAdress> {
                     IconButton(
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
-                        Navigator.pop(context, () {
-                          setState(() {});
-                        });
+                        Navigator.pop(context, true);
                       },
                     ),
                     SizedBox(
@@ -194,10 +195,6 @@ class _AddAdressState extends State<AddAdress> {
                   margin: EdgeInsets.only(
                       left: size.width * 0.05, right: size.width * 0.05),
                   child: TextField(
-                    obscureText: false,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    maxLength: 10,
                     controller: _fullnamecontroller,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -222,7 +219,6 @@ class _AddAdressState extends State<AddAdress> {
                     controller: _phonenumbercontroller,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
-                    maxLength: 10,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
@@ -635,7 +631,7 @@ class _AddAdressState extends State<AddAdress> {
         "name": _fullnamecontroller.text,
         "phone": _phonenumbercontroller.text,
         "userId": userid.toString(),
-        "address": _landmarkcontroller.text,
+        "address": _roadnamecontroller.text,
         "state": stateSelected.text,
         "city": citiesSelected.text,
         "addressFor": data.toString(),
@@ -650,8 +646,7 @@ class _AddAdressState extends State<AddAdress> {
       var responsData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: responsData['message']);
-        Navigator.pop(
-            context, MaterialPageRoute(builder: (context) => AddressList()));
+        Navigator.pop(context, true);
       } else if (response.statusCode == 401) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove(

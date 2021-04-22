@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/view_popular.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:http/http.dart' as http;
 
 import 'dineoutdetailpage.dart';
 
@@ -39,6 +40,9 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
       return responseData1;
+    } else if (response.statusCode == 204) {
+      responseData1 = [];
+      return responseData1;
     }
   }
 
@@ -59,10 +63,8 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
               padding: const EdgeInsets.only(left: 20),
               child: Text(
                 "Popular Dineout Areas",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: size.height * 0.016,
-                    fontWeight: FontWeight.w700),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
               ),
             ),
             Spacer(),
@@ -98,84 +100,93 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
           ],
         ),
         Container(
-            height: size.height * 0.151,
+            height: size.height * 0.14,
             child: FutureBuilder<List>(
               future: getpopulardineouts(),
 // ignore: missing_return
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Container(
-                      child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Container(
-                                height: size.height * 0.11,
-                                width: size.width * 0.31,
-                                child: FlatButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DineoutDetailPage(
-                                                  data: snapshot.data[index]
-                                                      ['VendorInfo'],
-                                                )));
-                                  },
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: snapshot.data[index]
-                                                ['dineoutImages'] !=
+                  return snapshot.data.isEmpty
+                      ? SizedBox(
+                          child: Center(
+                            child: Text("No data Available"),
+                          ),
+                        )
+                      : Container(
+                          child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 0.0),
+                                  child: Container(
+                                      height: size.height * 0.11,
+                                      width: size.width * 0.31,
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DineoutDetailPage(
+                                                        data:
+                                                            snapshot.data[index]
+                                                                ['VendorInfo'],
+                                                      )));
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: snapshot.data[index]
+                                                      ['dineoutImages'] !=
+                                                  null
+                                              ? CachedNetworkImage(
+                                                  imageUrl: S3_BASE_PATH +
+                                                      snapshot.data[index]
+                                                              ['dineoutImages']
+                                                          [0]['image'],
+                                                  fit: BoxFit.cover,
+                                                  width: size.width * 0.31,
+                                                  height: size.height * 0.2,
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                )
+                                              : Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: Image.asset(
+                                                    "assets/images/feasturenttemp.jpeg",
+                                                    fit: BoxFit.cover,
+                                                    width: size.width * 0.31,
+                                                    height: size.height * 0.2,
+                                                  ),
+                                                ),
+                                        ),
+                                      )),
+                                ),
+                                SizedBox(
+                                  height: 7,
+                                ),
+                                Container(
+                                    child: snapshot.data[index]['VendorInfo']
+                                                ['name'] !=
                                             null
-                                        ? CachedNetworkImage(
-                                            imageUrl: S3_BASE_PATH +
-                                                snapshot.data[index]
-                                                        ['dineoutImages'][0]
-                                                    ['image'],
-                                            fit: BoxFit.cover,
-                                            width: size.width * 0.31,
-                                            height: size.height * 0.2,
-                                            placeholder: (context, url) =>
-                                                CircularProgressIndicator(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                          )
-                                        : Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Image.asset(
-                                              "assets/images/feasturenttemp.jpeg",
-                                              fit: BoxFit.cover,
-                                              width: size.width * 0.31,
-                                              height: size.height * 0.2,
-                                            ),
-                                          ),
-                                  ),
-                                )),
-                          ),
-                          SizedBox(
-                            height: 7,
-                          ),
-                          Container(
-                              child: snapshot.data[index]['VendorInfo']
-                                          ['name'] !=
-                                      null
-                                  ? Text(
-                                      "${snapshot.data[index]['VendorInfo']['name']}",
-                                      style: _textstyle)
-                                  : Text("Name"))
-                        ],
-                      );
-                    },
-                  ));
+                                        ? Text(
+                                            "${snapshot.data[index]['VendorInfo']['name']}",
+                                            style: _textstyle)
+                                        : Text("Name"))
+                              ],
+                            );
+                          },
+                        ));
                 } else {
                   return Center(child: CircularProgressIndicator());
                 }

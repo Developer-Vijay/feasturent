@@ -43,6 +43,8 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: ListView(children: [
         Container(
@@ -51,11 +53,11 @@ class _SignupPageState extends State<SignupPage> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SizedBox(height: 40),
+                SizedBox(height: size.height * 0.1),
                 Image.asset(
-                  'assets/icons/feasturent.png',
-                  height: 170,
-                  width: 170,
+                  'assets/images/feasturent_app_logo.png',
+                  height: size.height * 0.15,
+                  width: size.width * 0.6,
                 ),
                 Text('Signup',
                     style: GoogleFonts.pacifico(

@@ -400,7 +400,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate, // Refer step 1
-        firstDate: DateTime(2000),
+        firstDate: DateTime.now(),
         lastDate: DateTime(2025),
         helpText: "Select Booking Date",
         confirmText: "Confirm");

@@ -61,14 +61,62 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       _image = image;
     });
+    Navigator.pop(context);
+    EditProfile();
   }
 
-  Future getImageFromCamera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+  EditProfile() async {
+    //name validation
+    if (_image == null) {
+      Fluttertoast.showToast(msg: "Please select profile photo");
+    } else {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (_) => new AlertDialog(
+                  content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text("updating"),
+                  ),
+                ],
+              )));
+      final prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getInt('userId');
+      print(userId);
+      var _authorization = prefs.getString('sessionToken');
+      var uri = Uri.parse(APP_ROUTES + 'updateProfileImage/$userId');
 
-    setState(() {
-      _image = image;
-    });
+      var request = http.MultipartRequest('PUT', uri);
+      request.headers['authorization'] = _authorization;
+
+      request.files.add(await http.MultipartFile.fromPath('file', _image.path));
+      var response = await request.send();
+      print(response.stream);
+      print(response.statusCode);
+      final res = await http.Response.fromStream(response);
+      print(res.body);
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: "Profile Photo Updated");
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else if (response.statusCode == 401) {
+        var decodedData = jsonDecode(res.body);
+        setState(() {
+          _image = null;
+        });
+        Fluttertoast.showToast(msg: decodedData['message']);
+        Navigator.pop(context);
+      } else {
+        setState(() {
+          _image = null;
+        });
+        Fluttertoast.showToast(msg: "Please try after some time");
+        Navigator.pop(context);
+      }
+    }
   }
 
   TextEditingController _nameController = TextEditingController();
@@ -189,22 +237,9 @@ class _EditProfileState extends State<EditProfile> {
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (context) => Container(
-                                        height: size.height * 0.25,
+                                        height: size.height * 0.17,
                                         child: Column(
                                           children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: InkWell(
-                                                onTap: () async =>
-                                                    await getImageFromCamera(),
-                                                child: Container(
-                                                  child: Center(
-                                                    child: Text("Take Photo"),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Divider(),
                                             Expanded(
                                               flex: 1,
                                               child: InkWell(

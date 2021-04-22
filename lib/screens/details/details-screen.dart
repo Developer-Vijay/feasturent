@@ -8,7 +8,6 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
       backgroundColor: kPrimaryColor,
       appBar: detailsAppBar(),
       body: Body(),

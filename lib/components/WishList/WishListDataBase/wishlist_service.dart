@@ -7,17 +7,17 @@ var dataWishList;
 
 class WishListService {
   void saveUser(
-    int itemPrice,
-    int itemCount,
-    int vendorId,
-    int menuItemId,
-    String imagePath,
-    String itemName,
-    String itemStatus,
-    int itemtype,
-    int isSelected,
-    String vendorName,
-  ) {
+      int itemPrice,
+      int itemCount,
+      int vendorId,
+      int menuItemId,
+      String imagePath,
+      String itemName,
+      String itemStatus,
+      int itemtype,
+      int isSelected,
+      String vendorName,
+      int gst) {
     WishListDBhelper.insert('wishListDat', {
       'itemPrice': itemPrice,
       'itemCount': itemCount,
@@ -29,6 +29,7 @@ class WishListService {
       'itemtype': itemtype,
       'isSelected': isSelected,
       'vendorName': vendorName,
+      'gst': gst,
     });
   }
 
@@ -46,7 +47,8 @@ class WishListService {
             itemStatus: item['itemStatus'],
             itemtype: item['itemtype'],
             isSelected: item['isSelected'],
-            vendorName: item['vendorName']))
+            vendorName: item['vendorName'],
+            gst: item['gst']))
         .toList();
   }
 

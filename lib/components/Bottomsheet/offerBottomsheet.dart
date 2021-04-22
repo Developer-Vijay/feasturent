@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 class OnOfferBottomSheet extends StatefulWidget {
+  final amount;
   final data;
-  OnOfferBottomSheet({Key key, this.data}) : super(key: key);
+  OnOfferBottomSheet({Key key, this.data, this.amount}) : super(key: key);
   @override
   _OnOfferBottomSheetState createState() => _OnOfferBottomSheetState();
 }
@@ -58,21 +59,17 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
             children: [
               Container(
                 alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(left: 6),
+                margin: EdgeInsets.only(left: 6, top: 15),
                 padding: EdgeInsets.all(2),
                 child: DottedBorder(
                   strokeWidth: 1,
                   radius: Radius.circular(20),
                   color: Colors.black,
                   child: Text(
-                    "${offerData['coupon']}",
+                    "${widget.amount}",
                     style: TextStyle(color: Colors.black, fontSize: 15),
                   ),
                 ),
-              ),
-              IconButton(
-                icon: Icon(Icons.content_copy),
-                onPressed: () async {},
               ),
             ],
           ),
@@ -83,17 +80,19 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
               style: offerSheetStyle,
             ),
           ),
-          Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: offerData['description'] != null
-                  ? Text(
-                      offerData['description'],
-                      style: offerCommonStyle,
-                    )
-                  : SizedBox()),
-          SizedBox(
-            height: 12,
-          ),
+          offerData['description'] != null
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    offerData['description'],
+                    style: offerCommonStyle,
+                  ))
+              : SizedBox(),
+          offerData['description'] != null
+              ? SizedBox(
+                  height: 12,
+                )
+              : SizedBox(),
           Container(
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.only(left: size.width * 0.03),

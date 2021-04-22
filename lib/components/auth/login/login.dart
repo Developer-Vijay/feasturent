@@ -86,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: [
                         TextField(
+                          autofocus: true,
                           obscureText: false,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
@@ -104,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: 15),
                         //Password
                         TextField(
+                          autofocus: true,
                           obscureText: _obscureText,
                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
