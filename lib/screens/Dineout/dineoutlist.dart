@@ -13,15 +13,11 @@ class Dineoutlist {
 
 List<Dineoutlist> dineoutlist = [
   Dineoutlist(
-      icon: Icon(
-        Icons.table_chart,
-        color: Colors.brown,
-      ),
+      icon: Image.asset('assets/icons/RESERVE TABLE.png'),
       title: "Reserve Table",
       subtitle: "",
       phoneNumber: 0,
       number: 3),
- 
 ];
 
 class PopularList {

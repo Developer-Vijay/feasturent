@@ -1,7 +1,10 @@
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_date_select.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../constants.dart';
 
 class PortfolioGallerySubPage extends StatefulWidget {
   final data;
@@ -18,6 +21,32 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
   void initState() {
     super.initState();
     data = widget.data;
+    fetchCategory();
+  }
+
+  Future<void> openMap(double latitude, double longitude) async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }
+
+  var categoryData = '';
+  fetchCategory() {
+    int k = data['cuisines'].length;
+    print(k);
+
+    if (k != 0) {
+      for (int j = 0; j <= k - 1; j++) {
+        categoryData =
+            '$categoryData${data['cuisines'][j]['Category']['name']},';
+      }
+    } else {
+      categoryData = null;
+    }
   }
 
   @override
@@ -47,7 +76,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                     Container(
                         child: data['name'] != null
                             ? Text(
-                                '${data['name']}',
+                                capitalize('${data['name']}'),
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -58,68 +87,97 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                       height: 4,
                     ),
                     Container(
-                        child: data['Address']['address'] != null
+                        width: size.width * 0.65,
+                        child: categoryData != null
                             ? Text(
-                                data['Address']['address'],
+                                categoryData,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.black),
                               )
-                            : Text("Address")),
+                            : SizedBox()),
                     SizedBox(
                       height: 4,
                     ),
-                    Row(
-                      children: [
-                        Container(
-                            child: data['avgCost'] != null
-                                ? Text(
-                                    " ₹ ${data['avgCost']}",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.black),
-                                  )
-                                : Text("offers")),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "for",
-                          style: TextStyle(fontSize: 12, color: Colors.black),
-                        ),
-                        SizedBox(
-                          width: 7,
-                        ),
-                        Container(
-                            child: data['forPeople'] != null
-                                ? Text(
-                                    data['forPeople'],
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.black),
-                                  )
-                                : Text("Data")),
-                        // SizedBox(
-                        //   width: 20,
-                        // ),
-                        // Text(
-                        //   "Call -",
-                        //   style: TextStyle(color: Colors.black),
-                        // ),
-                        // SizedBox(
-                        //   width: 12,
-                        // ),
-                        // Container(
-                        //     child: data['Address']['address'] != null
-                        //         ? Text(
-                        //             data['user']['phone'],
-                        //             style: TextStyle(
-                        //                 color: Colors.black,
-                        //                 fontWeight: FontWeight.bold),
-                        //           )
-                        //         : Text("phone"))
-                      ],
-                    ),
+                    data['avgCost'] != null
+                        ? Row(
+                            children: [
+                              Text(
+                                "Avg Cost : ",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.black),
+                              ),
+                              Container(
+                                  child: data['avgCost'] != null
+                                      ? Text(
+                                          " ₹ ${data['avgCost']}",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black),
+                                        )
+                                      : Text("offers")),
+
+                              Text(
+                                " for ",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.black),
+                              ),
+
+                              Container(
+                                  child: data['forPeople'] != null
+                                      ? Text(
+                                          data['forPeople'],
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black),
+                                        )
+                                      : Text("Data")),
+                              // SizedBox(
+                              //   width: 20,
+                              // ),
+                              // Text(
+                              //   "Call -",
+                              //   style: TextStyle(color: Colors.black),
+                              // ),
+                              // SizedBox(
+                              //   width: 12,
+                              // ),
+                              // Container(
+                              //     child: data['Address']['address'] != null
+                              //         ? Text(
+                              //             data['user']['phone'],
+                              //             style: TextStyle(
+                              //                 color: Colors.black,
+                              //                 fontWeight: FontWeight.bold),
+                              //           )
+                              //         : Text("phone"))
+                            ],
+                          )
+                        : SizedBox(),
                     SizedBox(
                       height: 4,
                     ),
+                    Row(children: [
+                      Text(
+                        "Dineout Timing: ",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      data['user']['Setting'] == null
+                          ? Text("Not Avialable",
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: size.height * 0.016))
+                          : data['user']['Setting']['storeTimeStart'] == null
+                              ? Text("Not Avialable",
+                                  style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: size.height * 0.016))
+                              : Text(
+                                  "${data['user']['Setting']['storeTimeStart']}-${data['user']['Setting']['storeTimeEnd']}",
+                                  style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: size.height * 0.016)),
+                    ])
                     // Row(
                     //   children: [
                     //     Text(
@@ -184,6 +242,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                           builder: (context) => Container(
                               height: size.height * 0.6,
                               child: DineoutDateSelection(
+                                cate: categoryData,
                                 data: data,
                               )));
                     } else {
@@ -200,55 +259,246 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
           },
         )),
         SizedBox(
-          height: 30,
+          height: 10,
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8),
-          child: Container(
-              height: 60,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 2,
-                        spreadRadius: 2,
-                        offset: Offset(1, 3),
-                        color: Colors.blue[50])
-                  ]),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        var url = 'tel:${data['contact']}';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
-                        }
-                      },
-                      icon: Icon(Icons.call),
-                      color: Colors.green,
+        data['Address']['latitude'].isEmpty &&
+                data['Address']['longitude'].isEmpty
+            ? SizedBox()
+            : Container(
+                margin: EdgeInsets.all(10),
+                // height: size.height * 0.48,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 2,
+                          spreadRadius: 2,
+                          offset: Offset(1, 3),
+                          color: Colors.blue[50])
+                    ],
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: size.height * 0.06,
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0, top: 10.0),
+                        child: Text(
+                          "Locate & Contact",
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 18.5,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: size.width * 0.008,
-                  ),
-                  Container(
-                      child: data['Address']['address'] != null
-                          ? Text(
-                              " +91 ${data['user']['phone']}",
+                    Container(
+                      height: size.height * 0.25,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black26, width: 0.5),
+                          // borderRadius:
+                          //     BorderRadius.all(Radius.circular(10)),
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage('assets/images/mapshow.jpeg'))),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+                        child: InkWell(
+                          onTap: () {
+                            openMap(double.parse(data['Address']['latitude']),
+                                double.parse(data['Address']['longitude']));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/icons/map.svg",
+                                height: size.height * 0.035,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Open with map",
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.red[300],
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                              width: size.height * 0.35,
+                              alignment: Alignment.topLeft,
+                              margin: EdgeInsets.only(
+                                  top: size.height * 0.01,
+                                  left: size.width * 0.033),
+                              child: Text(
+                                data['Address']['address'],
+                                // overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: size.height * 0.02,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w600),
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.025,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.phone_outlined,
+                            size: size.height * 0.035,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            data['contact'],
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.black54),
+                          ),
+                          Spacer(),
+                          InkWell(
+                            onTap: () async {
+                              var url = 'tel:${data['contact']}';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                            child: Text(
+                              "Call",
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : Text("phone Number Not Avaliable"))
-                ],
-              )),
-        )
+                                  decoration: TextDecoration.underline,
+                                  fontSize: 17,
+                                  color: Colors.red[300],
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              ),
+        data['Address']['latitude'].isNotEmpty &&
+                data['Address']['longitude'].isNotEmpty
+            ? SizedBox()
+            : Padding(
+                padding: const EdgeInsets.only(left: 8, right: 8),
+                child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 2,
+                              spreadRadius: 2,
+                              offset: Offset(1, 3),
+                              color: Colors.blue[50])
+                        ]),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconButton(
+                            onPressed: () async {
+                              var url = 'tel:${data['contact']}';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                            icon: Icon(Icons.call),
+                            color: Colors.green,
+                          ),
+                        ),
+                        SizedBox(
+                          width: size.width * 0.008,
+                        ),
+                        Container(
+                            child: data['Address']['address'] != null
+                                ? Text(
+                                    " +91 ${data['user']['phone']}",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : Text("phone Number Not Avaliable"))
+                      ],
+                    )),
+              ),
+        data['Address']['latitude'].isNotEmpty &&
+                data['Address']['longitude'].isNotEmpty
+            ? SizedBox()
+            : SizedBox(
+                height: 30,
+              ),
+        data['Address']['latitude'].isNotEmpty &&
+                data['Address']['longitude'].isNotEmpty
+            ? SizedBox()
+            : data['Address']['address'] == null
+                ? SizedBox()
+                : Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 2,
+                                  spreadRadius: 2,
+                                  offset: Offset(1, 3),
+                                  color: Colors.blue[50])
+                            ]),
+                        child: ListTile(
+                          leading: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.location_on),
+                            color: Colors.redAccent,
+                          ),
+                          title: Text(
+                            data['Address']['address'],
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )),
+                  )
       ],
     ));
   }

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/Bottomsheet/addRatingBottom.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/place_order.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/select_address.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
@@ -120,434 +120,484 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
     final item = TextStyle(color: Colors.black, fontWeight: FontWeight.w600);
     final itemPrice =
         TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Order Summary"),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              flex: 15,
-              child: ListView.builder(
-                itemCount: 1,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+    return WillPopScope(
+      // ignore: missing_return
+      onWillPop: () {
+        Navigator.pop(context, true);
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+            title: Text("Order Summary"),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                flex: 15,
+                child: ListView.builder(
+                  itemCount: 1,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Your Order",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        ListView.builder(
+                          itemCount: itemData1['orderMenues'].length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            // DateTime _timed =
+                            //     DateTime.parse(itemData1['createdAt']);
+                            // var data1 = _timed.toLocal();
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Divider(
+                                  color: Colors.black38,
+                                  thickness: 0.8,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          capitalize(
+                                              "${itemData1['orderMenues'][index]['Menu']['title']}"),
+                                          style: item,
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5)),
+                                                  color: Colors.grey[400]),
+                                              padding: EdgeInsets.only(
+                                                  top: 2,
+                                                  left: 2,
+                                                  right: 5,
+                                                  bottom: 2),
+                                              margin: EdgeInsets.only(top: 8),
+                                              child: Text(
+                                                "${itemData1['orderMenues'][index]['quantity']} ",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                              ),
+                                            ),
+                                            Text(" * ",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.grey[400],
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            Text(
+                                                "₹ ${itemData1['orderMenues'][index]['Menu']['price']}",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.grey[400],
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            Spacer(),
+                                            itemData1['orderMenues'][index]
+                                                        ['variant'] !=
+                                                    null
+                                                ? Text(
+                                                    "₹ ${(itemData1['orderMenues'][index]['Menu']['price'] * itemData1['orderMenues'][index]['quantity']) + (itemData1['orderMenues'][index]['variant']['amount'] * itemData1['orderMenues'][index]['quantity'])}",
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600))
+                                                : Text(
+                                                    "₹ ${(itemData1['orderMenues'][index]['Menu']['price'] * itemData1['orderMenues'][index]['quantity'])}",
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "GST added",
+                                              style: item,
+                                            ),
+                                            Spacer(),
+                                            itemData1['orderMenues'][index]
+                                                        ['variant'] !=
+                                                    null
+                                                ? Text(
+                                                    "₹ ${(itemData1['orderMenues'][index]['Menu']['gstAmount'] * itemData1['orderMenues'][index]['quantity']) + (itemData1['orderMenues'][index]['variant']['gstAmount'] * itemData1['orderMenues'][index]['quantity'])}",
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600))
+                                                : Text(
+                                                    "₹ ${itemData1['orderMenues'][index]['Menu']['gstAmount'] * itemData1['orderMenues'][index]['quantity']}",
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                          ],
+                                        )
+                                      ]),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        Divider(
+                          color: Colors.black38,
+                          thickness: 0.8,
+                        ),
+                        itemData1['donation'] == 0
+                            ? SizedBox()
+                            : Container(
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Donation",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "${itemData1['donation']} ₹ +",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                        textDirection: TextDirection.rtl,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                        itemData1['discountPrice'] == 0
+                            ? SizedBox()
+                            : Container(
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Discount Price",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "${itemData1['discountPrice']} ₹ -",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                        textDirection: TextDirection.rtl,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                        Container(
                           child: Row(
                             children: [
-                              Text(
-                                "Your Order",
-                                style: TextStyle(color: Colors.black),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Grand Total",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "${(itemData1['orderPrice'] - itemData1['discountPrice'] + itemData1['donation'])} ₹",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  textDirection: TextDirection.rtl,
+                                ),
+                              )
                             ],
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      ListView.builder(
-                        itemCount: itemData1['orderMenues'].length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          // DateTime _timed =
-                          //     DateTime.parse(itemData1['createdAt']);
-                          // var data1 = _timed.toLocal();
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Divider(
-                                color: Colors.black38,
-                                thickness: 0.8,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${itemData1['orderMenues'][index]['Menu']['title']}",
-                                        style: item,
-                                      ),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5)),
-                                                color: Colors.grey[400]),
-                                            padding: EdgeInsets.only(
-                                                top: 2,
-                                                left: 2,
-                                                right: 5,
-                                                bottom: 2),
-                                            margin: EdgeInsets.only(top: 8),
-                                            child: Text(
-                                              "${itemData1['orderMenues'][index]['quantity']} ",
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600),
-                                              textDirection: TextDirection.rtl,
-                                            ),
-                                          ),
-                                          Text(" * ",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.grey[400],
-                                                  fontWeight: FontWeight.w600)),
-                                          Text(
-                                              "₹ ${itemData1['orderMenues'][index]['Menu']['price']}",
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.grey[400],
-                                                  fontWeight: FontWeight.w600)),
-                                          Spacer(),
-                                          Text(
-                                              "₹ ${(itemData1['orderMenues'][index]['Menu']['price'] * itemData1['orderMenues'][index]['quantity'])}",
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600)),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "GST added",
-                                            style: item,
-                                          ),
-                                          Spacer(),
-                                          Text(
-                                              "₹ ${(itemData1['orderMenues'][index]['Menu']['gstAmount'] * itemData1['orderMenues'][index]['quantity'])}",
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600)),
-                                        ],
-                                      )
-                                    ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      Divider(
-                        color: Colors.black38,
-                        thickness: 0.8,
-                      ),
-                      itemData1['donation'] == 0
-                          ? SizedBox()
-                          : Container(
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "Donation",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "${itemData1['donation']} ₹ +",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                      textDirection: TextDirection.rtl,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                      itemData1['discountPrice'] == 0
-                          ? SizedBox()
-                          : Container(
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "Discount Price",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "${itemData1['discountPrice']} ₹ -",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                      textDirection: TextDirection.rtl,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Grand Total",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "${(itemData1['orderPrice'] - itemData1['discountPrice'] + itemData1['donation'])} ₹",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                                textDirection: TextDirection.rtl,
-                              ),
-                            )
-                          ],
+                        SizedBox(
+                          height: size.height * 0.03,
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Order Details",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Order Details",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
                         ),
-                      ),
-                      Divider(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Order Number",
-                          style: orderHeading,
+                        Divider(),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Resturent Name",
+                            style: orderHeading,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "${itemData1['id'].toString()}",
-                          style: orderdetails,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            capitalize(itemData1['VendorInfo']['name']),
+                            style: orderdetails,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Resturent Name",
-                          style: orderHeading,
+                        SizedBox(
+                          height: size.height * 0.03,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Not available",
-                          style: orderdetails,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Order Number",
+                            style: orderHeading,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Payment",
-                          style: orderHeading,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "${itemData1['id'].toString()}",
+                            style: orderdetails,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "${itemData1['paymentMode'].toString()}",
-                          style: orderdetails,
+                        SizedBox(
+                          height: size.height * 0.03,
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Date and Time",
-                          style: orderHeading,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Payment",
+                            style: orderHeading,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "${widget.data}",
-                          style: orderdetails,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "${itemData1['paymentMode'].toString()}",
+                            style: orderdetails,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Delivered to",
-                          style: orderHeading,
+                        SizedBox(
+                          height: size.height * 0.03,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          itemData1['OrderAddress']['address'],
-                          style: orderdetails,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Date and Time",
+                            style: orderHeading,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                    ],
-                  );
-                },
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "${widget.data}",
+                            style: orderdetails,
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Delivered to",
+                            style: orderHeading,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: itemData1['OrderAddress'] == null
+                              ? Text(
+                                  "Not Available",
+                                  style: orderdetails,
+                                )
+                              : Text(
+                                  itemData1['OrderAddress']['address'],
+                                  style: orderdetails,
+                                ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-            Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: itemData1['orderStatus'] != "PENDING"
-                    ? Container(
-                        child: itemData1['orderStatus'] != "CANCELED"
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: itemData1['orderStatus'] ==
-                                              "DELIVERED"
-                                          ? OutlineButton(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          14)),
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                    "Repeat Order",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                              textColor: Colors.blue,
-                                              borderSide: BorderSide(
-                                                  color: Colors.green,
-                                                  width: 2),
-                                              onPressed: () {
-                                                if (itemData1[
-                                                        'discountPrice'] !=
-                                                    0) {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Discount will not add in total amount");
-                                                }
-                                                showModalBottomSheet(
-                                                    isScrollControlled: true,
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        BottomRepeatSheet(
-                                                          data: itemData1,
-                                                        ));
-                                              },
-                                            )
-                                          : SizedBox()),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: itemData1['orderStatus'] != "PENDING"
+                      ? Container(
+                          child: itemData1['orderStatus'] != "CANCELED"
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: itemData1['orderStatus'] ==
                                                 "DELIVERED"
                                             ? OutlineButton(
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            15)),
+                                                            14)),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      "Repeat Order",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                ),
                                                 textColor: Colors.blue,
                                                 borderSide: BorderSide(
-                                                    color: Colors.amber,
+                                                    color: Colors.green,
                                                     width: 2),
-                                                child: Text("Give Rating"),
                                                 onPressed: () {
+                                                  if (itemData1[
+                                                          'discountPrice'] !=
+                                                      0) {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "Discount will not add in total amount");
+                                                  }
                                                   showModalBottomSheet(
-                                                      enableDrag: true,
                                                       isScrollControlled: true,
+                                                      backgroundColor:
+                                                          Colors.transparent,
                                                       context: context,
-                                                      builder: (context) => Container(
-                                                          height:
-                                                              size.height * 0.8,
-                                                          child: AddRatingPage(
-                                                              data:
-                                                                  itemData1)));
+                                                      builder: (context) =>
+                                                          BottomRepeatSheet(
+                                                            data: itemData1,
+                                                          ));
                                                 },
                                               )
                                             : SizedBox()),
-                                  )
-                                ],
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  child: Text(
-                                    "Order is Cancelled",
-                                    style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                          child: itemData1['orderStatus'] ==
+                                                  "DELIVERED"
+                                              ? OutlineButton(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15)),
+                                                  textColor: Colors.blue,
+                                                  borderSide: BorderSide(
+                                                      color: Colors.amber,
+                                                      width: 2),
+                                                  child: Text("Give Rating"),
+                                                  onPressed: () {
+                                                    showModalBottomSheet(
+                                                        enableDrag: true,
+                                                        isScrollControlled:
+                                                            true,
+                                                        context: context,
+                                                        builder: (context) => Container(
+                                                            height:
+                                                                size.height *
+                                                                    0.8,
+                                                            child: AddRatingPage(
+                                                                data:
+                                                                    itemData1)));
+                                                  },
+                                                )
+                                              : SizedBox()),
+                                    )
+                                  ],
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    child: Text(
+                                      "Order is Cancelled",
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
                                   ),
                                 ),
-                              ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: Text(
-                            "IN PROGRESS",
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            child: Text(
+                              "IN PROGRESS",
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                      ))
-          ],
-        ));
+                        ))
+            ],
+          )),
+    );
   }
 }
 
@@ -686,12 +736,8 @@ class _BottomRepeatSheetState extends State<BottomRepeatSheet> {
           InkWell(
               onTap: () async {
                 if (userNameWithNumber == "Select Delivery Address") {
-                  final result = await showModalBottomSheet(
-                      isScrollControlled: true,
-                      elevation: 2,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (context) => SelectAddress());
+                  final result = await Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SelectAddress()));
                   if (result) {
                     setState(() {});
                   }
@@ -887,7 +933,7 @@ class _RepeatOrderCheckState extends State<RepeatOrderCheck> {
       print(
           "MenuName = $menuName and MenuId = $menuID and MenuQuantity = $menuQty");
       print("***************************data close*************************");
-      menuidAndQty.add(MenuData(menuID, menuQty));
+      menuidAndQty.add(MenuData(menuID, menuQty, 0));
     }
     print("***************************final*************************");
     print(menuidAndQty);

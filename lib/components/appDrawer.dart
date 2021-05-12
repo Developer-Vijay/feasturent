@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/WishList/wishlist.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
@@ -45,10 +43,10 @@ class _AppDrawerState extends State<AppDrawer> {
                 backgroundColor: Color(0xffF8F9FE),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
-                    child: widget.cProfile == null
+                    child: photo == null
                         ? Image.asset("assets/images/loginuser.png")
                         : CachedNetworkImage(
-                            imageUrl: S3_BASE_PATH + widget.cProfile,
+                            imageUrl: S3_BASE_PATH + photo,
                             fit: BoxFit.fill,
                             width: size.width * 0.33,
                             placeholder: (context, url) =>
@@ -68,7 +66,9 @@ class _AppDrawerState extends State<AppDrawer> {
               child: Column(
                 children: [
                   Text(
-                    widget.cName != null ? widget.cName : ' ',
+                    capitalize(widget.cName) != null
+                        ? capitalize(widget.cName)
+                        : ' ',
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.02,
                         color: Colors.white),
@@ -122,6 +122,16 @@ class _AppDrawerState extends State<AppDrawer> {
     }
   }
 
+  bool home = true;
+  bool myorder = false;
+  bool wishlist = false;
+  bool cart = false;
+  bool setting = false;
+  bool wallet = false;
+  bool term = false;
+  bool policy = false;
+  bool logout = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -144,11 +154,26 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.home),
             title: Text(
               'Home',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: home == true ? Colors.blue : Colors.black87),
             ),
             dense: true,
-            selected: true,
+            selected: home,
             onTap: () {
+              setState(() {
+                home = true;
+                myorder = false;
+                wishlist = false;
+                cart = false;
+                setting = false;
+                wallet = false;
+                term = false;
+                policy = false;
+                logout = false;
+              });
+              Navigator.pop(context);
               // Update the state of the app.
               // ...
             },
@@ -157,11 +182,26 @@ class _AppDrawerState extends State<AppDrawer> {
               ? ListTile(
                   leading: Icon(Icons.article),
                   title: Text(
-                    'MyOrders',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    'My Orders',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: myorder == true ? Colors.blue : Colors.black87),
                   ),
                   dense: true,
+                  selected: myorder,
                   onTap: () {
+                    setState(() {
+                      home = false;
+                      myorder = true;
+                      wishlist = false;
+                      cart = false;
+                      setting = false;
+                      wallet = false;
+                      term = false;
+                      policy = false;
+                      logout = false;
+                    });
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => MyOrders()));
                     // Update the state of the app.
@@ -173,10 +213,25 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.favorite),
             title: Text(
               'Wishlist',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: wishlist == true ? Colors.blue : Colors.black87),
             ),
+            selected: wishlist,
             dense: true,
             onTap: () {
+              setState(() {
+                home = false;
+                myorder = false;
+                wishlist = true;
+                cart = false;
+                setting = false;
+                wallet = false;
+                term = false;
+                policy = false;
+                logout = false;
+              });
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Wishlist()));
               // Update the state of the app.
@@ -187,10 +242,25 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.shopping_cart),
             title: Text(
               'Cart',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: cart == true ? Colors.blue : Colors.black87),
             ),
+            selected: cart,
             dense: true,
             onTap: () {
+              setState(() {
+                home = false;
+                myorder = false;
+                wishlist = false;
+                cart = true;
+                setting = false;
+                wallet = false;
+                term = false;
+                policy = false;
+                logout = false;
+              });
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => CartScreen()));
               // Update the state of the app.
@@ -201,10 +271,25 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.account_balance_wallet),
             title: Text(
               'Wallet',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: wallet == true ? Colors.blue : Colors.black87),
             ),
+            selected: wallet,
             dense: true,
             onTap: () {
+              setState(() {
+                home = false;
+                myorder = false;
+                wishlist = false;
+                cart = false;
+                setting = false;
+                wallet = true;
+                term = false;
+                policy = false;
+                logout = false;
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => WalletDesign()),
@@ -223,10 +308,25 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.settings),
             title: Text(
               'Settings',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: setting == true ? Colors.blue : Colors.black87),
             ),
+            selected: setting,
             dense: true,
             onTap: () {
+              setState(() {
+                home = false;
+                myorder = false;
+                wishlist = false;
+                cart = false;
+                setting = true;
+                wallet = false;
+                term = false;
+                policy = false;
+                logout = false;
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SettingsScreen()),
@@ -239,10 +339,25 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.help_center),
             title: Text(
               'Term & Condition',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: term == true ? Colors.blue : Colors.black87),
             ),
             dense: true,
+            selected: term,
             onTap: () {
+              setState(() {
+                home = false;
+                myorder = false;
+                wishlist = false;
+                cart = false;
+                setting = false;
+                wallet = false;
+                term = true;
+                policy = false;
+                logout = false;
+              });
               _launchURL();
             },
           ),
@@ -250,10 +365,25 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.privacy_tip),
             title: Text(
               'Privacy Policy',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: policy == true ? Colors.blue : Colors.black87),
             ),
+            selected: policy,
             dense: true,
             onTap: () {
+              setState(() {
+                home = false;
+                myorder = false;
+                wishlist = false;
+                cart = false;
+                setting = false;
+                wallet = false;
+                term = false;
+                policy = true;
+                logout = false;
+              });
               _launchURL();
             },
           ),
@@ -262,8 +392,12 @@ class _AppDrawerState extends State<AppDrawer> {
                   leading: Icon(Icons.logout),
                   title: Text(
                     'Logout',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: logout == true ? Colors.blue : Colors.black87),
                   ),
+                  selected: logout,
                   dense: true,
                   onTap: () async {
                     return showDialog(
@@ -274,6 +408,17 @@ class _AppDrawerState extends State<AppDrawer> {
                                 FlatButton(
                                   child: Text("Yes"),
                                   onPressed: () async {
+                                    setState(() {
+                                      home = false;
+                                      myorder = false;
+                                      wishlist = false;
+                                      cart = false;
+                                      setting = false;
+                                      wallet = false;
+                                      term = false;
+                                      policy = false;
+                                      logout = true;
+                                    });
                                     Navigator.pop(context);
                                     Navigator.pop(context);
 

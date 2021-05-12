@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -20,7 +21,7 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   File _image;
-  var photo;
+  // var photo;
   var emailidD;
   int user;
   var username;
@@ -46,7 +47,7 @@ class _EditProfileState extends State<EditProfile> {
       var takeUser = prefs.getString('loginBy');
       print(takeUser);
       emailidD = prefs.getString('userEmail');
-      photo = prefs.getString('userProfile');
+      // photo = prefs.getString('userProfile');
       username = prefs.getString('name');
       userid = prefs.getInt('userId');
       phonenumber = prefs.getString('userNumber');
@@ -99,6 +100,10 @@ class _EditProfileState extends State<EditProfile> {
       final res = await http.Response.fromStream(response);
       print(res.body);
       if (response.statusCode == 200) {
+        var decodedData = jsonDecode(res.body);
+        setState(() {
+          photo = decodedData['data'];
+        });
         Fluttertoast.showToast(msg: "Profile Photo Updated");
         Navigator.pop(context);
         Navigator.pop(context);
@@ -219,12 +224,18 @@ class _EditProfileState extends State<EditProfile> {
                                                   "assets/images/avatar.png"))))
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
-                                      child: Image.file(
-                                        photo,
-                                        fit: BoxFit.cover,
+                                      child: CachedNetworkImage(
+                                        imageUrl: S3_BASE_PATH + photo,
+                                        fit: BoxFit.fill,
                                         width: size.width * 0.33,
-                                      ),
-                                    )),
+                                        placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            Image.asset(
+                                          "assets/images/loginuser.png",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ))),
                         ),
                         Positioned(
                           left: size.width * 0.55,

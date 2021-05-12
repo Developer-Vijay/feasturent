@@ -63,7 +63,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                             ),
                             Text("Feasturent gives opportunity"),
                             Text("to Experience the "),
-                            Text("great food"),
+                            Text("great foods"),
                           ],
                         ),
                       ),

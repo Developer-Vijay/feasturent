@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/customize_menu.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/screens/profile/components/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,11 +12,18 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:feasturent_costomer_app/components/WishList/WishListDataBase/wishlist_service.dart';
 
 class FoodSlider extends StatefulWidget {
+  final rating;
+  final ratinglength;
   final menuData;
   final menuStatus;
   final restaurentName;
   const FoodSlider(
-      {Key key, this.menuData, this.menuStatus, this.restaurentName})
+      {Key key,
+      this.menuData,
+      this.menuStatus,
+      this.restaurentName,
+      this.rating,
+      this.ratinglength})
       : super(key: key);
   @override
   _FoodSliderState createState() => _FoodSliderState();
@@ -25,7 +32,7 @@ class FoodSlider extends StatefulWidget {
 class _FoodSliderState extends State<FoodSlider> {
   bool isSelected = false;
 
-  var rating = 3.0;
+  var ratingfetched;
   int selectedRadioTile;
 
   var pad = 34;
@@ -33,9 +40,26 @@ class _FoodSliderState extends State<FoodSlider> {
   void initState() {
     super.initState();
     getList();
+    ratingfetched = widget.rating;
     datamenu = widget.menuData;
     selectedRadioTile = 0;
     checkStatus();
+  }
+
+  callingLoader() {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
   }
 
   checkStatus() async {
@@ -316,7 +340,7 @@ class _FoodSliderState extends State<FoodSlider> {
                                       child: Container(
                                         width: size.width * 0.75,
                                         child: Text(
-                                          datamenu['title'],
+                                          capitalize(datamenu['title']),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 18,
@@ -339,10 +363,10 @@ class _FoodSliderState extends State<FoodSlider> {
                                     child: SmoothStarRating(
                                         allowHalfRating: false,
                                         onRated: (v) {
-                                          Text("23");
+                                          Text(widget.ratinglength);
                                         },
                                         starCount: 5,
-                                        rating: rating,
+                                        rating: ratingfetched,
                                         size: 23.0,
                                         isReadOnly: true,
                                         defaultIconData:
@@ -355,7 +379,7 @@ class _FoodSliderState extends State<FoodSlider> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
-                                    child: Text("24 Views"),
+                                    child: Text("${widget.ratinglength} Views"),
                                   ),
                                   Spacer(),
                                   Padding(
@@ -444,63 +468,151 @@ class _FoodSliderState extends State<FoodSlider> {
                                           .then((value) => fun(value));
                                       if (vendorId == 0 ||
                                           vendorId == datamenu['vendorId']) {
+                                        callingLoader();
                                         if (data1.isEmpty) {
-                                          setState(() {
-                                            itemAddToCart(tpye);
-                                            checkdata
-                                                .add(datamenu['id'].toString());
+                                          if (datamenu['AddonMenus'].isEmpty) {
+                                            await addButtonFunction(
+                                                datamenu['totalPrice'],
+                                                datamenu['gstAmount'],
+                                                0,
+                                                null,
+                                                datamenu['title'],
+                                                ratingfetched);
+                                          } else {
+                                            tempAddOns = null;
+                                            final result =
+                                                await showModalBottomSheet(
+                                                    isScrollControlled: true,
+                                                    isDismissible: false,
+                                                    enableDrag: false,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        CustomizeMenu(
+                                                          menuData: datamenu,
+                                                        ));
 
-                                            totalcount = totalcount + 1;
-                                            gsttotal = gsttotal +
-                                                datamenu['gstAmount'];
-                                            totalprice = totalprice +
-                                                datamenu['totalPrice'];
-
-                                            vendorId = datamenu['vendorId'];
-                                            cart.setInt('VendorId', vendorId);
-                                            cart.setInt(
-                                                'TotalPrice', totalprice);
-                                            cart.setInt('TotalGst', gsttotal);
-                                            cart.setInt(
-                                                'TotalCount', totalcount);
-
-                                            cart.setStringList(
-                                                'addedtocart', checkdata);
-                                            snackBarData =
-                                                "${datamenu['title']} is added to cart";
-                                          });
+                                            if (result != null) {
+                                              if (result > 0) {
+                                                int totalprice = 0;
+                                                int totalgst = 0;
+                                                String title;
+                                                int k = datamenu['AddonMenus']
+                                                    .length;
+                                                for (int i = 0;
+                                                    i <= k - 1;
+                                                    i++) {
+                                                  if (datamenu['AddonMenus'][i]
+                                                          ['id'] ==
+                                                      result) {
+                                                    setState(() {
+                                                      title =
+                                                          "${datamenu['AddonMenus'][i]['title']} ${datamenu['title']}";
+                                                      totalprice = datamenu[
+                                                                  'AddonMenus']
+                                                              [i]['amount'] +
+                                                          datamenu['AddonMenus']
+                                                              [i]['gstAmount'];
+                                                      totalgst =
+                                                          datamenu['AddonMenus']
+                                                              [i]['gstAmount'];
+                                                    });
+                                                  }
+                                                }
+                                                await addButtonFunction(
+                                                    totalprice,
+                                                    totalgst,
+                                                    result,
+                                                    tempAddOns,
+                                                    title,
+                                                    ratingfetched);
+                                              } else if (result == 0) {
+                                                await addButtonFunction(
+                                                    datamenu['totalPrice'],
+                                                    datamenu['gstAmount'],
+                                                    0,
+                                                    tempAddOns,
+                                                    datamenu['title'],
+                                                    ratingfetched);
+                                              }
+                                            }
+                                          }
                                         } else {
                                           if (data1[0]['itemName'] !=
                                               datamenu['title']) {
-                                            setState(() {
-                                              itemAddToCart(tpye);
-                                              checkdata.add(
-                                                  datamenu['id'].toString());
+                                            if (datamenu['AddonMenus']
+                                                .isEmpty) {
+                                              await addButtonFunction(
+                                                  datamenu['totalPrice'],
+                                                  datamenu['gstAmount'],
+                                                  0,
+                                                  null,
+                                                  datamenu['title'],
+                                                  ratingfetched);
+                                            } else {
+                                              tempAddOns = null;
+                                              final result =
+                                                  await showModalBottomSheet(
+                                                      isScrollControlled: true,
+                                                      isDismissible: false,
+                                                      enableDrag: false,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          CustomizeMenu(
+                                                            menuData: datamenu,
+                                                          ));
 
-                                              totalcount = totalcount + 1;
-                                              gsttotal = gsttotal +
-                                                  datamenu['gstAmount'];
-                                              totalprice = totalprice +
-                                                  datamenu['totalPrice'];
+                                              if (result != null) {
+                                                if (result > 0) {
+                                                  int totalprice = 0;
+                                                  int totalgst = 0;
+                                                  String title;
+                                                  int k = datamenu['AddonMenus']
+                                                      .length;
+                                                  for (int i = 0;
+                                                      i <= k - 1;
+                                                      i++) {
+                                                    if (datamenu['AddonMenus']
+                                                            [i]['id'] ==
+                                                        result) {
+                                                      setState(() {
+                                                        title =
+                                                            "${datamenu['AddonMenus'][i]['title']} ${datamenu['title']}";
 
-                                              vendorId = datamenu['vendorId'];
-                                              cart.setInt('VendorId', vendorId);
-                                              cart.setInt(
-                                                  'TotalPrice', totalprice);
-                                              cart.setInt('TotalGst', gsttotal);
-                                              cart.setInt(
-                                                  'TotalCount', totalcount);
-
-                                              cart.setStringList(
-                                                  'addedtocart', checkdata);
-                                              snackBarData =
-                                                  "${datamenu['title']} is added to cart";
-                                            });
-
-                                            setState(() {
-                                              snackBarData =
-                                                  "${datamenu['title']} is added to cart";
-                                            });
+                                                        totalprice = datamenu[
+                                                                    'AddonMenus']
+                                                                [i]['amount'] +
+                                                            datamenu[
+                                                                    'AddonMenus']
+                                                                [
+                                                                i]['gstAmount'];
+                                                        totalgst = datamenu[
+                                                                'AddonMenus'][i]
+                                                            ['gstAmount'];
+                                                      });
+                                                    }
+                                                  }
+                                                  await addButtonFunction(
+                                                      totalprice,
+                                                      totalgst,
+                                                      result,
+                                                      tempAddOns,
+                                                      title,
+                                                      ratingfetched);
+                                                } else if (result == 0) {
+                                                  await addButtonFunction(
+                                                      datamenu['totalPrice'],
+                                                      datamenu['gstAmount'],
+                                                      0,
+                                                      tempAddOns,
+                                                      datamenu['title'],
+                                                      ratingfetched);
+                                                }
+                                              }
+                                            }
                                           } else {
                                             setState(() {
                                               snackBarData =
@@ -509,10 +621,133 @@ class _FoodSliderState extends State<FoodSlider> {
                                             print("match");
                                           }
                                         }
+                                        Navigator.pop(context);
                                       } else {
-                                        Fluttertoast.showToast(
-                                            msg:
-                                                "Please Add order from Single Resturent");
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                  content: Text(
+                                                      "Do you want to order food from different resturent"),
+                                                  actions: <Widget>[
+                                                    FlatButton(
+                                                      child: Text(
+                                                        "No",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text(
+                                                        "Yes",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      onPressed: () async {
+                                                        callingLoader();
+                                                        removeCartForNewData();
+                                                        setState(() {});
+                                                        getList();
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        if (datamenu[
+                                                                'AddonMenus']
+                                                            .isEmpty) {
+                                                          await addButtonFunction(
+                                                              datamenu[
+                                                                  'totalPrice'],
+                                                              datamenu[
+                                                                  'gstAmount'],
+                                                              0,
+                                                              null,
+                                                              datamenu['title'],
+                                                              ratingfetched);
+                                                        } else {
+                                                          tempAddOns = null;
+                                                          final result =
+                                                              await showModalBottomSheet(
+                                                                  isScrollControlled:
+                                                                      true,
+                                                                  isDismissible:
+                                                                      false,
+                                                                  enableDrag:
+                                                                      false,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) =>
+                                                                          CustomizeMenu(
+                                                                            menuData:
+                                                                                datamenu,
+                                                                          ));
+
+                                                          if (result != null) {
+                                                            if (result > 0) {
+                                                              int totalprice =
+                                                                  0;
+                                                              int totalgst = 0;
+                                                              String title;
+                                                              int k = datamenu[
+                                                                      'AddonMenus']
+                                                                  .length;
+                                                              for (int i = 0;
+                                                                  i <= k - 1;
+                                                                  i++) {
+                                                                if (datamenu['AddonMenus']
+                                                                            [i][
+                                                                        'id'] ==
+                                                                    result) {
+                                                                  setState(() {
+                                                                    title =
+                                                                        "${datamenu['AddonMenus'][i]['title']} ${datamenu['title']}";
+
+                                                                    totalprice = datamenu['AddonMenus'][i]
+                                                                            [
+                                                                            'amount'] +
+                                                                        datamenu['AddonMenus'][i]
+                                                                            [
+                                                                            'gstAmount'];
+                                                                    totalgst = datamenu[
+                                                                            'AddonMenus'][i]
+                                                                        [
+                                                                        'gstAmount'];
+                                                                  });
+                                                                }
+                                                              }
+                                                              await addButtonFunction(
+                                                                  totalprice,
+                                                                  totalgst,
+                                                                  result,
+                                                                  tempAddOns,
+                                                                  title,
+                                                                  ratingfetched);
+                                                            } else if (result ==
+                                                                0) {
+                                                              await addButtonFunction(
+                                                                  datamenu[
+                                                                      'totalPrice'],
+                                                                  datamenu[
+                                                                      'gstAmount'],
+                                                                  0,
+                                                                  tempAddOns,
+                                                                  datamenu[
+                                                                      'title'],
+                                                                  ratingfetched);
+                                                            }
+                                                          }
+                                                        }
+                                                      },
+                                                    ),
+                                                  ]);
+                                            });
                                       }
                                     } else {
                                       Fluttertoast.showToast(
@@ -596,6 +831,120 @@ class _FoodSliderState extends State<FoodSlider> {
     );
   }
 
+  addButtonFunction(price, gst, variantId, addOnData, title, rating) async {
+    if (widget.menuStatus == true) {
+      int tpye = 0;
+
+      final SharedPreferences cart = await SharedPreferences.getInstance();
+      int totalprice = cart.getInt('TotalPrice');
+      int gsttotal = cart.getInt('TotalGst');
+      int totalcount = cart.getInt('TotalCount');
+      int vendorId = cart.getInt('VendorId');
+      if (datamenu['isNonVeg'] == false) {
+        if (datamenu['isEgg'] == false) {
+          tpye = 1;
+        } else {
+          tpye = 2;
+        }
+      } else {
+        tpye = 3;
+      }
+
+      await services.data(datamenu['id']).then((value) => fun(value));
+      if (vendorId == 0 || vendorId == datamenu['vendorId']) {
+        callingLoader();
+        if (data1.isEmpty) {
+          setState(() {
+            itemAddToCart(
+                tpye, price, gst, variantId, addOnData, title, rating);
+            checkdata.add(datamenu['id'].toString());
+
+            totalcount = totalcount + 1;
+            gsttotal = gsttotal + gst;
+            totalprice = totalprice + price;
+
+            vendorId = datamenu['vendorId'];
+            cart.setInt('VendorId', vendorId);
+            cart.setInt('TotalPrice', totalprice);
+            cart.setInt('TotalGst', gsttotal);
+            cart.setInt('TotalCount', totalcount);
+
+            cart.setStringList('addedtocart', checkdata);
+            snackBarData = "${datamenu['title']} is added to cart";
+          });
+        } else {
+          if (data1[0]['itemName'] != datamenu['title']) {
+            setState(() {
+              itemAddToCart(
+                  tpye, price, gst, variantId, addOnData, title, rating);
+              checkdata.add(datamenu['id'].toString());
+
+              totalcount = totalcount + 1;
+              gsttotal = gsttotal + gst;
+              totalprice = totalprice + price;
+
+              vendorId = datamenu['vendorId'];
+              cart.setInt('VendorId', vendorId);
+              cart.setInt('TotalPrice', totalprice);
+              cart.setInt('TotalGst', gsttotal);
+              cart.setInt('TotalCount', totalcount);
+
+              cart.setStringList('addedtocart', checkdata);
+              snackBarData = "${datamenu['title']} is added to cart";
+            });
+
+            setState(() {
+              snackBarData = "${datamenu['title']} is added to cart";
+            });
+          } else {
+            setState(() {
+              snackBarData = "${datamenu['title']} is already added to cart";
+            });
+            print("match");
+          }
+        }
+        Navigator.pop(context);
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  content: Text(
+                      "Do you want to order food from different resturent"),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(
+                        "No",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(
+                        "Yes",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: () async {
+                        callingLoader();
+                        removeCartForNewData();
+                        setState(() {});
+                        getList();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        await addButtonFunction(
+                            price, gst, variantId, addOnData, title, rating);
+                      },
+                    ),
+                  ]);
+            });
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Not taking orders now");
+    }
+  }
+
   getItemandNavigateToFavourites(type) async {
     setState(() {
       wishListServices.saveUser(
@@ -609,32 +958,29 @@ class _FoodSliderState extends State<FoodSlider> {
           type,
           0,
           widget.restaurentName,
-          datamenu['gstAmount']);
+          datamenu['gstAmount'],
+          ratingfetched.toString());
     });
     print("data added");
   }
 
-  itemAddToCart(tpye) async {
-    final SharedPreferences cart = await SharedPreferences.getInstance();
-
-    // var sum = cart.getInt('price');
-    // sum = sum + datamenu['totalPrice'];
-    // cart.setInt('price', sum);
-    // print(sum);
+  itemAddToCart(tpye, price, gst, variantId, addons, name, rating) async {
     setState(() {
-      // itemCount.add(value)
       services.saveUser(
-          datamenu['totalPrice'],
+          price,
           1,
           datamenu['vendorId'],
           datamenu['id'],
           datamenu['image1'],
-          datamenu['title'],
+          name,
           "Add".toString(),
           tpye,
           0,
           widget.restaurentName,
-          datamenu['gstAmount']);
+          gst,
+          variantId,
+          addons,
+          rating.toString());
     });
   }
 

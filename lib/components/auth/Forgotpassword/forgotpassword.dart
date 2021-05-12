@@ -60,7 +60,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     ),
                     Container(
                       child: Image.asset(
-                        "assets/images/forgot (1).png",
+                        "assets/images/forgot.png",
                         height: size.height * 0.20,
                       ),
                     )

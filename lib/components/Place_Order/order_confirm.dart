@@ -27,7 +27,11 @@ class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
 
   route() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyOrders(
+                  checker: true,
+                )));
   }
 
   @override
@@ -66,7 +70,7 @@ class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
                     child: Container(
                       margin: EdgeInsets.only(left: 40, right: 40),
                       child: Text(
-                        'You will be Redirected to the Home Screen Shortly',
+                        'You will be Redirected to the My Orders Shortly',
                         style: TextStyle(
                           color: Colors.blueGrey,
                           fontSize: 16,

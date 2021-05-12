@@ -1,5 +1,8 @@
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineput_book_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../../constants.dart';
 
 class DineoutAddMembers extends StatefulWidget {
   var date;
@@ -49,7 +52,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.data['name']),
+          title: Text(capitalize(widget.data['name'])),
         ),
         body: ListView(
           children: [
@@ -89,9 +92,37 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
               child: widget.data['user']['OffersAndCoupons'].isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
                       itemCount: 1,
                       itemBuilder: (context, index) {
+                        var couponDetatil;
+
+                        if (widget.data['user']['OffersAndCoupons'][index]
+                                ['discount'] ==
+                            null) {
+                          String symbol;
+                          if (widget.data['user']['OffersAndCoupons'][index]
+                                  ['couponDiscountType'] ==
+                              "PERCENT") {
+                            symbol = "%";
+                          } else {
+                            symbol = "₹";
+                          }
+
+                          couponDetatil =
+                              "${widget.data['user']['OffersAndCoupons'][index]['couponDiscount']}$symbol off";
+                        } else {
+                          String symbol;
+                          if (widget.data['user']['OffersAndCoupons'][index]
+                                  ['discountType'] ==
+                              "PERCENT") {
+                            symbol = "%";
+                          } else {
+                            symbol = "₹";
+                          }
+
+                          couponDetatil =
+                              "${widget.data['user']['OffersAndCoupons'][index]['discount']}$symbol off";
+                        }
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -132,17 +163,18 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                                         Container(
                                             child: widget.data['user']
                                                             ['OffersAndCoupons']
-                                                        [index]['coupon'] !=
+                                                        [index]['title'] !=
                                                     null
                                                 ? Text(
-                                                    "${widget.data['user']['OffersAndCoupons'][index]['coupon']}",
+                                                    capitalize(
+                                                        "${widget.data['user']['OffersAndCoupons'][index]['title']}"),
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w700),
                                                   )
-                                                : Text("Data")),
+                                                : Text("Coupon Details...")),
                                         Spacer(),
                                         CircleAvatar(
                                           backgroundColor: Colors.grey[200],
@@ -159,44 +191,36 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                                     Row(
                                       children: [
                                         Container(
-                                            child: widget.data['user'][
-                                                                'OffersAndCoupons']
-                                                            [index]
-                                                        ['couponQuantity'] !=
-                                                    null
-                                                ? Text(
-                                                    '${widget.data['user']['OffersAndCoupons'][index]['couponQuantity']} GUEST',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  )
-                                                : Text("No. of Person")),
-                                        Spacer(),
-                                        Text(
-                                          "from",
-                                          style: TextStyle(
-                                              color: Colors.blueGrey,
-                                              fontSize: 12),
+                                          child: widget.data['user']
+                                                          ['OffersAndCoupons']
+                                                      [index]['coupon'] !=
+                                                  null
+                                              ? Text(
+                                                  'Use coupon code : ${widget.data['user']['OffersAndCoupons'][index]['coupon']}',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                )
+                                              : SizedBox(
+                                                  width: 6,
+                                                ),
                                         ),
+                                        Spacer(),
                                         SizedBox(
                                           width: 6,
                                         ),
                                         Container(
-                                            child: widget.data['user'][
-                                                                'OffersAndCoupons']
-                                                            [index]
-                                                        ['couponDiscount'] !=
-                                                    null
+                                            child: couponDetatil != null
                                                 ? Text(
-                                                    "₹ ${widget.data['user']['OffersAndCoupons'][index]['couponDiscount']}",
+                                                    "₹ $couponDetatil",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w700),
                                                   )
-                                                : Text("coupon discount")),
+                                                : Text("Coupon discount")),
                                       ],
                                     ),
                                     SizedBox(
@@ -225,7 +249,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                                     ),
                                     Container(
                                       height: 3,
-                                      width: size.width * 0.7,
+                                      width: size.width * 0.98,
                                       color: Colors.red[300],
                                       child: Text("1"),
                                     ),
@@ -258,7 +282,6 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                                       height: 6,
                                       width: size.width * 0.9,
                                       color: Colors.blue,
-                                      child: Text("1"),
                                     ),
                                   ],
                                 ),
@@ -494,20 +517,24 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
             ),
             MaterialButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DineoutBookingSummary(
-                              date: showdate,
-                              time: showtime,
-                              data: widget.data,
-                              femalecount: counter1,
-                              malecount: counter,
-                              childcount: counter2,
-                              totalguest: guest,
-                              senddate: senddate,
-                              adult: adult,
-                            )));
+                if (counter == 0 && counter1 == 0 && counter2 == 0) {
+                  Fluttertoast.showToast(msg: 'Please add no. of guest');
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DineoutBookingSummary(
+                                date: showdate,
+                                time: showtime,
+                                data: widget.data,
+                                femalecount: counter1,
+                                malecount: counter,
+                                childcount: counter2,
+                                totalguest: guest,
+                                senddate: senddate,
+                                adult: adult,
+                              )));
+                }
               },
               child: Text("Continue to Reserve"),
               color: Colors.blue,

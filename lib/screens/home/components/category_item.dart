@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 
-
 class CategoryItem extends StatelessWidget {
   final String title;
   final bool isActive;
@@ -22,13 +21,13 @@ class CategoryItem extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              title,
+              capitalize(title),
               style: isActive
                   ? TextStyle(
                       color: kTextColor,
                       fontWeight: FontWeight.bold,
                     )
-                  : TextStyle(fontSize: 12),
+                  : TextStyle(fontSize: 14),
             ),
             if (isActive)
               Container(

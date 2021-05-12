@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/AddOnDataBase/addon_dataClass.dart';
+import 'package:feasturent_costomer_app/components/Cart.dart/AddOnDataBase/addon_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/dataClass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/order_confirm.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/select_address.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +16,22 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
+import '../../main.dart';
 import 'offer_bottom_Sheet.dart';
+
+var offerInfo = "Select a promo code";
 
 class PlaceOrder extends StatefulWidget {
   final resturentOfferData;
+  final restUsername;
   final deliveryTime;
   final data;
   const PlaceOrder(
-      {Key key, this.data, this.deliveryTime, this.resturentOfferData})
+      {Key key,
+      this.data,
+      this.deliveryTime,
+      this.resturentOfferData,
+      this.restUsername})
       : super(key: key);
   @override
   _PlaceOrderState createState() => _PlaceOrderState();
@@ -30,9 +39,12 @@ class PlaceOrder extends StatefulWidget {
 
 class _PlaceOrderState extends State<PlaceOrder> {
   final services = UserServices();
+  final addOnservices = AddOnService();
+
   @override
   void initState() {
     super.initState();
+    offerInfo = "Select a promo code";
     createstorage();
     dataForOffer = widget.data;
   }
@@ -61,11 +73,13 @@ class _PlaceOrderState extends State<PlaceOrder> {
   }
 
   List<String> checkitem = [];
+  List addonlist = [];
 
   createstorage() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
       checkitem = cart.getStringList('addedtocart');
+      addonlist = cart.getStringList('addontocart');
       totalprice1 = cart.getInt('TotalPrice');
       gsttotal1 = cart.getInt('TotalGst');
       totalcount1 = cart.getInt('TotalCount');
@@ -146,6 +160,14 @@ class _PlaceOrderState extends State<PlaceOrder> {
     });
   }
 
+  List<DonateList> donate = [
+    DonateList(amount: 5, value: false),
+    DonateList(amount: 10, value: false),
+    DonateList(amount: 20, value: false),
+    DonateList(amount: 50, value: false),
+    DonateList(amount: 100, value: false),
+  ];
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -155,6 +177,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
         setState(() {
           discount = 0;
           offerid = 0;
+          donateAmount = 0;
         });
         Navigator.pop(context, true);
       },
@@ -174,6 +197,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   setState(() {
                     discount = 0;
                     offerid = 0;
+                    donateAmount = 0;
                   });
                   Navigator.pop(context, true);
                 },
@@ -220,11 +244,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               Icons.arrow_drop_down_rounded,
                             ),
                             onPressed: () async {
-                              final result = await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (context) => SelectAddress());
+                              final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SelectAddress()));
                               if (result) {
                                 setState(() {});
                                 createstorage();
@@ -262,6 +285,19 @@ class _PlaceOrderState extends State<PlaceOrder> {
             Expanded(
               child: ListView(
                 children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Menus",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: size.height * 0.025)),
+                      ),
+                      Spacer()
+                    ],
+                  ),
                   FutureBuilder(
                       future: services.fetchUsers(),
                       builder: (ctx, snap) {
@@ -383,6 +419,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                 cart.setInt(
                                                                     'TotalCount',
                                                                     totalcount);
+                                                                removeAddOnWithMenu(
+                                                                    users[index]
+                                                                        .addons);
+
                                                                 services.deleteUser(
                                                                     users[index]
                                                                         .menuItemId);
@@ -424,6 +464,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                 cart.setInt(
                                                                     'TotalCount',
                                                                     totalcount);
+                                                                removeAddOnWithMenu(
+                                                                    users[index]
+                                                                        .addons);
+
                                                                 services.deleteUser(
                                                                     users[index]
                                                                         .menuItemId);
@@ -568,8 +612,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                             0.3,
                                                                         child:
                                                                             Text(
-                                                                          users[index]
-                                                                              .itemName,
+                                                                          capitalize(
+                                                                              users[index].itemName),
                                                                           maxLines:
                                                                               2,
                                                                           overflow:
@@ -616,7 +660,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                           child:
                                                                               Text("⭐")),
                                                                       Text(
-                                                                        "3.0",
+                                                                        users[index]
+                                                                            .rating,
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 15,
@@ -794,6 +839,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                               cart.setInt('TotalPrice', totalprice);
                                                                               cart.setInt('TotalGst', gsttotal);
                                                                               cart.setInt('TotalCount', totalcount);
+                                                                              removeAddOnWithMenu(users[index].addons);
+
                                                                               services.deleteUser(users[index].menuItemId);
                                                                               checkitem.remove(users[index].menuItemId.toString());
                                                                               print(checkitem);
@@ -809,6 +856,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                               cart.setInt('TotalPrice', totalprice);
                                                                               cart.setInt('TotalGst', gsttotal);
                                                                               cart.setInt('TotalCount', totalcount);
+                                                                              removeAddOnWithMenu(users[index].addons);
+
                                                                               services.deleteUser(users[index].menuItemId);
                                                                               checkitem.remove(users[index].menuItemId.toString());
                                                                               print(checkitem);
@@ -918,6 +967,352 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               });
                         }
                       }),
+                  addonlist.isEmpty
+                      ? SizedBox()
+                      : Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("AddOns",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: size.height * 0.025)),
+                            ),
+                            Spacer()
+                          ],
+                        ),
+                  addonlist.isEmpty
+                      ? SizedBox()
+                      : Container(
+                          child: FutureBuilder(
+                              future: addOnservices.fetchUsers(),
+                              builder: (ctx, snap) {
+                                List<AddOnData> addonusers = snap.data;
+                                if (snap.hasData) {
+                                  return ListView.builder(
+                                      itemCount: addonusers.length,
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemBuilder: (
+                                        context,
+                                        i,
+                                      ) {
+                                        print("hiting listview");
+                                        print(
+                                            "Addon name= ${addonusers[i].addonName} and id is= ${addonusers[i].addonId}");
+                                        return Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 2,
+                                                      color: Colors.blue[50],
+                                                      offset: Offset(1, 4),
+                                                      spreadRadius: 2)
+                                                ]),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    width: size.width * 0.45,
+                                                    child: Text(
+                                                      capitalize(
+                                                          "${addonusers[i].addonName}"),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                          fontSize: 14),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: size.width * 0.05,
+                                                  ),
+                                                  Text(
+                                                    capitalize(
+                                                        "₹ ${addonusers[i].addonPrice}"),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                        fontSize: 14),
+                                                  ),
+                                                  Spacer(),
+                                                  Container(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    padding: EdgeInsets.only(
+                                                        right: 0),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            blurRadius: 2,
+                                                            spreadRadius: 2,
+                                                            color: Colors
+                                                                .grey[300],
+                                                            offset:
+                                                                Offset(0, 3))
+                                                      ],
+                                                    ),
+                                                    margin: EdgeInsets.only(
+                                                        right:
+                                                            size.width * 0.0),
+                                                    child: ButtonBar(
+                                                      buttonPadding:
+                                                          EdgeInsets.all(3),
+                                                      children: [
+                                                        InkWell(
+                                                            onTap: () async {
+                                                              final SharedPreferences
+                                                                  cart =
+                                                                  await SharedPreferences
+                                                                      .getInstance();
+                                                              int totalprice =
+                                                                  cart.getInt(
+                                                                      'TotalPrice');
+                                                              int gsttotal =
+                                                                  cart.getInt(
+                                                                      'TotalGst');
+                                                              int totalcount =
+                                                                  cart.getInt(
+                                                                      'TotalCount');
+
+                                                              if (addonusers[i]
+                                                                      .addonCount >
+                                                                  1) {
+                                                                callingLoader();
+
+                                                                setState(() {
+                                                                  totalcount--;
+
+                                                                  gsttotal = gsttotal -
+                                                                      addonusers[
+                                                                              i]
+                                                                          .addongst;
+                                                                  totalprice = totalprice -
+                                                                      addonusers[
+                                                                              i]
+                                                                          .addonPrice;
+                                                                  addOnservices.decrementItemCounter(
+                                                                      addonusers[
+                                                                              i]
+                                                                          .id,
+                                                                      addonusers[
+                                                                              i]
+                                                                          .addonCount);
+
+                                                                  cart.setInt(
+                                                                      'TotalPrice',
+                                                                      totalprice);
+                                                                  cart.setInt(
+                                                                      'TotalGst',
+                                                                      gsttotal);
+                                                                  cart.setInt(
+                                                                      'TotalCount',
+                                                                      totalcount);
+                                                                });
+                                                                await Future.delayed(
+                                                                    Duration(
+                                                                        seconds:
+                                                                            1));
+                                                                setState(() {});
+                                                                Navigator.pop(
+                                                                    context);
+                                                              } else if (addonusers[
+                                                                          i]
+                                                                      .addonCount ==
+                                                                  1) {
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return AlertDialog(
+                                                                        content:
+                                                                            Text("Are you sure you want to delete ${addonusers[i].addonName}?"),
+                                                                        actions: <
+                                                                            Widget>[
+                                                                          FlatButton(
+                                                                            child:
+                                                                                Text(
+                                                                              "Cancel",
+                                                                              style: TextStyle(color: Colors.black),
+                                                                            ),
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                          ),
+                                                                          FlatButton(
+                                                                            child:
+                                                                                Text(
+                                                                              "Delete",
+                                                                              style: TextStyle(color: Colors.red),
+                                                                            ),
+                                                                            onPressed:
+                                                                                () async {
+                                                                              callingLoader();
+
+                                                                              final SharedPreferences cart = await SharedPreferences.getInstance();
+                                                                              int totalprice = cart.getInt('TotalPrice');
+                                                                              int gsttotal = cart.getInt('TotalGst');
+                                                                              int totalcount = cart.getInt('TotalCount');
+
+                                                                              if (addonusers[i].addonCount == totalcount) {
+                                                                                setState(() {
+                                                                                  totalcount = totalcount - addonusers[i].addonCount;
+                                                                                  gsttotal = gsttotal - (addonusers[i].addonCount * addonusers[i].addongst);
+                                                                                  totalprice = totalprice - (addonusers[i].addonCount * addonusers[i].addonPrice);
+
+                                                                                  cart.setInt('TotalPrice', totalprice);
+                                                                                  cart.setInt('TotalGst', gsttotal);
+                                                                                  cart.setInt('TotalCount', totalcount);
+                                                                                  addOnservices.deleteUser(addonusers[i].addonId);
+                                                                                  addonlist.remove(addonusers[i].addonId.toString());
+                                                                                  print(checkitem);
+                                                                                  cart.setStringList('addontocart', addonlist);
+                                                                                  print(checkitem);
+                                                                                });
+                                                                              } else {
+                                                                                setState(() {
+                                                                                  totalcount = totalcount - addonusers[i].addonCount;
+                                                                                  gsttotal = gsttotal - (addonusers[i].addonCount * addonusers[i].addongst);
+                                                                                  totalprice = totalprice - (addonusers[i].addonCount * addonusers[i].addonPrice);
+
+                                                                                  cart.setInt('TotalPrice', totalprice);
+                                                                                  cart.setInt('TotalGst', gsttotal);
+                                                                                  cart.setInt('TotalCount', totalcount);
+                                                                                  addOnservices.deleteUser(addonusers[i].addonId);
+                                                                                  addonlist.remove(addonusers[i].addonId.toString());
+                                                                                  print(checkitem);
+                                                                                  cart.setStringList('addontocart', addonlist);
+                                                                                  print(checkitem);
+                                                                                });
+                                                                              }
+                                                                              await Future.delayed(Duration(seconds: 1));
+                                                                              setState(() {});
+                                                                              createstorage();
+
+                                                                              Navigator.of(context).pop();
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    });
+                                                              }
+                                                              createstorage();
+                                                            },
+                                                            child: Icon(
+                                                                Icons.remove)),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(
+                                                            "${addonusers[i].addonCount}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black)),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        InkWell(
+                                                          child:
+                                                              Icon(Icons.add),
+                                                          onTap: () async {
+                                                            callingLoader();
+
+                                                            final SharedPreferences
+                                                                cart =
+                                                                await SharedPreferences
+                                                                    .getInstance();
+                                                            int totalprice =
+                                                                cart.getInt(
+                                                                    'TotalPrice');
+                                                            int gsttotal =
+                                                                cart.getInt(
+                                                                    'TotalGst');
+                                                            int totalcount =
+                                                                cart.getInt(
+                                                                    'TotalCount');
+
+                                                            setState(() {
+                                                              totalcount++;
+
+                                                              gsttotal = gsttotal +
+                                                                  addonusers[i]
+                                                                      .addongst;
+                                                              totalprice =
+                                                                  totalprice +
+                                                                      addonusers[
+                                                                              i]
+                                                                          .addonPrice;
+                                                              addOnservices
+                                                                  .incrementItemCounter(
+                                                                      addonusers[
+                                                                              i]
+                                                                          .id,
+                                                                      addonusers[
+                                                                              i]
+                                                                          .addonCount)
+                                                                  .then((value) =>
+                                                                      fun(value));
+
+                                                              cart.setInt(
+                                                                  'TotalPrice',
+                                                                  totalprice);
+                                                              cart.setInt(
+                                                                  'TotalGst',
+                                                                  gsttotal);
+                                                              cart.setInt(
+                                                                  'TotalCount',
+                                                                  totalcount);
+                                                            });
+                                                            await Future
+                                                                .delayed(
+                                                                    Duration(
+                                                                        seconds:
+                                                                            1));
+                                                            setState(() {});
+                                                            print(
+                                                                "@@@@@@@hjjjjjjjjjjjjjjjjjj@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                                            Navigator.pop(
+                                                                context);
+                                                            createstorage();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              }),
+                        ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Container(
@@ -1110,7 +1505,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
                                     ),
-                                    Text("Select a promo code"),
+                                    Text("$offerInfo"),
                                     Spacer(),
                                     InkWell(
                                       onTap: () async {
@@ -1119,20 +1514,20 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                           Fluttertoast.showToast(
                                               msg: "No offer avialable.. ");
                                         } else {
-                                          final result =
-                                              await showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  isDismissible: false,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  context: context,
+                                          final result = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
                                                   builder: (context) =>
                                                       OfferForPlaceOrder(
-                                                        data: dataForOffer[
-                                                            'OffersAndCoupons'],
-                                                      ));
+                                                          data: dataForOffer[
+                                                              'OffersAndCoupons'],
+                                                          userid: dataForOffer[
+                                                                  'OffersAndCoupons']
+                                                              [0]['userId'])));
+
                                           if (result == 0) {
                                             setState(() {
+                                              offerInfo = "Select a promo code";
                                               offerid = result;
                                               createstorage();
                                             });
@@ -1282,6 +1677,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
               flex: 16,
             ),
             Expanded(
+              flex: 5,
               child: Container(
                 child: Row(
                   children: [
@@ -1293,8 +1689,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         children: [
                           Row(
                             children: [
-                              Text("Pay Using"),
-                              dataForOffer['Setting']['isCod'] == null
+                              Text(
+                                "Pay Using",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              dataForOffer['Setting']['isCod'] == null ||
+                                      dataForOffer['Setting']['isCod'] == true
                                   ? PopupMenuButton(
                                       padding: EdgeInsets.all(10),
                                       icon: Icon(Icons.arrow_drop_down),
@@ -1315,79 +1715,64 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                       },
                                       itemBuilder: (BuildContext) => [
                                         PopupMenuItem(
-                                          child: Text("Online Mode"),
+                                          child: Text(
+                                            "Online Mode",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
                                           value: 0,
                                         ),
                                         PopupMenuItem(
-                                          child: Text("Cash On Delivery"),
+                                          child: Text(
+                                            "Cash On Delivery",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
                                           value: 1,
                                         ),
                                         PopupMenuItem(
-                                          child: Text("Wallet"),
+                                          child: Text(
+                                            "Wallet",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
                                           value: 2,
                                         ),
                                       ],
                                     )
-                                  : dataForOffer['Setting']['isCod'] == true
-                                      ? PopupMenuButton(
-                                          padding: EdgeInsets.all(10),
-                                          icon: Icon(Icons.arrow_drop_down),
-                                          onSelected: (value) {
-                                            if (value == 0) {
-                                              setState(() {
-                                                paymentMode = "Online Mode";
-                                              });
-                                            } else if (value == 1) {
-                                              setState(() {
-                                                paymentMode =
-                                                    "Cash On Delivery";
-                                              });
-                                            } else if (value == 2) {
-                                              setState(() {
-                                                paymentMode = "Wallet";
-                                              });
-                                            }
-                                          },
-                                          itemBuilder: (BuildContext) => [
-                                            PopupMenuItem(
-                                              child: Text("Online Mode"),
-                                              value: 0,
-                                            ),
-                                            PopupMenuItem(
-                                              child: Text("Cash On Delivery"),
-                                              value: 1,
-                                            ),
-                                            PopupMenuItem(
-                                              child: Text("Wallet"),
-                                              value: 2,
-                                            ),
-                                          ],
-                                        )
-                                      : PopupMenuButton(
-                                          padding: EdgeInsets.all(10),
-                                          icon: Icon(Icons.arrow_drop_down),
-                                          onSelected: (value) {
-                                            if (value == 0) {
-                                              setState(() {
-                                                paymentMode = "Online Mode";
-                                              });
-                                            } else if (value == 2) {
-                                              setState(() {
-                                                paymentMode = "Wallet";
-                                              });
-                                            }
-                                          },
-                                          itemBuilder: (BuildContext) => [
-                                            PopupMenuItem(
-                                              child: Text("Online Mode"),
-                                              value: 0,
-                                            ),
-                                            PopupMenuItem(
-                                              child: Text("Wallet"),
-                                              value: 2,
-                                            ),
-                                          ],
-                                        )
+                                  : PopupMenuButton(
+                                      padding: EdgeInsets.all(10),
+                                      icon: Icon(Icons.arrow_drop_down),
+                                      onSelected: (value) {
+                                        if (value == 0) {
+                                          setState(() {
+                                            paymentMode = "Online Mode";
+                                          });
+                                        } else if (value == 2) {
+                                          setState(() {
+                                            paymentMode = "Wallet";
+                                          });
+                                        }
+                                      },
+                                      itemBuilder: (BuildContext) => [
+                                        PopupMenuItem(
+                                          child: Text(
+                                            "Online Mode",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          value: 0,
+                                        ),
+                                        PopupMenuItem(
+                                          child: Text(
+                                            "Wallet",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          value: 2,
+                                        ),
+                                      ],
+                                    )
                             ],
                           ),
                           Text(paymentMode),
@@ -1398,11 +1783,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     InkWell(
                         onTap: () async {
                           if (userNameWithNumber == "Select Delivery Address") {
-                            final result = await showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (context) => SelectAddress());
+                            final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SelectAddress()));
                             if (result) {
                               setState(() {});
                               createstorage();
@@ -1415,7 +1799,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   isScrollControlled: false,
                                   backgroundColor: Colors.transparent,
                                   context: context,
-                                  builder: (context) => PlaceOrderCheck());
+                                  builder: (context) => PlaceOrderCheck(
+                                        username: widget.restUsername,
+                                      ));
                             } else {
                               Fluttertoast.showToast(
                                   msg: "Please select any item to place order");
@@ -1426,7 +1812,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   ],
                 ),
               ),
-              flex: 4,
             ),
           ],
         ),
@@ -1450,10 +1835,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
     if (userNameWithNumber == "Select Delivery Address") {
       return Container(
           margin: EdgeInsets.all(10.0),
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
               color: Colors.blue, borderRadius: BorderRadius.circular(7)),
-          height: size.height * 0.08,
+          height: size.height * 0.1,
           width: size.width * 0.52,
           child: Center(
             child: Row(
@@ -1512,6 +1897,8 @@ step''',
 }
 
 class PlaceOrderCheck extends StatefulWidget {
+  final username;
+  const PlaceOrderCheck({Key key, this.username}) : super(key: key);
   @override
   _PlaceOrderCheckState createState() => _PlaceOrderCheckState();
 }
@@ -1575,11 +1962,21 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
             ));
   }
 
+  var dataofferShow = "No promo code applied";
   @override
   void initState() {
+    print("socket id ${socket.id}");
     getList();
-    getMenuDetails();
 
+    if (offerInfo != "Select a promo code") {
+      setState(() {
+        dataofferShow = offerInfo;
+      });
+    } else {
+      setState(() {
+        dataofferShow = "No promo code applied";
+      });
+    }
     createstorage();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -1594,18 +1991,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         placeTimer.cancel();
         placePrecent = 0;
         placeValue = 1;
-
-        // int k = add2.length - 1;
-
-        // for (int i = 0; i <= k; i++) {
-        //   if (add2[i].isSelected == true) {
-        //     print("remove from cart ${add2[i].title}");
-        //   } else {
-        //     print("item not selected  ${add2[i].title}");
-        //   }
-        // }
-        // API hit will be from here
-
         if (paymentMode == "Online Mode") {
           _checkout();
         } else if (paymentMode == "Cash On Delivery") {
@@ -1640,6 +2025,32 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   final services = UserServices();
   String jsonTags;
   getMenuDetails() async {
+    if (addOncheckitem.isNotEmpty) {
+      int l = addOncheckitem.length;
+      print("length of addonlist $l");
+      for (int i = 0; i <= l - 1; i++) {
+        var datatemp = int.parse(addOncheckitem[i]);
+
+        await addOnservices.data(datatemp).then((value) => fun(value));
+        String addonName = data1[0]['addonName'];
+        int addonID = data1[0]['addonId'];
+        int addonQty = data1[0]['addonCount'];
+        print(
+            "***************************new addon data*************************");
+        print(
+            "AddonName = $addonName and AddonId = $addonID and AddonQuantity = $addonQty");
+        print(
+            "***************************data addon close*************************");
+        addOnidAndQty.add(AddOnDataclass(addonID, addonQty));
+      }
+      print(
+          "***************************final addon close*************************");
+    } else {
+      print("addon list is empty $addOncheckitem");
+      setState(() {
+        addOnidAndQty = null;
+      });
+    }
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
       checkitem = cart.getStringList('addedtocart');
@@ -1652,14 +2063,15 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
       var data = int.parse(checkitem[i]);
       await services.data(data).then((value) => fun(value));
       String menuName = data1[0]['itemName'];
-
+      dataImage = data1[0]['imagePath'];
       int menuID = data1[0]['menuItemId'];
       int menuQty = data1[0]['itemCount'];
+      int variantId = data1[0]['variantId'];
       print("***************************new data*************************");
       print(
-          "MenuName = $menuName and MenuId = $menuID and MenuQuantity = $menuQty");
+          "MenuName = $menuName and MenuId = $menuID and MenuQuantity = $menuQty nd variant  =$variantId");
       print("***************************data close*************************");
-      menuidAndQty.add(MenuData(menuID, menuQty));
+      menuidAndQty.add(MenuData(menuID, menuQty, variantId));
     }
     print("***************************final*************************");
     print(menuidAndQty);
@@ -1683,57 +2095,65 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   }
 
   List<String> checkitem = [];
+  List<String> addOncheckitem = [];
+
   getList() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
       checkitem = cart.getStringList('addedtocart');
+      addOncheckitem = cart.getStringList('addontocart');
     });
     print("list");
     print(checkitem);
+    print('addon list');
+    print(addOncheckitem);
+    getMenuDetails();
   }
 
+  var dataImage;
   List<MenuData> menuidAndQty = [];
+  List<AddOnDataclass> addOnidAndQty = [];
 
-  removeDataFromCart() async {
-    final SharedPreferences cart = await SharedPreferences.getInstance();
-    setState(() {
-      checkitem = cart.getStringList('addedtocart');
-    });
-    print(
-        "*********************************   idcheck length********    ${idCheck.length}");
-    int k = checkitem.length;
-    print("*********************************   k length********    $k");
-    for (int i = 0; i <= k - 1; i++) {
-      print("*********************************   for loop stated********");
-      print("*********************************   i  ********    $i");
-      print("ID:-$i");
-      final SharedPreferences cart = await SharedPreferences.getInstance();
+  // removeDataFromCart() async {
+  //   final SharedPreferences cart = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     checkitem = cart.getStringList('addedtocart');
+  //   });
+  //   print(
+  //       "*********************************   idcheck length********    ${idCheck.length}");
+  //   int k = checkitem.length;
+  //   print("*********************************   k length********    $k");
+  //   for (int i = 0; i <= k - 1; i++) {
+  //     print("*********************************   for loop stated********");
+  //     print("*********************************   i  ********    $i");
+  //     print("ID:-$i");
+  //     // final SharedPreferences cart = await SharedPreferences.getInstance();
 
-      var data = int.parse(checkitem[i]);
-      await services.data(data).then((value) => func(value));
+  //     var data = int.parse(checkitem[i]);
+  //     // await services.data(data).then((value) => func(value));
 
-      setState(() {
-        services.deleteUser(data);
-      });
-    }
-    setState(() {
-      gsttotal1 = 0;
-      totalcount1 = 0;
-      totalprice1 = 0;
-      discount = 0;
-      offerid = 0;
-      vendorId1 = 0;
-      cart.setInt('VendorId', vendorId1);
+  //     setState(() {
+  //       services.deleteUser(data);
+  //     });
+  //   }
+  //   setState(() {
+  //     gsttotal1 = 0;
+  //     totalcount1 = 0;
+  //     totalprice1 = 0;
+  //     discount = 0;
+  //     offerid = 0;
+  //     vendorId1 = 0;
+  //     cart.setInt('VendorId', vendorId1);
 
-      cart.setInt('TotalPrice', totalprice1);
-      cart.setInt('TotalGst', gsttotal1);
-      cart.setInt('TotalCount', totalcount1);
+  //     cart.setInt('TotalPrice', totalprice1);
+  //     cart.setInt('TotalGst', gsttotal1);
+  //     cart.setInt('TotalCount', totalcount1);
 
-      checkitem.clear();
-      print(checkitem);
-      cart.setStringList('addedtocart', checkitem);
-    });
-  }
+  //     checkitem.clear();
+  //     print(checkitem);
+  //     cart.setStringList('addedtocart', checkitem);
+  //   });
+  // }
 
   walletPayment() async {
     print("*****************************************");
@@ -1744,6 +2164,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
       "menuId": menuidAndQty,
+      "addons": addOnidAndQty,
       "vendorId": "$vendorId1",
       "userId": "$userid",
       "addressId": addressID,
@@ -1780,7 +2201,18 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      removeDataFromCart();
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting socket %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      Map socketData = {
+        'iconUrl': S3_BASE_PATH + dataImage,
+        'message': "You have recieved new order",
+        'theme': 'lightblue',
+        'userName': widget.username
+      };
+
+      socket.emit("pushNotification", socketData);
+
+      removeCartForNewData();
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
@@ -1824,6 +2256,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
       "menuId": menuidAndQty,
+      "addons": addOnidAndQty,
       "vendorId": "$vendorId1",
       "userId": "$userid",
       "addressId": addressID,
@@ -1858,8 +2291,18 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting socket %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      Map socketData = {
+        'iconUrl': '',
+        'message': "You have recieved new order",
+        'theme': 'lightblue',
+        'userName': widget.username
+      };
+      socket.emit("pushNotification", socketData);
 
-      removeDataFromCart();
+      removeCartForNewData();
+
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
@@ -1926,6 +2369,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
       "menuId": menuidAndQty,
+      "addons": addOnidAndQty,
       "vendorId": "$vendorId1",
       "userId": "$userid",
       "addressId": addressID,
@@ -1951,8 +2395,19 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting socket %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      Map socketData = {
+        'iconUrl': S3_BASE_PATH + dataImage,
+        'message': "You have recieved new order",
+        'theme': 'lightblue',
+        'userName': widget.username
+      };
+      print("socket emit");
+      print(socketData);
+      socket.emit("pushNotification", socketData);
 
-      removeDataFromCart();
+      removeCartForNewData();
       setState(() {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderConfirmResturent()));
@@ -2073,7 +2528,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     children: [
                       Spacer(),
                       Text(
-                          "PAY USING with GST ( ₹${totalprice1 + donateAmount - discount})"),
+                          "PAY USING with GST ( ₹${totalprice1 + (donateAmount - discount)})"),
                       Spacer(),
                       Text(
                         paymentMode,
@@ -2093,7 +2548,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     Text("PROMO CODE"),
                     Spacer(),
                     Text(
-                      "No promo code applied",
+                      "$dataofferShow",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: size.height * 0.025,

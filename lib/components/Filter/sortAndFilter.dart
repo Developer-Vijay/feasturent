@@ -23,261 +23,270 @@ class _FilterState extends State<Filter> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Container(
-          height: size.height * 1,
-          child: ListView(
-            children: [
-              Column(
-                children: [
-                  Row(
+        appBar: AppBar(
+          title: Text("Filter & Sort"),
+          actions: [
+            FlatButton(
+              child: Text("Reset",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: size.height * 0.023)),
+              onPressed: () {},
+            )
+          ],
+        ),
+        body: Column(
+          children: [
+            // Expanded(
+            //   flex: 1,
+            //   child: Row(
+            //     children: [
+            //       IconButton(
+            //           icon: Icon(
+            //             Icons.arrow_back,
+            //           ),
+            //           onPressed: () {
+            //             Navigator.pop(context);
+            //           }),
+            //       Spacer(),
+            //       Text(
+            //         "Filter and Sort",
+            //         style: TextStyle(
+            //             color: Colors.black,
+            //             fontWeight: FontWeight.bold,
+            //             fontSize: size.height * 0.024),
+            //       ),
+            //       Spacer(),
+            //       FlatButton(
+            //         child: Text("Reset",
+            //             style: TextStyle(
+            //                 color: Colors.black,
+            //                 fontWeight: FontWeight.bold,
+            //                 fontSize: size.height * 0.023)),
+            //         onPressed: () {},
+            //       )
+            //     ],
+            //   ),
+            // ),
+            Expanded(
+              flex: 3,
+              child: Container(
+                color: Colors.grey[300],
+                width: size.width * 1,
+                height: size.height * 0.18,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          }),
-                      Spacer(),
-                      Text(
-                        "Filter and Sort",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: size.height * 0.024),
+                      // InputChip(
+                      //   label: Text(isSelected ? "Selected" : "Select"),
+                      //   deleteIcon: Icon(Icons.close),
+                      //   labelStyle: TextStyle(color: Colors.blue),
+                      //   selectedColor: Colors.white,
+                      //   onSelected: (bool value) {
+                      //     setState(() {
+                      //       isSelected = value;
+                      //     });
+                      //   },
+                      //   onDeleted: () {
+                      //     Scaffold.of(context).showSnackBar(SnackBar(
+                      //       content: Text("Delete Clicked"),
+                      //       duration: Duration(milliseconds: 1),
+                      //     ));
+                      //   },
+                      //   selected: isSelected,
+                      // ),
+                      // SizedBox(
+                      //   height: 1,
+                      // ),
+                      Container(
+                        decoration: BoxDecoration(color: Colors.white),
+                        margin: EdgeInsets.only(right: size.width * 0.03),
+                        child: TextField(
+                          autocorrect: false,
+                          onTap: () {
+                            showSearch(
+                                context: context, delegate: FoodItemsSearch());
+                          },
+                          style: TextStyle(fontSize: size.height * 0.024),
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              hintText: "Search",
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                              suffixIcon: Icon(Icons.close)),
+                        ),
                       ),
-                      Spacer(),
-                      FlatButton(
-                        child: Text("Reset",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: size.height * 0.023)),
-                        onPressed: () {},
-                      )
                     ],
                   ),
-                  Divider(),
-                  Container(
-                    color: Colors.grey[300],
-                    width: size.width * 1,
-                    height: size.height * 0.18,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InputChip(
-                            label: Text(isSelected ? "Selected" : "Select"),
-                            deleteIcon: Icon(Icons.close),
-                            labelStyle: TextStyle(color: Colors.blue),
-                            selectedColor: Colors.white,
-                            onSelected: (bool value) {
-                              setState(() {
-                                isSelected = value;
-                              });
-                            },
-                            onDeleted: () {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text("Delete Clicked"),
-                                duration: Duration(milliseconds: 1),
-                              ));
-                            },
-                            selected: isSelected,
-                          ),
-                          SizedBox(
-                            height: 1,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(color: Colors.white),
-                            margin: EdgeInsets.only(right: size.width * 0.03),
-                            child: TextField(
-                              autocorrect: false,
-                              onTap: () {
-                                showSearch(
-                                    context: context,
-                                    delegate: FoodItemsSearch());
-                              },
-                              style: TextStyle(fontSize: size.height * 0.024),
-                              decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.search),
-                                  hintText: "Search",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: InputBorder.none,
-                                  suffixIcon: Icon(Icons.close)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: size.height * 0.58,
-                    width: size.width * 1,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  color: Colors.grey[300],
-                                  height: size.height * 0.58,
-                                  child: Column(
-                                    children: [
-                                      ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: filtered.length,
-                                        itemBuilder: (context, index) {
-                                          return ListTile(
-                                            title: Text(
-                                              filtered[index].name,
-                                              // style: _style,
-                                            ),
-                                            enabled: true,
-                                            selectedTileColor: Colors.white,
-                                            selected: index == isSelect,
-                                            onTap: () {
-                                              setState(() {
-                                                isSelect = index;
-                                              });
-
-                                              pageController.animateToPage(
-                                                  filtered[index].pagecount,
-                                                  duration: Duration(
-                                                      milliseconds: 12),
-                                                  curve: Curves.bounceIn);
-                                            },
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                )),
-
-                            //Main Item Starts  From here or Chanageable
-                            Expanded(
-                                flex: 5,
-                                child: Container(
-                                    height: size.height * 0.58,
-                                    color: Colors.white,
-                                    child: PageView(
-                                        controller: pageController,
-                                        children: [
-                                          ListView(
-                                            children: [
-                                              CheckboxListTile(
-                                                title: Text("North Indian"),
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _value = value;
-                                                  });
-                                                },
-                                                value: _value,
-                                              ),
-                                              CheckboxListTile(
-                                                title: Text("Dineout Pay"),
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _value = value;
-                                                  });
-                                                },
-                                                value: _value,
-                                              ),
-                                              CheckboxListTile(
-                                                title: Text("Dineout Passport"),
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _value = value;
-                                                  });
-                                                },
-                                                value: _value,
-                                              ),
-                                              CheckboxListTile(
-                                                title: Text("Pure Veg"),
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _value = value;
-                                                  });
-                                                },
-                                                value: _value,
-                                              ),
-                                              CheckboxListTile(
-                                                title: Text("5 Star"),
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _value = value;
-                                                  });
-                                                },
-                                                value: _value,
-                                              ),
-                                              CheckboxListTile(
-                                                title: Text("Buffet"),
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _value = value;
-                                                  });
-                                                },
-                                                value: _value,
-                                              ),
-                                              CheckboxListTile(
-                                                title: Text("Happy hours"),
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _value = value;
-                                                  });
-                                                },
-                                                value: _value,
-                                              )
-                                            ],
-                                          ),
-                                          Cuisins(),
-                                          CheckList(),
-                                          SortBY()
-                                        ])))
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  MaterialButton(
-                    child: Text("Apply Filters"),
-                    color: Colors.deepOrange,
-                    textColor: Colors.white,
-                    minWidth: size.width * 0.9,
-                    height: size.height * 0.07,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    onPressed: () {},
-                  )
-                ],
+                ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              flex: 17,
+              child: Container(
+                color: Colors.red,
+                // height: size.height * 0.58,
+                width: size.width * 1,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: Container(
+                              color: Colors.grey[300],
+                              height: size.height * 0.6628,
+                              child: Column(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: filtered.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        title: Text(
+                                          filtered[index].name,
+                                          // style: _style,
+                                        ),
+                                        enabled: true,
+                                        selectedTileColor: Colors.white,
+                                        selected: index == isSelect,
+                                        onTap: () {
+                                          setState(() {
+                                            isSelect = index;
+                                          });
+
+                                          pageController.animateToPage(
+                                              filtered[index].pagecount,
+                                              duration:
+                                                  Duration(milliseconds: 12),
+                                              curve: Curves.bounceIn);
+                                        },
+                                      );
+                                    },
+                                  )
+                                ],
+                              ),
+                            )),
+
+                        //Main Item Starts  From here or Chanageable
+                        Expanded(
+                            flex: 5,
+                            child: Container(
+                                height: size.height * 0.6628,
+                                color: Colors.white,
+                                child: PageView(
+                                    controller: pageController,
+                                    children: [
+                                      ListView(
+                                        children: [
+                                          CheckboxListTile(
+                                            title: Text("North Indian"),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                            value: _value,
+                                          ),
+                                          CheckboxListTile(
+                                            title: Text("Dineout Pay"),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                            value: _value,
+                                          ),
+                                          CheckboxListTile(
+                                            title: Text("Dineout Passport"),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                            value: _value,
+                                          ),
+                                          CheckboxListTile(
+                                            title: Text("Pure Veg"),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                            value: _value,
+                                          ),
+                                          CheckboxListTile(
+                                            title: Text("5 Star"),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                            value: _value,
+                                          ),
+                                          CheckboxListTile(
+                                            title: Text("Buffet"),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                            value: _value,
+                                          ),
+                                          CheckboxListTile(
+                                            title: Text("Happy hours"),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                            value: _value,
+                                          )
+                                        ],
+                                      ),
+                                      Cuisins(),
+                                      CheckList(),
+                                      SortBY()
+                                    ])))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+                flex: 2,
+                child: MaterialButton(
+                  child: Text("Apply Filters"),
+                  color: Colors.deepOrange,
+                  textColor: Colors.white,
+                  minWidth: size.width * 0.9,
+                  height: size.height * 0.07,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  onPressed: () {},
+                )),
+          ],
         ),
       ),
     );
@@ -301,8 +310,6 @@ class FoodItemsSearch extends SearchDelegate<String> {
   ];
   @override
   List<Widget> buildActions(BuildContext context) {
-    // TODO: implement buildActions
-
     return [
       IconButton(
           onPressed: () {
@@ -316,7 +323,6 @@ class FoodItemsSearch extends SearchDelegate<String> {
 
   @override
   Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
     return IconButton(
       onPressed: () {
         close(context, null);

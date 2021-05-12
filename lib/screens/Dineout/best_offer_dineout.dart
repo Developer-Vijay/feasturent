@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import '../../constants.dart';
 
@@ -21,7 +22,7 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
 
-    var response = await http.get(APP_ROUTES + 'popularDineout');
+    var response = await http.get(APP_ROUTES + 'popularDineout?limit=null');
 
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
@@ -52,14 +53,16 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   "Best Offers",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: kTextColor,
+                      fontSize: size.height * 0.025),
                 ),
               ),
             ]),
             Container(
-                margin: EdgeInsets.only(top: 8, left: 15, bottom: 25),
-                height: size.height * 0.181,
+                margin: EdgeInsets.only(top: 8, left: 15, bottom: 5),
+                height: size.height * 0.20,
                 child: FutureBuilder<List>(
                   future: getpopulardineouts(),
 // ignore: missing_return
@@ -78,7 +81,7 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
                               itemBuilder: (context, index) {
                                 return Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    height: size.height * 0.08,
+                                    height: size.height * 0.15,
                                     width: size.width * 0.25,
                                     decoration: BoxDecoration(
                                       // border: Border.all(color: Colors.black54),
@@ -169,7 +172,29 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
                               },
                             ));
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return Container(
+                          child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 7,
+                        itemBuilder: (context, index) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: Container(
+                              padding: const EdgeInsets.only(top: 15, left: 5),
+                              margin: EdgeInsets.only(left: 10),
+                              height: size.height * 0.08,
+                              width: size.width * 0.25,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                              ),
+                            ),
+                          );
+                        },
+                      ));
                     }
                   },
                 )),

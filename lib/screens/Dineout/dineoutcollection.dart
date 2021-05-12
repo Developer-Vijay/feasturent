@@ -5,6 +5,7 @@ import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/view_all_best.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 class Collections extends StatefulWidget {
   @override
@@ -57,7 +58,9 @@ class _CollectionsState extends State<Collections> {
                   child: Text(
                     "Best Collections",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: kTextColor),
+                        fontWeight: FontWeight.bold,
+                        color: kTextColor,
+                        fontSize: size.height * 0.025),
                   ),
                 ),
                 Spacer(),
@@ -110,84 +113,79 @@ class _CollectionsState extends State<Collections> {
                             itemCount: snapshot.data.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DineoutDetailPage(
-                                                  data: snapshot.data[index],
-                                                )));
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    margin: EdgeInsets.only(
-                                      left: size.width * 0.04,
-                                    ),
-                                    height: size.height * 0.2,
-                                    width: size.width * 0.34,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        image: snapshot
-                                                .data[index]['dineoutImages']
-                                                .isNotEmpty
-                                            ? DecorationImage(
-                                                image: CachedNetworkImageProvider(
-                                                    S3_BASE_PATH +
-                                                        snapshot.data[index][
-                                                                'dineoutImages']
-                                                            [0]['image']),
-                                                // collectionImage[index],
-                                                fit: BoxFit.cover)
-                                            : DecorationImage(
-                                                image: CachedNetworkImageProvider(
-                                                    "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/u/y/p20941-15700828565d959028e9f28.jpg?tr=tr:n-medium"),
-                                                // collectionImage[index],
-                                                fit: BoxFit.cover)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: size.height * 0.062,
-                                          color: Colors.black.withOpacity(0.4),
-                                          margin: EdgeInsets.only(
-                                              top: size.height * 0.143),
-                                          padding:
-                                              EdgeInsets.only(left: 5, top: 10),
-                                          alignment: Alignment.topLeft,
-                                          child: RichText(
-                                            text: TextSpan(
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                                children: [
-                                                  TextSpan(
-                                                      text:
-                                                          " ${snapshot.data[index]['name']}\n",
-                                                      style: TextStyle(
-                                                          fontSize:
-                                                              size.height *
-                                                                  0.022,
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  TextSpan(
-                                                      text:
-                                                          " ${snapshot.data[index]['Address']['city']}",
-                                                      style: TextStyle(
-                                                          fontSize:
-                                                              size.height *
-                                                                  0.018,
-                                                          fontWeight:
-                                                              FontWeight.w600)),
-                                                ]),
-                                          ),
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DineoutDetailPage(
+                                                data: snapshot.data[index],
+                                              )));
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(
+                                    left: size.width * 0.04,
+                                  ),
+                                  height: size.height * 0.2,
+                                  width: size.width * 0.34,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      image: snapshot
+                                              .data[index]['dineoutImages']
+                                              .isNotEmpty
+                                          ? DecorationImage(
+                                              image: CachedNetworkImageProvider(
+                                                  S3_BASE_PATH +
+                                                      snapshot.data[index]
+                                                              ['dineoutImages']
+                                                          [0]['image']),
+                                              // collectionImage[index],
+                                              fit: BoxFit.cover)
+                                          : DecorationImage(
+                                              image: CachedNetworkImageProvider(
+                                                  "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/u/y/p20941-15700828565d959028e9f28.jpg?tr=tr:n-medium"),
+                                              // collectionImage[index],
+                                              fit: BoxFit.cover)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: size.height * 0.062,
+                                        color: Colors.black.withOpacity(0.4),
+                                        margin: EdgeInsets.only(
+                                            top: size.height * 0.143),
+                                        padding:
+                                            EdgeInsets.only(left: 5, top: 10),
+                                        alignment: Alignment.topLeft,
+                                        child: RichText(
+                                          text: TextSpan(
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                    text: capitalize(
+                                                        "${snapshot.data[index]['name']}\n"),
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            size.height * 0.022,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                TextSpan(
+                                                    text:
+                                                        " ${snapshot.data[index]['Address']['city']}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            size.height * 0.018,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                              ]),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               );
@@ -198,7 +196,27 @@ class _CollectionsState extends State<Collections> {
                   //   return
                   // }
                   else {
-                    return Center(child: CircularProgressIndicator());
+                    return Container(
+                        child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 4.0, left: 15),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white),
+                              height: size.height * 0.2,
+                              width: size.width * 0.34,
+                            ),
+                          ),
+                        );
+                      },
+                    ));
                   }
                 },
               ),

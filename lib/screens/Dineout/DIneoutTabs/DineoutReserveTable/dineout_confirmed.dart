@@ -79,7 +79,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
                     ));
               },
             ),
-            title: Text("Cafe name"),
+            title: Text("Booking Summary"),
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -75,7 +75,7 @@ class ViewAllCategory extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Text(
-                    categoryData[index]['name'],
+                    capitalize(categoryData[index]['name']),
                     overflow: TextOverflow.ellipsis,
                   ),
                 )

@@ -57,11 +57,10 @@ class ItemCard extends StatelessWidget {
                         ),
                 ),
                 Text(
-                  title,
+                  capitalize(title),
                   style: TextStyle(color: Colors.white),
                 ),
                 SizedBox(height: 10),
-               
               ],
             ),
           ),

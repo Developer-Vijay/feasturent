@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/AddressBook/addAddress.dart';
-import 'package:feasturent_costomer_app/components/Place_Order/add_address.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SelectAddress extends StatefulWidget {
   @override
@@ -216,6 +216,21 @@ class _SelectAddressState extends State<SelectAddress> {
     }
   }
 
+  int selectedRadio = -1;
+  int addrId;
+  var addrUser;
+  var addaddr;
+
+  changeValue(int val, data) {
+    setState(() {
+      selectedRadio = val;
+      addrId = data['id'];
+      addrUser = "${data['name']}, ${data['phone']}";
+
+      addaddr = "${data['address']}";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -224,292 +239,404 @@ class _SelectAddressState extends State<SelectAddress> {
       onWillPop: () {
         Navigator.pop(context, true);
       },
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        height: size.height * 0.75,
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
+            height: size.height * 1,
+            child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 160),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.blue,
-                    ),
-                    alignment: Alignment.center,
-                    height: 8,
-                    width: size.width * 0.1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Select an address",
-                        style: TextStyle(
-                            color: Colors.black, fontSize: size.height * 0.024),
-                      ),
-                      Spacer(),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context, true);
-                        },
-                        child: Icon(
-                          Icons.clear,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 7,
-                  color: Colors.grey,
-                ),
-                ordersData == null
-                    ? SizedBox()
-                    : ordersData >= 10
-                        ? SizedBox()
-                        : Column(
-                            children: [
-                              InkWell(
-                                onTap: () async {
-                                  final result = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => AddAdress()));
-                                  if (result) {
-                                    setState(() {
-                                      refreshList();
-                                    });
-                                  }
-                                },
-                                child: Container(
-                                  height: size.height * 0.06,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.add,
-                                          color: Colors.red,
-                                          size: size.height * 0.025,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          "Add Address",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: size.height * 0.0225),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Divider(
-                                height: 7,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
-                      height: size.height * 0.06,
+                      color: Colors.blue,
                       child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "Saved Addresses",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: size.height * 0.0225),
-                          )),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Select an address",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: size.height * 0.024),
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Expanded(
-                    child: RefreshIndicator(
-                  key: refreshKey,
-                  onRefresh: refreshList,
-                  child: FutureBuilder<List<dynamic>>(
-                      future: getAddress(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        addressID = snapshot.data[index]['id'];
-                                        userNameWithNumber =
-                                            "${snapshot.data[index]['name']}, ${snapshot.data[index]['phone']}";
-
-                                        addAddress =
-                                            "${snapshot.data[index]['address']}";
-                                      });
-                                      Navigator.pop(context, true);
+                    ordersData == null
+                        ? SizedBox()
+                        : ordersData >= 10
+                            ? SizedBox()
+                            : Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      final result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddAdress()));
+                                      if (result) {
+                                        setState(() {
+                                          refreshList();
+                                        });
+                                      }
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 2,
-                                                  color: Colors.grey[500])
-                                            ]),
-                                        width: size.width,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 15.0),
+                                    child: Container(
+                                      height: size.height * 0.06,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.add,
+                                              color: Colors.red,
+                                              size: size.height * 0.025,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "Add Address",
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize:
+                                                      size.height * 0.0225),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    height: 7,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                    Row(
+                      children: [
+                        Container(
+                          height: size.height * 0.06,
+                          child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                "Saved Addresses",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: size.height * 0.0225),
+                              )),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Expanded(
+                        flex: 6,
+                        child: RefreshIndicator(
+                          key: refreshKey,
+                          onRefresh: refreshList,
+                          child: FutureBuilder<List<dynamic>>(
+                              future: getAddress(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return ListView.builder(
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                            child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 2,
+                                                      color: Colors.grey[500])
+                                                ]),
+                                            width: size.width,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 15.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 18.0,
+                                                              right: 8),
+                                                      child: Radio(
+                                                        value: index,
+                                                        groupValue:
+                                                            selectedRadio,
+                                                        activeColor:
+                                                            Colors.blue,
+                                                        onChanged: (val) {
+                                                          changeValue(
+                                                              val,
+                                                              snapshot
+                                                                  .data[index]);
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 8,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              "Address",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blueGrey),
+                                                            ),
+                                                            Spacer(),
+                                                            PopupMenuButton(
+                                                              onSelected:
+                                                                  (value) {
+                                                                if (value ==
+                                                                    1) {
+                                                                  setState(() {
+                                                                    deleteAddress(
+                                                                        index,
+                                                                        snapshot
+                                                                            .data[index]['id']
+                                                                            .toString());
+
+                                                                    // refreshList();
+                                                                  });
+                                                                }
+                                                              },
+                                                              itemBuilder:
+                                                                  (BuildContext
+                                                                          context) =>
+                                                                      [
+                                                                PopupMenuItem(
+                                                                  child: Text(
+                                                                      "Remove"),
+                                                                  enabled: true,
+                                                                  value: 1,
+                                                                ),
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              snapshot.data[
+                                                                      index]
+                                                                  ['name'],
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 20),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          20),
+                                                              child: Container(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          7),
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .lightBlue,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              7)),
+                                                                  child: Text(
+                                                                    snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'addressFor'],
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white),
+                                                                  )),
+                                                            ),
+                                                            Spacer(),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: size.height *
+                                                              0.02,
+                                                        ),
+                                                        Text(
+                                                          "${snapshot.data[index]['address']}",
+                                                          style: textstyle,
+                                                        ),
+                                                        SizedBox(
+                                                          height: size.height *
+                                                              0.005,
+                                                        ),
+                                                        Text(
+                                                            "${snapshot.data[index]['phone']}",
+                                                            style: textstyle),
+                                                        SizedBox(
+                                                          height: size.height *
+                                                              0.02,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ));
+                                      });
+                                } else if (snapshot.hasError) {
+                                  return Image.asset(
+                                      "assets/images/ErrorLogo.png");
+                                } else {
+                                  return Container(
+                                    margin: EdgeInsets.only(left: 18, top: 20),
+                                    child: Shimmer.fromColors(
+                                      baseColor: Colors.grey[300],
+                                      highlightColor: Colors.grey[100],
+                                      enabled: true,
+                                      child: ListView.builder(
+                                        itemBuilder: (_, __) => Padding(
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Address",
-                                                    style: TextStyle(
-                                                        color: Colors.blueGrey),
-                                                  ),
-                                                  Spacer(),
-                                                  PopupMenuButton(
-                                                    onSelected: (value) {
-                                                      if (value == 1) {
-                                                        setState(() {
-                                                          deleteAddress(
-                                                              index,
-                                                              snapshot
-                                                                  .data[index]
-                                                                      ['id']
-                                                                  .toString());
-
-                                                          // refreshList();
-                                                        });
-                                                      }
-                                                    },
-                                                    itemBuilder: (BuildContext
-                                                            context) =>
-                                                        [
-                                                      PopupMenuItem(
-                                                        child: Text("Remove"),
-                                                        enabled: true,
-                                                        value: 1,
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
+                                            children: <Widget>[
+                                              Container(
+                                                width: double.infinity,
+                                                height: size.height * 0.02,
+                                                color: Colors.white,
                                               ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    snapshot.data[index]
-                                                        ['name'],
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20),
-                                                  ),
-                                                ],
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 5.0),
                                               ),
-                                              SizedBox(
-                                                height: 6,
+                                              Container(
+                                                width: double.infinity,
+                                                height: size.height * 0.02,
+                                                color: Colors.white,
                                               ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                      "${snapshot.data[index]['phone']}",
-                                                      style: textstyle),
-                                                  Spacer(),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 20),
-                                                    child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(7),
-                                                        decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .lightBlue,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        child: Text(
-                                                          snapshot.data[index]
-                                                              ['addressFor'],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                        )),
-                                                  ),
-                                                ],
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 5.0),
                                               ),
-                                              SizedBox(
-                                                height: size.height * 0.001,
+                                              Container(
+                                                width: double.infinity,
+                                                height: size.height * 0.02,
+                                                color: Colors.white,
                                               ),
-                                              Text(
-                                                snapshot.data[index]['pinCode'],
-                                                style: textstyle,
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 5.0),
                                               ),
-                                              SizedBox(
-                                                  height: size.height * 0.001),
-                                              Text(
-                                                snapshot.data[index]['city'],
-                                                style: textstyle,
+                                              Container(
+                                                width: double.infinity,
+                                                height: size.height * 0.02,
+                                                color: Colors.white,
                                               ),
-                                              Text(
-                                                snapshot.data[index]['state'],
-                                                style: textstyle,
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 5.0),
                                               ),
-                                              SizedBox(
-                                                  height: size.height * 0.001),
-                                              Text(
-                                                "${snapshot.data[index]['address']}",
-                                                style: textstyle,
+                                              Container(
+                                                width: 40.0,
+                                                height: size.height * 0.02,
+                                                color: Colors.white,
                                               ),
-                                              SizedBox(
-                                                  height: size.height * 0.001),
-                                              Text(
-                                                "${snapshot.data[index]['landMark']}",
-                                                style: textstyle,
-                                              )
                                             ],
                                           ),
                                         ),
+                                        itemCount: 6,
                                       ),
-                                    ));
-                              });
-                        } else if (snapshot.hasError) {
-                          return Image.asset("assets/images/ErrorLogo.png");
-                        } else {
-                          return Container(
-                            margin: EdgeInsets.only(left: 18),
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-                      }),
-                ))
+                                    ),
+                                  );
+                                }
+                              }),
+                        )),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          if (addaddr == null) {
+                            Fluttertoast.showToast(
+                                msg: "Please select any address");
+                          } else {
+                            setState(() {
+                              addressID = addrId;
+                              userNameWithNumber = addrUser;
+
+                              addAddress = addaddr;
+                            });
+                            Navigator.pop(context, true);
+                          }
+                        },
+                        child: Container(
+                          height: 25,
+                          margin: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Center(
+                              child: Text(
+                                "Deliver to this Address",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: size.height * 0.024),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
