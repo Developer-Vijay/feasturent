@@ -1,14 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_add_guest.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:date_time_format/date_time_format.dart';
 
 class DineoutDateSelection extends StatefulWidget {
+  final cate;
   final data;
-  const DineoutDateSelection({this.data});
+  const DineoutDateSelection({this.data, this.cate});
   @override
   _DineoutDateSelectionState createState() => _DineoutDateSelectionState();
 }
@@ -47,31 +50,47 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
             child: Container(
               child: Row(
                 children: [
-                  Container(
-                    child: CachedNetworkImage(
-                      width: size.width * 0.2,
-                      height: size.height * 0.1,
-                      imageUrl:
-                          "https://media.gettyimages.com/photos/nightclub-picture-id157532720?k=6&m=157532720&s=612x612&w=0&h=oan-SIIOcol4NRhRWpJ_Vd2k6FzFE24Ub4zmK4SjNzM=",
-                    ),
-                  ),
+                  widget.data['dineoutImages'].isNotEmpty
+                      ? Container(
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            width: size.width * 0.2,
+                            height: size.height * 0.1,
+                            imageUrl: S3_BASE_PATH +
+                                widget.data['dineoutImages'][0]['image'],
+                          ),
+                        )
+                      : Image.asset(
+                          "assets/images/feasturenttemp.jpeg",
+                          width: size.width * 0.2,
+                          height: size.height * 0.1,
+                          fit: BoxFit.cover,
+                        ),
                   SizedBox(
                     width: 9,
                   ),
                   Container(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Radioactive Cafe",
+                          capitalize(widget.data['name']),
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 21),
                         ),
-                        Text(
-                          "Hudson Lane | North Delhi",
-                          style: TextStyle(fontSize: 13),
-                        )
+                        widget.cate == null
+                            ? SizedBox()
+                            : Container(
+                                width: size.width * 0.65,
+                                child: Text(
+                                  capitalize(widget.cate),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.black45),
+                                ),
+                              )
                       ],
                     ),
                   ),
@@ -375,14 +394,16 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
           ),
           MaterialButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DineoutAddMembers(
-                          data: widget.data,
-                          senddate: selectedDate.format("\d-\M-\Y"),
-                          date: selectedDate.format("\d-\M-\Y-\D"),
-                          time: time)));
+              time == null
+                  ? Fluttertoast.showToast(msg: 'Please select valid time')
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DineoutAddMembers(
+                              data: widget.data,
+                              senddate: selectedDate.format("\d-\M-\Y"),
+                              date: selectedDate.format("\d-\M-\Y-\D"),
+                              time: time)));
             },
             color: Colors.blue,
             minWidth: size.width * 0.8,

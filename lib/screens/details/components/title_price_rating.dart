@@ -27,7 +27,7 @@ class TitlePriceRating extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  name,
+                  capitalize(name),
                   style: Theme.of(context).textTheme.headline,
                 ),
                 SizedBox(height: 10),

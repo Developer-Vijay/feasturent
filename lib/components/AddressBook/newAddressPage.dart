@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/AddressBook/addAddress.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 class AddressList extends StatefulWidget {
   @override
@@ -340,17 +341,9 @@ class _AddressListState extends State<AddressList> {
                                                         color: Colors.black,
                                                         fontSize: 20),
                                                   ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 6,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                      "${snapshot.data[index]['phone']}",
-                                                      style: textstyle),
-                                                  Spacer(),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
@@ -365,7 +358,7 @@ class _AddressListState extends State<AddressList> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10)),
+                                                                        7)),
                                                         child: Text(
                                                           snapshot.data[index]
                                                               ['addressFor'],
@@ -374,42 +367,25 @@ class _AddressListState extends State<AddressList> {
                                                                   Colors.white),
                                                         )),
                                                   ),
+                                                  Spacer(),
                                                 ],
                                               ),
                                               SizedBox(
-                                                height: 3,
+                                                height: size.height * 0.02,
                                               ),
                                               Text(
-                                                snapshot.data[index]['pinCode'],
+                                                "${snapshot.data[index]['address']}",
                                                 style: textstyle,
                                               ),
                                               SizedBox(
-                                                height: 3,
+                                                height: size.height * 0.005,
                                               ),
                                               Text(
-                                                snapshot.data[index]['city'],
-                                                style: textstyle,
-                                              ),
-                                              Text(
-                                                snapshot.data[index]['state'],
-                                                style: textstyle,
-                                              ),
+                                                  "${snapshot.data[index]['phone']}",
+                                                  style: textstyle),
                                               SizedBox(
-                                                height: 3,
+                                                height: size.height * 0.02,
                                               ),
-                                              Text(
-                                                snapshot.data[index]
-                                                    ['addressFor'],
-                                                style: textstyle,
-                                              ),
-                                              SizedBox(
-                                                height: 3,
-                                              ),
-                                              Text(
-                                                snapshot.data[index]
-                                                    ['landMark'],
-                                                style: textstyle,
-                                              )
                                             ],
                                           ),
                                         ),
@@ -420,9 +396,65 @@ class _AddressListState extends State<AddressList> {
                               return Text("Error");
                             } else {
                               return Container(
-                                margin: EdgeInsets.only(left: 18),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
+                                margin: EdgeInsets.only(left: 18, top: 20),
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.grey[100],
+                                  enabled: true,
+                                  child: ListView.builder(
+                                    itemBuilder: (_, __) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            width: double.infinity,
+                                            height: size.height * 0.02,
+                                            color: Colors.white,
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: size.height * 0.02,
+                                            color: Colors.white,
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: size.height * 0.02,
+                                            color: Colors.white,
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: size.height * 0.02,
+                                            color: Colors.white,
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                          ),
+                                          Container(
+                                            width: 40.0,
+                                            height: size.height * 0.02,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    itemCount: 6,
+                                  ),
+                                ),
                               );
                             }
                           }),

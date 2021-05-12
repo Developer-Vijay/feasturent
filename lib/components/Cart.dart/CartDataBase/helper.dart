@@ -8,7 +8,7 @@ class DBHelper {
     return sql.openDatabase(path.join(dbPath, 'addToCartData.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE addToCartData(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, itemPrice INTEGER, itemCount INTEGER, vendorId INTEGER, menuItemId INTEGER, imagePath TEXT, itemName TEXT, itemStatus TEXT, itemtype INTEGER, isSelected INTEGER, vendorName TEXT, gst INTEGER)');
+          'CREATE TABLE addToCartData(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, itemPrice INTEGER, itemCount INTEGER, vendorId INTEGER, menuItemId INTEGER, imagePath TEXT, itemName TEXT, itemStatus TEXT, itemtype INTEGER, isSelected INTEGER, vendorName TEXT, gst INTEGER, variantId INTEGER, addons TEXT, rating TEXT)');
     }, version: 1);
   }
 

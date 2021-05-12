@@ -78,7 +78,7 @@ class ViewAllPopular extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Text(
-                      popularData[index]['title'],
+                      capitalize(popularData[index]['title']),
                       overflow: TextOverflow.ellipsis,
                     ),
                   )

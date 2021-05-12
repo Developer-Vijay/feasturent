@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:feasturent_costomer_app/components/auth/Forgotpassword/forgotpassword.dart';
 import 'package:feasturent_costomer_app/components/auth/login/authenticate.dart';
 import 'package:feasturent_costomer_app/components/auth/login/loginWithGoolge.dart';
+import 'package:feasturent_costomer_app/components/auth/signup/otpcheck.dart';
 import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
@@ -332,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
           prefs.setString('sessionToken', responseData['data']['sessionToken']);
           prefs.setString("refreshToken", responseData['data']['refreshToken']);
           prefs.setString("userNumber", responseData['data']['user']['phone']);
-          prefs.setString("userProfile", null);
+          prefs.setString("userProfile", responseData['data']['profile']);
           prefs.setInt("userId", responseData['data']['user']['userId']);
           prefs.setInt("loginId", responseData['data']['user']['loginId']);
           prefs.setString("userEmail", responseData['data']['user']['email']);
@@ -358,6 +359,21 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pop(context);
           });
         }
+      } else if (response.statusCode == 401) {
+        setState(() {
+          _isProcessing = false;
+          Navigator.pop(context);
+        });
+        _stoastMessage("Verify your phone number", ERRORSTATUS);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OtpChecker(
+                    phone: "        ",
+                    resgUserId: responseData['userId'].toString(),
+                  )),
+        );
       } else {
         _stoastMessage(responseData['message'], ERRORSTATUS);
         setState(() {

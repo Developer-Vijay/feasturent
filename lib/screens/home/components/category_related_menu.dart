@@ -1,3 +1,5 @@
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
+import 'package:feasturent_costomer_app/shimmer_effect.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:http/http.dart' as http;
@@ -5,11 +7,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
-import 'package:feasturent_costomer_app/screens/home/slider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'category_detail.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 
 class CategoryRelatedMenues extends StatefulWidget {
   final categoryName;
@@ -67,14 +65,30 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
 
   var restaurantDataCopy;
   var restaurantMenu;
-  Future<List<dynamic>> fetchMenues() async {
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get menues");
+  var restaurantData;
 
-    var result =
-        await http.get(APP_ROUTES + 'getMenues?key=BYCATID&id=' + cateId);
-    restaurantMenu = json.decode(result.body)['data'];
-    return restaurantMenu;
+  Future<List<dynamic>> fetchAllRestaurant() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
+
+    var result = await http.get(
+      APP_ROUTES +
+          'getRestaurantInfos' +
+          '?key=BYCATID&id=$cateId' +
+          '&latitude=' +
+          latitude.toString() +
+          '&longitude=' +
+          longitude.toString(),
+    );
+    var restaurantfullData = json.decode(result.body)['data'];
+    if (restaurantfullData.isEmpty) {
+      restaurantData = [];
+
+      return restaurantData;
+    } else {
+      restaurantData = restaurantfullData;
+      return restaurantData;
+    }
   }
 
   @override
@@ -83,832 +97,311 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(menuName),
+          title: Text(capitalize(menuName)),
         ),
         body: FutureBuilder<List<dynamic>>(
-            future: fetchMenues(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  children: [
-                    Expanded(
-                      flex: 23,
-                      child: ListView.builder(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          {
-                            int tpye = 0;
-                            return InkWell(
-                              onTap: () async {
-                                var menuD;
-                                setState(() {
-                                  menuD = snapshot.data[index];
-                                });
-                                final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CategoryDetailPage(
-                                              menuData: menuD,
-                                            )));
-                                if (result) {
-                                  setState(() {});
-                                  getList();
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 14),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              blurRadius: 2,
-                                              color: Colors.blue[50],
-                                              offset: Offset(1, 3),
-                                              spreadRadius: 2)
-                                        ]),
-                                    margin: EdgeInsets.only(
-                                      left: size.width * 0.02,
-                                      right: size.width * 0.02,
-                                    ),
-                                    height: size.height * 0.14,
-                                    child: Dismissible(
-                                      direction: DismissDirection.endToStart,
-                                      // ignore: missing_return
-                                      confirmDismiss: (direction) async {
-                                        if (direction ==
-                                            DismissDirection.endToStart) {
-                                          final bool res = await showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  content: Text(
-                                                      "Are you sure you want to delete ${snapshot.data[index]['title']}?"),
-                                                  actions: <Widget>[
-                                                    FlatButton(
-                                                      child: Text(
-                                                        "Cancel",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black),
+          future: fetchAllRestaurant(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data.isNotEmpty
+                  ? ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        var couponDetatil;
+
+                        if (snapshot
+                            .data[index]['user']['OffersAndCoupons'].isEmpty) {
+                        } else {
+                          if (snapshot.data[index]['user']['OffersAndCoupons']
+                                  [0]['discount'] ==
+                              null) {
+                            String symbol;
+                            if (snapshot.data[index]['user']['OffersAndCoupons']
+                                    [0]['couponDiscountType'] ==
+                                "PERCENT") {
+                              symbol = "%";
+                            } else {
+                              symbol = "₹";
+                            }
+
+                            couponDetatil =
+                                "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol off";
+                          } else {
+                            String symbol;
+                            if (snapshot.data[index]['user']['OffersAndCoupons']
+                                    [0]['discountType'] ==
+                                "PERCENT") {
+                              symbol = "%";
+                            } else {
+                              symbol = "₹";
+                            }
+
+                            couponDetatil =
+                                "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
+                          }
+                        }
+                        // int k = snapshot.data[index]['cuisines'].length;
+                        // print(k);
+                        // var categoryData = '';
+                        // if (k != 0) {
+                        //   for (int j = 1; j <= k - 1; j++) {
+                        //     categoryData =
+                        //         '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
+                        //   }
+                        // } else {
+                        //   categoryData = null;
+                        // }
+                        // print("###################### data $categoryData");
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OfferListPage(
+                                        restaurantDa: snapshot.data[index])));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 2,
+                                          color: Colors.grey[200],
+                                          offset: Offset(0, 3),
+                                          spreadRadius: 2)
+                                    ]),
+                                margin: EdgeInsets.only(
+                                  left: size.width * 0.02,
+                                  right: size.width * 0.02,
+                                ),
+                                height: size.height * 0.135,
+                                child: Row(children: [
+                                  Expanded(
+                                      flex: 0,
+                                      child: Container(
+                                        alignment: Alignment.topCenter,
+                                        height: size.height * 0.2,
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.all(8),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: snapshot.data[index]
+                                                                ['user']
+                                                            ['profile'] !=
+                                                        null
+                                                    ? CachedNetworkImage(
+                                                        imageUrl: S3_BASE_PATH +
+                                                            snapshot.data[index]
+                                                                    ['user']
+                                                                ['profile'],
+                                                        height:
+                                                            size.height * 0.18,
+                                                        width: size.width * 0.3,
+                                                        fit: BoxFit.fill,
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            Center(
+                                                                child:
+                                                                    CircularProgressIndicator()),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            Icon(Icons.error),
+                                                      )
+                                                    : Image.asset(
+                                                        "assets/images/feasturenttemp.jpeg",
+                                                        height:
+                                                            size.height * 0.18,
+                                                        width: size.width * 0.3,
+                                                        fit: BoxFit.cover,
                                                       ),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                    ),
-                                                    FlatButton(
-                                                      child: Text(
-                                                        "Delete",
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      ),
-                                                      onPressed: () async {
-                                                        callingLoader();
-
-                                                        await services
-                                                            .data(snapshot
-                                                                    .data[index]
-                                                                ['menuId'])
-                                                            .then((value) =>
-                                                                fun(value));
-
-                                                        final SharedPreferences
-                                                            cart =
-                                                            await SharedPreferences
-                                                                .getInstance();
-                                                        int totalprice =
-                                                            cart.getInt(
-                                                                'TotalPrice');
-                                                        int gsttotal = cart
-                                                            .getInt('TotalGst');
-                                                        int totalcount =
-                                                            cart.getInt(
-                                                                'TotalCount');
-                                                        int vendorId = cart
-                                                            .getInt('VendorId');
-
-                                                        if (checkitem
-                                                                .isNotEmpty &&
-                                                            checkitem.contains(
-                                                                snapshot
-                                                                    .data[index]
-                                                                        [
-                                                                        'menuId']
-                                                                    .toString())) {
-                                                          if (data1[0][
-                                                                  'itemCount'] ==
-                                                              totalcount) {
-                                                            setState(() {
-                                                              snackBarData =
-                                                                  "${snapshot.data[index]['title']} is remove from cart";
-                                                              totalcount =
-                                                                  totalcount -
-                                                                      data1[0][
-                                                                          'itemCount'];
-                                                              gsttotal = gsttotal -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
-                                                                      data1[0][
-                                                                          'gst']);
-                                                              totalprice = totalprice -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
-                                                                      data1[0][
-                                                                          'itemPrice']);
-                                                              vendorId = 0;
-                                                              cart.setInt(
-                                                                  'VendorId',
-                                                                  vendorId);
-                                                              cart.setInt(
-                                                                  'TotalPrice',
-                                                                  totalprice);
-                                                              cart.setInt(
-                                                                  'TotalGst',
-                                                                  gsttotal);
-                                                              cart.setInt(
-                                                                  'TotalCount',
-                                                                  totalcount);
-
-                                                              // vendorIdCheck
-                                                              //     .remove(data1[
-                                                              //             0][
-                                                              //         'vendorId']);
-                                                              checkitem.remove(data1[
-                                                                          0][
-                                                                      'menuItemId']
-                                                                  .toString());
-                                                              print(checkitem);
-                                                              cart.setStringList(
-                                                                  'addedtocart',
-                                                                  checkitem);
-                                                              services.deleteUser(
-                                                                  data1[0][
-                                                                      'menuItemId']);
-                                                            });
-                                                          } else {
-                                                            setState(() {
-                                                              snackBarData =
-                                                                  "${snapshot.data[index]['title']} is remove from cart";
-                                                              totalcount =
-                                                                  totalcount -
-                                                                      data1[0][
-                                                                          'itemCount'];
-                                                              gsttotal = gsttotal -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
-                                                                      data1[0][
-                                                                          'gst']);
-                                                              totalprice = totalprice -
-                                                                  (data1[0][
-                                                                          'itemCount'] *
-                                                                      data1[0][
-                                                                          'itemPrice']);
-
-                                                              cart.setInt(
-                                                                  'TotalPrice',
-                                                                  totalprice);
-                                                              cart.setInt(
-                                                                  'TotalGst',
-                                                                  gsttotal);
-                                                              cart.setInt(
-                                                                  'TotalCount',
-                                                                  totalcount);
-
-                                                              // vendorIdCheck
-                                                              //     .remove(data1[
-                                                              //             0][
-                                                              //         'vendorId']);
-                                                              checkitem.remove(data1[
-                                                                          0][
-                                                                      'menuItemId']
-                                                                  .toString());
-                                                              print(checkitem);
-                                                              cart.setStringList(
-                                                                  'addedtocart',
-                                                                  checkitem);
-                                                              services.deleteUser(
-                                                                  data1[0][
-                                                                      'menuItemId']);
-                                                            });
-                                                          }
-                                                        } else {
-                                                          setState(() {
-                                                            snackBarData =
-                                                                "${snapshot.data[index]['title']} is already remove from cart";
-                                                          });
-                                                        }
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                          return res;
-                                        }
-                                      },
-                                      key: ValueKey(index),
-                                      background: Container(
-                                        color: Colors.red,
-                                        padding: EdgeInsets.only(right: 10),
-                                        alignment: Alignment.centerRight,
-                                        child: Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      child: Row(children: [
-                                        Expanded(
-                                            flex: 0,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                  height: size.height * 0.2,
-                                                  width: size.width * 0.3,
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: size.width * 0.01,
-                                                        right:
-                                                            size.width * 0.014,
-                                                        top: size.height *
-                                                            0.008),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      child: snapshot.data[
-                                                                      index][
-                                                                  'menuImage1'] !=
-                                                              null
-                                                          ? CachedNetworkImage(
-                                                              imageUrl: S3_BASE_PATH +
-                                                                  snapshot.data[
-                                                                          index]
-                                                                      [
-                                                                      'menuImage1'],
-                                                              height:
-                                                                  size.height *
-                                                                      0.1,
-                                                              width:
-                                                                  size.width *
-                                                                      0.26,
-                                                              fit: BoxFit.cover,
-                                                              placeholder: (context,
-                                                                      url) =>
-                                                                  Center(
-                                                                      child:
-                                                                          CircularProgressIndicator()),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
-                                                            )
-                                                          : Image.asset(
-                                                              "assets/images/feasturenttemp.jpeg",
-                                                              height:
-                                                                  size.height *
-                                                                      0.1,
-                                                              width:
-                                                                  size.width *
-                                                                      0.26,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  top: size.height * 0.09,
-                                                  bottom: size.height * 0.02,
-                                                  left: size.width * 0.058,
-                                                  right: size.width * 0.058,
-                                                  child: MaterialButton(
-                                                    onPressed: () async {
-                                                      final SharedPreferences
-                                                          cart =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      int totalprice = cart
-                                                          .getInt('TotalPrice');
-                                                      int gsttotal = cart
-                                                          .getInt('TotalGst');
-                                                      int totalcount = cart
-                                                          .getInt('TotalCount');
-                                                      int vendorId = cart
-                                                          .getInt('VendorId');
-                                                      if (snapshot.data[index]
-                                                              ['isNonVeg'] ==
-                                                          false) {
-                                                        if (snapshot.data[index]
-                                                                ['isEgg'] ==
-                                                            false) {
-                                                          tpye = 1;
-                                                        } else {
-                                                          tpye = 2;
-                                                        }
-                                                      } else {
-                                                        tpye = 3;
-                                                      }
-
-                                                      await services
-                                                          .data(snapshot
-                                                                  .data[index]
-                                                              ['menuId'])
-                                                          .then((value) =>
-                                                              fun(value));
-                                                      if (vendorId == 0 ||
-                                                          vendorId ==
-                                                              snapshot.data[
-                                                                      index][
-                                                                  'vendorId']) {
-                                                        if (data1.isEmpty) {
-                                                          setState(() {
-                                                            var data =
-                                                                snapshot.data;
-                                                            itemAddToCart(index,
-                                                                tpye, data);
-                                                            setState(() {
-                                                              snackBarData =
-                                                                  "${snapshot.data[index]['title']} is added to cart";
-
-                                                              totalcount =
-                                                                  totalcount +
-                                                                      1;
-                                                              gsttotal = gsttotal +
-                                                                  snapshot.data[
-                                                                          index]
-                                                                      [
-                                                                      'gstAmount'];
-                                                              totalprice = totalprice +
-                                                                  snapshot.data[
-                                                                          index]
-                                                                      [
-                                                                      'totalPrice'];
-
-                                                              vendorId = snapshot
-                                                                          .data[
-                                                                      index]
-                                                                  ['vendorId'];
-                                                              cart.setInt(
-                                                                  'VendorId',
-                                                                  vendorId);
-                                                              cart.setInt(
-                                                                  'TotalPrice',
-                                                                  totalprice);
-                                                              cart.setInt(
-                                                                  'TotalGst',
-                                                                  gsttotal);
-                                                              cart.setInt(
-                                                                  'TotalCount',
-                                                                  totalcount);
-                                                            });
-
-                                                            checkitem.add(snapshot
-                                                                .data[index]
-                                                                    ['menuId']
-                                                                .toString());
-                                                            cart.setStringList(
-                                                                'addedtocart',
-                                                                checkitem);
-                                                          });
-                                                        } else {
-                                                          if (data1[0][
-                                                                  'itemName'] !=
-                                                              snapshot.data[
-                                                                      index]
-                                                                  ['title']) {
-                                                            setState(() {
-                                                              var data =
-                                                                  snapshot.data;
-                                                              itemAddToCart(
-                                                                  index,
-                                                                  tpye,
-                                                                  data);
-                                                              setState(() {
-                                                                snackBarData =
-                                                                    "${snapshot.data[index]['title']} is added to cart";
-
-                                                                totalcount =
-                                                                    totalcount +
-                                                                        1;
-                                                                gsttotal = gsttotal +
-                                                                    snapshot.data[
-                                                                            index]
-                                                                        [
-                                                                        'gstAmount'];
-                                                                totalprice = totalprice +
-                                                                    snapshot.data[
-                                                                            index]
-                                                                        [
-                                                                        'totalPrice'];
-
-                                                                vendorId = snapshot
-                                                                            .data[
-                                                                        index][
-                                                                    'vendorId'];
-                                                                cart.setInt(
-                                                                    'VendorId',
-                                                                    vendorId);
-                                                                cart.setInt(
-                                                                    'TotalPrice',
-                                                                    totalprice);
-                                                                cart.setInt(
-                                                                    'TotalGst',
-                                                                    gsttotal);
-                                                                cart.setInt(
-                                                                    'TotalCount',
-                                                                    totalcount);
-                                                              });
-
-                                                              checkitem.add(snapshot
-                                                                  .data[index]
-                                                                      ['menuId']
-                                                                  .toString());
-                                                              cart.setStringList(
-                                                                  'addedtocart',
-                                                                  checkitem);
-                                                            });
-                                                          } else {
-                                                            setState(() {
-                                                              snackBarData =
-                                                                  "${snapshot.data[index]['title']} is already added to cart";
-                                                            });
-
-                                                            print("match");
-                                                          }
-                                                        }
-                                                      } else {
-                                                        Fluttertoast.showToast(
-                                                            msg:
-                                                                "Please Add order from Single Resturent");
-                                                      }
-                                                    },
-                                                    color: Colors.white,
-                                                    minWidth: size.width * 0.16,
-                                                    height: size.height * 0.033,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        14)),
-                                                    textColor: Colors.white,
-                                                    child: checkitem.isEmpty
-                                                        ? Center(
-                                                            child: Text(
-                                                              "Add",
-                                                              style: TextStyle(
-                                                                  fontSize: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height *
-                                                                      0.015,
-                                                                  color: Colors
-                                                                      .blueGrey),
-                                                            ),
-                                                          )
-                                                        : checkitem.contains(
-                                                                snapshot
-                                                                    .data[index]
-                                                                        [
-                                                                        'menuId']
-                                                                    .toString())
-                                                            ? Center(
-                                                                child: Text(
-                                                                  "Added",
-                                                                  style: TextStyle(
-                                                                      fontSize: MediaQuery.of(context)
-                                                                              .size
-                                                                              .height *
-                                                                          0.015,
-                                                                      color: Colors
-                                                                          .blueGrey),
-                                                                ),
-                                                              )
-                                                            : Center(
-                                                                child: Text(
-                                                                  "Add",
-                                                                  style: TextStyle(
-                                                                      fontSize: MediaQuery.of(context)
-                                                                              .size
-                                                                              .height *
-                                                                          0.015,
-                                                                      color: Colors
-                                                                          .blueGrey),
-                                                                ),
-                                                              ),
-                                                  ),
-                                                )
-                                              ],
-                                            )),
-                                        Expanded(
-                                            flex: 6,
-                                            child: Container(
-                                              height: size.height * 0.2,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.max,
+                                      )),
+                                  Expanded(
+                                      flex: 6,
+                                      child: Container(
+                                        height: size.height * 0.2,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  top: size.height * 0.02),
+                                              child: Row(
                                                 children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        top:
-                                                            size.height * 0.01),
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          snapshot.data[index]
-                                                              ['title'],
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize:
-                                                                  size.height *
-                                                                      0.019),
-                                                        ),
-                                                        Spacer(),
-                                                        Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right: 12),
-                                                            child: snapshot.data[
-                                                                            index]
-                                                                        [
-                                                                        'isNonVeg'] ==
-                                                                    false
-                                                                ? snapshot.data[index]
-                                                                            [
-                                                                            'isEgg'] ==
-                                                                        false
-                                                                    ? Container(
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
-                                                                          height:
-                                                                              size.height * 0.016,
-                                                                          errorWidget: (context, url, error) =>
-                                                                              Icon(Icons.error),
-                                                                        ),
-                                                                      )
-                                                                    : Container(
-                                                                        child: Image
-                                                                            .asset(
-                                                                        "assets/images/eggeterian.png",
-                                                                        height: size.height *
-                                                                            0.016,
-                                                                      ))
-                                                                : CachedNetworkImage(
-                                                                    imageUrl:
-                                                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
-                                                                    height: size
-                                                                            .height *
-                                                                        0.016,
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        Icon(Icons
-                                                                            .error),
-                                                                  ))
-                                                      ],
-                                                    ),
+                                                  Text(
+                                                    capitalize(snapshot
+                                                        .data[index]['name']),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                        fontSize:
+                                                            size.height * 0.02),
                                                   ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.005),
-                                                  Container(
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          child: snapshot.data[
-                                                                              index]
-                                                                          [
-                                                                          'categories']
-                                                                      [
-                                                                      'iconImage'] ==
-                                                                  "null"
-                                                              ? CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      'https://st2.depositphotos.com/1435425/6338/v/950/depositphotos_63384005-stock-illustration-special-offer-icon-design.jpg',
-                                                                  height:
-                                                                      size.height *
-                                                                          0.02,
-                                                                  errorWidget: (context,
-                                                                          url,
-                                                                          error) =>
-                                                                      Icon(Icons
-                                                                          .error),
-                                                                )
-                                                              : SizedBox(),
-                                                        ),
-                                                        SizedBox(
-                                                          width: size.width *
-                                                              0.006,
-                                                        ),
-                                                        Text(
-                                                          snapshot.data[index][
-                                                              'restaurantName'],
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  size.height *
-                                                                      0.014,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: size.height * 0.002,
-                                                  ),
-                                                  Container(
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          child: Text(
-                                                            "⭐",
-                                                            style: TextStyle(
-                                                              color: Colors.red,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          "3.0",
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  size.height *
-                                                                      0.014,
-                                                              color: Colors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        Spacer(),
-                                                        Container(
-                                                          margin: EdgeInsets.only(
-                                                              right:
-                                                                  size.width *
-                                                                      0.1),
-                                                          child: Text(
-                                                            "₹${snapshot.data[index]['totalPrice']}",
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    size.height *
-                                                                        0.018,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: size.height * 0.003,
-                                                  ),
-                                                  Container(
-                                                    child: Container(
-                                                        child: snapshot
-                                                                    .data[index]
-                                                                        [
-                                                                        'offers']
-                                                                    .length !=
-                                                                0
-                                                            ? Row(
-                                                                children: [
-                                                                  Container(
-                                                                      child: snapshot.data[index]['offers'].length !=
-                                                                              0
-                                                                          ? Row(
-                                                                              children: [
-                                                                                Image.asset(
-                                                                                  "assets/icons/discount_icon.jpg",
-                                                                                  height: size.height * 0.02,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: size.width * 0.006,
-                                                                                ),
-                                                                                Container(
-                                                                                  child: snapshot.data[index]['offers'].length >= 2
-                                                                                      ? Row(
-                                                                                          children: [
-                                                                                            Text(
-                                                                                              "OfferID ${snapshot.data[index]['offers'][0]['OffersAndCoupon']['coupon']}, ",
-                                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                                            ),
-                                                                                            Text(
-                                                                                              "OfferID ${snapshot.data[index]['offers'][1]['OffersAndCoupon']['coupon']}",
-                                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                                            ),
-                                                                                          ],
-                                                                                        )
-                                                                                      : Text(
-                                                                                          "OfferID ${snapshot.data[index]['offers'][0]['OffersAndCoupon']['coupon']}",
-                                                                                          style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                                        ),
-                                                                                ),
-                                                                              ],
-                                                                            )
-                                                                          : SizedBox()),
-                                                                ],
-                                                              )
-                                                            : SizedBox()),
-                                                  ),
+                                                  Spacer(),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 12),
+                                                  )
                                                 ],
                                               ),
-                                            ))
-                                      ]),
-                                    )),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                          height: size.height * 1,
-                          color: Colors.white,
-                          child: Container(
-                            height: size.height * 0.01,
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            width: size.width * 1,
-                            color: Colors.lightBlueAccent[200],
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: size.width * 0.65,
-                                  child: Text(
-                                    snackBarData,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                Spacer(),
-                                FlatButton(
-                                  textColor: Colors.redAccent,
-                                  child: Text("View Cart"),
-                                  onPressed: () async {
-                                    final result = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CartScreen()));
-                                    if (result) {
-                                      setState(() {});
-                                      getList();
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.005,
+                                            ),
+                                            snapshot.data[index]['cuisines'][0]
+                                                        ['Category']['name'] ==
+                                                    null
+                                                ? SizedBox()
+                                                : Container(
+                                                    width: size.width * 0.5,
+                                                    child: Text(
+                                                      "${snapshot.data[index]['cuisines'][0]['Category']['name']}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: size.height *
+                                                            0.0175,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ),
+                                            SizedBox(
+                                              height: size.height * 0.015,
+                                            ),
+                                            Container(
+                                              child: Row(
+                                                children: [
+                                                  snapshot.data[index]
+                                                              ['avgRating'] ==
+                                                          null
+                                                      ? Text(
+                                                          "⭐1",
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  size.height *
+                                                                      0.016,
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        )
+                                                      : Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Container(
+                                                                child:
+                                                                    Text("⭐"),
+                                                              ),
+                                                              Text(
+                                                                snapshot
+                                                                    .data[index]
+                                                                        [
+                                                                        'avgRating']
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        size.height *
+                                                                            0.016,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                  Spacer(),
+                                                  couponDetatil == null
+                                                      ? SizedBox()
+                                                      : Image.asset(
+                                                          "assets/icons/discount_icon.jpg",
+                                                          height: size.height *
+                                                              0.02,
+                                                        ),
+                                                  couponDetatil == null
+                                                      ? SizedBox()
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                            right: 12.0,
+                                                          ),
+                                                          child: Text(
+                                                            couponDetatil,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    size.height *
+                                                                        0.016,
+                                                                color:
+                                                                    kTextColor),
+                                                          ),
+                                                        ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ))
+                                ])),
                           ),
-                        ))
-                  ],
-                );
-              } else {
-                print("no data00");
-                return Center(child: CircularProgressIndicator());
-              }
-            }));
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Text(
+                          "No resturent available related with this category"),
+                    );
+            } else {
+              return LoadingListPage();
+            }
+          },
+        ));
   }
 
-  itemAddToCart(index, tpye, data) async {
-    final SharedPreferences cart = await SharedPreferences.getInstance();
+  // itemAddToCart(index, tpye, data) async {
+  //   final SharedPreferences cart = await SharedPreferences.getInstance();
 
-    // var sum = cart.getInt('price');
-    // sum = sum + data[index]['totalPrice'];
-    // cart.setInt('price', sum);
-    // print(sum);
-    setState(() {
-      // itemCount.add(value);
-      services.saveUser(
-          data[index]['totalPrice'],
-          1,
-          data[index]['vendorId'],
-          data[index]['menuId'],
-          data[index]['image1'],
-          data[index]['title'],
-          "Add".toString(),
-          tpye,
-          0,
-          data[index]['restaurantName'],
-          data[index]['gstAmount']);
-    });
-  }
+  //   // var sum = cart.getInt('price');
+  //   // sum = sum + data[index]['totalPrice'];
+  //   // cart.setInt('price', sum);
+  //   // print(sum);
+  //   setState(() {
+  //     // itemCount.add(value);
+  //     services.saveUser(
+  //         data[index]['totalPrice'],
+  //         1,
+  //         data[index]['vendorId'],
+  //         data[index]['menuId'],
+  //         data[index]['image1'],
+  //         data[index]['title'],
+  //         "Add".toString(),
+  //         tpye,
+  //         0,
+  //         data[index]['restaurantName'],
+  //         data[index]['gstAmount'],
+  //         0);
+  //   });
+  // }
 
   fun(value) {
     setState(() {

@@ -1,7 +1,5 @@
 import 'dart:convert';
-
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/auth/Forgotpassword/otp.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -53,7 +51,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     ),
                     Container(
                       child: Image.asset(
-                        "assets/images/password.png",
+                        "assets/images/resetpassword.png",
                         height: size.width * 0.3,
                       ),
                     ),

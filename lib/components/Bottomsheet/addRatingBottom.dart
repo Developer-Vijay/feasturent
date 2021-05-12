@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

@@ -17,7 +17,8 @@ class WishListService {
       int itemtype,
       int isSelected,
       String vendorName,
-      int gst) {
+      int gst,
+      String rating) {
     WishListDBhelper.insert('wishListDat', {
       'itemPrice': itemPrice,
       'itemCount': itemCount,
@@ -30,6 +31,7 @@ class WishListService {
       'isSelected': isSelected,
       'vendorName': vendorName,
       'gst': gst,
+      'rating': rating
     });
   }
 
@@ -48,7 +50,8 @@ class WishListService {
             itemtype: item['itemtype'],
             isSelected: item['isSelected'],
             vendorName: item['vendorName'],
-            gst: item['gst']))
+            gst: item['gst'],
+            rating: item['rating']))
         .toList();
   }
 

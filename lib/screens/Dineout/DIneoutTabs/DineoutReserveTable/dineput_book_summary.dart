@@ -99,7 +99,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(widget.data['name']),
+        title: Text(capitalize(widget.data['name'])),
       ),
       body: ListView(
         children: [

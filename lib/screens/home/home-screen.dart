@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/offerpage.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/offerpage.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineouthome.dart';
 import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
 import 'package:feasturent_costomer_app/screens/home/components/notificationPage.dart';
@@ -17,8 +17,8 @@ import 'package:http/http.dart' as http;
 import 'package:feasturent_costomer_app/components/appDrawer.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'components/searchBarFunction.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'SearchFiles/test_search.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return showDialog(
         context: context,
         barrierDismissible: false,
-        builder: _showOffers(data),
+        builder: (context) => _showOffers(data),
       );
     }
   }
@@ -185,62 +185,60 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _showOffers(homebannerData) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.55,
-            width: MediaQuery.of(context).size.height * 0.35,
-            color: Colors.transparent,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: MediaQuery.of(context).size.height * 0.1,
-                  child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.lightBlue[100],
-                          borderRadius: BorderRadius.circular(15)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.55,
+          width: MediaQuery.of(context).size.height * 0.35,
+          color: Colors.transparent,
+          child: Stack(
+            children: [
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.1,
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.lightBlue[100],
+                        borderRadius: BorderRadius.circular(15)),
+                    height: MediaQuery.of(context).size.height * 0.48,
+                    width: MediaQuery.of(context).size.height * 0.35,
+                    child: CachedNetworkImage(
+                      imageUrl: S3_BASE_PATH +
+                          homebannerData[0]['OffersAndCoupon']['image'],
                       height: MediaQuery.of(context).size.height * 0.48,
                       width: MediaQuery.of(context).size.height * 0.35,
-                      child: CachedNetworkImage(
-                        imageUrl: S3_BASE_PATH +
-                            homebannerData[0]['OffersAndCoupon']['image'],
-                        height: MediaQuery.of(context).size.height * 0.48,
-                        width: MediaQuery.of(context).size.height * 0.35,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      )),
-                ),
-                Positioned(
-                  top: 10,
-                  left: MediaQuery.of(context).size.height * 0.1,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage("assets/icons/feasturent.png"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Material(
-            color: Colors.transparent,
-            child: IconButton(
-              icon: Icon(
-                Icons.cancel_outlined,
-                size: MediaQuery.of(context).size.height * 0.04,
-                color: Colors.grey,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    )),
               ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+              Positioned(
+                top: 10,
+                left: MediaQuery.of(context).size.height * 0.1,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage("assets/icons/feasturent.png"),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Material(
+          color: Colors.transparent,
+          child: IconButton(
+            icon: Icon(
+              Icons.cancel_outlined,
+              size: MediaQuery.of(context).size.height * 0.04,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -312,6 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_page == 0) {
       return Image.asset(
         "assets/images/feasturent_app_logo.png",
+        height: MediaQuery.of(context).size.height * 0.05,
       );
     } else if (_page == 1) {
       return Text(
@@ -385,100 +384,82 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildAppBar(_page) {
     if (_page == 3) {
-      return SizedBox();
+      return AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: Icon(
+          Icons.menu,
+          color: Colors.white,
+        ),
+      );
     } else {
-      return Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                IconButton(
-                    icon: SvgPicture.asset(
-                      "assets/icons/menu.svg",
-                      height: MediaQuery.of(context).size.height * 0.027,
-                    ),
-                    onPressed: () {
-                      _scaffoldKey.currentState.openDrawer();
-                    }),
-              ],
+      return AppBar(
+        leading: IconButton(
+            icon: SvgPicture.asset(
+              "assets/icons/menu.svg",
+              height: MediaQuery.of(context).size.height * 0.027,
             ),
+            onPressed: () {
+              _scaffoldKey.currentState.openDrawer();
+            }),
+        actions: [
+          IconButton(
+            icon: SvgPicture.asset(
+              "assets/icons/search.svg",
+              height: MediaQuery.of(context).size.height * 0.027,
+            ),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SearchField()));
+              // showSearch(context: context, delegate: Searchbar(), query: "");
+            },
           ),
-          Expanded(
-            flex: 5,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: _buildChangeTextApp(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            "$location",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize:
-                                  MediaQuery.of(context).size.height * 0.02,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                            onTap: () async {
-                              displayPrediction();
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
-                              child: Icon(
-                                Icons.edit_outlined,
-                                size:
-                                    MediaQuery.of(context).size.height * 0.028,
-                                color: Colors.grey,
-                              ),
-                            )),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          IconButton(
+            icon: SvgPicture.asset(
+              "assets/icons/notification.svg",
+              height: MediaQuery.of(context).size.height * 0.027,
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/search.svg",
-                height: MediaQuery.of(context).size.height * 0.027,
-              ),
-              onPressed: () {
-                showSearch(context: context, delegate: Searchbar(), query: "");
-              },
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/notification.svg",
-                height: MediaQuery.of(context).size.height * 0.027,
-              ),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotificationSheet()));
-              },
-            ),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NotificationSheet()));
+            },
           ),
         ],
+        centerTitle: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildChangeTextApp(),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    "$location",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                  ),
+                ),
+                InkWell(
+                    onTap: () async {
+                      displayPrediction();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Icon(
+                        Icons.edit_outlined,
+                        size: MediaQuery.of(context).size.height * 0.028,
+                        color: Colors.grey,
+                      ),
+                    )),
+              ],
+            ),
+          ],
+        ),
       );
     }
   }
@@ -526,24 +507,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
             ),
-            body: mainbodyFunction()),
+            appBar: _buildAppBar(_page),
+            body: IndexedStack(
+              index: _page,
+              children: [
+                HomePageBody(),
+                OfferPageScreen(),
+                DineoutHomePage(),
+                UserProfilePage(),
+              ],
+            )),
       ),
     );
-  }
-
-  mainbodyFunction() {
-    if (_page == 3) {
-      return tabPages[_page];
-    } else {
-      return Column(
-        children: [
-          Expanded(
-            flex: 3,
-            child: _buildAppBar(_page),
-          ),
-          Expanded(flex: 32, child: tabPages[_page]),
-        ],
-      );
-    }
   }
 }

@@ -3,23 +3,24 @@ import 'helper.dart';
 
 var data1;
 var data2;
-var tempcount;
 var sqlIdData;
 
 class UserServices {
   void saveUser(
-    int itemPrice,
-    int itemCount,
-    int vendorId,
-    int menuItemId,
-    String imagePath,
-    String itemName,
-    String itemStatus,
-    int itemtype,
-    int isSelected,
-    String vendorName,
-    int gst,
-  ) {
+      int itemPrice,
+      int itemCount,
+      int vendorId,
+      int menuItemId,
+      String imagePath,
+      String itemName,
+      String itemStatus,
+      int itemtype,
+      int isSelected,
+      String vendorName,
+      int gst,
+      int variantId,
+      String addons,
+      String rating) {
     DBHelper.insert('addToCartData', {
       'itemPrice': itemPrice,
       'itemCount': itemCount,
@@ -31,7 +32,10 @@ class UserServices {
       'itemtype': itemtype,
       'isSelected': isSelected,
       'vendorName': vendorName,
-      'gst': gst
+      'gst': gst,
+      'variantId': variantId,
+      'addons': addons,
+      'rating': rating,
     });
   }
 
@@ -50,7 +54,10 @@ class UserServices {
             itemtype: item['itemtype'],
             isSelected: item['isSelected'],
             vendorName: item['vendorName'],
-            gst: item['gst']))
+            gst: item['gst'],
+            variantId: item['variantId'],
+            addons: item['addons'],
+            rating: item['rating']))
         .toList();
   }
 
@@ -125,7 +132,10 @@ class UserServices {
       int itemtype,
       int isSelected,
       String vendorName,
-      int gst) {
+      int gst,
+      int variantId,
+      String addons,
+      String rating) {
     DBHelper.updateData('addToCartData', id, {
       'itemPrice': itemPrice,
       'itemCount': itemCount,
@@ -138,6 +148,9 @@ class UserServices {
       'isSelected': isSelected,
       'vendorName': vendorName,
       'gst': gst,
+      'variantId': variantId,
+      'addons': addons,
+      'rating': rating,
     });
   }
 }

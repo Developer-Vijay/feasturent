@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 import '../../constants.dart';
 
@@ -22,7 +23,7 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
 
-    var response = await http.get(APP_ROUTES + 'popularDineout');
+    var response = await http.get(APP_ROUTES + 'popularDineout?limit=null');
 
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
@@ -53,8 +54,10 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
               padding: const EdgeInsets.only(left: 20, bottom: 5, top: 20),
               child: Text(
                 "Featured Dineout",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: kTextColor,
+                    fontSize: size.height * 0.025),
               ),
             ),
             // Spacer(),
@@ -91,7 +94,7 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
           ],
         ),
         Container(
-            height: size.height * 0.28,
+            height: size.height * 0.31,
             child: FutureBuilder<List>(
               future: getpopulardineouts(),
 // ignore: missing_return
@@ -114,7 +117,7 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                                   padding:
                                       const EdgeInsets.only(top: 4.0, left: 15),
                                   child: Container(
-                                      height: size.height * 0.27,
+                                      height: size.height * 0.303,
                                       width: size.width * 0.6,
                                       child: InkWell(
                                         onTap: () {
@@ -135,7 +138,7 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                                                 CachedNetworkImage(
                                                   imageUrl:
                                                       "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/u/y/p20941-15700828565d959028e9f28.jpg?tr=tr:n-medium",
-                                                  height: size.height * 0.27,
+                                                  height: size.height * 0.303,
                                                   width: size.width * 0.6,
                                                   fit: BoxFit.fill,
                                                   placeholder: (context, url) =>
@@ -148,7 +151,7 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                                                   alignment:
                                                       Alignment.bottomLeft,
                                                   child: Container(
-                                                    height: size.height * 0.11,
+                                                    height: size.height * 0.14,
                                                     width: size.width * 1,
                                                     color: Colors.black
                                                         .withOpacity(0.4),
@@ -160,6 +163,9 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
                                                           Container(
                                                             height: 20,
@@ -238,7 +244,27 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                           },
                         ));
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Container(
+                      child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 4.0, left: 15),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white),
+                            height: size.height * 0.27,
+                            width: size.width * 0.6,
+                          ),
+                        ),
+                      );
+                    },
+                  ));
                 }
               },
             )),

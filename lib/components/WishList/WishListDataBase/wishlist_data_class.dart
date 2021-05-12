@@ -11,6 +11,7 @@ class WishListClass {
   int isSelected;
   String vendorName;
   int gst;
+  String rating;
 
   WishListClass(
       {this.id,
@@ -24,5 +25,6 @@ class WishListClass {
       this.itemStatus,
       this.isSelected,
       this.vendorName,
-      this.gst});
+      this.gst,
+      this.rating});
 }

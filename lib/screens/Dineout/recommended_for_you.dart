@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 import '../../constants.dart';
 
@@ -22,7 +23,7 @@ class _RecommendedForUState extends State<RecommendedForU> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
 
-    var response = await http.get(APP_ROUTES + 'popularDineout');
+    var response = await http.get(APP_ROUTES + 'popularDineout?limit=null');
 
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
@@ -53,8 +54,10 @@ class _RecommendedForUState extends State<RecommendedForU> {
               padding: const EdgeInsets.only(left: 20, bottom: 10),
               child: Text(
                 "Recommended For You",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: kTextColor,
+                    fontSize: size.height * 0.025),
               ),
             ),
             // Spacer(),
@@ -91,7 +94,7 @@ class _RecommendedForUState extends State<RecommendedForU> {
           ],
         ),
         Container(
-            height: size.height * 0.25,
+            height: size.height * 0.26,
             child: FutureBuilder<List>(
               future: getpopulardineouts(),
 // ignore: missing_return
@@ -108,105 +111,121 @@ class _RecommendedForUState extends State<RecommendedForU> {
                           scrollDirection: Axis.horizontal,
                           itemCount: 5,
                           itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 4.0, left: 15),
-                                  child: Container(
-                                      height: size.height * 0.24,
-                                      width: size.width * 0.4,
-                                      child: InkWell(
-                                        onTap: () {
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             DineoutDetailPage(
-                                          //               data: snapshot.data[index]
-                                          //                   ['VendorInfo'],
-                                          //             )));
-                                        },
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            child: Stack(
-                                              children: [
-                                                CachedNetworkImage(
-                                                  imageUrl:
-                                                      "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/e/p/p20298-1484731590587f34c63a2a1.jpg?tr=tr:n-medium",
-                                                  fit: BoxFit.cover,
-                                                  height: size.height * 0.24,
-                                                  width: size.width * 0.4,
-                                                  placeholder: (context, url) =>
-                                                      CircularProgressIndicator(),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomLeft,
-                                                  child: Container(
-                                                    height:
-                                                        size.height * 0.0875,
-                                                    width: size.width * 1,
-                                                    color: Colors.black
-                                                        .withOpacity(0.7),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 5),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'EAT, SAVE, REPEAT.',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    size.height *
-                                                                        0.015,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                          Text(
-                                                            'Flat 20% off',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    size.height *
-                                                                        0.033,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                          Text(
-                                                            'the Total Bill',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    size.height *
-                                                                        0.015,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        ],
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 4.0, left: 15),
+                              child: Container(
+                                  height: size.height * 0.26,
+                                  width: size.width * 0.4,
+                                  child: InkWell(
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             DineoutDetailPage(
+                                      //               data: snapshot.data[index]
+                                      //                   ['VendorInfo'],
+                                      //             )));
+                                    },
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Stack(
+                                          children: [
+                                            CachedNetworkImage(
+                                              imageUrl:
+                                                  "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/e/p/p20298-1484731590587f34c63a2a1.jpg?tr=tr:n-medium",
+                                              fit: BoxFit.cover,
+                                              height: size.height * 0.26,
+                                              width: size.width * 0.4,
+                                              placeholder: (context, url) => Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Container(
+                                                height: size.height * 0.11,
+                                                width: size.width * 1,
+                                                color: Colors.black
+                                                    .withOpacity(0.7),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        'EAT, SAVE, REPEAT.',
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.015,
+                                                            color:
+                                                                Colors.white),
                                                       ),
-                                                    ),
+                                                      Text(
+                                                        'Flat 20% off',
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.033,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      Text(
+                                                        'the Total Bill',
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.015,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ],
                                                   ),
-                                                )
-                                              ],
-                                            )),
-                                      )),
-                                ),
-                              ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )),
+                                  )),
                             );
                           },
                         ));
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Container(
+                      child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 4.0, left: 15),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white),
+                            height: size.height * 0.24,
+                            width: size.width * 0.4,
+                          ),
+                        ),
+                      );
+                    },
+                  ));
                 }
               },
             )),

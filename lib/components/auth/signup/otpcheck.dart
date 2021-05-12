@@ -137,10 +137,8 @@ class _OtpCheckerState extends State<OtpChecker> {
                                     size: size.height * 0.04,
                                   ),
                                   onPressed: () {
-                                    Navigator.push(
+                                    Navigator.pop(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignupPage()),
                                     );
                                   },
                                 ),
@@ -280,6 +278,7 @@ ${widget.phone} mobile number''',
     );
   }
 
+  // ignore: missing_return
   Future<void> _stoastMessage(message) {
     Fluttertoast.showToast(
         msg: message,

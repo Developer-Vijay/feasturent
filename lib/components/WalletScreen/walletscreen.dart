@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/appDrawer.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/shimmer_effect.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,8 @@ import 'package:http/http.dart' as http;
 
 import 'package:intl/intl.dart';
 import 'dart:async';
+
+import 'package:shimmer/shimmer.dart';
 
 class WalletDesign extends StatefulWidget {
   var walletdata;
@@ -111,6 +114,7 @@ class _WalletDesignState extends State<WalletDesign> {
                               print(
                                   "################################################################################");
                               print(snapshot.data);
+
                               return Column(
                                 children: [
                                   Container(
@@ -476,8 +480,97 @@ class _WalletDesignState extends State<WalletDesign> {
                                 ],
                               );
                             } else {
-                              return Center(
-                                child: CircularProgressIndicator(),
+                              return Container(
+                                margin: EdgeInsets.only(left: 5, top: 20),
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.grey[100],
+                                  enabled: true,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 4.0),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          width: double.infinity,
+                                          height: size.height * 0.2,
+                                          color: Colors.white,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 7.0),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: size.height * 0.1,
+                                          color: Colors.white,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 15.0),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: size.height * 0.05,
+                                          color: Colors.white,
+                                        ),
+                                        ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: 3,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 5.0),
+                                                    ),
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height:
+                                                          size.height * 0.02,
+                                                      color: Colors.white,
+                                                    ),
+                                                    const Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 5.0),
+                                                    ),
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height:
+                                                          size.height * 0.02,
+                                                      color: Colors.white,
+                                                    ),
+                                                    const Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 5.0),
+                                                    ),
+                                                    Container(
+                                                      width: 40.0,
+                                                      height:
+                                                          size.height * 0.02,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            })
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               );
                             }
                           })

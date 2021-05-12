@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/insideofferpage.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
 import 'package:flutter/material.dart';
-
 import '../../../constants.dart';
 
 class ViewallRestaurant extends StatefulWidget {
@@ -98,6 +96,17 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
             //         "${restaurantData[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
             //   }
             // }
+            int k = restaurantData[index]['cuisines'].length;
+            print(k);
+            var categoryData = '';
+            if (k != 0) {
+              for (int j = 1; j <= k - 1; j++) {
+                categoryData =
+                    '$categoryData${restaurantData[index]['cuisines'][j]['Category']['name']},';
+              }
+            } else {
+              categoryData = null;
+            }
             return InkWell(
               onTap: () {
                 Navigator.push(
@@ -178,7 +187,8 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        restaurantData[index]['name'],
+                                        capitalize(
+                                            restaurantData[index]['name']),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
@@ -192,24 +202,21 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                     ],
                                   ),
                                 ),
-                                restaurantData[index]['type'] == null
+                                SizedBox(
+                                  height: size.height * 0.005,
+                                ),
+                                categoryData == null
                                     ? SizedBox()
-                                    : Column(
-                                        children: [
-                                          SizedBox(
-                                            height: size.height * 0.013,
+                                    : Container(
+                                        width: size.width * 0.5,
+                                        child: Text(
+                                          "$categoryData",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: size.height * 0.0175,
+                                            color: Colors.black,
                                           ),
-                                          Container(
-                                            width: size.width * 0.35,
-                                            child: Text(
-                                              restaurantData[index]['type'],
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: size.height * 0.015,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                 SizedBox(
                                   height: size.height * 0.015,

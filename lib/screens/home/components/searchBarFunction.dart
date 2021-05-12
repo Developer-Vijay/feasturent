@@ -40,7 +40,7 @@ class Searchbar extends SearchDelegate<String> {
       IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {
-          query = " ";
+          query = "";
         },
       )
     ];

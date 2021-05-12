@@ -1,6 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'components/Cart.dart/AddOnDataBase/addon_service.dart';
+import 'components/Cart.dart/CartDataBase/cart_service.dart';
+
+// capitalize text function
+String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
 //Colors Code
 const kPrimaryColor = Color(0xFF3498E5);
@@ -105,7 +114,7 @@ final offerRecommendStyle = TextStyle(
 
 final offerSheetStyle = TextStyle(
   fontWeight: FontWeight.bold,
-  fontSize: 14,
+  fontSize: 15,
   color: Colors.black,
 );
 
@@ -202,6 +211,8 @@ List<FilterList> filtered = [
   FilterList(name: "Features", pagecount: 3),
   FilterList(name: "Dineout Passport", pagecount: 4),
   FilterList(name: "Sort By", pagecount: 5),
+  FilterList(name: "Sort ", pagecount: 5),
+  // FilterList(name: " By", pagecount: 5),
 ];
 
 class SettingsList {
@@ -311,14 +322,6 @@ class DonateList {
   DonateList({this.value, this.amount});
 }
 
-List<DonateList> donate = [
-  DonateList(amount: 5, value: false),
-  DonateList(amount: 10, value: false),
-  DonateList(amount: 20, value: false),
-  DonateList(amount: 50, value: false),
-  DonateList(amount: 100, value: false),
-];
-
 int offerid = 0;
 double discount = 0;
 List color = [
@@ -340,3 +343,102 @@ List colors = [
   Color(0xFF80A8CA),
   Color(0xFFFDEDA5),
 ];
+
+// function for clear cart for add menu from different resturent
+final services = UserServices();
+final addOnservices = AddOnService();
+
+removeCartForNewData() async {
+  int gsttotal1;
+  int totalprice1;
+  int totalcount1;
+  int vendorId1;
+  List<String> checkitem = [];
+  List<String> addOncheckitem = [];
+
+  final SharedPreferences cart = await SharedPreferences.getInstance();
+  checkitem = cart.getStringList('addedtocart');
+  addOncheckitem = cart.getStringList('addontocart');
+
+  int l = addOncheckitem.length;
+  for (int i = 0; i <= l - 1; i++) {
+    var datatemp = int.parse(addOncheckitem[i]);
+
+    addOnservices.deleteUser(datatemp);
+  }
+
+  int k = checkitem.length;
+  for (int i = 0; i <= k - 1; i++) {
+    var data = int.parse(checkitem[i]);
+
+    services.deleteUser(data);
+  }
+
+  gsttotal1 = 0;
+  totalcount1 = 0;
+  totalprice1 = 0;
+  discount = 0;
+  offerid = 0;
+  vendorId1 = 0;
+  cart.setInt('VendorId', vendorId1);
+
+  cart.setInt('TotalPrice', totalprice1);
+  cart.setInt('TotalGst', gsttotal1);
+  cart.setInt('TotalCount', totalcount1);
+
+  checkitem.clear();
+  addOncheckitem.clear();
+
+  print(checkitem);
+  cart.setStringList('addontocart', addOncheckitem);
+
+  cart.setStringList('addedtocart', checkitem);
+}
+
+removeAddOnWithMenu(addOnIds) async {
+  if (addOnIds != null) {
+    var ids = json.decode(addOnIds);
+
+    if (ids.isNotEmpty) {
+      List tempIds = [];
+      List addonlist = [];
+      final SharedPreferences cart = await SharedPreferences.getInstance();
+      addonlist = cart.getStringList('addontocart');
+
+      int totalprice = cart.getInt('TotalPrice');
+      int gsttotal = cart.getInt('TotalGst');
+      int totalcount = cart.getInt('TotalCount');
+      int k = ids.length;
+      for (int i = 0; i <= k - 1; i++) {
+        var id = ids[i];
+
+        var data = id.toInt();
+        await addOnservices.data(data).then((value) => fun(value));
+        totalcount = totalcount - data3New[0]['addonCount'];
+        gsttotal = gsttotal - data3New[0]['addongst'];
+        totalprice = totalprice - data3New[0]['addonPrice'];
+        tempIds.add(data);
+      }
+      int l = tempIds.length;
+      cart.setInt('TotalPrice', totalprice);
+      cart.setInt('TotalGst', gsttotal);
+      cart.setInt('TotalCount', totalcount);
+      for (int z = 0; z <= l - 1; z++) {
+        int tempid = tempIds[z];
+        addonlist.remove(tempid.toString());
+
+        addOnservices.deleteUser(tempid);
+      }
+      cart.setStringList('addontocart', addonlist);
+    } else {
+      print("addons list is empty from constants");
+    }
+  } else {
+    print("addons list is null from constants");
+  }
+  print("this is addon is from constants $addOnIds");
+}
+
+fun(value) {
+  data3New = value;
+}

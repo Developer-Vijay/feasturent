@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:feasturent_costomer_app/components/AddressBook/newAddressPage.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:flutter/material.dart';

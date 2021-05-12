@@ -5,6 +5,7 @@ import 'package:feasturent_costomer_app/screens/home/components/category_detail.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 import 'ViewAllPopular.dart';
 
 class PopularList extends StatefulWidget {
@@ -25,9 +26,14 @@ class _PopularListState extends State<PopularList> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getpopular menues");
 
     var result = await http.get(APP_ROUTES + 'getPopularMenues');
-    data = json.decode(result.body)['data'];
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    return data;
+    if (result.statusCode == 200) {
+      data = json.decode(result.body)['data'];
+      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      return data;
+    } else {
+      data = [];
+      return data;
+    }
   }
 
   var sliderOffers;
@@ -97,8 +103,10 @@ class _PopularListState extends State<PopularList> {
               margin: EdgeInsets.only(left: size.width * 0.04),
               child: Text(
                 "Popular on Feasturent",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: kTextColor,
+                    fontSize: size.height * 0.025),
               ),
             ),
             Spacer(),
@@ -223,12 +231,12 @@ class _PopularListState extends State<PopularList> {
                               width: size.width * 0.2,
                               child: Center(
                                 child: Text(
-                                  snap.data[index]['title'],
+                                  capitalize(snap.data[index]['title']),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: size.height * 0.014),
+                                      fontSize: size.height * 0.017),
                                 ),
                               ),
                             )
@@ -240,8 +248,31 @@ class _PopularListState extends State<PopularList> {
                     },
                   );
                 } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Container(
+                    height: size.height * 0.14,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8.0,
+                            left: 10,
+                          ),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.white),
+                              margin: EdgeInsets.only(left: size.width * 0.011),
+                              height: size.height * 0.06,
+                              width: size.width * 0.2,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   );
                 }
               },
@@ -295,8 +326,17 @@ class _PopularListState extends State<PopularList> {
                                   ),
                           );
                         } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: Container(
+                              margin: EdgeInsets.all(16),
+                              height: size.height * 0.18,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
                           );
                         }
                       },
@@ -353,8 +393,17 @@ class _PopularListState extends State<PopularList> {
                             },
                           );
                         } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: Container(
+                              margin: EdgeInsets.all(16),
+                              height: size.height * 0.18,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
                           );
                         }
                       },

@@ -1,12 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/OfferPageScreen/insideofferpage.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
 import 'package:feasturent_costomer_app/screens/home/components/view_all_restaurant.dart';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../shimmer_effect.dart';
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
+  }
+}
 
 class AllResturent extends StatefulWidget {
   const AllResturent({
@@ -59,8 +66,10 @@ class _AllResturentState extends State<AllResturent> {
                 margin: EdgeInsets.only(left: size.width * 0.05),
                 child: Text(
                   "All Restaurant",
-                  style:
-                      TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: kTextColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: size.height * 0.025),
                 )),
             Spacer(),
             Container(
@@ -176,6 +185,18 @@ class _AllResturentState extends State<AllResturent> {
                   //         "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                   //   }
                   // }
+
+                  int k = snapshot.data[index]['cuisines'].length;
+                  print(k);
+                  var categoryData = '';
+                  if (k != 0) {
+                    for (int j = 1; j <= k - 1; j++) {
+                      categoryData =
+                          '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
+                    }
+                  } else {
+                    categoryData = null;
+                  }
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -259,7 +280,8 @@ class _AllResturentState extends State<AllResturent> {
                                         child: Row(
                                           children: [
                                             Text(
-                                              snapshot.data[index]['name'],
+                                              capitalize(
+                                                  snapshot.data[index]['name']),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
@@ -273,28 +295,22 @@ class _AllResturentState extends State<AllResturent> {
                                           ],
                                         ),
                                       ),
-                                      snapshot.data[index]['type'] == null
+                                      SizedBox(
+                                        height: size.height * 0.005,
+                                      ),
+                                      categoryData == null
                                           ? SizedBox()
-                                          : Column(
-                                              children: [
-                                                SizedBox(
-                                                  height: size.height * 0.013,
+                                          : Container(
+                                              width: size.width * 0.38,
+                                              child: Text(
+                                                "$categoryData",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      size.height * 0.0175,
+                                                  color: Colors.black,
                                                 ),
-                                                Container(
-                                                  width: size.width * 0.35,
-                                                  child: Text(
-                                                    snapshot.data[index]
-                                                        ['type'],
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.height * 0.015,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
                                       SizedBox(
                                         height: size.height * 0.015,
@@ -372,9 +388,7 @@ class _AllResturentState extends State<AllResturent> {
                 },
               );
             } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingListPage();
             }
           },
         )

@@ -1,6 +1,7 @@
-import 'package:feasturent_costomer_app/components/OfferPageScreen/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -43,6 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     cart.setInt('VendorId', 0);
     cart.setInt('TotalCount', 0);
     cart.setStringList('addedtocart', itemAdded);
+    cart.setStringList('addontocart', addOnAdded);
   }
 
   setSession() async {
@@ -67,9 +69,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final kTitleStyle = TextStyle(
+    final kTitleStyle = GoogleFonts.merriweather(
         color: Colors.black,
-        fontFamily: 'CM Sans Serif',
         fontSize: size.height * 0.038,
         height: size.height * 0.002,
         fontWeight: FontWeight.w500);
@@ -141,15 +142,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
-                            SizedBox(height: size.height * 0.03),
-                            Text(
-                              'Order',
-                              style: kTitleStyle,
+                            SizedBox(height: size.height * 0.08),
+                            Center(
+                              child: Text(
+                                'Enjoy yummuy food ',
+                                style: kTitleStyle,
+                              ),
                             ),
                             SizedBox(height: size.height * 0.02),
-                            Text(
-                              'Order all you want from your favourite stores.',
-                              style: kSubtitleStyle,
+                            Center(
+                              child: Text(
+                                'Order all you want from ',
+                                style: kSubtitleStyle,
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                'your favourite stores.',
+                                style: kSubtitleStyle,
+                              ),
                             ),
                           ],
                         ),
@@ -169,14 +180,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
-                            Text(
-                              'Delivery On Time',
-                              style: kTitleStyle,
+                            SizedBox(height: size.height * 0.08),
+                            Center(
+                              child: Text(
+                                'Delivery On Time',
+                                style: kTitleStyle,
+                              ),
                             ),
                             SizedBox(height: size.height * 0.02),
-                            Text(
-                              'Receive Your order in less than 1 hour or pick a specific delivery time',
-                              style: kSubtitleStyle,
+                            Center(
+                              child: Text(
+                                'Receive Your order in less than ',
+                                style: kSubtitleStyle,
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                '1 hour or pick a specific',
+                                style: kSubtitleStyle,
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                ' delivery time',
+                                style: kSubtitleStyle,
+                              ),
                             ),
                           ],
                         ),
@@ -196,18 +224,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
+                            SizedBox(height: size.height * 0.08),
                             Center(
                               child: Text(
-                                "Top #1 Fastest Delivery Food For You",
+                                "Top #1 Fastest Delivery ",
                                 style: kTitleStyle,
                               ),
                             ),
+                            // Container(
+                            //   child: Text(
+                            //     "Food For You",
+                            //     style: kTitleStyle,
+                            //   ),
+                            // ),
                             SizedBox(height: size.height * 0.02),
                             Center(
                               child: Text(
-                                'Order food and get delivery in the fastest time Anytime Anywhere',
+                                'Order food and get delivery in the',
                                 style: kSubtitleStyle,
                               ),
+                            ),
+                            Center(
+                              child: Text(
+                                'Ofastest time Anytime ',
+                                style: kSubtitleStyle,
+                              ),
+                            ),
+                            Center(
+                              child: Text("Anywhere", style: kSubtitleStyle),
                             )
                           ],
                         ),
