@@ -1,3 +1,4 @@
+import 'package:feasturent_costomer_app/screens/home/components/quick_filter_resturent.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/screens/home/components/category_item.dart';
 
@@ -16,24 +17,58 @@ class CategoryList extends StatelessWidget {
         children: <Widget>[
           CategoryItem(
             title: "Combo Meal",
-            // isActive: true,
-            press: () {},
+            press: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuickFilterResturent(
+                            quickyName: "Combo Meal",
+                          )));
+            },
           ),
           CategoryItem(
             title: "Chicken",
-            press: () {},
+            press: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuickFilterResturent(
+                            quickyName: "Chicken",
+                          )));
+            },
           ),
           CategoryItem(
             title: "Beverages",
-            press: () {},
+            press: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuickFilterResturent(
+                            quickyName: "Beverage",
+                          )));
+            },
           ),
           CategoryItem(
             title: "Snacks & Sides",
-            press: () {},
+            press: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuickFilterResturent(
+                            quickyName: "Snacks Sides",
+                          )));
+            },
           ),
           CategoryItem(
-            title: "Snacks & Sides",
-            press: () {},
+            title: "Deserts",
+            press: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuickFilterResturent(
+                            quickyName: "Desert",
+                          )));
+            },
           ),
         ],
       ),

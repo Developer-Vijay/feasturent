@@ -89,8 +89,6 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
       }
     }
-
-    // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -139,10 +137,14 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
       checkdata = cart.getStringList('addedtocart');
+      baritemCount = cart.getInt('TotalCount');
+      pricebar = cart.getInt('TotalPrice');
     });
     print(checkdata);
   }
 
+  int baritemCount = 0;
+  int pricebar = 0;
   final services = UserServices();
   int counter = 0;
   var menuData;
@@ -184,7 +186,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                 : Column(
                     children: [
                       Expanded(
-                        flex: 18,
+                        flex: 23,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 18),
                           child: ListView.builder(
@@ -334,15 +336,6 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                 await SharedPreferences
                                                                     .getInstance();
 
-                                                            int totalprice =
-                                                                cart.getInt(
-                                                                    'TotalPrice');
-                                                            int gsttotal =
-                                                                cart.getInt(
-                                                                    'TotalGst');
-                                                            int totalcount =
-                                                                cart.getInt(
-                                                                    'TotalCount');
                                                             int vendorId =
                                                                 cart.getInt(
                                                                     'VendorId');
@@ -454,9 +447,9 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                                 "${menuData['Menus'][index]['AddonMenus'][i]['title']} ${menuData['Menus'][index]['title']}";
 
                                                                             totalprice =
-                                                                                menuData['Menus'][index]['AddonMenus'][i]['amount'] + menuData['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                                menuData['Menus'][index]['AddonMenus'][i]['amount'] + menuData['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
                                                                             totalgst =
-                                                                                menuData['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                                menuData['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
                                                                           });
                                                                         }
                                                                       }
@@ -553,8 +546,8 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                             setState(() {
                                                                               title = "${menuData['Menus'][index]['AddonMenus'][i]['title']} ${menuData['Menus'][index]['title']}";
 
-                                                                              totalprice = menuData['Menus'][index]['AddonMenus'][i]['amount'] + menuData['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                              totalgst = menuData['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                              totalprice = menuData['Menus'][index]['AddonMenus'][i]['amount'] + menuData['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                              totalgst = menuData['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
                                                                             });
                                                                           }
                                                                         }
@@ -573,7 +566,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                             tpye,
                                                                             index,
                                                                             menuData['Menus'][index]['totalPrice'],
-                                                                            menuData['Menus'][index]['gstAmount'],
+                                                                            menuData['Menus'][index]['gstAmount'].toInt(),
                                                                             0,
                                                                             tempAddOns,
                                                                             menuData['Menus'][index]['title'],
@@ -631,7 +624,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                               Navigator.pop(context);
                                                                               Navigator.pop(context);
                                                                               if (menuData['Menus'][index]['AddonMenus'].isEmpty) {
-                                                                                await addButtonFunction(tpye, index, menuData['Menus'][index]['totalPrice'], menuData['Menus'][index]['gstAmount'], 0, null, menuData['Menus'][index]['title'], rating);
+                                                                                await addButtonFunction(tpye, index, menuData['Menus'][index]['totalPrice'], menuData['Menus'][index]['gstAmount'].toInt(), 0, null, menuData['Menus'][index]['title'], rating);
                                                                               } else {
                                                                                 tempAddOns = null;
                                                                                 final result = await showModalBottomSheet(
@@ -655,14 +648,14 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                                         setState(() {
                                                                                           title = "${menuData['Menus'][index]['AddonMenus'][i]['title']} ${menuData['Menus'][index]['title']}";
 
-                                                                                          totalprice = menuData['Menus'][index]['AddonMenus'][i]['amount'] + menuData['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                          totalgst = menuData['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                                          totalprice = menuData['Menus'][index]['AddonMenus'][i]['amount'] + menuData['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                          totalgst = menuData['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
                                                                                         });
                                                                                       }
                                                                                     }
                                                                                     await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
                                                                                   } else if (result == 0) {
-                                                                                    await addButtonFunction(tpye, index, menuData['Menus'][index]['totalPrice'], menuData['Menus'][index]['gstAmount'], 0, null, menuData['Menus'][index]['title'], rating);
+                                                                                    await addButtonFunction(tpye, index, menuData['Menus'][index]['totalPrice'], menuData['Menus'][index]['gstAmount'].toInt(), 0, null, menuData['Menus'][index]['title'], rating);
                                                                                   }
                                                                                 }
                                                                               }
@@ -676,10 +669,15 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                 msg:
                                                                     "Not taking orders now");
                                                           }
-
-                                                          // await addButtonFunction(tpye, index);
                                                         },
-                                                        color: Colors.white,
+                                                        color: checkdata.contains(
+                                                                menuData['Menus']
+                                                                            [
+                                                                            index]
+                                                                        ['id']
+                                                                    .toString())
+                                                            ? Colors.blue
+                                                            : Colors.white,
                                                         minWidth:
                                                             size.width * 0.16,
                                                         height:
@@ -704,7 +702,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                             .height *
                                                                         0.015,
                                                                     color: Colors
-                                                                        .blueGrey),
+                                                                        .white),
                                                               )
                                                             : Text(
                                                                 "Add",
@@ -814,37 +812,6 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                     SizedBox(
                                                         height: size.height *
                                                             0.005),
-                                                    // Container(
-                                                    //   child: Row(
-                                                    //     children: [
-                                                    //       Container(
-                                                    //         child: menuData['Menus']
-                                                    //                             [index]
-                                                    //                         ['Category']
-                                                    //                     ['iconImage'] ==
-                                                    //                 "null"
-                                                    //             ? Image.asset(
-                                                    //                 "assets/icons/discount_icon.jpg",
-                                                    //                 height: size.height *
-                                                    //                     0.02,
-                                                    //               )
-                                                    //             : SizedBox(),
-                                                    //       ),
-                                                    //       SizedBox(
-                                                    //         width: size.width * 0.006,
-                                                    //       ),
-                                                    //       Text(
-                                                    //         menuData['Menus'][index]
-                                                    //             ['Category']['name'],
-                                                    //         style: TextStyle(
-                                                    //             fontSize:
-                                                    //                 size.height * 0.014,
-                                                    //             fontWeight:
-                                                    //                 FontWeight.bold),
-                                                    //       ),
-                                                    //     ],
-                                                    //   ),
-                                                    // ),
                                                     SizedBox(
                                                       height:
                                                           size.height * 0.002,
@@ -970,233 +937,78 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                               }
                             },
                           ),
-
-                          // ListView.builder(
-                          //   padding: EdgeInsets.symmetric(horizontal: 10),
-                          //   shrinkWrap: true,
-                          //   physics: NeverScrollableScrollPhysics(),
-                          //   itemCount: tandorilist.length,
-                          //   itemBuilder: (context, index) {
-                          //     return InkWell(
-                          //       onTap: () {
-                          //         var menuD;
-                          //         setState(() {
-                          //           menuD = menuData[index];
-                          //         });
-                          //         Navigator.push(
-                          //             context,
-                          //             MaterialPageRoute(
-                          //                 builder: (context) => FoodSlider(
-                          //                       menuData: menuD,
-                          //                     )));
-                          //       },
-                          //       child: Padding(
-                          //         padding: const EdgeInsets.only(bottom: 14),
-                          //         child: Container(
-                          //             decoration: BoxDecoration(
-                          //                 borderRadius: BorderRadius.circular(10),
-                          //                 color: Colors.white,
-                          //                 boxShadow: [
-                          //                   BoxShadow(
-                          //                       blurRadius: 2,
-                          //                       color: Colors.blue[50],
-                          //                       offset: Offset(1, 3),
-                          //                       spreadRadius: 2)
-                          //                 ]),
-                          //             margin: EdgeInsets.only(
-                          //               left: size.width * 0.02,
-                          //               right: size.width * 0.02,
-                          //             ),
-                          //             height: size.height * 0.136,
-                          //             child: Row(children: [
-                          //               Expanded(
-                          //                   flex: 0,
-                          //                   child: Container(
-                          //                     alignment: Alignment.topCenter,
-                          //                     height: size.height * 0.22,
-                          //                     child: Stack(
-                          //                       children: [
-                          //                         Container(
-                          //                           margin: EdgeInsets.only(
-                          //                               left: size.width * 0.01,
-                          //                               right: size.width * 0.01,
-                          //                               top: size.height * 0.005),
-                          //                           child: ClipRRect(
-                          //                             borderRadius: BorderRadius.circular(10),
-                          //                             child: CachedNetworkImage(
-                          //                               imageUrl: tandorilist[index].foodImage,
-                          //                               height: size.height * 0.1,
-                          //                               width: size.width * 0.26,
-                          //                               fit: BoxFit.fill,
-                          //                             ),
-                          //                           ),
-                          //                         ),
-                          //                         // For Add Button
-                          //                         Align(
-                          //                             widthFactor: size.width * 0.00368,
-                          //                             alignment: Alignment.bottomCenter,
-                          //                             heightFactor: size.height * 0.003,
-                          //                             child: Container(
-                          //                               child: MaterialButton(
-                          //                                 onPressed: () {
-                          //                                   setState(() {
-                          //                                     _index1 = tandorilist[index].index0;
-                          //                                   });
-
-                          //                                   getItemandNavigateToCart(_index1);
-                          //                                 },
-                          //                                 color: Colors.white,
-                          //                                 minWidth: size.width * 0.16,
-                          //                                 height: size.height * 0.033,
-                          //                                 shape: RoundedRectangleBorder(
-                          //                                     borderRadius:
-                          //                                         BorderRadius.circular(14)),
-                          //                                 textColor: Colors.white,
-                          //                                 child: Row(
-                          //                                   children: [
-                          //                                     Icon(
-                          //                                       Icons.add,
-                          //                                       size: size.height * 0.02,
-                          //                                       color: Colors.blueGrey,
-                          //                                     ),
-                          //                                     Text(
-                          //                                       "ADD",
-                          //                                       style: TextStyle(
-                          //                                           fontSize: size.height * 0.013,
-                          //                                           color: Colors.blueGrey),
-                          //                                     ),
-                          //                                   ],
-                          //                                 ),
-                          //                               ),
-                          //                             ))
-                          //                       ],
-                          //                     ),
-                          //                   )),
-                          //               Expanded(
-                          //                   flex: 6,
-                          //                   child: Container(
-                          //                     height: size.height * 0.2,
-                          //                     child: Column(
-                          //                       crossAxisAlignment: CrossAxisAlignment.start,
-                          //                       mainAxisSize: MainAxisSize.max,
-                          //                       children: [
-                          //                         Container(
-                          //                           margin: EdgeInsets.only(
-                          //                             top: size.height * 0.008,
-                          //                           ),
-                          //                           child: Row(
-                          //                             children: [
-                          //                               Text(
-                          //                                 tandorilist[index].title,
-                          //                                 style: TextStyle(
-                          //                                     fontWeight: FontWeight.bold,
-                          //                                     color: Colors.black,
-                          //                                     fontSize: size.height * 0.018),
-                          //                               ),
-                          //                               Spacer(),
-                          //                               Padding(
-                          //                                 padding:
-                          //                                     const EdgeInsets.only(right: 12),
-                          //                                 child: CachedNetworkImage(
-                          //                                   imageUrl:
-                          //                                       tandorilist[index].vegsymbol,
-                          //                                   height: size.height * 0.02,
-                          //                                 ),
-                          //                               )
-                          //                             ],
-                          //                           ),
-                          //                         ),
-                          //                         SizedBox(height: 4),
-                          //                         Text(
-                          //                           tandorilist[index].subtitle,
-                          //                           style: TextStyle(
-                          //                               fontSize: size.height * 0.016,
-                          //                               fontWeight: FontWeight.bold),
-                          //                         ),
-                          //                         SizedBox(
-                          //                           height: size.height * 0.006,
-                          //                         ),
-                          //                         Container(
-                          //                           child: Row(
-                          //                             children: [
-                          //                               Container(
-                          //                                 child: tandorilist[index].starRating,
-                          //                               ),
-                          //                               Text(
-                          //                                 "3.0",
-                          //                                 style: TextStyle(
-                          //                                     fontSize: size.height * 0.016,
-                          //                                     color: Colors.red,
-                          //                                     fontWeight: FontWeight.bold),
-                          //                               ),
-                          //                               Spacer(),
-                          //                               Container(
-                          //                                 margin: EdgeInsets.only(
-                          //                                     right: size.width * 0.1),
-                          //                                 child: Text(
-                          //                                   "₹${tandorilist[index].foodPrice}",
-                          //                                   style: TextStyle(
-                          //                                       fontSize: size.height * 0.016,
-                          //                                       color: Colors.black,
-                          //                                       fontWeight: FontWeight.bold),
-                          //                                 ),
-                          //                               ),
-                          //                             ],
-                          //                           ),
-                          //                         ),
-                          //                         SizedBox(
-                          //                           height: 5,
-                          //                         ),
-                          //                       ],
-                          //                     ),
-                          //                   ))
-                          //             ])),
-                          //       ),
-                          //     );
-                          //   },
-                          // ),
                         ),
                       ),
-                      Expanded(
-                          flex: 2,
-                          child: Container(
-                            height: size.height * 1,
-                            color: Colors.white,
-                            child: Container(
-                              height: size.height * 0.01,
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              width: size.width * 1,
-                              color: Colors.lightBlueAccent[200],
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: size.width * 0.65,
-                                    child: Text(
-                                      snackBarData,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                      baritemCount == 0
+                          ? SizedBox()
+                          : Expanded(
+                              flex: 3,
+                              child: Container(
+                                height: size.height * 1,
+                                color: Colors.white,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25)),
+                                    border:
+                                        Border.all(color: Colors.blueAccent),
+                                    // color: Colors.grey[200],
                                   ),
-                                  Spacer(),
-                                  FlatButton(
-                                    textColor: Colors.redAccent,
-                                    child: Text("View Cart"),
-                                    onPressed: () async {
-                                      final result = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CartScreen()));
-                                      if (result) {
-                                        setState(() {});
-                                        getList();
-                                      }
-                                    },
+                                  height: size.height * 0.01,
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  width: size.width * 1,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: size.width * 0.4,
+                                        child: Text(
+                                          "$baritemCount Items | ₹ $pricebar",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      MaterialButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25)),
+                                        color: Colors.blue,
+                                        // minWidth: size.width * 0.4,
+                                        // height: size.height * 0.03,
+                                        textColor: Colors.white,
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.shopping_cart_outlined,
+                                              color: Colors.blue[50],
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "View Cart",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        onPressed: () async {
+                                          final result = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CartScreen()));
+                                          if (result) {
+                                            setState(() {});
+                                            getList();
+                                          }
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ))
+                                ),
+                              ))
                     ],
                   ),
       ),
@@ -1246,9 +1058,6 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
             snackBarData =
                 "${menuData['Menus'][index]['title']} is added to cart";
           });
-
-          // Scaffold.of(context)
-          //     .showSnackBar(snackBar);
         } else {
           if (data1[0]['itemName'] != menuData['Menus'][index]['title']) {
             setState(() {
@@ -1337,6 +1146,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
           addons,
           rating.toString());
     });
+    getList();
   }
 
   fun(value) {

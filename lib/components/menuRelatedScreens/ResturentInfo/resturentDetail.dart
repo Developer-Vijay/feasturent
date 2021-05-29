@@ -1,5 +1,7 @@
+import 'package:feasturent_costomer_app/components/WishList/WishListDataBase/wishlist_service.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/ResturentInfo/review_resturent.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../../constants.dart';
 import 'detail_Resturent.dart';
 import 'menu_Resturent.dart';
@@ -16,7 +18,44 @@ class _ResturentDetailState extends State<ResturentDetail> {
   @override
   void initState() {
     super.initState();
+    datamenu = infodata;
+
+    checkStatus();
+    getcategory(infodata);
   }
+
+  checkStatus() async {
+    await wishListServices.data(datamenu['id']).then((value) => func(value));
+
+    if (dataCheck1.isEmpty) {
+      setState(() {
+        isSelected = false;
+      });
+    } else {
+      print(dataCheck1[0]);
+      if (dataCheck1[0]['name'] != datamenu['name']) {
+        setState(() {
+          isSelected = false;
+        });
+      } else {
+        setState(() {
+          isSelected = true;
+        });
+      }
+    }
+  }
+
+  func(value) {
+    if (mounted) {
+      setState(() {
+        dataCheck1 = value;
+      });
+    }
+  }
+
+  bool isSelected = false;
+  var datamenu;
+  final wishListServices = WishListService();
 
   int _page = 0;
   List tabPages = [
@@ -61,34 +100,80 @@ class _ResturentDetailState extends State<ResturentDetail> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-              backgroundColor: Colors.white,
-              title: appbarText(),
-              shadowColor: Colors.white,
-              leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
+            backgroundColor: Colors.white,
+            title: appbarText(),
+            shadowColor: Colors.white,
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                iconSize: size.height * 0.03,
+                color: Colors.black,
+                onPressed: () {
+                  Navigator.pop(context, true);
+                }),
+            actions: [
+              IconButton(
+                  icon: isSelected == false
+                      ? Icon(Icons.bookmark_border_outlined)
+                      : Icon(Icons.bookmark_outlined),
                   iconSize: size.height * 0.03,
-                  color: Colors.black,
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  })),
+                  color: Colors.blue,
+                  onPressed: () async {
+                    if (isSelected == false) {
+                      await wishListServices
+                          .data(datamenu['id'])
+                          .then((value) => func(value));
+
+                      if (dataCheck1.isEmpty) {
+                        setState(() {
+                          isSelected = true;
+                        });
+                        getItemandNavigateToFavourites(infodata);
+                      } else {
+                        print(dataCheck1[0]);
+                        if (dataCheck1[0]['name'] != datamenu['name']) {
+                          setState(() {
+                            isSelected = true;
+                            getItemandNavigateToFavourites(infodata);
+                            Fluttertoast.showToast(
+                                msg: "Item Added to favourites");
+                          });
+                        }
+                      }
+                    } else {
+                      setState(() {
+                        isSelected = true;
+                        removeFromWishlist(infodata);
+                        Fluttertoast.showToast(
+                            msg: "Item remove from favourites");
+                      });
+                    }
+                  }),
+            ],
+          ),
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: ImageIcon(
-                    AssetImage('assets/icons/default restaurent.png')),
+                  AssetImage('assets/icons/default restaurent.png'),
+                ),
                 label: 'Details',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.menu_rounded),
+                icon: Icon(
+                  Icons.menu_rounded,
+                ),
                 label: 'Menu',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.rate_review_outlined),
+                icon: Icon(
+                  Icons.rate_review_outlined,
+                ),
                 label: 'Review',
               ),
             ],
             currentIndex: _page,
-            selectedItemColor: Colors.amber[800],
+            selectedItemColor: Colors.blue,
+            selectedIconTheme: IconThemeData(color: Colors.blue),
             onTap: (index) {
               setState(() {
                 _page = index;
@@ -99,5 +184,49 @@ class _ResturentDetailState extends State<ResturentDetail> {
         ),
       ),
     );
+  }
+
+  String avg;
+
+  var category;
+  getcategory(data) {
+    if (data['cuisines'] != null) {
+      int k = data['cuisines'].length;
+      print(k);
+      var categoryData = '';
+      if (k != 0) {
+        for (int j = 1; j <= k - 1; j++) {
+          categoryData =
+              '$categoryData ${data['cuisines'][j]['Category']['name']},';
+        }
+        category = categoryData;
+      } else {
+        categoryData = null;
+      }
+    } else {
+      category = null;
+    }
+
+    if (data['avgCost'] != null) {
+      avg = "${data['avgCost']} Cost for ${data['forPeople']}";
+    } else {
+      avg = null;
+    }
+  }
+
+  removeFromWishlist(data) async {
+    wishListServices.deleteUser(datamenu['id']);
+    checkStatus();
+  }
+
+  getItemandNavigateToFavourites(data) async {
+    String rating;
+
+    setState(() {
+      wishListServices.saveUser(0, 1, avg, data['user']['profile'],
+          data['name'], datamenu['id'], rating, null, category);
+    });
+    checkStatus();
+    print("data added");
   }
 }

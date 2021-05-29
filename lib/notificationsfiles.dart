@@ -32,6 +32,7 @@ class Notifications {
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
+    // ignore: deprecated_member_use
     await flutterLocalNotificationsPlugin.schedule(0, title, body,
         scheduledNotificationDateTime, platformChannelSpecifics);
   }

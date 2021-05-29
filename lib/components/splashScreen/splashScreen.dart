@@ -112,17 +112,5 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
         ),
       ),
     );
-
-    // new SplashScreen(
-    //   // seconds: 20,
-    //   // navigateAfterSeconds:
-    //   //     _isOnboadingSeen ? HomeScreen() : OnboardingScreen(),
-    //   image: new Image.asset('assets/images/feasturent_app_logo.png'),
-    //   backgroundColor: Colors.white,
-    //   styleTextUnderTheLoader: new TextStyle(),
-    //   photoSize: size.height * 0.14,
-    //   onClick: () => print("Feasturent"),
-    //   loaderColor: Color(0xffFF1577),
-    // );
   }
 }

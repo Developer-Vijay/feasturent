@@ -80,9 +80,6 @@ class _CartScreenState extends State<CartScreen> {
                 for (int i = 0; i <= k - 1; i++) {
                   int data = int.parse(checkitem[i]);
                   print("menue id : $data");
-                  // int menuID;
-
-                  // menuID = data;
 
                   for (int j = 0; j <= resDEcodeData.length - 1; j++) {
                     print("getmenu id : ${resDEcodeData[j]['menuId']}");
@@ -159,38 +156,8 @@ class _CartScreenState extends State<CartScreen> {
         statusno = 0;
       });
     }
-    // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
     return resturantStatus;
   }
-
-  // checkMenuAvailability(resData) async {
-  //   print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-  //   print("##########################################################");
-  //   print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-  //   print(resData);
-  //   int k = checkitem.length;
-  //   for (int i = 0; i <= k - 1; i++) {
-  //     int data = int.parse(checkitem[i]);
-  //     // await services.data(data).then((value) => fun(value));
-  //     int menuID;
-  //     setState(() {
-  //       menuID = data;
-  //     });
-  //     for (int j = 0; j <= resData.length - 1; j++) {
-  //       if (resData[j]['id'] == menuID) {
-  //         int time = resData[j]['deliveryTime'];
-  //         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ $time");
-  //         if (time > deliverytime) {
-  //           setState(() {
-  //             deliverytime = time;
-  //           });
-  //         }
-  //         print(
-  //             "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   availabe  &&&&&&&&&&&&&&");
-  //       }
-  //     }
-  //   }
-  // }
 
   fun(value) {
     setState(() {
@@ -360,7 +327,7 @@ class _CartScreenState extends State<CartScreen> {
                                                     ) {
                                                       print("hiting listview");
                                                       print(
-                                                          "this is AddList menu name = ${users[index].itemName} ${users[index].addons}");
+                                                          "this is AddList menu name = ${users[index].itemName} ${users[index].addons} and menuid = ${users[index].menuItemId},variant id =${users[index].variantId} id wher store ${users[index].id}");
                                                       return Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -394,6 +361,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                       .endToStart,
                                                               // ignore: missing_return
                                                               confirmDismiss:
+                                                                  // ignore: missing_return
                                                                   (direction) async {
                                                                 if (direction ==
                                                                     DismissDirection
@@ -529,7 +497,12 @@ class _CartScreenState extends State<CartScreen> {
                                                                                                 height: size.height * 0.1,
                                                                                                 width: size.width * 0.26,
                                                                                                 fit: BoxFit.cover,
-                                                                                                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                                                                placeholder: (context, url) => Image.asset(
+                                                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                                                  height: size.height * 0.1,
+                                                                                                  width: size.width * 0.26,
+                                                                                                  fit: BoxFit.cover,
+                                                                                                ),
                                                                                                 errorWidget: (context, url, error) => Image.asset(
                                                                                                   "assets/images/feasturenttemp.jpeg",
                                                                                                   fit: BoxFit.cover,
@@ -674,7 +647,6 @@ class _CartScreenState extends State<CartScreen> {
                                                                               int totalprice = cart.getInt('TotalPrice');
                                                                               int gsttotal = cart.getInt('TotalGst');
                                                                               int totalcount = cart.getInt('TotalCount');
-                                                                              int vendorId = cart.getInt('VendorId');
 
                                                                               if (users[index].itemCount > 1) {
                                                                                 callingLoader();
@@ -804,8 +776,6 @@ class _CartScreenState extends State<CartScreen> {
                                                                                 cart.getInt('TotalGst');
                                                                             int totalcount =
                                                                                 cart.getInt('TotalCount');
-                                                                            int vendorId =
-                                                                                cart.getInt('VendorId');
 
                                                                             setState(() {
                                                                               totalcount++;

@@ -1,10 +1,7 @@
 import 'dart:convert';
-
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/appDrawer.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/shimmer_effect.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +12,7 @@ import 'dart:async';
 
 import 'package:shimmer/shimmer.dart';
 
+// ignore: must_be_immutable
 class WalletDesign extends StatefulWidget {
   var walletdata;
 
@@ -42,6 +40,7 @@ class _WalletDesignState extends State<WalletDesign> {
     });
   }
 
+  // ignore: missing_return
   Future<List<dynamic>> getWalletDetaile() async {
     final prefs = await SharedPreferences.getInstance();
     var userid = prefs.getInt('userId');
@@ -84,15 +83,14 @@ class _WalletDesignState extends State<WalletDesign> {
 
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
+    } else {
+      print("error %%%%%%%%%%%%%%%%%% ");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    var mediaheight40 = size.height * 0.04;
-    var mediawidth25 = size.width * 0.06;
 
     var mediaheight25 = size.height * 0.034;
 

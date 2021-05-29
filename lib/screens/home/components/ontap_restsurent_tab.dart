@@ -1,33 +1,38 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
-import 'package:feasturent_costomer_app/screens/home/SearchFiles/test_search.dart';
 import 'package:flutter/material.dart';
-
+import 'ontap_offer.dart';
 import '../../../constants.dart';
 
-class SearchResturent extends StatefulWidget {
+class OnTapResturentTab extends StatefulWidget {
   @override
-  _SearchResturentState createState() => _SearchResturentState();
+  _OnTapResturentTabState createState() => _OnTapResturentTabState();
 }
 
-class _SearchResturentState extends State<SearchResturent> {
+class _OnTapResturentTabState extends State<OnTapResturentTab> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-        child: resultData != null
-            ? resultData['restaurant'].isNotEmpty
+        child: offerTapData != null
+            ? offerTapData['restaurant'].isNotEmpty
                 ? new ListView.builder(
-                    itemCount: resultData['restaurant'].length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: offerTapData['restaurant'].length,
                     itemBuilder: (context, i) {
-                      int k = resultData['restaurant'][i]['cuisines'].length;
+                      print(offerTapData['restaurant'][i]['VendorInfo']
+                          ['cuisines']);
+                      int k = offerTapData['restaurant'][i]['VendorInfo']
+                              ['cuisines']
+                          .length;
                       print(k);
                       var categoryData = '';
                       if (k != 0) {
                         for (int j = 1; j <= k - 1; j++) {
                           categoryData =
-                              '$categoryData${resultData['restaurant'][i]['cuisines'][j]['Category']['name']},';
+                              '$categoryData${offerTapData['restaurant'][i]['VendorInfo']['cuisines'][j]['Category']['name']},';
                         }
                       } else {
                         categoryData = null;
@@ -38,8 +43,8 @@ class _SearchResturentState extends State<SearchResturent> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OfferListPage(
-                                        restID: resultData['restaurant'][i]
-                                            ['id'],
+                                        restID: offerTapData['restaurant'][i]
+                                            ['VendorInfo']['id'],
                                       )));
                         },
                         child: Padding(
@@ -73,14 +78,17 @@ class _SearchResturentState extends State<SearchResturent> {
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              child: resultData['restaurant'][i]
+                                              child: offerTapData['restaurant']
+                                                              [i]['VendorInfo']
                                                           ['user']['profile'] !=
                                                       null
                                                   ? CachedNetworkImage(
                                                       imageUrl: S3_BASE_PATH +
-                                                          resultData['restaurant']
-                                                                  [i]['user']
-                                                              ['profile'],
+                                                          offerTapData['restaurant']
+                                                                      [i]
+                                                                  ['VendorInfo']
+                                                              [
+                                                              'user']['profile'],
                                                       height:
                                                           size.height * 0.18,
                                                       width: size.width * 0.3,
@@ -123,9 +131,9 @@ class _SearchResturentState extends State<SearchResturent> {
                                                 Container(
                                                   width: size.width * 0.3,
                                                   child: Text(
-                                                    capitalize(
-                                                        resultData['restaurant']
-                                                            [i]['name']),
+                                                    capitalize(offerTapData[
+                                                            'restaurant'][i]
+                                                        ['VendorInfo']['name']),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: TextStyle(
@@ -143,38 +151,39 @@ class _SearchResturentState extends State<SearchResturent> {
                                                   padding:
                                                       const EdgeInsets.only(
                                                           right: 12),
-                                                  child:
-                                                      resultData['restaurant']
+                                                  child: offerTapData['restaurant']
                                                                       [i]
-                                                                  ['avgCost'] ==
-                                                              null
-                                                          ? SizedBox()
-                                                          : Column(
-                                                              children: [
-                                                                SizedBox(
-                                                                  height:
-                                                                      size.height *
-                                                                          0.013,
-                                                                ),
-                                                                Container(
-                                                                  child: Text(
-                                                                    capitalize(
-                                                                        "₹ ${resultData['restaurant'][i]['avgCost']} Cost for ${resultData['restaurant'][i]['forPeople']} "),
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            size.height *
-                                                                                0.015,
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
-                                                                ),
-                                                              ],
+                                                                  ['VendorInfo']
+                                                              ['avgCost'] ==
+                                                          null
+                                                      ? SizedBox()
+                                                      : Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              height:
+                                                                  size.height *
+                                                                      0.013,
                                                             ),
+                                                            Container(
+                                                              child: Text(
+                                                                capitalize(
+                                                                    "₹ ${offerTapData['restaurant'][i]['VendorInfo']['avgCost']} Cost for ${offerTapData['restaurant'][i]['VendorInfo']['forPeople']} "),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        size.height *
+                                                                            0.015,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                 )
                                               ],
                                             ),

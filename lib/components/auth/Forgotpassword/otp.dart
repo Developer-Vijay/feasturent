@@ -35,8 +35,6 @@ class Otprecieve extends StatelessWidget {
                       height: size.height * 0.07,
                     ),
                     Container(
-                      // width: size.width * 0.3,
-                      // height: size.height * 0.4,
                       child: Image.asset(
                         "assets/images/password.png",
                         height: size.height * 0.2,
@@ -78,7 +76,6 @@ class Otprecieve extends StatelessWidget {
                 left: size.width * 0.05, right: size.width * 0.05),
             child: TextField(
               obscureText: false,
-              //readOnly: _isOtpSend,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
@@ -93,10 +90,6 @@ class Otprecieve extends StatelessWidget {
                 labelText: 'OTP',
                 prefixIcon: Icon(Icons.lock_sharp),
                 counterText: "",
-                // errorText: _isPhoneValidate == true
-                //     ? null
-                //     : 'Please enter valid phone number'),
-                //controller: _phoneNumberController,
               ),
             ),
           ),

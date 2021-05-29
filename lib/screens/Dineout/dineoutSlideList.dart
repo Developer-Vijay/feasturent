@@ -37,7 +37,7 @@ class _DineoutListState extends State<DineoutList> {
             press: () {},
           ),
           CategoryItem(
-            title: "Snacks & Sides",
+            title: "Deserts",
             press: () {},
           ),
         ],

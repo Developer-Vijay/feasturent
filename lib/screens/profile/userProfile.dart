@@ -35,10 +35,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // bool finalUser = true;
-  // int temp;
-  // var email;
-  // var photo;
   var name;
   @override
   void initState() {
@@ -80,7 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           )),
               ),
-              //CachedNetworkImageProvider('$photo')),
             ),
             SizedBox(height: kSpacingUnit.w * 2),
             Container(
@@ -118,15 +113,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           index: 2,
         ),
         ProfileListItem(
-          icon: LineAwesomeIcons.question_circle,
+          icon: LineAwesomeIcons.wallet,
           text: 'Wallet',
           index: 3,
         ),
-        ProfileListItem(
-          icon: LineAwesomeIcons.cog,
-          text: 'Settings',
-          index: 4,
-        ),
+        // ProfileListItem(
+        //   icon: LineAwesomeIcons.cog,
+        //   text: 'Settings',
+        //   index: 4,
+        // ),
         ProfileListItem(
           icon: LineAwesomeIcons.user_plus,
           text: 'Invite a Friend',
@@ -187,12 +182,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         SizedBox(
           height: 20,
         ),
-        ProfileListItem(
-          icon: LineAwesomeIcons.cog,
-          text: 'Settings',
-          hasNavigation: true,
-          index: 4,
-        ),
+        // ProfileListItem(
+        //   icon: LineAwesomeIcons.cog,
+        //   text: 'Settings',
+        //   hasNavigation: true,
+        //   index: 4,
+        // ),
       ],
     );
   }

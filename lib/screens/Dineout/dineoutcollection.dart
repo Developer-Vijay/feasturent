@@ -6,6 +6,7 @@ import 'package:feasturent_costomer_app/screens/Dineout/view_all_best.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Collections extends StatefulWidget {
   @override
@@ -13,21 +14,38 @@ class Collections extends StatefulWidget {
 }
 
 class _CollectionsState extends State<Collections> {
-  final _textstyle =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14);
-  // List collectionImage = [
-  //   "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
-  //   "https://media.gettyimages.com/photos/enjoying-lunch-with-friends-picture-id1171787426?k=6&m=1171787426&s=612x612&w=0&h=cvdOLV4T-QGC60hZT4p8u7FHPHsUKA12FnswVCL2WB4=",
-  //   "https://media.gettyimages.com/photos/heres-to-tonight-picture-id868935172?k=6&m=868935172&s=612x612&w=0&h=MjBYXm7f229lyNXsWqcSnmlouGWrfsNDYhQCiPJ0V6g=",
-  //   "https://media.gettyimages.com/photos/closeup-of-sommelier-serving-red-wine-at-fine-dining-restaurant-picture-id991732782?k=6&m=991732782&s=612x612&w=0&h=HZ1ke5DJK571Tj2-mEf0P7wV6eq589k6uKvwOIUSBrY=",
-  // ];
   @override
   void initState() {
     super.initState();
   }
 
-  var responseData = null;
+  List<String> idDataList = [];
+  List<String> datadine = [];
+  fetchDineoutShared() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    idDataList = cart.getStringList('idDineout');
+    datadine = cart.getStringList('recommendDineout');
+    // String data = datadine.toString();
+    // datadine = json.decode(data);
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+
+    print("dinneout is list $idDataList");
+  }
+
+  var responseData;
+  // ignore: missing_return
   Future<List> getdineouts() async {
+    fetchDineoutShared();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineout");
     var response = await http.get(APP_ROUTES + 'dineout' + '?key=ALL');
@@ -114,7 +132,34 @@ class _CollectionsState extends State<Collections> {
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                onTap: () {
+                                onTap: () async {
+                                  final SharedPreferences cart =
+                                      await SharedPreferences.getInstance();
+
+                                  var dataAddtoList = snapshot.data[index];
+                                  var newdata = json.encode(dataAddtoList);
+                                  if (idDataList.contains(
+                                      snapshot.data[index]['id'].toString())) {
+                                    print("removing adding dinout");
+                                    int k = idDataList.indexOf(
+                                        snapshot.data[index]['id'].toString());
+                                    datadine.removeAt(k);
+                                    idDataList.removeAt(k);
+
+                                    idDataList.add(
+                                        snapshot.data[index]['id'].toString());
+                                    datadine.add(newdata);
+                                    cart.setStringList(
+                                        'recommendDineout', datadine);
+                                    cart.setStringList('idDineout', idDataList);
+                                  } else {
+                                    idDataList.add(
+                                        snapshot.data[index]['id'].toString());
+                                    datadine.add(newdata);
+                                    cart.setStringList(
+                                        'recommendDineout', datadine);
+                                    cart.setStringList('idDineout', idDataList);
+                                  }
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -132,21 +177,18 @@ class _CollectionsState extends State<Collections> {
                                   width: size.width * 0.34,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
-                                      image: snapshot
-                                              .data[index]['dineoutImages']
-                                              .isNotEmpty
+                                      image: snapshot.data[index]['user']
+                                                  ['profile'] !=
+                                              null
                                           ? DecorationImage(
                                               image: CachedNetworkImageProvider(
                                                   S3_BASE_PATH +
                                                       snapshot.data[index]
-                                                              ['dineoutImages']
-                                                          [0]['image']),
-                                              // collectionImage[index],
+                                                          ['user']['profile']),
                                               fit: BoxFit.cover)
                                           : DecorationImage(
                                               image: CachedNetworkImageProvider(
                                                   "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/u/y/p20941-15700828565d959028e9f28.jpg?tr=tr:n-medium"),
-                                              // collectionImage[index],
                                               fit: BoxFit.cover)),
                                   child: Column(
                                     crossAxisAlignment:
@@ -191,11 +233,7 @@ class _CollectionsState extends State<Collections> {
                               );
                             },
                           );
-                  }
-                  // else if (snapshot.data == null) {
-                  //   return
-                  // }
-                  else {
+                  } else {
                     return Container(
                         child: ListView.builder(
                       scrollDirection: Axis.horizontal,

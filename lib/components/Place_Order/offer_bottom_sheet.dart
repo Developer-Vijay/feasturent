@@ -4,10 +4,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/components/Place_Order/place_order.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
 import '../../constants.dart';
 
 class OfferForPlaceOrder extends StatefulWidget {

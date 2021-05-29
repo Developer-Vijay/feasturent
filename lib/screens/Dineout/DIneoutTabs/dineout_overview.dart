@@ -51,7 +51,6 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _textstyle = TextStyle(color: Colors.black);
     Size size = MediaQuery.of(context).size;
     return Container(
         child: ListView(
@@ -115,14 +114,12 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                                               fontSize: 12,
                                               color: Colors.black),
                                         )
-                                      : Text("offers")),
-
+                                      : Text("₹ 500")),
                               Text(
                                 " for ",
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.black),
                               ),
-
                               Container(
                                   child: data['forPeople'] != null
                                       ? Text(
@@ -131,26 +128,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                                               fontSize: 12,
                                               color: Colors.black),
                                         )
-                                      : Text("Data")),
-                              // SizedBox(
-                              //   width: 20,
-                              // ),
-                              // Text(
-                              //   "Call -",
-                              //   style: TextStyle(color: Colors.black),
-                              // ),
-                              // SizedBox(
-                              //   width: 12,
-                              // ),
-                              // Container(
-                              //     child: data['Address']['address'] != null
-                              //         ? Text(
-                              //             data['user']['phone'],
-                              //             style: TextStyle(
-                              //                 color: Colors.black,
-                              //                 fontWeight: FontWeight.bold),
-                              //           )
-                              //         : Text("phone"))
+                                      : Text("2")),
                             ],
                           )
                         : SizedBox(),
@@ -178,37 +156,12 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                                       color: Colors.black54,
                                       fontSize: size.height * 0.016)),
                     ])
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       "Now Closed",
-                    //       style:
-                    //           TextStyle(color: Colors.red[700], fontSize: 12),
-                    //     ),
-                    //     SizedBox(
-                    //       width: 20,
-                    //     ),
-                    //     Text(
-                    //       "Opens at 07:00 PM",
-                    //       style: TextStyle(
-                    //           fontSize: 12,
-                    //           color: Colors.green,
-                    //           fontWeight: FontWeight.bold),
-                    //     ),
-                    //   ],
-                    // ),
-                    // SizedBox(
-                    //   height: 4,
-                    // ),
-                    // Text(
-                    //   "Pay 10% of Total Bill using PromoCash",
-                    //   style: TextStyle(fontSize: 12, color: Colors.black),
-                    // ),
                   ],
                 ),
               )),
         ),
         Container(
+            // margin: EdgeInsets.only(top: 5),
             child: ListView.builder(
           itemCount: dineoutlist.length,
           shrinkWrap: true,
@@ -220,6 +173,7 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                 right: 8,
               ),
               child: Container(
+                height: 75,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
@@ -230,29 +184,30 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                           color: Colors.blue[50])
                     ],
                     borderRadius: BorderRadius.circular(8)),
-                child: ListTile(
-                  onTap: () {
-                    if (dineoutlist[index].number == 3) {
-                      showModalBottomSheet(
-                          isScrollControlled: true,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (context) => Container(
-                              height: size.height * 0.6,
-                              child: DineoutDateSelection(
-                                cate: categoryData,
-                                data: data,
-                              )));
-                    } else {
-                      print(dineoutlist[index].number);
-                    }
-                  },
-                  leading: Container(child: dineoutlist[index].icon),
-                  enabled: true,
-                  title: Text(dineoutlist[index].title),
-                  subtitle: Text(dineoutlist[index].subtitle),
+                child: Center(
+                  child: ListTile(
+                    onTap: () {
+                      if (dineoutlist[index].number == 3) {
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (context) => Container(
+                                height: size.height * 0.6,
+                                child: DineoutDateSelection(
+                                  cate: categoryData,
+                                  data: data,
+                                )));
+                      } else {
+                        print(dineoutlist[index].number);
+                      }
+                    },
+                    leading: Container(child: dineoutlist[index].icon),
+                    enabled: true,
+                    title: Text(dineoutlist[index].title),
+                  ),
                 ),
               ),
             );
@@ -266,7 +221,6 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
             ? SizedBox()
             : Container(
                 margin: EdgeInsets.all(10),
-                // height: size.height * 0.48,
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -289,22 +243,28 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                         child: Text(
                           "Locate & Contact",
                           style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 18.5,
-                              fontWeight: FontWeight.w600),
+                            color: Colors.black,
+                            fontSize: 18.5,
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      height: size.height * 0.25,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black26, width: 0.5),
-                          // borderRadius:
-                          //     BorderRadius.all(Radius.circular(10)),
-                          image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage('assets/images/mapshow.jpeg'))),
+                    InkWell(
+                      onTap: () {
+                        openMap(double.parse(data['Address']['latitude']),
+                            double.parse(data['Address']['longitude']));
+                      },
+                      child: Container(
+                        height: size.height * 0.25,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.black26, width: 0.5),
+                            image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image:
+                                    AssetImage('assets/images/mapshow.jpeg'))),
+                      ),
                     ),
                     Padding(
                         padding: const EdgeInsets.only(right: 8.0, top: 8.0),
@@ -352,7 +312,6 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                                   left: size.width * 0.033),
                               child: Text(
                                 data['Address']['address'],
-                                // overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: size.height * 0.02,
                                     color: Colors.black54,
@@ -376,11 +335,19 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                           SizedBox(
                             width: 5,
                           ),
-                          Text(
-                            data['contact'],
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.black54),
-                          ),
+                          Container(
+                              width: size.height * 0.2,
+                              alignment: Alignment.topLeft,
+                              margin: EdgeInsets.only(
+                                  top: size.height * 0.01,
+                                  left: size.width * 0.033),
+                              child: Text(
+                                data['contact'],
+                                style: TextStyle(
+                                    fontSize: size.height * 0.02,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w600),
+                              )),
                           Spacer(),
                           InkWell(
                             onTap: () async {
@@ -412,53 +379,57 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
         data['Address']['latitude'].isNotEmpty &&
                 data['Address']['longitude'].isNotEmpty
             ? SizedBox()
-            : Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                child: Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 2,
-                              spreadRadius: 2,
-                              offset: Offset(1, 3),
-                              color: Colors.blue[50])
-                        ]),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: IconButton(
-                            onPressed: () async {
-                              var url = 'tel:${data['contact']}';
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              } else {
-                                throw 'Could not launch $url';
-                              }
-                            },
-                            icon: Icon(Icons.call),
+            : Container(
+                child: ListView.builder(
+                itemCount: 1,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                    ),
+                    child: Container(
+                      height: 75,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 2,
+                                spreadRadius: 2,
+                                offset: Offset(1, 3),
+                                color: Colors.blue[50])
+                          ],
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Center(
+                        child: ListTile(
+                          onTap: () async {
+                            var url = 'tel:${data['contact']}';
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          },
+                          leading: Icon(
+                            Icons.call,
                             color: Colors.green,
+                            size: 30,
                           ),
+                          enabled: true,
+                          title: data['Address']['address'] != null
+                              ? Text(
+                                  " +91 ${data['user']['phone']}",
+                                )
+                              : Text("phone Number Not Avaliable"),
+                          // subtitle: Text(dineoutlist[index].subtitle),
                         ),
-                        SizedBox(
-                          width: size.width * 0.008,
-                        ),
-                        Container(
-                            child: data['Address']['address'] != null
-                                ? Text(
-                                    " +91 ${data['user']['phone']}",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                : Text("phone Number Not Avaliable"))
-                      ],
-                    )),
-              ),
+                      ),
+                    ),
+                  );
+                },
+              )),
         data['Address']['latitude'].isNotEmpty &&
                 data['Address']['longitude'].isNotEmpty
             ? SizedBox()
@@ -484,18 +455,16 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                                   offset: Offset(1, 3),
                                   color: Colors.blue[50])
                             ]),
-                        child: ListTile(
-                          leading: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.location_on),
-                            color: Colors.redAccent,
-                          ),
-                          title: Text(
-                            data['Address']['address'],
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                        child: Center(
+                          child: ListTile(
+                            leading: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.location_on),
+                              color: Colors.redAccent,
+                            ),
+                            title: Text(
+                              data['Address']['address'],
+                            ),
                           ),
                         )),
                   )

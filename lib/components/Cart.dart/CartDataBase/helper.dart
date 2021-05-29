@@ -17,11 +17,6 @@ class DBHelper {
     db.insert(table, data);
   }
 
-  // static Future<List<Map>> result(id) async {
-  //   final db = await DBHelper.database();
-  //   return db.rawQuery('SELECT * FROM addToCartData WHERE menuItemId=$id');
-  // }
-
   static Future<List<Map<String, Object>>> getData(String table) async {
     final db = await DBHelper.database();
     return db.query(table);

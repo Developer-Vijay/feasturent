@@ -1,4 +1,3 @@
-import 'package:feasturent_costomer_app/screens/Dineout/dineoutSlideList.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutSweeper.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutcollection.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/featured_dineout.dart';
@@ -41,7 +40,7 @@ class _DineoutHomePageState extends State<DineoutHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Swipper(),
-                      DineoutList(),
+                      // DineoutList(),
                       RecommendedForU(),
                       PopularDininingLists(),
                       FeaturedDineout(),

@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_confirmed.dart';
-import 'package:feasturent_costomer_app/screens/home/components/notificationPage.dart';
-import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../../../notificationsfiles.dart';
 
+// ignore: must_be_immutable
 class DineoutBookingSummary extends StatefulWidget {
   var date;
   var time;
@@ -85,8 +84,6 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     _nameController.text = username;
     _phoneController.text = usermobilenumber;
   }
-
-  NotificationSheet _notificationSheet = NotificationSheet();
 
   @override
   Widget build(BuildContext context) {
@@ -264,6 +261,22 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     );
   }
 
+  callingLoader() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
+  }
+
   Future data() async {
     if (_nameController.text.isEmpty) {
       setState(() {
@@ -291,6 +304,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     }
 
     if (_isValidate == true) {
+      callingLoader();
       Map data = {
         "vendorId": "${widget.data['id']}",
         "member": "$guests",
@@ -317,9 +331,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
       if (response.statusCode == 200) {
         response.body;
         Fluttertoast.showToast(msg: responseData['message']);
-        Center(child: CircularProgressIndicator());
+        Navigator.pop(context);
         setState(() {
-          CircularProgressIndicator();
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -337,6 +350,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
             "Dear ${_nameController.text}", "Your Table is Booked For $guests");
       } else {
         Fluttertoast.showToast(msg: responseData['message']);
+        Navigator.pop(context);
       }
     } else {
       Fluttertoast.showToast(msg: "out of the validate");

@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/screens/home/components/category_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import '../slider.dart';
 import 'ViewAllPopular.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'ontap_offer.dart';
+
+int checkDataLenght;
 
 class PopularList extends StatefulWidget {
   @override
@@ -16,11 +20,10 @@ class PopularList extends StatefulWidget {
 class _PopularListState extends State<PopularList> {
   @override
   void initState() {
-    fetchHomeSliderLength();
     super.initState();
   }
 
-  var data = null;
+  var data;
   Future<List<dynamic>> fetchPopular() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getpopular menues");
@@ -38,40 +41,7 @@ class _PopularListState extends State<PopularList> {
 
   var sliderOffers;
 
-  int checkDataLenght = 0;
-
-  Future fetchHomeSliderLength() async {
-    var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
-    var data = json.decode(result.body)['data'];
-    if (data.isEmpty) {
-      if (mounted) {
-        setState(() {
-          checkDataLenght = 0;
-        });
-      }
-      print("data not here");
-    } else {
-      print("data her e");
-      if (data[0]['status'] == true) {
-        if (mounted) {
-          setState(() {
-            checkDataLenght = data.length;
-          });
-        }
-      } else {
-        if (mounted) {
-          setState(() {
-            checkDataLenght = 0;
-          });
-        }
-        print("data not here");
-      }
-    }
-
-    print("data length $checkDataLenght");
-  }
-
+  // ignore: missing_return
   Future<List<dynamic>> fetchHomeSlider() async {
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
@@ -86,8 +56,16 @@ class _PopularListState extends State<PopularList> {
     }
   }
 
+  int checher;
+
   @override
   Widget build(BuildContext context) {
+    if (checher != checkDataLenght) {
+      setState(() {
+        checher = checkDataLenght;
+      });
+      print("discount cherher change screen refresh");
+    }
     Size size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,6 +92,14 @@ class _PopularListState extends State<PopularList> {
                 alignment: Alignment.topRight,
                 child: FlatButton(
                   onPressed: () {
+                    // showModalBottomSheet(
+                    //     enableDrag: true,
+                    //     isScrollControlled: true,
+                    //     context: context,
+                    //     builder: (context) => Container(
+                    //         height: size.height * 0.8,
+                    //         child: AddRatingPage(data: data)));
+
                     if (data != null) {
                       Navigator.push(
                           context,
@@ -151,8 +137,8 @@ class _PopularListState extends State<PopularList> {
               builder: (context, snap) {
                 if (snap.hasData) {
                   int legnth;
-                  if (snap.data.length > 15) {
-                    legnth = 15;
+                  if (snap.data.length >= 50) {
+                    legnth = 50;
                   } else {
                     legnth = snap.data.length;
                   }
@@ -187,12 +173,72 @@ class _PopularListState extends State<PopularList> {
                                         setState(() {
                                           menuD = snap.data[index];
                                         });
+                                        List<ChangeJson> dataList = [];
+                                        List addonList = menuD['variant'];
+                                        addonList.addAll(menuD['addon']);
+                                        print("this is list");
+                                        List<AddonMenus> createListAddon = [];
+
+                                        if (addonList.isNotEmpty) {
+                                          int k = addonList.length;
+                                          for (int i = 0; i <= k - 1; i++) {
+                                            createListAddon.add(AddonMenus(
+                                                addonList[i]['id'],
+                                                menuD['menuId'],
+                                                addonList[i]['type'],
+                                                addonList[i]['title'],
+                                                addonList[i]['amount'],
+                                                addonList[i]['gst'],
+                                                addonList[i]['gstAmount']
+                                                    .toInt()));
+                                          }
+                                        }
+                                        print("this is without encode list");
+                                        print(createListAddon);
+
+                                        print("this is  encode list");
+                                        var dataencoded =
+                                            jsonEncode(createListAddon);
+                                        print(dataencoded);
+                                        print("this is  dencode list");
+                                        var datadecode =
+                                            jsonDecode(dataencoded);
+                                        print(datadecode);
+
+                                        dataList.add(ChangeJson(
+                                            menuD['menuId'],
+                                            menuD['vendorId'],
+                                            menuD['title'],
+                                            menuD['description'],
+                                            menuD['itemPrice'],
+                                            menuD['gst'],
+                                            menuD['gstAmount'],
+                                            menuD['totalPrice'],
+                                            menuD['deliveryTime'],
+                                            menuD['isNonVeg'],
+                                            menuD['isEgg'],
+                                            menuD['isCombo'],
+                                            menuD['menuImage1'],
+                                            menuD['menuImage2'],
+                                            menuD['menuImage3'],
+                                            datadecode, []));
+                                        print("this is data list open #####");
+                                        var dataNew = jsonEncode(dataList[0]);
+                                        var finaldata = jsonDecode(dataNew);
+                                        print(finaldata);
+                                        print("this is data list close #####");
+
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CategoryDetailPage(
-                                                      menuData: menuD,
+                                                    FoodSlider(
+                                                      menuData: finaldata,
+                                                      menuStatus: true,
+                                                      restaurentName: menuD[
+                                                          'restaurantName'],
+                                                      rating: 1.0,
+                                                      ratinglength: 1,
                                                     )));
                                       },
                                       child: ClipOval(
@@ -282,92 +328,104 @@ class _PopularListState extends State<PopularList> {
         ),
         checkDataLenght == 0
             ? SizedBox()
-            : checkDataLenght == 1
-                ? Container(
-                    margin: EdgeInsets.all(16),
-                    height: size.height * 0.18,
-                    child: FutureBuilder<List<dynamic>>(
-                      future: fetchHomeSlider(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            width: size.width * 1,
-                            height: size.height * 0.2,
-                            child: snapshot.data[0]['OffersAndCoupon']
-                                        ['image'] !=
-                                    null
-                                ? CachedNetworkImage(
-                                    width: size.width * 0.89722,
-                                    imageUrl: S3_BASE_PATH +
-                                        snapshot.data[0]['OffersAndCoupon']
-                                            ['image'],
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
+            : Container(
+                margin: EdgeInsets.all(16),
+                height: size.height * 0.18,
+                child: FutureBuilder<List<dynamic>>(
+                  future: fetchHomeSlider(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return snapshot.data.length >= 2
+                          ? Swiper(
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => OnTapOffer(
+                                                    data: snapshot.data[index],
+                                                  )));
+                                    },
+                                    child: Container(
                                       decoration: BoxDecoration(
+                                        color: Colors.blue,
                                         borderRadius: BorderRadius.circular(5),
-                                        image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.fill),
                                       ),
-                                    ),
-                                    fit: BoxFit.fill,
-                                    placeholder: (context, url) => Center(
-                                        child: CircularProgressIndicator()),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                  )
-                                : Image.asset(
-                                    "assets/images/feasturenttemp.jpeg",
-                                    fit: BoxFit.cover,
-                                  ),
-                          );
-                        } else {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.grey[100],
-                            child: Container(
-                              margin: EdgeInsets.all(16),
-                              height: size.height * 0.18,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
+                                      width: size.width * 1,
+                                      height: size.height * 0.2,
+                                      child: snapshot.data[index]
+                                                      ['OffersAndCoupon']
+                                                  ['image'] !=
+                                              null
+                                          ? CachedNetworkImage(
+                                              width: size.width * 0.89722,
+                                              imageUrl: S3_BASE_PATH +
+                                                  snapshot.data[index]
+                                                          ['OffersAndCoupon']
+                                                      ['image'],
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.fill),
+                                                ),
+                                              ),
+                                              fit: BoxFit.fill,
+                                              placeholder: (context, url) => Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            )
+                                          : Image.asset(
+                                              "assets/images/feasturenttemp.jpeg",
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ));
+                              },
+                              pagination: SwiperPagination(
+                                alignment: Alignment.bottomCenter,
+                                builder: DotSwiperPaginationBuilder(
+                                    color: Colors.grey[300],
+                                    size: 6,
+                                    activeSize: 12),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                    ))
-                : Container(
-                    margin: EdgeInsets.only(left: 16, top: 5, bottom: 16),
-                    height: size.height * 0.18,
-                    child: FutureBuilder<List<dynamic>>(
-                      future: fetchHomeSlider(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(right: 8),
+                              itemCount: snapshot.data.length,
+                              itemWidth: 300,
+                              layout: SwiperLayout.DEFAULT,
+                              autoplay: true,
+                              autoplayDelay: 2000,
+                            )
+                          : InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OnTapOffer(
+                                              data: snapshot.data[0],
+                                            )));
+                              },
+                              child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                width: size.width * 0.8,
+                                width: size.width * 1,
                                 height: size.height * 0.2,
-                                child: snapshot.data[index]['OffersAndCoupon']
+                                child: snapshot.data[0]['OffersAndCoupon']
                                             ['image'] !=
                                         null
                                     ? CachedNetworkImage(
                                         width: size.width * 0.89722,
                                         imageUrl: S3_BASE_PATH +
-                                            snapshot.data[index]
-                                                ['OffersAndCoupon']['image'],
+                                            snapshot.data[0]['OffersAndCoupon']
+                                                ['image'],
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 Container(
@@ -389,157 +447,24 @@ class _PopularListState extends State<PopularList> {
                                         "assets/images/feasturenttemp.jpeg",
                                         fit: BoxFit.cover,
                                       ),
-                              );
-                            },
-                          );
-                        } else {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.grey[100],
-                            child: Container(
-                              margin: EdgeInsets.all(16),
-                              height: size.height * 0.18,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                    )),
-        // Container(
-        //   margin: EdgeInsets.only(left: 20),
-        //   child: Text(
-        //     "Top Brands For You",
-        //     style: TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
-        //   ),
-        // ),
-        // SizedBox(
-        //   height: 20,
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.only(bottom: 25),
-        //   child: SingleChildScrollView(
-        //       child: Row(
-        //     children: [
-        //       Column(
-        //         children: [
-        //           Container(
-        //               decoration: BoxDecoration(
-        //                 shape: BoxShape.circle,
-        //                 boxShadow: [
-        //                   BoxShadow(
-        //                       blurRadius: 3,
-        //                       color: Colors.blueGrey,
-        //                       spreadRadius: 2)
-        //                 ],
-        //               ),
-        //               margin: EdgeInsets.only(left: 4),
-        //               height: size.height * 0.08,
-        //               width: size.width * 0.24,
-        //               child: CircleAvatar(
-        //                 backgroundColor: Colors.white,
-        //                 radius: 80,
-        //                 child: FlatButton(
-        //                   onPressed: () {},
-        //                   child: ClipOval(
-        //                     child: Image.asset("assets/images/M3.png",
-        //                         fit: BoxFit.cover,
-        //                         width: size.width * 0.14,
-        //                         height: size.height * 0.2),
-        //                   ),
-        //                 ),
-        //               )),
-        //           SizedBox(
-        //             height: 7,
-        //           ),
-        //           Text(
-        //             "McDonalds",
-        //             style: TextStyle(
-        //                 color: Colors.black,
-        //                 fontWeight: FontWeight.w700,
-        //                 fontSize: 10),
-        //           )
-        //         ],
-        //       ),
-        //       Column(children: [
-        //         Container(
-        //             decoration: BoxDecoration(
-        //               shape: BoxShape.circle,
-        //               boxShadow: [
-        //                 BoxShadow(
-        //                     blurRadius: 3,
-        //                     color: Colors.blueGrey,
-        //                     spreadRadius: 2)
-        //               ],
-        //             ),
-        //             margin: EdgeInsets.only(left: 4),
-        //             height: size.height * 0.08,
-        //             width: size.width * 0.24,
-        //             child: CircleAvatar(
-        //               backgroundColor: Colors.white,
-        //               radius: 0,
-        //               child: FlatButton(
-        //                 onPressed: () {},
-        //                 child: ClipOval(
-        //                   child: Image.asset("assets/images/king.png",
-        //                       fit: BoxFit.cover,
-        //                       width: size.width * 0.14,
-        //                       height: size.height * 0.2),
-        //                 ),
-        //               ),
-        //             )),
-        //         SizedBox(
-        //           height: 7,
-        //         ),
-        //         Text(
-        //           "Burger King",
-        //           style: TextStyle(
-        //               color: Colors.black,
-        //               fontWeight: FontWeight.w700,
-        //               fontSize: 10),
-        //         ),
-        //       ]),
-        //       Column(children: [
-        //         Container(
-        //             decoration: BoxDecoration(
-        //               shape: BoxShape.circle,
-        //               boxShadow: [
-        //                 BoxShadow(
-        //                     blurRadius: 3,
-        //                     color: Colors.blueGrey,
-        //                     spreadRadius: 2)
-        //               ],
-        //             ),
-        //             margin: EdgeInsets.only(left: 4),
-        //             height: size.height * 0.08,
-        //             width: size.width * 0.24,
-        //             child: CircleAvatar(
-        //               backgroundColor: Colors.white,
-        //               radius: 80,
-        //               child: FlatButton(
-        //                 onPressed: () {},
-        //                 child: ClipOval(
-        //                   child: Image.asset("assets/images/K.png",
-        //                       fit: BoxFit.cover,
-        //                       width: size.width * 0.14,
-        //                       height: size.height * 0.2),
-        //                 ),
-        //               ),
-        //             )),
-        //         SizedBox(
-        //           height: 7,
-        //         ),
-        //         Text("KFC",
-        //             style: TextStyle(
-        //                 color: Colors.black,
-        //                 fontWeight: FontWeight.w600,
-        //                 fontSize: 10)),
-        //       ])
-        //     ],
-        //   )),
-        // ),
+                            );
+                    } else {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.grey[100],
+                        child: Container(
+                          margin: EdgeInsets.all(16),
+                          height: size.height * 0.18,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ))
       ],
     );
   }

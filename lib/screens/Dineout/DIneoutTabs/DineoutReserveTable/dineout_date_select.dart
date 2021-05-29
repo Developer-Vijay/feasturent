@@ -27,6 +27,49 @@ var myFormat = DateFormat('d-MM-yyyy');
 final pageController = PageController(initialPage: 0);
 
 class _DineoutDateSelectionState extends State<DineoutDateSelection> {
+  List<TimeList> breaskfastList = [
+    TimeList(isSelected1: true, isSelected: false, time: "9:00 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "9:15 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "9:30 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "9:45 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "10:00 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "10:15 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "10:30 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "10:45 AM"),
+    TimeList(isSelected1: false, isSelected: false, time: "11:00 AM"),
+  ];
+
+  List<TimeList> lunchlist = [
+    TimeList(isSelected1: true, isSelected: false, time: "12:00 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "12:15 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "12:30 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "1:00 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "1:15 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "1:30 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "1:45 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "2:00 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "2:15 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "2:30 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "2:45 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "3:00 PM"),
+  ];
+
+  List<TimeList> dinnerlist = [
+    TimeList(isSelected1: true, isSelected: false, time: "7:00 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "7:15 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "7:30 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "7:45 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "8:00 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "8:15 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "8:30 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "8:45 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "9:00 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "9:15 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "9:30 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "9:45 PM"),
+    TimeList(isSelected1: true, isSelected: false, time: "10:00 PM"),
+  ];
+
   int isSelect = 0;
   bool isSelected = false;
   bool isSelected1 = false;
@@ -123,13 +166,20 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
           ),
           Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisAlignment: MainAxisAlignment.,
               children: [
+                Spacer(),
                 InputChip(
-                  label: Text(
-                    "Breakfast",
-                    style: TextStyle(
-                      color: Colors.white,
+                  label: Container(
+                    width: 62,
+                    height: 20,
+                    child: Center(
+                      child: Text(
+                        "Breakfast",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   selectedColor: Colors.blue,
@@ -161,12 +211,19 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                     }
                   },
                 ),
+                Spacer(),
                 InputChip(
                   backgroundColor: Colors.blueGrey,
-                  label: Text(
-                    "Lunch",
-                    style: TextStyle(
-                      color: Colors.white,
+                  label: Container(
+                    width: 62,
+                    height: 20,
+                    child: Center(
+                      child: Text(
+                        "Lunch",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   selectedColor: Colors.blue,
@@ -174,7 +231,8 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   elevation: 2,
                   isEnabled: true,
                   selected: isSelected,
-                  showCheckmark: false,
+                  showCheckmark: true,
+                  checkmarkColor: Colors.white,
                   onSelected: (value) {
                     setState(() {
                       isSelect = 2;
@@ -196,12 +254,19 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                     }
                   },
                 ),
+                Spacer(),
                 InputChip(
                   backgroundColor: Colors.blueGrey,
-                  label: Text(
-                    "Dinner",
-                    style: TextStyle(
-                      color: Colors.white,
+                  label: Container(
+                    width: 62,
+                    height: 20,
+                    child: Center(
+                      child: Text(
+                        "Dinner",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   selectedColor: Colors.blue,
@@ -209,7 +274,8 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                   elevation: 2,
                   isEnabled: true,
                   selected: isSelected2,
-                  showCheckmark: false,
+                  checkmarkColor: Colors.white,
+                  showCheckmark: true,
                   onSelected: (value) {
                     setState(() {
                       isSelect = 3;
@@ -231,6 +297,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                     }
                   },
                 ),
+                Spacer(),
               ],
             ),
           ),
@@ -254,12 +321,24 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                     itemCount: lunchlist.length,
                     itemBuilder: (context, index) {
                       return InputChip(
-                        label: Text(
-                          lunchlist[index].time,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                        label: Container(
+                            width: 65,
+                            height: 20,
+                            child: Center(
+                              child: lunchlist[index].isSelected == true
+                                  ? Text(
+                                      lunchlist[index].time,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      lunchlist[index].time,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                            )),
                         selectedColor: Colors.blue,
                         disabledColor: Colors.grey[200],
                         elevation: 2,
@@ -302,12 +381,24 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: InputChip(
-                          label: Text(
-                            breaskfastList[index].time,
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                          label: Container(
+                              width: 65,
+                              height: 20,
+                              child: Center(
+                                child: breaskfastList[index].isSelected == true
+                                    ? Text(
+                                        breaskfastList[index].time,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        breaskfastList[index].time,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                              )),
                           selectedColor: Colors.blue,
                           disabledColor: Colors.grey[200],
                           elevation: 2,
@@ -349,12 +440,24 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                     itemCount: dinnerlist.length,
                     itemBuilder: (context, index) {
                       return InputChip(
-                        label: Text(
-                          dinnerlist[index].time,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                        label: Container(
+                            width: 65,
+                            height: 20,
+                            child: Center(
+                              child: dinnerlist[index].isSelected == true
+                                  ? Text(
+                                      dinnerlist[index].time,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      dinnerlist[index].time,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                            )),
                         selectedColor: Colors.blue,
                         disabledColor: Colors.grey[200],
                         elevation: 2,
@@ -422,7 +525,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
         context: context,
         initialDate: selectedDate, // Refer step 1
         firstDate: DateTime.now(),
-        lastDate: DateTime(2025),
+        lastDate: DateTime.now().add(Duration(days: 30)),
         helpText: "Select Booking Date",
         confirmText: "Confirm");
     if (picked != null && picked != selectedDate)

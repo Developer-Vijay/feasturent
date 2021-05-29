@@ -23,6 +23,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isValidate = true;
   bool _obscureText = true;
+  // ignore: unused_field
   bool _isProcessing = false;
   bool _isUserNameValidate = true;
   bool _isPasswordValidate = true;
@@ -359,7 +360,8 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pop(context);
           });
         }
-      } else if (response.statusCode == 401) {
+      } else if (responseData['message'] ==
+          "Your mobile number is not verified") {
         setState(() {
           _isProcessing = false;
           Navigator.pop(context);
@@ -419,6 +421,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //Toast Message
+
+  // ignore: missing_return
   Future<void> _stoastMessage(message, status) {
     Fluttertoast.showToast(
         msg: message,

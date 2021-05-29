@@ -41,6 +41,7 @@ class UserServices {
 
   Future<List<AddToCart>> fetchUsers() async {
     final usersList = await DBHelper.getData('addToCartData');
+    print(usersList);
     return usersList
         .map((item) => AddToCart(
             id: item['id'],
@@ -60,14 +61,6 @@ class UserServices {
             rating: item['rating']))
         .toList();
   }
-
-  // updateCustomer(id, tempIsSelected) async {
-  //   final db = await DBHelper.database();
-
-  //   db.rawUpdate(
-  //       'UPDATE addToCartData SET isSelected = $tempIsSelected WHERE id = $id');
-  //   print("updates");
-  // }
 
   Future incrementItemCounter(id, count) async {
     print("ob");
@@ -106,15 +99,6 @@ class UserServices {
     sqlIdData = userdata;
     return sqlIdData;
   }
-  // Future<List<AddToCart>> query(id) async {
-  //   final db = await DBHelper.database();
-  //   List<Map> result =
-  //       await db.rawQuery('SELECT * FROM addToCartData WHERE menuItemId=$id');
-  //   result.forEach((row) => print(row));
-  //   // print(result.forEach((row));
-  //   // var data = result;
-  //   return result;
-  // }
 
   void deleteUser(int id) {
     DBHelper.deleteData('addToCartData', id);

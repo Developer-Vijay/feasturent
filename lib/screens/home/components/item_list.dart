@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
-import 'category_related_menu.dart';
+import 'category_related_resturent.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({
@@ -22,7 +22,7 @@ class _CategoriesListState extends State<CategoriesList> {
     super.initState();
   }
 
-  var data = null;
+  var data;
   Future<List<dynamic>> fetchCategories() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  hitting api category");
@@ -89,8 +89,8 @@ class _CategoriesListState extends State<CategoriesList> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               int legnth;
-              if (snapshot.data.length > 15) {
-                legnth = 15;
+              if (snapshot.data.length >= 50) {
+                legnth = 50;
               } else {
                 legnth = snapshot.data.length;
               }

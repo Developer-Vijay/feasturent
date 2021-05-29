@@ -22,6 +22,8 @@ import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistcl
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 
+import 'components/ontap_offer.dart';
+
 class HomeScreen extends StatefulWidget {
   final index;
   const HomeScreen({Key key, this.index}) : super(key: key);
@@ -32,7 +34,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       tempoaryData = widget.index;
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
     location = locationShared.getString('tempLocation');
   }
 
+  // ignore: missing_return
   Future<List<dynamic>> fetchwelcomeBanner() async {
     try {
       var result = await http
@@ -71,7 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (result.statusCode == 200) {
         if (homeBanner != null) {
           if (homeBanner[0]['status'] == true) {
-            checkDate(homeBanner);
+            if (homeBanner[0]['OffersAndCoupon'] != null) {
+              checkDate(homeBanner);
+            }
           }
         } else {
           print("data  avialable");
@@ -88,7 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String _customerEmail;
   String _authorization = '';
   String _refreshtoken = '';
+  // ignore: unused_field
   var _latitude;
+  // ignore: unused_field
   var _longitude;
 
   Future<bool> _onbackpressed() {
@@ -151,7 +157,6 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final geopostion = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      var speed = geopostion.speed;
       setState(() {
         latitude = geopostion.latitude;
         longitude = geopostion.longitude;
@@ -192,34 +197,40 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
           height: MediaQuery.of(context).size.height * 0.55,
           width: MediaQuery.of(context).size.height * 0.35,
-          color: Colors.transparent,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
           child: Stack(
             children: [
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.1,
-                child: Container(
+                bottom: 20,
+                top: MediaQuery.of(context).size.height * 0.095,
+                child: Material(
+                  child: Container(
                     decoration: BoxDecoration(
                         color: Colors.lightBlue[100],
-                        borderRadius: BorderRadius.circular(15)),
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                              S3_BASE_PATH +
+                                  homebannerData[0]['OffersAndCoupon']['image'],
+                            ),
+                            fit: BoxFit.fill)),
                     height: MediaQuery.of(context).size.height * 0.48,
                     width: MediaQuery.of(context).size.height * 0.35,
-                    child: CachedNetworkImage(
-                      imageUrl: S3_BASE_PATH +
-                          homebannerData[0]['OffersAndCoupon']['image'],
-                      height: MediaQuery.of(context).size.height * 0.48,
-                      width: MediaQuery.of(context).size.height * 0.35,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    )),
-              ),
-              Positioned(
-                top: 10,
-                left: MediaQuery.of(context).size.height * 0.1,
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage("assets/icons/feasturent.png"),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OnTapOffer(
+                                      data: homebannerData[0],
+                                    )));
+                      },
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -246,16 +257,12 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final prefs = await SharedPreferences.getInstance();
       setState(() {
-        // takeUser = prefs.getBool('_isAuthenticate');
         userName = prefs.getString('name');
         _customerUserId = prefs.getInt('userId');
         _authorization = prefs.getString('sessionToken');
         _refreshtoken = prefs.getString('refreshToken');
         _latitude = prefs.setDouble('latitude', latitude);
         _longitude = prefs.setDouble('longitude', longitude);
-        // emailid = prefs.getString('userEmail');
-
-        // photo = prefs.getString('userProfile');
       });
 
       print(takeUser);
@@ -325,6 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
         text: TextSpan(
           style: Theme.of(context)
               .textTheme
+              // ignore: deprecated_member_use
               .title
               .copyWith(fontWeight: FontWeight.bold),
           children: [
@@ -411,7 +419,6 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SearchField()));
-              // showSearch(context: context, delegate: Searchbar(), query: "");
             },
           ),
           IconButton(

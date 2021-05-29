@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
@@ -18,6 +17,7 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
 
   int status = 1;
   var responseData1;
+  // ignore: missing_return
   Future<List> getpopulardineouts() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
@@ -39,10 +39,7 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final _textstyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
-        fontSize: size.height * 0.014);
+
     return Container(
         margin: EdgeInsets.only(top: 15),
         child: Column(

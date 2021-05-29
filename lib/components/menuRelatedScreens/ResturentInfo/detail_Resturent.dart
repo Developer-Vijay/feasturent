@@ -144,13 +144,15 @@ class _DetailResturentState extends State<DetailResturent> {
                           Spacer(),
                           Container(
                             width: size.width * 0.25,
-                            // color: Colors.red,
                             child: Column(
                               children: [
-                                Icon(
-                                  Icons.timer_outlined,
-                                  size: size.height * 0.036,
-                                  color: Colors.grey[600],
+                                Tooltip(
+                                  message: "Store Timing",
+                                  child: Icon(
+                                    Icons.timer_outlined,
+                                    size: size.height * 0.036,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 8,
@@ -182,13 +184,15 @@ class _DetailResturentState extends State<DetailResturent> {
                           Spacer(),
                           Container(
                             width: size.width * 0.25,
-                            // color: Colors.red,
                             child: Column(
                               children: [
-                                Icon(
-                                  Icons.location_on,
-                                  size: size.height * 0.036,
-                                  color: Colors.grey[700],
+                                Tooltip(
+                                  message: "Distance",
+                                  child: Icon(
+                                    Icons.location_on,
+                                    size: size.height * 0.036,
+                                    color: Colors.grey[700],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 5,
@@ -200,25 +204,34 @@ class _DetailResturentState extends State<DetailResturent> {
                                             color: Colors.black54,
                                             fontSize: size.height * 0.016),
                                       )
-                                    : Text(
-                                        "${data['distance'].toInt()}Km",
-                                        style: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: size.height * 0.016),
-                                      )
+                                    : data['distance'].toInt() == 0
+                                        ? Text(
+                                            "Near you",
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: size.height * 0.016),
+                                          )
+                                        : Text(
+                                            "${data['distance'].toInt()}Km",
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: size.height * 0.016),
+                                          )
                               ],
                             ),
                           ),
                           Spacer(),
                           Container(
                             width: size.width * 0.25,
-                            // color: Colors.red,
                             child: Column(
                               children: [
-                                Icon(
-                                  Icons.delivery_dining,
-                                  size: size.height * 0.036,
-                                  color: Colors.grey[600],
+                                Tooltip(
+                                  message: "Delivery option",
+                                  child: Icon(
+                                    Icons.delivery_dining,
+                                    size: size.height * 0.036,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 8,
@@ -230,20 +243,25 @@ class _DetailResturentState extends State<DetailResturent> {
                                                 color: Colors.black54,
                                                 fontSize: size.height * 0.016))
                                         : Container(
-                                            child: data['user']['Setting']
-                                                        ['deliveryType'] ==
+                                            child: data['user']['Setting']['deliveryType'] ==
                                                     null
                                                 ? Text("Not Avialable",
                                                     style: TextStyle(
                                                         color: Colors.black54,
                                                         fontSize: size.height *
                                                             0.016))
-                                                : Text(
-                                                    "${data['user']['Setting']['deliveryType']}",
-                                                    style: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: size.height *
-                                                            0.016)))),
+                                                : data['user']['Setting']['deliveryType'] ==
+                                                        'BOTH'
+                                                    ? Text("TakeAway/Delivery",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: size.height *
+                                                                0.016))
+                                                    : Text("${data['user']['Setting']['deliveryType']}",
+                                                        style: TextStyle(
+                                                            color: Colors.black54,
+                                                            fontSize: size.height * 0.016)))),
                               ],
                             ),
                           ),
@@ -325,7 +343,6 @@ class _DetailResturentState extends State<DetailResturent> {
                           )
                         : Container(
                             margin: EdgeInsets.all(10),
-                            // height: size.height * 0.48,
                             width: double.infinity,
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -355,18 +372,25 @@ class _DetailResturentState extends State<DetailResturent> {
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  height: size.height * 0.25,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.black26, width: 0.5),
-                                      // borderRadius:
-                                      //     BorderRadius.all(Radius.circular(10)),
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: AssetImage(
-                                              'assets/images/mapshow.jpeg'))),
+                                InkWell(
+                                  onTap: () {
+                                    openMap(
+                                        double.parse(
+                                            data['Address']['latitude']),
+                                        double.parse(
+                                            data['Address']['longitude']));
+                                  },
+                                  child: Container(
+                                    height: size.height * 0.25,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.black26, width: 0.5),
+                                        image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: AssetImage(
+                                                'assets/images/mapshow.jpeg'))),
+                                  ),
                                 ),
                                 Padding(
                                     padding: const EdgeInsets.only(
@@ -421,7 +445,6 @@ class _DetailResturentState extends State<DetailResturent> {
                                               left: size.width * 0.033),
                                           child: Text(
                                             data['Address']['address'],
-                                            // overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontSize: size.height * 0.02,
                                                 color: Colors.black54,
