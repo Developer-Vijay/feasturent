@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'components/Cart.dart/AddOnDataBase/addon_service.dart';
 import 'components/Cart.dart/CartDataBase/cart_service.dart';
 
@@ -205,14 +204,60 @@ class FilterList {
 }
 
 List<FilterList> filtered = [
-  FilterList(name: "Quick Filters", pagecount: 0),
+  FilterList(name: "Sort", pagecount: 0),
   FilterList(name: "Cuisines", pagecount: 1),
-  FilterList(name: "Tags", pagecount: 2),
-  FilterList(name: "Features", pagecount: 3),
-  FilterList(name: "Dineout Passport", pagecount: 4),
-  FilterList(name: "Sort By", pagecount: 5),
-  FilterList(name: "Sort ", pagecount: 5),
+  FilterList(name: "Offer & more", pagecount: 2),
+  // FilterList(name: "Features", pagecount: 3),
+  // FilterList(name: "Dineout Passport", pagecount: 4),
+  // FilterList(name: "Sort By", pagecount: 5),
+  // FilterList(name: "Sort ", pagecount: 5),
   // FilterList(name: " By", pagecount: 5),
+];
+
+class ShortList {
+  var name;
+  int index;
+  ShortList({this.name, this.index});
+}
+
+int selectedRadio = -1;
+
+List<ShortList> sorted = [
+  ShortList(name: "Relevance", index: 0),
+  ShortList(name: "Cost For Two", index: 1),
+  ShortList(name: "Delivery Time", index: 2),
+  ShortList(name: "Rating", index: 3),
+];
+
+class CusisinesList {
+  var name;
+  bool index;
+  CusisinesList({this.name, this.index});
+}
+
+List<CusisinesList> cusisinesList = [
+  CusisinesList(name: "American", index: false),
+  CusisinesList(name: "Bakery", index: false),
+  CusisinesList(name: "Beverages", index: false),
+  CusisinesList(name: "Chaat", index: false),
+  CusisinesList(name: "Chinese", index: false),
+  CusisinesList(name: "Continental", index: false),
+  CusisinesList(name: "Desserts", index: false),
+  CusisinesList(name: "Fast Food", index: false),
+  CusisinesList(name: "Italian", index: false),
+  CusisinesList(name: "Mughlai", index: false),
+  CusisinesList(name: "North Indian", index: false),
+];
+
+class OfferMore {
+  var name;
+  bool index;
+  OfferMore({this.name, this.index});
+}
+
+List<OfferMore> offerMore = [
+  OfferMore(name: "Pure Veg", index: false),
+  OfferMore(name: "Non-Veg", index: false),
 ];
 
 class SettingsList {
@@ -369,7 +414,7 @@ removeCartForNewData() async {
 
   int k = checkitem.length;
   for (int i = 0; i <= k - 1; i++) {
-    var data = int.parse(checkitem[i]);
+    int data = int.parse(checkitem[i]);
 
     services.deleteUser(data);
   }
@@ -441,4 +486,92 @@ removeAddOnWithMenu(addOnIds) async {
 
 fun(value) {
   data3New = value;
+}
+
+class ChangeJson {
+  int id;
+  int vendorId;
+  String title;
+  String description;
+  int price;
+  int gst;
+  int gstAmount;
+  int totalPrice;
+  int deliveryTime;
+  bool isNonVeg;
+  bool isEgg;
+  bool isCombo;
+  String image1;
+  String image2;
+  String image3;
+  List addonMenus;
+  List menuoffer;
+
+  ChangeJson(
+      this.id,
+      this.vendorId,
+      this.title,
+      this.description,
+      this.price,
+      this.gst,
+      this.gstAmount,
+      this.totalPrice,
+      this.deliveryTime,
+      this.isNonVeg,
+      this.isEgg,
+      this.isCombo,
+      this.image1,
+      this.image2,
+      this.image3,
+      this.addonMenus,
+      this.menuoffer);
+
+  Map toJson() => {
+        'id': id,
+        'vendorId': vendorId,
+        'title': title,
+        'description': description,
+        'price': price,
+        'gst': gst,
+        'gstAmount': gstAmount,
+        'totalPrice': totalPrice,
+        'deliveryTime': deliveryTime,
+        'isNonVeg': isNonVeg,
+        'isEgg': isEgg,
+        'isCombo': isCombo,
+        'image1': image1,
+        'image2': image2,
+        'image3': image3,
+        'AddonMenus': addonMenus,
+        'MenuOffers': menuoffer
+      };
+}
+
+class AddonMenus {
+  int id;
+  int menuId;
+  String type;
+  String title;
+  int amount;
+  int gst;
+  int gstAmount;
+
+  AddonMenus(
+    this.id,
+    this.menuId,
+    this.type,
+    this.title,
+    this.amount,
+    this.gst,
+    this.gstAmount,
+  );
+  Map toJson() => {
+        'id': id,
+        'menuId': menuId,
+        'type': type,
+        'title': title,
+        'amount': amount,
+        'gst': gst,
+        'gstAmount': gstAmount
+      };
 }

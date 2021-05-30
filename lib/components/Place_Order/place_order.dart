@@ -47,6 +47,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
     offerInfo = "Select a promo code";
     createstorage();
     dataForOffer = widget.data;
+    discount = 0;
+    donateAmount = 0;
   }
 
   var dataForOffer;
@@ -562,7 +564,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                             fit:
                                                                                 BoxFit.cover,
                                                                             placeholder: (context, url) =>
-                                                                                Center(child: CircularProgressIndicator()),
+                                                                                Image.asset(
+                                                                              "assets/images/feasturenttemp.jpeg",
+                                                                              height: size.height * 0.1,
+                                                                              width: size.width * 0.26,
+                                                                              fit: BoxFit.cover,
+                                                                            ),
                                                                             errorWidget: (context, url, error) =>
                                                                                 Icon(Icons.error),
                                                                           )
@@ -732,9 +739,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                           int totalcount =
                                                               cart.getInt(
                                                                   'TotalCount');
-                                                          int vendorId =
-                                                              cart.getInt(
-                                                                  'VendorId');
 
                                                           if (users[index]
                                                                   .itemCount >
@@ -913,8 +917,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                         int totalcount =
                                                             cart.getInt(
                                                                 'TotalCount');
-                                                        int vendorId = cart
-                                                            .getInt('VendorId');
 
                                                         setState(() {
                                                           totalcount++;
@@ -1325,7 +1327,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           Text(
                             " Donation for Social cause",
                             style: TextStyle(
-                                // fontWeight: FontWeight.bold,
                                 color: Colors.black,
                                 fontSize: size.height * 0.03),
                           ),
@@ -1713,6 +1714,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                           });
                                         }
                                       },
+                                      // ignore: non_constant_identifier_names
                                       itemBuilder: (BuildContext) => [
                                         PopupMenuItem(
                                           child: Text(
@@ -1754,6 +1756,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                           });
                                         }
                                       },
+                                      // ignore: non_constant_identifier_names
                                       itemBuilder: (BuildContext) => [
                                         PopupMenuItem(
                                           child: Text(
@@ -1819,6 +1822,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   DonationFunction(data) {
     for (int i = 0; i <= donate.length - 1; i++) {
       setState(() {
@@ -1915,7 +1919,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
   Future<void> getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //FirebaseUser user = await FirebaseAuth.instance.currentUser();
 
     var takeUser = prefs.getString('loginBy');
     print(takeUser);
@@ -1951,7 +1954,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                     for (int i = 0; i <= k; i++) {
                       print(i);
                     }
-                    placeTimer.cancel();
+                    placeTimer1.cancel();
                     placePrecent = 0;
                     placeValue = 0;
                     Navigator.pop(context);
@@ -1983,12 +1986,12 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
 
-    placeTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
+    placeTimer1 = Timer.periodic(Duration(milliseconds: 100), (_) {
       setState(() {
         placePrecent++;
       });
       if (placePrecent >= 100) {
-        placeTimer.cancel();
+        placeTimer1.cancel();
         placePrecent = 0;
         placeValue = 1;
         if (paymentMode == "Online Mode") {
@@ -2080,7 +2083,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
     setState(() {
       jsonTags = jsonEncode(menuidAndQty);
-      // jsonTags = jsonDecode(jsonTags);
     });
 
     print(jsonTags);
@@ -2113,47 +2115,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
   var dataImage;
   List<MenuData> menuidAndQty = [];
   List<AddOnDataclass> addOnidAndQty = [];
-
-  // removeDataFromCart() async {
-  //   final SharedPreferences cart = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     checkitem = cart.getStringList('addedtocart');
-  //   });
-  //   print(
-  //       "*********************************   idcheck length********    ${idCheck.length}");
-  //   int k = checkitem.length;
-  //   print("*********************************   k length********    $k");
-  //   for (int i = 0; i <= k - 1; i++) {
-  //     print("*********************************   for loop stated********");
-  //     print("*********************************   i  ********    $i");
-  //     print("ID:-$i");
-  //     // final SharedPreferences cart = await SharedPreferences.getInstance();
-
-  //     var data = int.parse(checkitem[i]);
-  //     // await services.data(data).then((value) => func(value));
-
-  //     setState(() {
-  //       services.deleteUser(data);
-  //     });
-  //   }
-  //   setState(() {
-  //     gsttotal1 = 0;
-  //     totalcount1 = 0;
-  //     totalprice1 = 0;
-  //     discount = 0;
-  //     offerid = 0;
-  //     vendorId1 = 0;
-  //     cart.setInt('VendorId', vendorId1);
-
-  //     cart.setInt('TotalPrice', totalprice1);
-  //     cart.setInt('TotalGst', gsttotal1);
-  //     cart.setInt('TotalCount', totalcount1);
-
-  //     checkitem.clear();
-  //     print(checkitem);
-  //     cart.setStringList('addedtocart', checkitem);
-  //   });
-  // }
 
   walletPayment() async {
     print("*****************************************");
@@ -2290,7 +2251,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     print(response.statusCode);
 
     if (response.statusCode == 200) {
-      var responseData = jsonDecode(response.body);
       print(
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting socket %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
       Map socketData = {
@@ -2394,7 +2354,6 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     });
 
     if (response.statusCode == 200) {
-      var responseData = jsonDecode(response.body);
       print(
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting socket %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
       Map socketData = {
@@ -2578,7 +2537,7 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
                   child: InkWell(
                       onTap: () {
                         Navigator.pop(context, true);
-                        placeTimer.cancel();
+                        placeTimer1.cancel();
                         placePrecent = 0;
                         placeValue = 0;
                       },
@@ -2601,6 +2560,5 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
 
 @override
 Widget build(BuildContext context) {
-  // TODO: implement build
   throw UnimplementedError();
 }

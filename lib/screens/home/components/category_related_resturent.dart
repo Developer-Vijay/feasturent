@@ -111,7 +111,16 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         var couponDetatil;
+                        double rating = 1.0;
+                        // int j =
+                        //     snapshot.data[index]['VendorRatingReviews'].length;
 
+                        // for (int i = 0; i < j - 1; i++) {
+                        //   rating = rating +
+                        //       double.parse(snapshot.data[index]
+                        //           ['VendorRatingReviews'][i]['rating']);
+                        // }
+                        // rating = rating / j;
                         if (snapshot
                             .data[index]['user']['OffersAndCoupons'].isEmpty) {
                         } else {
@@ -143,24 +152,13 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                 "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                           }
                         }
-                        // int k = snapshot.data[index]['cuisines'].length;
-                        // print(k);
-                        // var categoryData = '';
-                        // if (k != 0) {
-                        //   for (int j = 1; j <= k - 1; j++) {
-                        //     categoryData =
-                        //         '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
-                        //   }
-                        // } else {
-                        //   categoryData = null;
-                        // }
-                        // print("###################### data $categoryData");
                         return InkWell(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => OfferListPage(
+                                        ratingVendor: rating,
                                         restaurantDa: snapshot.data[index])));
                           },
                           child: Padding(
@@ -287,9 +285,10 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                             Container(
                                               child: Row(
                                                 children: [
-                                                  snapshot.data[index]
-                                                              ['avgRating'] ==
-                                                          null
+                                                  snapshot
+                                                          .data[index][
+                                                              'VendorRatingReviews']
+                                                          .isEmpty
                                                       ? Text(
                                                           "⭐1",
                                                           style: TextStyle(
@@ -309,11 +308,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                                     Text("⭐"),
                                                               ),
                                                               Text(
-                                                                snapshot
-                                                                    .data[index]
-                                                                        [
-                                                                        'avgRating']
-                                                                    .toString(),
+                                                                "${rating.toInt()}",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         size.height *
@@ -336,7 +331,29 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                               0.02,
                                                         ),
                                                   couponDetatil == null
-                                                      ? SizedBox()
+                                                      ? snapshot.data[index]
+                                                                  ['avgCost'] ==
+                                                              null
+                                                          ? SizedBox()
+                                                          : Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                right: 12.0,
+                                                              ),
+                                                              child: Text(
+                                                                "₹ ${snapshot.data[index]['avgCost']} Cost for ${snapshot.data[index]['forPeople']}",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        size.height *
+                                                                            0.016,
+                                                                    color:
+                                                                        kTextColor),
+                                                              ),
+                                                            )
                                                       : Padding(
                                                           padding:
                                                               const EdgeInsets
@@ -377,31 +394,6 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
           },
         ));
   }
-
-  // itemAddToCart(index, tpye, data) async {
-  //   final SharedPreferences cart = await SharedPreferences.getInstance();
-
-  //   // var sum = cart.getInt('price');
-  //   // sum = sum + data[index]['totalPrice'];
-  //   // cart.setInt('price', sum);
-  //   // print(sum);
-  //   setState(() {
-  //     // itemCount.add(value);
-  //     services.saveUser(
-  //         data[index]['totalPrice'],
-  //         1,
-  //         data[index]['vendorId'],
-  //         data[index]['menuId'],
-  //         data[index]['image1'],
-  //         data[index]['title'],
-  //         "Add".toString(),
-  //         tpye,
-  //         0,
-  //         data[index]['restaurantName'],
-  //         data[index]['gstAmount'],
-  //         0);
-  //   });
-  // }
 
   fun(value) {
     setState(() {

@@ -582,18 +582,6 @@ class _AddAdressState extends State<AddAdress> {
         _isValidate = true;
       });
     }
-    // Validation For House No.
-    // if (_housenocontroller.text.isEmpty) {
-    //   setState(() {
-    //     _housenoValidate = "Please enter the house no.";
-    //     _isValidate = false;
-    //   });
-    // } else {
-    //   setState(() {
-    //     _housenoValidate = null;
-    //     _isValidate = true;
-    //   });
-    // } // Validation For Roadname
     if (_roadnamecontroller.text.isEmpty) {
       setState(() {
         _roadnameValidate = "Please enter the road name";
@@ -619,6 +607,7 @@ class _AddAdressState extends State<AddAdress> {
     }
 
     if (_isValidate == true) {
+      callingLoader();
       final prefs = await SharedPreferences.getInstance();
       _authorization = prefs.getString('sessionToken');
       userid = prefs.getInt('userId');
@@ -637,7 +626,8 @@ class _AddAdressState extends State<AddAdress> {
         "pinCode": _pincodecontroller.text,
         "landMark": _landmarkcontroller.text,
         "latitude": latadd.toString(),
-        "longitude": longadd.toString()
+        "longitude": longadd.toString(),
+        "status": "true"
       }, headers: {
         "authorization": _authorization,
         "refreshtoken": _refreshtoken
@@ -645,6 +635,8 @@ class _AddAdressState extends State<AddAdress> {
       var responsData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: responsData['message']);
+        Navigator.pop(context);
+
         Navigator.pop(context, true);
       } else if (response.statusCode == 401) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -666,6 +658,7 @@ class _AddAdressState extends State<AddAdress> {
         userName = null;
 
         prefs.setBool("_isAuthenticate", false);
+        Navigator.pop(context);
 
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
@@ -675,7 +668,25 @@ class _AddAdressState extends State<AddAdress> {
         });
       }
     } else {
+      Navigator.pop(context);
+
       Fluttertoast.showToast(msg: "Please Fill the above field to continue");
     }
+  }
+
+  callingLoader() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
   }
 }

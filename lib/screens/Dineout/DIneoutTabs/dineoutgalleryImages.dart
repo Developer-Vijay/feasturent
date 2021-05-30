@@ -14,7 +14,6 @@ class DineoutGallery extends StatefulWidget {
 class _DineoutGalleryState extends State<DineoutGallery> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
@@ -23,6 +22,8 @@ class _DineoutGalleryState extends State<DineoutGallery> {
             body: Container(
                 child: widget.data.isNotEmpty
                     ? Swiper(
+                        autoplay: true,
+                        autoplayDelay: 2000,
                         itemCount: widget.data.length,
                         pagination: SwiperPagination(
                             builder: SwiperPagination.fraction),
@@ -52,7 +53,10 @@ class _DineoutGalleryState extends State<DineoutGallery> {
                             builder: SwiperPagination.fraction),
                         loop: false,
                         itemBuilder: (context, index) {
-                          return Image.asset("assets/images/NoImage.png.jpeg",fit: BoxFit.cover,);
+                          return Image.asset(
+                            "assets/images/NoImage.png.jpeg",
+                            fit: BoxFit.cover,
+                          );
                         }))));
   }
 }

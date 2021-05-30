@@ -1,30 +1,24 @@
 class WishListClass {
   int id;
-  int itemPrice;
-  int itemCount;
-  int vendorId;
-  int menuItemId;
-  String imagePath;
-  String itemName;
-  String itemStatus;
-  int itemtype;
-  int isSelected;
-  String vendorName;
-  int gst;
+  int isDineout;
+  int isResturent;
+  String average;
+  String imagepath;
+  String name;
+  int idDR;
   String rating;
+  String address;
+  String cusines;
 
   WishListClass(
       {this.id,
-      this.itemtype,
-      this.imagePath,
-      this.itemCount,
-      this.itemName,
-      this.itemPrice,
-      this.menuItemId,
-      this.vendorId,
-      this.itemStatus,
-      this.isSelected,
-      this.vendorName,
-      this.gst,
+      this.address,
+      this.average,
+      this.cusines,
+      this.idDR,
+      this.imagepath,
+      this.isDineout,
+      this.isResturent,
+      this.name,
       this.rating});
 }

@@ -39,20 +39,14 @@ class _AboutState extends State<About> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Container(
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(blurRadius: 2, color: Colors.blue[100], spreadRadius: 2)
-        ], color: Colors.white, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            boxShadow: [],
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              Text(
-                "ABOUT",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800),
-              ),
               SizedBox(
                 height: 10,
               ),

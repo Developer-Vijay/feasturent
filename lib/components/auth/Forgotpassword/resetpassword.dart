@@ -93,7 +93,6 @@ class _ResetPasswordState extends State<ResetPassword> {
             child: TextField(
               controller: _oldpasswordcontroller,
               obscureText: true,
-              // readOnly: _isOtpSend,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(
@@ -116,7 +115,6 @@ class _ResetPasswordState extends State<ResetPassword> {
             child: TextField(
               controller: _newpasswordcontroller,
               obscureText: true,
-              // readOnly: _isOtpSend,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
@@ -255,7 +253,6 @@ class _ResetPasswordState extends State<ResetPassword> {
       var responsedata = jsonDecode(response.body);
       print("hello");
       print(responsedata['message']);
-      // print(responsedata['data']['user']['userType']);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: responsedata['message'].toString());
         Navigator.pop(context);

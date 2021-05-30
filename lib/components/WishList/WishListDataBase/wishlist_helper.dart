@@ -8,7 +8,7 @@ class WishListDBhelper {
     return sql.openDatabase(path.join(dbPath, 'wishListDat.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE wishListDat(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, itemPrice INTEGER, itemCount INTEGER, vendorId INTEGER, menuItemId INTEGER, imagePath TEXT, itemName TEXT, itemStatus TEXT, itemtype INTEGER, isSelected INTEGER, vendorName TEXT, gst INTEGER, rating TEXT)');
+          'CREATE TABLE wishListDat(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, isDineout INTEGER, isResturent INTEGER, average TEXT, imagepath TEXT, name TEXT, idDR INTEGER, rating TEXT, address TEXT, cusines TEXT)');
     }, version: 1);
   }
 
@@ -24,12 +24,12 @@ class WishListDBhelper {
 
   static Future querydata(id) async {
     final db = await WishListDBhelper.database();
-    return db.rawQuery('SELECT * FROM wishListDat WHERE menuItemId=$id');
+    return db.rawQuery('SELECT * FROM wishListDat WHERE idDR=$id');
   }
 
   static Future<void> deleteData(String table, int id) async {
     final db = await WishListDBhelper.database();
 
-    db.delete(table, where: 'id = ?', whereArgs: [id]);
+    db.delete(table, where: 'idDR = ?', whereArgs: [id]);
   }
 }

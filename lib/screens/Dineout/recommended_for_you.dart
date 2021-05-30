@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../constants.dart';
+import 'dineoutdetailpage.dart';
 
 class RecommendedForU extends StatefulWidget {
   @override
@@ -19,31 +20,50 @@ class _RecommendedForUState extends State<RecommendedForU> {
 
   int status = 1;
   var responseData1;
+  // ignore: missing_return
   Future<List> getpopulardineouts() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    print('#############################################');
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    print('#############################################');
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    print('#############################################');
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    print('#############################################');
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    print('#############################################');
 
-    var response = await http.get(APP_ROUTES + 'popularDineout?limit=null');
-
-    if (response.statusCode == 200) {
-      responseData1 = json.decode(response.body)['data'];
-      print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      print(responseData1);
-      return responseData1;
-    } else if (response.statusCode == 204) {
-      responseData1 = [];
-      return responseData1;
-    }
+    var data = cart.getStringList('recommendDineout');
+    var nedata = data.reversed;
+    print(data);
+    // String datastring = nedata.toString();
+    // var response = await http.get(APP_ROUTES + 'popularDineout?limit=null');
+    print(nedata);
+    var datareversed = nedata.toList();
+    // if (response.statusCode == 200) {
+    var dedata = json.decode(datareversed.toString());
+    return dedata; //   print(
+    //       "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    //   print(responseData1);
+    //   return responseData1;
+    // } else if (response.statusCode == 204) {
+    //   responseData1 = [];
+    //   return responseData1;
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final _textstyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
-        fontSize: size.height * 0.014);
     return Container(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,37 +80,6 @@ class _RecommendedForUState extends State<RecommendedForU> {
                     fontSize: size.height * 0.025),
               ),
             ),
-            // Spacer(),
-            // Container(
-            //     child: FlatButton(
-            //         onPressed: () {
-            //           if (responseData1 != null) {
-            //             Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(
-            //                   builder: (context) =>
-            //                       ViewAllPopular(data: responseData1),
-            //                 ));
-            //           }
-            //         },
-            //         child: Row(
-            //           children: [
-            //             Container(
-            //               margin: EdgeInsets.only(left: 15),
-            //               child: Text(
-            //                 "View All",
-            //                 style: TextStyle(
-            //                     fontWeight: FontWeight.bold,
-            //                     color: kPrimaryColor),
-            //               ),
-            //             ),
-            //             Icon(
-            //               Icons.arrow_right_rounded,
-            //               color: kSecondaryTextColor,
-            //             ),
-            //           ],
-            //         ))
-            // )
           ],
         ),
         Container(
@@ -109,7 +98,7 @@ class _RecommendedForUState extends State<RecommendedForU> {
                       : Container(
                           child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: 5,
+                          itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding:
@@ -119,36 +108,58 @@ class _RecommendedForUState extends State<RecommendedForU> {
                                   width: size.width * 0.4,
                                   child: InkWell(
                                     onTap: () {
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             DineoutDetailPage(
-                                      //               data: snapshot.data[index]
-                                      //                   ['VendorInfo'],
-                                      //             )));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DineoutDetailPage(
+                                                    data: snapshot.data[index],
+                                                  )));
                                     },
                                     child: ClipRRect(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Stack(
                                           children: [
-                                            CachedNetworkImage(
-                                              imageUrl:
-                                                  "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/e/p/p20298-1484731590587f34c63a2a1.jpg?tr=tr:n-medium",
-                                              fit: BoxFit.cover,
-                                              height: size.height * 0.26,
-                                              width: size.width * 0.4,
-                                              placeholder: (context, url) => Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            ),
+                                            snapshot.data[index]['user']
+                                                        ['profile'] !=
+                                                    null
+                                                ? CachedNetworkImage(
+                                                    imageUrl: S3_BASE_PATH +
+                                                        snapshot.data[index]
+                                                            ['user']['profile'],
+                                                    fit: BoxFit.cover,
+                                                    height: size.height * 0.26,
+                                                    width: size.width * 0.4,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        Center(
+                                                            child: Center(
+                                                                child:
+                                                                    CircularProgressIndicator())),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  )
+                                                : CachedNetworkImage(
+                                                    imageUrl:
+                                                        "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/e/p/p20298-1484731590587f34c63a2a1.jpg?tr=tr:n-medium",
+                                                    fit: BoxFit.cover,
+                                                    height: size.height * 0.26,
+                                                    width: size.width * 0.4,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        Center(
+                                                            child: Center(
+                                                                child:
+                                                                    CircularProgressIndicator())),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
                                             Align(
                                               alignment: Alignment.bottomLeft,
                                               child: Container(
-                                                height: size.height * 0.11,
+                                                height: size.height * 0.125,
                                                 width: size.width * 1,
                                                 color: Colors.black
                                                     .withOpacity(0.7),
@@ -174,7 +185,10 @@ class _RecommendedForUState extends State<RecommendedForU> {
                                                                 Colors.white),
                                                       ),
                                                       Text(
-                                                        'Flat 20% off',
+                                                        capitalize(
+                                                            "${snapshot.data[index]['name']}"),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: TextStyle(
                                                             fontSize:
                                                                 size.height *

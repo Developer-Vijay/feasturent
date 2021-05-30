@@ -200,14 +200,17 @@ class _DineoutOfferTabPageState extends State<DineoutOfferTabPage> {
                                   height: 5,
                                 ),
                                 Container(
+                                  width: size.width * 1,
                                   decoration: BoxDecoration(
                                       color: Colors.amber[100],
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "Only Applicable when Paying using Dineout Pay",
+                                      data['user']['OffersAndCoupons'][index]
+                                          ['description'],
                                       maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),

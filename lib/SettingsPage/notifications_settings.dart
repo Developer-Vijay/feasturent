@@ -7,9 +7,6 @@ class NotificationsSettings extends StatefulWidget {
 
 class _NotificationsSettingsState extends State<NotificationsSettings> {
   bool _value1 = false;
-  // bool _value2 = false;
-  // bool _value3=false;
-  // bool _value4=false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

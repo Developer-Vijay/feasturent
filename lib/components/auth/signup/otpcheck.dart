@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
-import 'package:feasturent_costomer_app/components/auth/signup/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';

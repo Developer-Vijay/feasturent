@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'discount_card.dart';
+import 'popular.dart';
 import '../../../shimmer_effect.dart';
 
 extension StringExtension on String {
@@ -30,8 +31,73 @@ class _AllResturentState extends State<AllResturent> {
     super.initState();
   }
 
+  Future fetchHomebaanerLength() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api length home banner");
+
+    var result = await http
+        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
+    if (result.statusCode == 200) {
+      var data = json.decode(result.body)['data'];
+      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      if (data.isEmpty) {
+        if (mounted) {
+          dataLenght = 0;
+        }
+        print("data not here");
+      } else {
+        print("data here");
+        if (data[0]['status'] == true) {
+          if (mounted) {
+            dataLenght = 1;
+          }
+        } else {
+          if (mounted) {
+            dataLenght = 0;
+          }
+
+          print("data not here");
+        }
+      }
+
+      print("data  $dataLenght");
+    } else {
+      if (mounted) {
+        dataLenght = 0;
+      }
+    }
+  }
+
+  Future fetchHomeSliderLength() async {
+    var result = await http
+        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
+    var data = json.decode(result.body)['data'];
+    if (data.isEmpty) {
+      if (mounted) {
+        checkDataLenght = 0;
+      }
+      print("data not here");
+    } else {
+      print("data her e");
+      if (data[0]['status'] == true) {
+        if (mounted) {
+          checkDataLenght = data.length;
+        }
+      } else {
+        if (mounted) {
+          checkDataLenght = 0;
+        }
+        print("data not here");
+      }
+    }
+
+    print("data length $checkDataLenght");
+  }
+
   var restaurantData;
   Future<List<dynamic>> fetchAllRestaurant() async {
+    fetchHomeSliderLength();
+    fetchHomebaanerLength();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
@@ -75,13 +141,15 @@ class _AllResturentState extends State<AllResturent> {
             Container(
                 child: FlatButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ViewallRestaurant(
-                              restData: restaurantData,
-                            ),
-                          ));
+                      if (restaurantData != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewallRestaurant(
+                                restData: restaurantData,
+                              ),
+                            ));
+                      }
                     },
                     child: Row(
                       children: [
@@ -122,6 +190,15 @@ class _AllResturentState extends State<AllResturent> {
                 itemCount: listlength,
                 itemBuilder: (context, index) {
                   var couponDetatil;
+                  double rating = 1.0;
+                  // int j = snapshot.data[index]['VendorRatingReviews'].length;
+
+                  // for (int i = 0; i < j - 1; i++) {
+                  //   rating = rating +
+                  //       double.parse(snapshot.data[index]['VendorRatingReviews']
+                  //           [i]['rating']);
+                  // }
+                  // rating = rating / j;
 
                   if (snapshot
                       .data[index]['user']['OffersAndCoupons'].isEmpty) {
@@ -154,37 +231,6 @@ class _AllResturentState extends State<AllResturent> {
                           "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                     }
                   }
-                  // if (snapshot
-                  //     .data[index]['user']['OffersAndCoupons'].isEmpty) {
-                  // } else {
-                  //   if (snapshot.data[index]['user']['OffersAndCoupons'][0]
-                  //           ['discount'] ==
-                  //       null) {
-                  //     String symbol;
-                  //     if (snapshot.data[index]['user']['OffersAndCoupons'][0]
-                  //             ['couponDiscountType'] ==
-                  //         "PERCENT") {
-                  //       symbol = "%";
-                  //     } else {
-                  //       symbol = "₹";
-                  //     }
-
-                  //     couponDetatil =
-                  //         "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${snapshot.data[index]['user']['OffersAndCoupons'][0]['coupon']}";
-                  //   } else {
-                  //     String symbol;
-                  //     if (snapshot.data[index]['user']['OffersAndCoupons'][0]
-                  //             ['discountType'] ==
-                  //         "PERCENT") {
-                  //       symbol = "%";
-                  //     } else {
-                  //       symbol = "₹";
-                  //     }
-
-                  //     couponDetatil =
-                  //         "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
-                  //   }
-                  // }
 
                   int k = snapshot.data[index]['cuisines'].length;
                   print(k);
@@ -203,6 +249,7 @@ class _AllResturentState extends State<AllResturent> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => OfferListPage(
+                                  ratingVendor: rating,
                                   restaurantDa: snapshot.data[index])));
                     },
                     child: Padding(
@@ -247,9 +294,12 @@ class _AllResturentState extends State<AllResturent> {
                                                   width: size.width * 0.3,
                                                   fit: BoxFit.fill,
                                                   placeholder: (context, url) =>
-                                                      Center(
-                                                          child:
-                                                              CircularProgressIndicator()),
+                                                      Image.asset(
+                                                    "assets/images/feasturenttemp.jpeg",
+                                                    height: size.height * 0.18,
+                                                    width: size.width * 0.3,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                   errorWidget:
                                                       (context, url, error) =>
                                                           Icon(Icons.error),
@@ -336,9 +386,7 @@ class _AllResturentState extends State<AllResturent> {
                                                           child: Text("⭐"),
                                                         ),
                                                         Text(
-                                                          snapshot.data[index]
-                                                                  ['avgRating']
-                                                              .toString(),
+                                                          "${rating.toInt()}",
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.height *
@@ -359,7 +407,29 @@ class _AllResturentState extends State<AllResturent> {
                                                     height: size.height * 0.02,
                                                   ),
                                             couponDetatil == null
-                                                ? SizedBox()
+                                                ? snapshot.data[index]
+                                                            ['avgCost'] ==
+                                                        null
+                                                    ? SizedBox()
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                          right: 12.0,
+                                                        ),
+                                                        child: Text(
+                                                          "₹ ${snapshot.data[index]['avgCost']} Cost for ${snapshot.data[index]['forPeople']}",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize:
+                                                                  size.height *
+                                                                      0.016,
+                                                              color:
+                                                                  kTextColor),
+                                                        ),
+                                                      )
                                                 : Padding(
                                                     padding:
                                                         const EdgeInsets.only(

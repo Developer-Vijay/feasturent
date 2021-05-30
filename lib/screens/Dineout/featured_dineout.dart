@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
-
+import 'dineoutSweeper.dart';
 import '../../constants.dart';
 
 class FeaturedDineout extends StatefulWidget {
@@ -19,7 +19,9 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
 
   int status = 1;
   var responseData1;
+  // ignore: missing_return
   Future<List> getpopulardineouts() async {
+    getDineoutBanner();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
 
@@ -37,13 +39,32 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
     }
   }
 
+  Future getDineoutBanner() async {
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  utiltsedineout");
+
+    var result = await http
+        .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner');
+    if (result.statusCode == 200) {
+      var homeOffers = json.decode(result.body)['data'];
+      if (homeOffers.isEmpty) {
+        dineoutofferlength = 0;
+      } else {
+        print("data here");
+        if (homeOffers[0]['status'] == true) {
+          dineoutofferlength = 1;
+        } else {
+          dineoutofferlength = 0;
+        }
+      }
+    } else {
+      dineoutofferlength = 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final _textstyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
-        fontSize: size.height * 0.014);
     return Container(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,37 +81,6 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                     fontSize: size.height * 0.025),
               ),
             ),
-            // Spacer(),
-            // Container(
-            //     child: FlatButton(
-            //         onPressed: () {
-            //           if (responseData1 != null) {
-            //             Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(
-            //                   builder: (context) =>
-            //                       ViewAllPopular(data: responseData1),
-            //                 ));
-            //           }
-            //         },
-            //         child: Row(
-            //           children: [
-            //             Container(
-            //               margin: EdgeInsets.only(left: 15),
-            //               child: Text(
-            //                 "View All",
-            //                 style: TextStyle(
-            //                     fontWeight: FontWeight.bold,
-            //                     color: kPrimaryColor),
-            //               ),
-            //             ),
-            //             Icon(
-            //               Icons.arrow_right_rounded,
-            //               color: kSecondaryTextColor,
-            //             ),
-            //           ],
-            //         ))
-            // )
           ],
         ),
         Container(
@@ -120,16 +110,7 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                                       height: size.height * 0.303,
                                       width: size.width * 0.6,
                                       child: InkWell(
-                                        onTap: () {
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             DineoutDetailPage(
-                                          //               data: snapshot.data[index]
-                                          //                   ['VendorInfo'],
-                                          //             )));
-                                        },
+                                        onTap: () {},
                                         child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -142,7 +123,9 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                                                   width: size.width * 0.6,
                                                   fit: BoxFit.fill,
                                                   placeholder: (context, url) =>
-                                                      CircularProgressIndicator(),
+                                                      Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
                                                   errorWidget:
                                                       (context, url, error) =>
                                                           Icon(Icons.error),

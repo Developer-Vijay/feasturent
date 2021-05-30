@@ -18,7 +18,6 @@ IO.Socket socket;
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     connect();
@@ -61,7 +60,9 @@ class _MyAppState extends State<MyApp> {
           primaryColor: kPrimaryColor,
           scaffoldBackgroundColor: Colors.white,
           textTheme: TextTheme(
+            // ignore: deprecated_member_use
             body1: TextStyle(color: ksecondaryColor),
+            // ignore: deprecated_member_use
             body2: TextStyle(color: ksecondaryColor),
           ),
         ),

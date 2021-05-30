@@ -12,7 +12,6 @@ class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: Scaffold(
@@ -22,12 +21,12 @@ class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
           elevation: 0,
           leading: IconButton(
               icon: SvgPicture.asset("assets/icons/menu.svg"),
-              onPressed: () {
-              }),
+              onPressed: () {}),
           title: RichText(
             text: TextSpan(
               style: Theme.of(context)
                   .textTheme
+                  // ignore: deprecated_member_use
                   .title
                   .copyWith(fontWeight: FontWeight.bold),
               children: [
@@ -62,7 +61,6 @@ class _HomeAppBar1State extends State<DineoutHomeAppBar1> {
 }
 
 class DineoutSearchbar extends SearchDelegate<String> {
-  
   DineoutSearchbar({
     String hintText,
   }) : super(
@@ -92,11 +90,9 @@ class DineoutSearchbar extends SearchDelegate<String> {
   ];
 
   @override
-  // TODO: implement searchFieldLabel
   String get searchFieldLabel => super.searchFieldLabel;
   @override
   List<Widget> buildActions(BuildContext context) {
-    // TODO: implement buildActions
     return [
       IconButton(
         icon: Icon(Icons.clear),
@@ -109,7 +105,6 @@ class DineoutSearchbar extends SearchDelegate<String> {
 
   @override
   Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
@@ -120,7 +115,6 @@ class DineoutSearchbar extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     return Card(
       child: Center(
         child: Text(query),
@@ -130,8 +124,6 @@ class DineoutSearchbar extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-
     final mylist = query.isEmpty
         ? recentFoodsearched
         : foodlist.where((p) => p.startsWith(query.toLowerCase())).toList();

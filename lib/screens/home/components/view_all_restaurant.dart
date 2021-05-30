@@ -31,6 +31,15 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           itemCount: restaurantData.length,
           itemBuilder: (context, index) {
+            double rating = 1.0;
+            // int j = restaurantData[index]['VendorRatingReviews'].length;
+
+            // for (int i = 0; i < j - 1; i++) {
+            //   rating = rating +
+            //       double.parse(restaurantData[index]['VendorRatingReviews'][i]
+            //           ['rating']);
+            // }
+            // rating = rating / j;
             var couponDetatil;
 
             if (restaurantData[index]['user']['OffersAndCoupons'].isEmpty) {
@@ -64,38 +73,6 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
               }
             }
 
-            // var couponDetatil;
-
-            // if (restaurantData[index]['user']['OffersAndCoupons'].isEmpty) {
-            // } else {
-            //   if (restaurantData[index]['user']['OffersAndCoupons'][0]
-            //           ['discount'] ==
-            //       null) {
-            //     String symbol;
-            //     if (restaurantData[index]['user']['OffersAndCoupons'][0]
-            //             ['couponDiscountType'] ==
-            //         "PERCENT") {
-            //       symbol = "%";
-            //     } else {
-            //       symbol = "₹";
-            //     }
-
-            //     couponDetatil =
-            //         "${restaurantData[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
-            //   } else {
-            //     String symbol;
-            //     if (restaurantData[index]['user']['OffersAndCoupons'][0]
-            //             ['discountType'] ==
-            //         "PERCENT") {
-            //       symbol = "%";
-            //     } else {
-            //       symbol = "₹";
-            //     }
-
-            //     couponDetatil =
-            //         "${restaurantData[index]['user']['OffersAndCoupons'][0]['discount']}$symbol${restaurantData[index]['user']['OffersAndCoupons'][0]['coupon']}";
-            //   }
-            // }
             int k = restaurantData[index]['cuisines'].length;
             print(k);
             var categoryData = '';
@@ -113,6 +90,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => OfferListPage(
+                            ratingVendor: rating,
                             restaurantDa: restaurantData[index])));
               },
               child: Padding(
@@ -155,9 +133,13 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                             height: size.height * 0.18,
                                             width: size.width * 0.3,
                                             fit: BoxFit.cover,
-                                            placeholder: (context, url) => Center(
-                                                child:
-                                                    CircularProgressIndicator()),
+                                            placeholder: (context, url) =>
+                                                Image.asset(
+                                              "assets/images/feasturenttemp.jpeg",
+                                              height: size.height * 0.18,
+                                              width: size.width * 0.3,
+                                              fit: BoxFit.cover,
+                                            ),
                                             errorWidget:
                                                 (context, url, error) =>
                                                     Icon(Icons.error),
@@ -224,7 +206,9 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                 Container(
                                   child: Row(
                                     children: [
-                                      restaurantData[index]['avgRating'] == null
+                                      restaurantData[index]
+                                                  ['VendorRatingReviews']
+                                              .isEmpty
                                           ? Text(
                                               "⭐1",
                                               style: TextStyle(
@@ -238,9 +222,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                                 child: Text("⭐"),
                                               ),
                                               Text(
-                                                restaurantData[index]
-                                                        ['avgRating']
-                                                    .toString(),
+                                                "${rating.toInt()}",
                                                 style: TextStyle(
                                                     fontSize:
                                                         size.height * 0.016,
@@ -257,7 +239,24 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                               height: size.height * 0.02,
                                             ),
                                       couponDetatil == null
-                                          ? SizedBox()
+                                          ? restaurantData[index]['avgCost'] ==
+                                                  null
+                                              ? SizedBox()
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    right: 12.0,
+                                                  ),
+                                                  child: Text(
+                                                    "₹ ${restaurantData[index]['avgCost']} Cost for ${restaurantData[index]['forPeople']}",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize:
+                                                            size.height * 0.016,
+                                                        color: kTextColor),
+                                                  ),
+                                                )
                                           : Padding(
                                               padding: const EdgeInsets.only(
                                                 right: 12.0,

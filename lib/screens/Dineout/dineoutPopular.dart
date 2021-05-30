@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/view_popular.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -22,9 +21,35 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
     super.initState();
   }
 
+  List<String> idDataList = [];
+  List<String> datadine = [];
+  fetchDineoutShared() async {
+    final SharedPreferences cart = await SharedPreferences.getInstance();
+    idDataList = cart.getStringList('idDineout');
+    datadine = cart.getStringList('recommendDineout');
+    // String data = datadine.toString();
+    // datadine = json.decode(data);
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+
+    print("dinneout is list $idDataList");
+  }
+
   int status = 1;
   var responseData1;
+  // ignore: missing_return
   Future<List> getpopulardineouts() async {
+    fetchDineoutShared();
+
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
 
@@ -45,10 +70,6 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final _textstyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
-        fontSize: size.height * 0.014);
     return Container(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +89,7 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
             Spacer(),
             Container(
                 child: FlatButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (responseData1 != null) {
                         Navigator.push(
                             context,
@@ -122,7 +143,41 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                                   height: size.height * 0.24,
                                   width: size.width * 0.32,
                                   child: InkWell(
-                                    onTap: () {
+                                    onTap: () async {
+                                      final SharedPreferences cart =
+                                          await SharedPreferences.getInstance();
+
+                                      var dataAddtoList =
+                                          snapshot.data[index]['VendorInfo'];
+                                      var newdata = json.encode(dataAddtoList);
+                                      if (idDataList.contains(snapshot
+                                          .data[index]['VendorInfo']['id']
+                                          .toString())) {
+                                        print("removing adding dinout");
+                                        int k = idDataList.indexOf(snapshot
+                                            .data[index]['VendorInfo']['id']
+                                            .toString());
+                                        datadine.removeAt(k);
+                                        idDataList.removeAt(k);
+
+                                        idDataList.add(snapshot.data[index]
+                                                ['VendorInfo']['id']
+                                            .toString());
+                                        datadine.add(newdata);
+                                        cart.setStringList(
+                                            'recommendDineout', datadine);
+                                        cart.setStringList(
+                                            'idDineout', idDataList);
+                                      } else {
+                                        idDataList.add(snapshot.data[index]
+                                                ['VendorInfo']['id']
+                                            .toString());
+                                        datadine.add(newdata);
+                                        cart.setStringList(
+                                            'recommendDineout', datadine);
+                                        cart.setStringList(
+                                            'idDineout', idDataList);
+                                      }
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -136,17 +191,14 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                                         borderRadius: BorderRadius.circular(5),
                                         child: Stack(
                                           children: [
-                                            snapshot
-                                                    .data[index]['VendorInfo']
-                                                        ['dineoutImages']
-                                                    .isNotEmpty
+                                            snapshot.data[index]['VendorInfo']
+                                                        ['user']['profile'] !=
+                                                    null
                                                 ? CachedNetworkImage(
                                                     imageUrl: S3_BASE_PATH +
-                                                        snapshot.data[index][
-                                                                    'VendorInfo']
-                                                                [
-                                                                'dineoutImages']
-                                                            [0]['image'],
+                                                        snapshot.data[index]
+                                                                ['VendorInfo']
+                                                            ['user']['profile'],
                                                     fit: BoxFit.cover,
                                                     height: size.height * 0.24,
                                                     width: size.width * 0.32,
@@ -211,75 +263,6 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                                         )),
                                   )),
                             );
-
-                            // Column(
-                            //   children: [
-                            //     Padding(
-                            //       padding: const EdgeInsets.only(top: 0.0),
-                            //       child: Container(
-                            //           height: size.height * 0.11,
-                            //           width: size.width * 0.31,
-                            //           child: FlatButton(
-                            //             onPressed: () {
-                            //               Navigator.push(
-                            //                   context,
-                            //                   MaterialPageRoute(
-                            //                       builder: (context) =>
-                            //                           DineoutDetailPage(
-                            //                             data:
-                            //                                 snapshot.data[index]
-                            //                                     ['VendorInfo'],
-                            //                           )));
-                            //             },
-                            //             child: ClipRRect(
-                            //               borderRadius:
-                            //                   BorderRadius.circular(5),
-                            //               child: snapshot.data[index]
-                            //                           ['dineoutImages'] !=
-                            //                       null
-                            //                   ? CachedNetworkImage(
-                            //                       imageUrl: S3_BASE_PATH +
-                            //                           snapshot.data[index]
-                            //                                   ['dineoutImages']
-                            //                               [0]['image'],
-                            //                       fit: BoxFit.cover,
-                            //                       width: size.width * 0.31,
-                            //                       height: size.height * 0.2,
-                            //                       placeholder: (context, url) =>
-                            //                           CircularProgressIndicator(),
-                            //                       errorWidget:
-                            //                           (context, url, error) =>
-                            //                               Icon(Icons.error),
-                            //                     )
-                            //                   : Container(
-                            //                       decoration: BoxDecoration(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                                 10),
-                            //                       ),
-                            //                       child: Image.asset(
-                            //                         "assets/images/feasturenttemp.jpeg",
-                            //                         fit: BoxFit.cover,
-                            //                         width: size.width * 0.31,
-                            //                         height: size.height * 0.2,
-                            //                       ),
-                            //                     ),
-                            //             ),
-                            //           )),
-                            //     ),
-                            //     SizedBox(
-                            //       height: 7,
-                            //     ),
-                            //     Container(
-                            //         child: snapshot.data[index]['VendorInfo']
-                            //                     ['name'] !=
-                            //                 null
-                            //             ? Text(
-                            //                 "${snapshot.data[index]['VendorInfo']['name']}",
-                            //                 style: _textstyle)
-                            //             : Text("Name"))
-                            //   ],
-                            // );
                           },
                         ));
                 } else {

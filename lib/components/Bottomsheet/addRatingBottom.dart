@@ -9,148 +9,222 @@ import '../../constants.dart';
 import 'package:http/http.dart' as http;
 
 class AddRatingPage extends StatefulWidget {
+  // final menuLength;
   final data;
-  AddRatingPage({this.data});
+  AddRatingPage({
+    this.data,
+  });
   @override
   _AddRatingPageState createState() => _AddRatingPageState();
 }
 
+class RatingListdata {
+  int menuId;
+  double rating;
+  String review;
+  TextEditingController commentController;
+  RatingListdata(this.menuId, this.rating, this.review, this.commentController);
+  Map toJson() => {
+        'menuId': menuId,
+        'rating': rating,
+        'review': review,
+      };
+}
+
 class _AddRatingPageState extends State<AddRatingPage> {
-  TextEditingController _commentController = TextEditingController();
+  @override
+  void initState() {
+    data = widget.data;
+    super.initState();
+    setState(() {
+      int j = data['orderMenues'].length;
+      print("this is from customize page lenth $j");
+      for (int i = 0; i < j; i++) {
+        print("Menue name${data['orderMenues'][i]['Menu']['id']}");
+        inputs.add(RatingListdata(data['orderMenues'][i]['Menu']['id'], 0.0,
+            null, TextEditingController()));
+      }
+    });
+  }
+
+  var data;
+  // TextEditingController _commentController = TextEditingController();
+  List<RatingListdata> inputs = [];
+
   var userId;
   var authorization;
   var refreshToken;
   var _commentvalidate;
-  var rating = 1.0;
   bool isValidate = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
       child: Column(children: [
-        Container(
-            alignment: Alignment.topRight,
-            child: FlatButton(
-              onPressed: () {
-                _AddComment();
-              },
-              child: Text(
-                "Post",
-                style: TextStyle(fontSize: 18),
-              ),
-            )),
+        Expanded(
+          flex: 1,
+          child: Container(
+              alignment: Alignment.topRight,
+              child: FlatButton(
+                onPressed: () {
+                  _AddComment();
+                },
+                child: Text(
+                  "Post",
+                  style: TextStyle(fontSize: 18),
+                ),
+              )),
+        ),
         Divider(
           thickness: 1,
         ),
-        ListView(
-          shrinkWrap: true,
-          children: [
-            Column(
-              children: [
-                Row(
+        Expanded(
+          flex: 9,
+          child: ListView.builder(
+              itemCount: data['orderMenues'].length,
+              itemBuilder: (context, index) {
+                // var rating = 0.0;
+
+                // _commentController.text = inputs[index].review;
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                        height: size.height * 0.09,
-                        width: size.width * 1,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: SmoothStarRating(
-                                  allowHalfRating: false,
-                                  onRated: (value) {
-                                    setState(() {
-                                      rating = value;
-                                    });
-                                  },
-                                  starCount: 5,
-                                  rating: rating,
-                                  size: 45.0,
-                                  isReadOnly: false,
-                                  defaultIconData: Icons.star_border_outlined,
-                                  filledIconData: Icons.star,
-                                  halfFilledIconData: Icons.star_border,
-                                  color: Colors.amber,
-                                  borderColor: Colors.amber,
-                                  spacing: 0.0),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8, bottom: 2),
-                              child: Text(
-                                "$rating",
-                                style: TextStyle(color: kTextColor),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Text(data['orderMenues'][index]['Menu']['title']),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: SmoothStarRating(
+                              allowHalfRating: false,
+                              onRated: (value) {
+                                setState(() {
+                                  inputs[index].rating = value;
+                                });
+                              },
+                              starCount: 5,
+                              rating: inputs[index].rating,
+                              size: 30.0,
+                              isReadOnly: false,
+                              defaultIconData: Icons.star_border_outlined,
+                              filledIconData: Icons.star,
+                              halfFilledIconData: Icons.star_border,
+                              color: Colors.amber,
+                              borderColor: Colors.amber,
+                              spacing: 0.0),
+                        )),
+                        inputs[index].rating == 0
+                            ? SizedBox()
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, bottom: 2),
+                                child: Text(
+                                  "${inputs[index].rating}",
+                                  style: TextStyle(color: kTextColor),
+                                ),
                               ),
+                      ],
+                    ),
+                    inputs[index].rating == 0
+                        ? SizedBox()
+                        : Container(
+                            margin: EdgeInsets.only(
+                                top: size.height * 0.02,
+                                left: size.width * 0.03,
+                                right: size.width * 0.03),
+                            child: TextField(
+                              autocorrect: false,
+                              controller: inputs[index].commentController,
+                              maxLength: 250,
+                              maxLines: 4,
+                              onChanged: (value) {
+                                setState(() {
+                                  inputs[index].review = value;
+                                });
+                                print(
+                                    "this is change data ${inputs[index].review}");
+                              },
+                              style: TextStyle(fontSize: 15),
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  hintText: "Add an Comment",
+                                  errorText: _commentvalidate),
                             ),
-                          ],
-                        ))
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                      left: size.width * 0.03, right: size.width * 0.03),
-                  child: TextField(
-                    autocorrect: false,
-                    controller: _commentController,
-                    maxLength: 500,
-                    maxLines: 7,
-                    style: TextStyle(fontSize: 15),
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(10.0),
                           ),
-                        ),
-                        hintText: "Add an Comment",
-                        errorText: _commentvalidate),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                );
+              }),
         ),
       ]),
     );
   }
 
+  // ignore: non_constant_identifier_names
   Future _AddComment() async {
-    // for name
-    if (_commentController.text.isEmpty) {
-      setState(() {
-        _commentvalidate =
-            "Please Enter The Comment and Star Rating Before Posting It";
-        isValidate = false;
-      });
-    } else {
-      setState(() {
-        isValidate = true;
-        _commentvalidate = null;
-      });
+    int j = data['orderMenues'].length;
+    for (int i = 0; i <= j - 1; i++) {
+      if (inputs[i].rating == 0.0) {
+        setState(() {
+          isValidate = false;
+          Fluttertoast.showToast(msg: "Please give rating to all menues");
+        });
+        break;
+      } else {
+        setState(() {
+          isValidate = true;
+        });
+      }
     }
-    if (isValidate = true) {
+    // for name
+
+    if (isValidate == true) {
+      print("good to go");
+      print(inputs);
+      var jsonTags = jsonEncode(inputs);
+      print(jsonTags);
+      var decode = jsonDecode(jsonTags);
+      print(decode);
+      var newencode = jsonEncode(decode);
+
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getInt('userId');
       authorization = prefs.getString('sessionToken');
       refreshToken = prefs.getString('refreshToken');
       print(
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  rating reviwe");
-
-      var response = await http.post(COMMON_API + 'ratingReview', body: {
+      Map data = {
         "userId": "$userId",
         "vendorId": "${widget.data['vendorId']}",
-        "menuId": "${widget.data['orderMenues'][0]['Menu']['id']}",
-        "rating": "$rating",
-        "review": "${_commentController.text}"
-      }, headers: {
+        "menuRating": inputs,
+        "status": "true"
+      };
+      print(data);
+
+      var requestBody = jsonEncode(data);
+      print(requestBody);
+      var response = await http
+          .post(COMMON_API + 'ratingReview', body: requestBody, headers: {
         "authorization": authorization,
-        "refreshToken": refreshToken
+        "refreshToken": refreshToken,
+        "Content-Type": "application/json"
       });
-      var responseData = json.decode(response.body);
+      print(response.statusCode);
+
       if (response.statusCode == 200) {
+        var responseData = json.decode(response.body);
+        Navigator.pop(context);
         Fluttertoast.showToast(msg: "${responseData['message']}");
       } else if (response.statusCode == 401) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -176,10 +250,12 @@ class _AddRatingPageState extends State<AddRatingPage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
-        Fluttertoast.showToast(msg: "${responseData['message']}");
+        print(response.body);
+        // var responseData = json.decode(response.body);
+        // Fluttertoast.showToast(msg: "${responseData['message']}");
       }
     } else {
-      Fluttertoast.showToast(msg: "Error occured");
+      print("Error occured");
     }
   }
 }

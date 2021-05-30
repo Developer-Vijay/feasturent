@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
+// ignore: must_be_immutable
 class ViewAllPopular extends StatelessWidget {
   var data;
   ViewAllPopular({this.data});
@@ -20,7 +21,7 @@ class ViewAllPopular extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(top: 10, left: 10, right: 10),
             child: Container(
-              color: Colors.red,
+              color: Colors.white,
               height: sized.height * 0.195,
               width: sized.height * 0.22,
               child: InkWell(
@@ -32,20 +33,34 @@ class ViewAllPopular extends StatelessWidget {
                                 data: data[index]['VendorInfo'],
                               ))));
                 },
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
                     child: Stack(
                       children: [
-                        data[index]['VendorInfo']['dineoutImages'].isNotEmpty
+                        data[index]['VendorInfo']['user']['profile'] != null
                             ? CachedNetworkImage(
                                 imageUrl: S3_BASE_PATH +
-                                    data[index]['VendorInfo']['dineoutImages']
-                                        [0]['image'],
-                                fit: BoxFit.cover,
+                                    data[index]['VendorInfo']['user']
+                                        ['profile'],
                                 height: sized.height * 0.35,
                                 width: sized.height * 0.35,
-                                placeholder: (context, url) =>
-                                    Center(child: CircularProgressIndicator()),
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  height: sized.height * 0.35,
+                                  width: sized.height * 0.35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                placeholder: (context, url) => Image.asset(
+                                  "assets/images/feasturenttemp.jpeg",
+                                  fit: BoxFit.cover,
+                                ),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),
                               )
@@ -58,14 +73,19 @@ class ViewAllPopular extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Container(
-                            height: sized.height * 0.05,
+                            height: sized.height * 0.07,
                             width: sized.width * 1,
-                            color: Colors.black.withOpacity(0.7),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                            ),
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 5),
+                              padding: const EdgeInsets.only(left: 0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   data[index]['VendorInfo']['name'] != null
                                       ? Text(

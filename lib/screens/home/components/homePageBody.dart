@@ -45,7 +45,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                     PopularList(),
                     AllResturent(),
                     Container(
-                      color: Colors.grey[50],
+                      color: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(

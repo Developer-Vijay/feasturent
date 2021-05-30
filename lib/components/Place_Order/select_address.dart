@@ -22,7 +22,6 @@ class _SelectAddressState extends State<SelectAddress> {
   var addressdata;
   String _authorization;
   int ordersData;
-  // var total = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   Future<void> refreshList() async {
     refreshKey.currentState.show();
@@ -163,6 +162,7 @@ class _SelectAddressState extends State<SelectAddress> {
     }
   }
 
+  // ignore: missing_return
   Future<List<dynamic>> getAddress() async {
     final prefs = await SharedPreferences.getInstance();
     userid = prefs.getInt('userId');
@@ -435,8 +435,6 @@ class _SelectAddressState extends State<SelectAddress> {
                                                                         snapshot
                                                                             .data[index]['id']
                                                                             .toString());
-
-                                                                    // refreshList();
                                                                   });
                                                                 }
                                                               },
@@ -595,43 +593,70 @@ class _SelectAddressState extends State<SelectAddress> {
                               }),
                         )),
                     Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        onTap: () {
-                          if (addaddr == null) {
-                            Fluttertoast.showToast(
-                                msg: "Please select any address");
-                          } else {
-                            setState(() {
-                              addressID = addrId;
-                              userNameWithNumber = addrUser;
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
+                          child: MaterialButton(
+                            onPressed: () {
+                              if (addaddr == null) {
+                                Fluttertoast.showToast(
+                                    msg: "Please select any address");
+                              } else {
+                                setState(() {
+                                  addressID = addrId;
+                                  userNameWithNumber = addrUser;
 
-                              addAddress = addaddr;
-                            });
-                            Navigator.pop(context, true);
-                          }
-                        },
-                        child: Container(
-                          height: 25,
-                          margin: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Center(
-                              child: Text(
-                                "Deliver to this Address",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: size.height * 0.024),
-                              ),
-                            ),
+                                  addAddress = addaddr;
+                                });
+                                Navigator.pop(context, true);
+                              }
+                            },
+                            child: Text("Deliver to this Address"),
+                            color: Colors.blue,
+                            minWidth: size.width * 0.8,
+                            textColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                           ),
-                        ),
-                      ),
-                    )
+                        )
+
+                        // InkWell(
+                        //   onTap: () {
+                        //     if (addaddr == null) {
+                        //       Fluttertoast.showToast(
+                        //           msg: "Please select any address");
+                        //     } else {
+                        //       setState(() {
+                        //         addressID = addrId;
+                        //         userNameWithNumber = addrUser;
+
+                        //         addAddress = addaddr;
+                        //       });
+                        //       Navigator.pop(context, true);
+                        //     }
+                        //   },
+                        //   child: Container(
+                        //     height: 25,
+                        //     margin: const EdgeInsets.all(10.0),
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.blue,
+                        //         borderRadius:
+                        //             BorderRadius.all(Radius.circular(15))),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10.0),
+                        //       child: Center(
+                        //         child: Text(
+                        //           "Deliver to this Address",
+                        //           style: TextStyle(
+                        //               color: Colors.white,
+                        //               fontSize: size.height * 0.024),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        )
                   ],
                 ),
               ],

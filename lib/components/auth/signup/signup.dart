@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -22,18 +21,21 @@ class _SignupPageState extends State<SignupPage> {
   bool _isOtpSend = false;
   int registeredUserId;
 
+  // ignore: unused_field
   bool _isProcessing = false;
-  var _isEmailValidate;
-  var _isUserNameValidate;
-  var _isPhoneValidate;
-  var _isPasswordValidate;
-  bool _isValidate = true;
+  // var _isEmailValidate;
+  // var _isUserNameValidate;
+  // var _isPhoneValidate;
+  // var _isPasswordValidate;
+  // bool _isValidate = true;
   bool _obscureText = true;
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
+
+  final _formKey = GlobalKey<FormState>();
 
   //Controllers
   TextEditingController _userNameController = new TextEditingController();
@@ -67,18 +69,20 @@ class _SignupPageState extends State<SignupPage> {
                             fontSize: 40))),
                 SizedBox(height: 10),
                 //Login Form
-                Container(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
-                  child: Column(
-                    children: [
-                      //Username
-                      TextField(
-                        textInputAction: TextInputAction.next,
-                        obscureText: false,
-                        readOnly: _isOtpSend,
-                        maxLength: 12,
-                        decoration: InputDecoration(
+                Form(
+                  key: _formKey,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: 20, left: 20, right: 20, bottom: 0),
+                    child: Column(
+                      children: [
+                        //Username
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          obscureText: false,
+                          readOnly: _isOtpSend,
+                          maxLength: 12,
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(20.0),
@@ -87,22 +91,33 @@ class _SignupPageState extends State<SignupPage> {
                             labelText: 'Username',
                             prefixIcon: Icon(Icons.person),
                             counterText: "",
-                            errorText: _isUserNameValidate),
-                        controller: _userNameController,
-                      ),
-                      SizedBox(height: 15),
-                      //Phone Number
-                      TextField(
-                        textInputAction: TextInputAction.next,
-                        obscureText: false,
-                        readOnly: _isOtpSend,
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                        ],
-                        maxLength: 10,
-                        decoration: InputDecoration(
+                          ),
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Username cannot be empty ';
+                            } else if (text.contains(" ")) {
+                              return 'Username cannot contain the Space';
+                            } else if (text.length <= 3) {
+                              return "Username cannot be of three words ";
+                            }
+                            return null;
+                          },
+                          controller: _userNameController,
+                        ),
+                        SizedBox(height: 15),
+                        //Phone Number
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          obscureText: false,
+                          readOnly: _isOtpSend,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp('[0-9.,]')),
+                          ],
+                          maxLength: 10,
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(20.0),
@@ -111,16 +126,24 @@ class _SignupPageState extends State<SignupPage> {
                             labelText: 'Phone Number',
                             prefixIcon: Icon(Icons.phone),
                             counterText: "",
-                            errorText: _isPhoneValidate),
-                        controller: _phoneNumberController,
-                      ),
-                      SizedBox(height: 15),
-                      //Email Address
-                      TextField(
-                        textInputAction: TextInputAction.next,
-                        obscureText: false,
-                        readOnly: _isOtpSend,
-                        decoration: InputDecoration(
+                          ),
+                          controller: _phoneNumberController,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Mobile number Cant be empty  ';
+                            } else if (text.length != 10) {
+                              return "Mobile number should be of 10 digit ";
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        //Email Address
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          obscureText: false,
+                          readOnly: _isOtpSend,
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(20.0),
@@ -128,15 +151,21 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             labelText: 'Email Address',
                             prefixIcon: Icon(Icons.email),
-                            errorText: _isEmailValidate),
-                        controller: _emailController,
-                      ),
-                      SizedBox(height: 15),
-                      //Password
-                      TextField(
-                        obscureText: _obscureText,
-                        readOnly: _isOtpSend,
-                        decoration: InputDecoration(
+                          ),
+                          controller: _emailController,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Email id cannot be Empty';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        //Password
+                        TextFormField(
+                          obscureText: _obscureText,
+                          readOnly: _isOtpSend,
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(20.0),
@@ -152,10 +181,23 @@ class _SignupPageState extends State<SignupPage> {
                                       : Icons.visibility),
                                   size: 17,
                                 )),
-                            errorText: _isPasswordValidate),
-                        controller: _passwordController,
-                      ),
-                    ],
+                          ),
+                          controller: _passwordController,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Password cannot be empty';
+                            } else if (text.length < 8) {
+                              return "Password Must be of 8 digits";
+                            } else if (!RegExp(
+                                    r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$")
+                                .hasMatch(text)) {
+                              return "password must contain a Capiatl word , special character , number ";
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Container(
@@ -164,10 +206,10 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       //Checkbox for accept T&C
                       Checkbox(
-                        value: this.tncValue,
+                        value: tncValue,
                         onChanged: (bool value) {
                           setState(() {
-                            this.tncValue = value;
+                            tncValue = value;
                           });
                         },
                       ),
@@ -241,117 +283,51 @@ class _SignupPageState extends State<SignupPage> {
 
   //Signup request api
   Future<void> _signupBymobile() async {
+    print(_emailController.text);
+
+    print(_passwordController.text);
+    final isValid = _formKey.currentState.validate();
+
     setState(() {
       _isProcessing = true;
     });
-    //Email Validate
-    if (_emailController.text.isEmpty &&
-        isEmail(_emailController.text) &&
-        _emailController.text.length < 7) {
-      setState(() {
-        _isEmailValidate = "Email id cannot be Empty";
-        _isValidate = false;
-      });
-    } else {
-      setState(() {
-        _isEmailValidate = null;
-        _isValidate = true;
-      });
-    }
-    //Phone Validate
-    if (_phoneNumberController.text.isEmpty) {
-      setState(() {
-        _isPhoneValidate = "Mobile number Cant be empty ";
-        _isValidate = false;
-      });
-    } else if (_phoneNumberController.text.length < 10) {
-      _isPhoneValidate = "Mobile number should be of 10 digit ";
-      _isValidate = false;
-    } else {
-      setState(() {
-        _isPhoneValidate = null;
-        _isValidate = true;
-      });
-    }
-    //Username Validation
-    if ((_userNameController.text.isEmpty)) {
-      setState(() {
-        _isUserNameValidate = "Username cannot be empty ";
-        _isValidate = false;
-      });
-    } else if ((_userNameController.text.length) <= 3) {
-      setState(() {
-        _isUserNameValidate = "Username cannot be of three words ";
-        _isValidate = false;
-      });
-    } else if (_userNameController.text.contains(" ")) {
-      setState(() {
-        _isUserNameValidate = "Username cannot contain the Space";
-        _isValidate = false;
-      });
-    } else {
-      setState(() {
-        _isUserNameValidate = null;
-        _isValidate = true;
-      });
-    }
-    //Phone Validation
-    if (_passwordController.text.isEmpty) {
-      setState(() {
-        _isPasswordValidate = "Password cannot be empty";
-        _isValidate = false;
-      });
-    } else if (_passwordController.text.length < 8) {
-      setState(() {
-        _isPasswordValidate = "Password Must be of 8 digits";
-        _isValidate = false;
-      });
-    } else if (!RegExp(
-            r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$")
-        .hasMatch(_passwordController.text)) {
-      setState(() {
-        _isPasswordValidate =
-            "password must contain a Capiatl word , special character , number ";
-        _isValidate = false;
-      });
-    } else {
-      setState(() {
-        _isPasswordValidate = null;
-        _isValidate = true;
-      });
-    }
 
-    if (tncValue == true && _isValidate) {
-      print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  signup");
+    if (tncValue == true) {
+      if (isValid == true) {
+        print(" here isValida ### $isValid");
+        print(
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  signup");
 
-      var response = await http.post(USER_API + 'signup', body: {
-        'userName': _userNameController.text,
-        'password': _passwordController.text,
-        'phone': _phoneNumberController.text,
-        'email': _emailController.text
-      });
-      var responseData = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        _stoastMessage(VerifyAcount);
-        setState(() {
-          _isOtpSend = true;
-          registeredUserId = responseData['data']['userId'];
-          _isProcessing = false;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => OtpChecker(
-                      phone: _phoneNumberController.text,
-                      resgUserId: registeredUserId.toString(),
-                    )),
-          );
+        var response = await http.post(USER_API + 'signup', body: {
+          'userName': _userNameController.text,
+          'password': _passwordController.text,
+          'phone': _phoneNumberController.text,
+          'email': _emailController.text
         });
+        var responseData = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          _stoastMessage(VerifyAcount);
+          setState(() {
+            _isOtpSend = true;
+            registeredUserId = responseData['data']['userId'];
+            _isProcessing = false;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OtpChecker(
+                        phone: _phoneNumberController.text,
+                        resgUserId: registeredUserId.toString(),
+                      )),
+            );
+          });
+        } else {
+          _stoastMessage(responseData['message']);
+          setState(() {
+            _isProcessing = false;
+          });
+        }
       } else {
-        _stoastMessage(responseData['message']);
-        setState(() {
-          _isProcessing = false;
-        });
+        print("isValida ### $isValid");
       }
     } else {
       setState(() {
@@ -362,6 +338,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   //Toast Message
+  // ignore: missing_return
   Future<void> _stoastMessage(message) {
     Fluttertoast.showToast(
         msg: message,
@@ -380,39 +357,5 @@ class _SignupPageState extends State<SignupPage> {
     } else {
       throw 'Could not launch $url';
     }
-  }
-
-//Verify otp
-  _openPopup(context) {
-    Alert(
-        context: context,
-        title: "Verify Account",
-        content: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.account_circle),
-                labelText: 'Username',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              readOnly: true,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-          ],
-        ),
-        buttons: [
-          DialogButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              "Verify",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ]).show();
   }
 }

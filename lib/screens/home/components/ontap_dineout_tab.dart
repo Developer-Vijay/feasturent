@@ -1,31 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
-import 'package:feasturent_costomer_app/screens/home/SearchFiles/test_search.dart';
 import 'package:flutter/material.dart';
-
+import 'ontap_offer.dart';
 import '../../../constants.dart';
 
-class DineoutSearch extends StatefulWidget {
+class OnTapDineOutTab extends StatefulWidget {
   @override
-  _DineoutSearchState createState() => _DineoutSearchState();
+  _OnTapDineOutTabState createState() => _OnTapDineOutTabState();
 }
 
-class _DineoutSearchState extends State<DineoutSearch> {
+class _OnTapDineOutTabState extends State<OnTapDineOutTab> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-        child: resultData != null
-            ? resultData['dineout'].isNotEmpty
+        child: offerTapData != null
+            ? offerTapData['dineout'].isNotEmpty
                 ? Container(
                     padding: const EdgeInsets.only(
                       top: 4.0,
                     ),
                     child: new GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       crossAxisCount: 2,
                       children:
-                          List.generate(resultData['dineout'].length, (i) {
+                          List.generate(offerTapData['dineout'].length, (i) {
                         return Padding(
                           padding: const EdgeInsets.only(
                               top: 7.0, left: 7, right: 7),
@@ -39,23 +40,25 @@ class _DineoutSearchState extends State<DineoutSearch> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               DineoutDetailPage(
-                                                dineID: resultData['dineout'][i]
-                                                    ['id'],
+                                                dineID: offerTapData['dineout']
+                                                    [i]['VendorInfo']['id'],
                                               )));
                                 },
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: Stack(
                                       children: [
-                                        resultData['dineout'][i]['user']
-                                                    ['profile'] !=
+                                        offerTapData['dineout'][i]['VendorInfo']
+                                                    ['user']['profile'] !=
                                                 null
                                             ? CachedNetworkImage(
                                                 imageUrl:
                                                     // "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/e/p/p20298-1484731590587f34c63a2a1.jpg?tr=tr:n-medium",
 
                                                     S3_BASE_PATH +
-                                                        resultData['dineout'][i]
+                                                        offerTapData['dineout']
+                                                                    [i]
+                                                                ['VendorInfo']
                                                             ['user']['profile'],
                                                 fit: BoxFit.cover,
                                                 height: size.height * 0.27,
@@ -105,8 +108,10 @@ class _DineoutSearchState extends State<DineoutSearch> {
                                                       Container(
                                                         width: size.width * 0.4,
                                                         child: Text(
-                                                          capitalize(resultData[
-                                                                  'dineout'][i]
+                                                          capitalize(offerTapData[
+                                                                      'dineout']
+                                                                  [
+                                                                  i]['VendorInfo']
                                                               ['name']),
                                                           overflow: TextOverflow
                                                               .ellipsis,
@@ -123,13 +128,14 @@ class _DineoutSearchState extends State<DineoutSearch> {
                                                       ),
                                                     ],
                                                   ),
-                                                  resultData['dineout'][i]
+                                                  offerTapData['dineout'][i]
+                                                                  ['VendorInfo']
                                                               ['avgCost'] ==
                                                           null
                                                       ? SizedBox()
                                                       : Text(
                                                           capitalize(
-                                                              '₹ ${resultData['dineout'][i]['avgCost']} for ${resultData['dineout'][i]['forPeople']}'),
+                                                              '₹ ${offerTapData['dineout'][i]['VendorInfo']['avgCost']} for ${offerTapData['dineout'][i]['VendorInfo']['forPeople']}'),
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.height *

@@ -20,7 +20,7 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
     varientPrice = widget.menuData['totalPrice'];
     setState(() {
       int j = widget.menuData['AddonMenus'].length;
-
+      print("this is from customize page lenth $j");
       for (int i = 0; i < j; i++) {
         inputs.add(false);
       }
@@ -31,7 +31,6 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
 
   final addOnservices = AddOnService();
 
-  // List<String> checkdata = [];
   getList() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
@@ -73,15 +72,16 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
   }
 
   List addonId = [];
-  void ItemChange(bool val, int index, data) async {
+  // ignore: non_constant_identifier_names
+  ItemChange(bool val, int index, data) async {
     if (val == true) {
-      int addOngst = (data['amount'] * (data['gst'] / 100)).toInt();
+      int addOngst = (data['gstAmount']).toInt();
       totalAddOngst = totalAddOngst + addOngst;
       totalAddOnPrice = totalAddOnPrice + data['amount'] + addOngst;
       ids.add(data['id'].toString());
       addonId.add(data['id']);
     } else {
-      int addOngst = (data['amount'] * (data['gst'] / 100)).toInt();
+      int addOngst = (data['gstAmount']).toInt();
       totalAddOngst = totalAddOngst - addOngst;
       totalAddOnPrice = totalAddOnPrice - data['amount'] - addOngst;
       ids.remove(data['id'].toString());
@@ -120,13 +120,14 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
   int temp = 0;
   changeValue(int val, data) {
     setState(() {
-      varientgst = (data['amount'] * (data['gst'] / 100)).toInt();
+      varientgst = (data['gstAmount']).toInt();
       selectedRadio = val;
       varientPrice = data['amount'] + varientgst;
       varientid = data['id'];
     });
   }
 
+  // ignore: non_constant_identifier_names
   AddtoCartAddonS() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
@@ -155,12 +156,13 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
             print("databaseEmpty");
             print(" added Addon  ${widget.menuData['AddonMenus'][k]['title']}");
             setState(() {
-              //   itemAddToCart(index, tpye, price, gst, variantId);
               totalcount = totalcount + 1;
               gsttotal = gsttotal +
-                  (widget.menuData['AddonMenus'][k]['gstAmount']).toInt();
+                  (widget.menuData['AddonMenus'][k]['gstAmount'].toInt())
+                      .toInt();
               totalprice = totalprice +
-                  (widget.menuData['AddonMenus'][k]['gstAmount']).toInt() +
+                  (widget.menuData['AddonMenus'][k]['gstAmount'].toInt())
+                      .toInt() +
                   widget.menuData['AddonMenus'][k]['amount'];
 
               cart.setInt('TotalPrice', totalprice);
@@ -183,9 +185,11 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
               setState(() {
                 totalcount = totalcount + 1;
                 gsttotal = gsttotal +
-                    (widget.menuData['AddonMenus'][k]['gstAmount']).toInt();
+                    (widget.menuData['AddonMenus'][k]['gstAmount'].toInt())
+                        .toInt();
                 totalprice = totalprice +
-                    (widget.menuData['AddonMenus'][k]['gstAmount']).toInt() +
+                    (widget.menuData['AddonMenus'][k]['gstAmount'].toInt())
+                        .toInt() +
                     widget.menuData['AddonMenus'][k]['amount'];
 
                 cart.setInt('TotalPrice', totalprice);
@@ -200,12 +204,6 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
             } else {
               print(
                   " function required to delete Addon  ${widget.menuData['AddonMenus'][k]['title']}");
-
-              // Add delete function here
-              // setState(() {
-              //   inputs[index] = true;
-              // });
-              // print("match");
             }
           }
         } else {
@@ -220,9 +218,9 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
 
   addtoAddonFunction(data) {
     setState(() {
-      int price = data['amount'] + (data['gstAmount']).toInt();
+      int price = data['amount'] + (data['gstAmount'].toInt());
       addOnservices.saveUser(price, 1, widget.menuData['vendorId'], data['id'],
-          data['title'], 'null', (data['gstAmount']).toInt());
+          data['title'], 'null', (data['gstAmount'].toInt()));
     });
   }
 
@@ -292,8 +290,12 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
                                     height: size.height * 0.2,
                                     width: size.width * 0.26,
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) => Center(
-                                        child: CircularProgressIndicator()),
+                                    placeholder: (context, url) => Image.asset(
+                                      "assets/images/feasturenttemp.jpeg",
+                                      height: size.height * 0.2,
+                                      width: size.width * 0.26,
+                                      fit: BoxFit.cover,
+                                    ),
                                     errorWidget: (context, url, error) =>
                                         Image.asset(
                                       "assets/images/feasturenttemp.jpeg",
@@ -503,7 +505,6 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
                                   Text(
                                       capitalize("${widget.menuData['title']}"),
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                           fontSize: size.height * 0.020)),
                                   Spacer(),
@@ -544,13 +545,12 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
                                                         .menuData['AddonMenus']
                                                     [index]['title']),
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black54,
+                                                    color: Colors.black,
                                                     fontSize:
                                                         size.height * 0.020)),
                                             Spacer(),
                                             Text(
-                                                "₹${widget.menuData['AddonMenus'][index]['amount'] + (widget.menuData['AddonMenus'][index]['amount'] * (widget.menuData['AddonMenus'][index]['gst'] / 100)).toInt()}",
+                                                "₹${widget.menuData['AddonMenus'][index]['amount'] + (widget.menuData['AddonMenus'][index]['gstAmount']).toInt()}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
@@ -607,13 +607,12 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
                                                         .menuData['AddonMenus']
                                                     [index]['title']),
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                     fontSize:
                                                         size.height * 0.020)),
                                             Spacer(),
                                             Text(
-                                                "₹${widget.menuData['AddonMenus'][index]['amount'] + (widget.menuData['AddonMenus'][index]['amount'] * (widget.menuData['AddonMenus'][index]['gst'] / 100)).toInt()}",
+                                                "₹${widget.menuData['AddonMenus'][index]['amount'] + (widget.menuData['AddonMenus'][index]['gstAmount']).toInt()}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,

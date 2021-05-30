@@ -1,9 +1,11 @@
+import 'package:dotted_line/dotted_line.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineput_book_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../constants.dart';
 
+// ignore: must_be_immutable
 class DineoutAddMembers extends StatefulWidget {
   var date;
   var time;
@@ -89,6 +91,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
               ),
             ),
             Container(
+              padding: EdgeInsets.all(8.0),
               child: widget.data['user']['OffersAndCoupons'].isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
@@ -266,6 +269,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                                       height: 5,
                                     ),
                                     Container(
+                                      width: size.width * 1,
                                       decoration: BoxDecoration(
                                           color: Colors.amber[100],
                                           borderRadius:
@@ -273,8 +277,11 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          "Only Applicable when Paying using Dineout Pay",
+                                          widget.data['user']
+                                                  ['OffersAndCoupons'][index]
+                                              ['description'],
                                           maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
@@ -289,7 +296,10 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                         );
                       },
                     )
-                  : Text("No offers"),
+                  : Text(
+                      "No offers added",
+                      style: TextStyle(color: Colors.black54),
+                    ),
             ),
             SizedBox(height: size.height * 0.04),
             Padding(
@@ -320,17 +330,19 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8),
-                      child: Text("Choose the Number of Guests going"),
-                    ),
+                        padding: const EdgeInsets.only(left: 8.0, right: 8),
+                        child: Text(
+                          "Choose the Number of Guests going",
+                          style: TextStyle(
+                            color: Colors.black54,
+                          ),
+                        )),
                     SizedBox(height: size.height * 0.04),
                     Row(
                       children: [
-                        SizedBox(
-                          width: 12,
-                        ),
+                        Spacer(),
                         Text(
-                          "Male",
+                          "Adults",
                           style: TextStyle(
                               color: Colors.black, fontWeight: FontWeight.w500),
                         ),
@@ -345,7 +357,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                             onTap: () {
                               if (counter1 == 0) {
                                 setState(() {
-                                  counter = 0;
+                                  counter1 = 0;
                                 });
                               } else {
                                 setState(() {
@@ -362,7 +374,10 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                         SizedBox(
                           width: 12,
                         ),
-                        Text("$counter1"),
+                        Text(
+                          "$counter1",
+                          style: TextStyle(color: Colors.black),
+                        ),
                         SizedBox(
                           width: 12,
                         ),
@@ -382,11 +397,19 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: size.width * 0.099,
+                        Spacer(),
+                        DottedLine(
+                          dashGapLength: 0,
+                          dashGapRadius: 0,
+                          dashGapColor: Colors.black45,
+                          lineThickness: 2,
+                          dashColor: Colors.black45,
+                          lineLength: size.height * 0.05,
+                          direction: Axis.vertical,
                         ),
+                        Spacer(),
                         Text(
-                          "Female",
+                          "Children",
                           style: TextStyle(
                               color: Colors.black, fontWeight: FontWeight.w500),
                         ),
@@ -400,13 +423,13 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                if (counter == 0) {
+                                if (counter2 == 0) {
                                   setState(() {
-                                    counter = 0;
+                                    counter2 = 0;
                                   });
                                 } else {
                                   setState(() {
-                                    counter--;
+                                    counter2--;
                                   });
                                 }
                               });
@@ -420,7 +443,10 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                         SizedBox(
                           width: 12,
                         ),
-                        Text("$counter"),
+                        Text(
+                          "$counter2",
+                          style: TextStyle(color: Colors.black),
+                        ),
                         SizedBox(
                           width: 12,
                         ),
@@ -431,7 +457,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                counter++;
+                                counter2++;
                               });
                             },
                             child: Icon(
@@ -440,73 +466,11 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                             ),
                           ),
                         ),
+                        Spacer()
                       ],
                     ),
                     SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: size.width * 0.24),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Children",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.06,
-                          ),
-                          CircleAvatar(
-                            backgroundColor: Colors.blueGrey[50],
-                            foregroundColor: Colors.blue,
-                            radius: 12,
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (counter2 == 0) {
-                                    setState(() {
-                                      counter2 = 0;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      counter2--;
-                                    });
-                                  }
-                                });
-                              },
-                              child: Icon(
-                                Icons.remove,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Text("$counter2"),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          CircleAvatar(
-                            backgroundColor: Colors.blueGrey[50],
-                            foregroundColor: Colors.blue,
-                            radius: 12,
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  counter2++;
-                                });
-                              },
-                              child: Icon(
-                                Icons.add,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      height: size.height * 0.01,
                     ),
                   ],
                 ),
@@ -515,33 +479,36 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
             SizedBox(
               height: size.height * 0.1,
             ),
-            MaterialButton(
-              onPressed: () {
-                if (counter == 0 && counter1 == 0 && counter2 == 0) {
-                  Fluttertoast.showToast(msg: 'Please add no. of guest');
-                } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DineoutBookingSummary(
-                                date: showdate,
-                                time: showtime,
-                                data: widget.data,
-                                femalecount: counter1,
-                                malecount: counter,
-                                childcount: counter2,
-                                totalguest: guest,
-                                senddate: senddate,
-                                adult: adult,
-                              )));
-                }
-              },
-              child: Text("Continue to Reserve"),
-              color: Colors.blue,
-              textColor: Colors.white,
-              minWidth: size.width * 0.9,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: MaterialButton(
+                onPressed: () {
+                  if (counter1 == 0) {
+                    Fluttertoast.showToast(msg: 'Please add no. of guest');
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DineoutBookingSummary(
+                                  date: showdate,
+                                  time: showtime,
+                                  data: widget.data,
+                                  femalecount: counter,
+                                  malecount: counter1,
+                                  childcount: counter2,
+                                  totalguest: guest,
+                                  senddate: senddate,
+                                  adult: adult,
+                                )));
+                  }
+                },
+                child: Text("Continue to Reserve"),
+                color: Colors.blue,
+                minWidth: size.width * 0.8,
+                textColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
             )
           ],
         ),

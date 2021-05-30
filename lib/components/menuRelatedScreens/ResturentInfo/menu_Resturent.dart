@@ -64,8 +64,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
       }
     }
-
-    // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -114,10 +112,14 @@ class _ResturentMenuState extends State<ResturentMenu> {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
       checkdata = cart.getStringList('addedtocart');
+      baritemCount = cart.getInt('TotalCount');
+      pricebar = cart.getInt('TotalPrice');
     });
     print(checkdata);
   }
 
+  int baritemCount = 0;
+  int pricebar = 0;
   var restaurantDataCopy;
   @override
   Widget build(BuildContext context) {
@@ -127,7 +129,10 @@ class _ResturentMenuState extends State<ResturentMenu> {
       floatingActionButton: restaurantDataCopy['VendorCategories'].length == 0
           ? Container()
           : Container(
-              margin: EdgeInsets.only(bottom: 30),
+              margin: EdgeInsets.only(
+                  bottom: baritemCount == 0
+                      ? size.height * 0.03
+                      : size.height * 0.07),
               child: MaterialButton(
                 onPressed: () {},
                 child: PopupMenuButton(
@@ -209,7 +214,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
       body: Column(
         children: [
           Expanded(
-            flex: 18,
+            flex: 23,
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 10),
               itemCount: restaurantDataCopy['Menus'].length,
@@ -310,9 +315,12 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                 width: size.width * 0.26,
                                                 fit: BoxFit.cover,
                                                 placeholder: (context, url) =>
-                                                    Center(
-                                                        child:
-                                                            CircularProgressIndicator()),
+                                                    Image.asset(
+                                                  "assets/images/feasturenttemp.jpeg",
+                                                  height: size.height * 0.1,
+                                                  width: size.width * 0.26,
+                                                  fit: BoxFit.cover,
+                                                ),
                                                 errorWidget:
                                                     (context, url, error) =>
                                                         Icon(Icons.error),
@@ -339,12 +347,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                 await SharedPreferences
                                                     .getInstance();
 
-                                            int totalprice =
-                                                cart.getInt('TotalPrice');
-                                            int gsttotal =
-                                                cart.getInt('TotalGst');
-                                            int totalcount =
-                                                cart.getInt('TotalCount');
                                             int vendorId =
                                                 cart.getInt('VendorId');
                                             if (restaurantDataCopy['Menus']
@@ -384,8 +386,10 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                               'Menus'][index]
                                                           ['totalPrice'],
                                                       restaurantDataCopy[
-                                                              'Menus'][index]
-                                                          ['gstAmount'],
+                                                                      'Menus']
+                                                                  [index]
+                                                              ['gstAmount']
+                                                          .toInt(),
                                                       0,
                                                       null,
                                                       restaurantDataCopy[
@@ -447,12 +451,14 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                         'AddonMenus'][i]
                                                                     [
                                                                     'gstAmount'];
-                                                            totalgst = restaurantDataCopy[
-                                                                            'Menus']
-                                                                        [index][
-                                                                    'AddonMenus']
-                                                                [
-                                                                i]['gstAmount'];
+                                                            totalgst = restaurantDataCopy['Menus']
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        'AddonMenus'][i]
+                                                                    [
+                                                                    'gstAmount']
+                                                                .toInt();
                                                           });
                                                         }
                                                       }
@@ -474,9 +480,10 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                   [index]
                                                               ['totalPrice'],
                                                           restaurantDataCopy[
-                                                                      'Menus']
-                                                                  [index]
-                                                              ['gstAmount'],
+                                                                          'Menus']
+                                                                      [index]
+                                                                  ['gstAmount']
+                                                              .toInt(),
                                                           0,
                                                           tempAddOns,
                                                           restaurantDataCopy[
@@ -501,8 +508,10 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                 'Menus'][index]
                                                             ['totalPrice'],
                                                         restaurantDataCopy[
-                                                                'Menus'][index]
-                                                            ['gstAmount'],
+                                                                        'Menus']
+                                                                    [index]
+                                                                ['gstAmount']
+                                                            .toInt(),
                                                         0,
                                                         null,
                                                         restaurantDataCopy[
@@ -567,14 +576,14 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                           'AddonMenus'][i]
                                                                       [
                                                                       'gstAmount'];
-                                                              totalgst = restaurantDataCopy[
-                                                                              'Menus']
+                                                              totalgst = restaurantDataCopy['Menus']
+                                                                              [
+                                                                              index]
                                                                           [
-                                                                          index]
+                                                                          'AddonMenus'][i]
                                                                       [
-                                                                      'AddonMenus']
-                                                                  [
-                                                                  i]['gstAmount'];
+                                                                      'gstAmount']
+                                                                  .toInt();
                                                             });
                                                           }
                                                         }
@@ -596,9 +605,10 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                     [index]
                                                                 ['totalPrice'],
                                                             restaurantDataCopy[
-                                                                        'Menus']
-                                                                    [index]
-                                                                ['gstAmount'],
+                                                                            'Menus']
+                                                                        [index][
+                                                                    'gstAmount']
+                                                                .toInt(),
                                                             0,
                                                             tempAddOns,
                                                             restaurantDataCopy[
@@ -734,9 +744,10 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                               "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
 
                                                                           totalprice =
-                                                                              restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                          totalgst =
-                                                                              restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                              restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                          totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount']
+                                                                              .toInt()
+                                                                              .toInt();
                                                                         });
                                                                       }
                                                                     }
@@ -778,10 +789,13 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                             Fluttertoast.showToast(
                                                 msg: "Not taking orders now");
                                           }
-
-                                          // await addButtonFunction(tpye, index);
                                         },
-                                        color: Colors.white,
+                                        color: checkdata.contains(
+                                                restaurantDataCopy['Menus']
+                                                        [index]['id']
+                                                    .toString())
+                                            ? Colors.blue
+                                            : Colors.white,
                                         minWidth: size.width * 0.16,
                                         height: size.height * 0.033,
                                         shape: RoundedRectangleBorder(
@@ -800,7 +814,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                 .size
                                                                 .height *
                                                             0.015,
-                                                    color: Colors.blueGrey),
+                                                    color: Colors.white),
                                               )
                                             : Text(
                                                 "Add",
@@ -889,33 +903,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                       ),
                                     ),
                                     SizedBox(height: size.height * 0.005),
-                                    // Container(
-                                    //   child: Row(
-                                    //     children: [
-                                    //       Container(
-                                    //         child: restaurantDataCopy['Menus']
-                                    //                         [index]['Category']
-                                    //                     ['iconImage'] ==
-                                    //                 "null"
-                                    //             ? Image.asset(
-                                    //                 "assets/icons/discount_icon.jpg",
-                                    //                 height: size.height * 0.02,
-                                    //               )
-                                    //             : SizedBox(),
-                                    //       ),
-                                    //       SizedBox(
-                                    //         width: size.width * 0.006,
-                                    //       ),
-                                    //       Text(
-                                    //         restaurantDataCopy['Menus'][index]
-                                    //             ['Category']['name'],
-                                    //         style: TextStyle(
-                                    //             fontSize: size.height * 0.014,
-                                    //             fontWeight: FontWeight.bold),
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // ),
                                     SizedBox(
                                       height: size.height * 0.002,
                                     ),
@@ -1037,45 +1024,72 @@ class _ResturentMenuState extends State<ResturentMenu> {
               },
             ),
           ),
-          Expanded(
-              flex: 2,
-              child: Container(
-                height: size.height * 1,
-                color: Colors.white,
-                child: Container(
-                  height: size.height * 0.01,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  width: size.width * 1,
-                  color: Colors.lightBlueAccent[200],
-                  child: Row(
-                    children: [
-                      Container(
-                        width: size.width * 0.65,
-                        child: Text(
-                          snackBarData,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white),
-                        ),
+          baritemCount == 0
+              ? SizedBox()
+              : Expanded(
+                  flex: 3,
+                  child: Container(
+                    height: size.height * 1,
+                    color: Colors.white,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            topRight: Radius.circular(25)),
+                        border: Border.all(color: Colors.blueAccent),
+                        // color: Colors.grey[200],
                       ),
-                      Spacer(),
-                      FlatButton(
-                        textColor: Colors.redAccent,
-                        child: Text("View Cart"),
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CartScreen()));
-                          if (result) {
-                            setState(() {});
-                            getList();
-                          }
-                        },
+                      height: size.height * 0.01,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width * 1,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: size.width * 0.4,
+                            child: Text(
+                              "$baritemCount Items | ₹ $pricebar",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ),
+                          Spacer(),
+                          MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            color: Colors.blue,
+                            // minWidth: size.width * 0.4,
+                            // height: size.height * 0.03,
+                            textColor: Colors.white,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.shopping_cart_outlined,
+                                  color: Colors.blue[50],
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "View Cart",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CartScreen()));
+                              if (result) {
+                                setState(() {});
+                                getList();
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ))
+                    ),
+                  ))
         ],
       ),
     );
@@ -1128,9 +1142,6 @@ class _ResturentMenuState extends State<ResturentMenu> {
             snackBarData =
                 "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
           });
-
-          // Scaffold.of(context)
-          //     .showSnackBar(snackBar);
         } else {
           if (data1[0]['itemName'] !=
               restaurantDataCopy['Menus'][index]['title']) {
@@ -1223,6 +1234,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
           addons,
           rating.toString());
     });
+    getList();
   }
 
   fun(value) {

@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/screens/home/SearchFiles/test_search.dart';
-import 'package:feasturent_costomer_app/screens/home/components/category_detail.dart';
 import 'package:flutter/material.dart';
-
 import '../../../constants.dart';
+import '../slider.dart';
 
 class DishSearch extends StatefulWidget {
   @override
@@ -31,7 +30,11 @@ class _DishSearchState extends State<DishSearch> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CategoryDetailPage(
+                                    builder: (context) => FoodSlider(
+                                          rating: 1.0,
+                                          ratinglength: 1,
+                                          menuStatus: true,
+                                          restaurentName: null,
                                           dishID: resultData['dish'][index]
                                               ['id'],
                                         )));
@@ -141,10 +144,10 @@ class _DishSearchState extends State<DishSearch> {
                                                           width:
                                                               size.width * 0.45,
                                                           child: Text(
-                                                            capitalize
-                                                            (resultData['dish']
-                                                                    [index]
-                                                                ['title']),
+                                                            capitalize(
+                                                                resultData['dish']
+                                                                        [index]
+                                                                    ['title']),
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -223,17 +226,7 @@ class _DishSearchState extends State<DishSearch> {
                                                   Container(
                                                     child: Row(
                                                       children: [
-                                                        Container(
-                                                            child: Text("⭐")),
-                                                        Text(
-                                                          "3.0",
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              color: Colors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
+                                                        Container(),
                                                         Spacer(),
                                                         Text(
                                                           "₹ ${resultData['dish'][index]['totalPrice']}",

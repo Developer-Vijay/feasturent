@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
-import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
+import 'package:feasturent_costomer_app/screens/Dineout/dineoutdetailpage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
@@ -35,8 +36,9 @@ class _WishlistState extends State<Wishlist> {
             )));
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final services = UserServices();
-  int _index1 = 0;
   final wishListServices = WishListService();
   List<String> checkdata = [];
   getList() async {
@@ -51,6 +53,7 @@ class _WishlistState extends State<Wishlist> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -73,455 +76,507 @@ class _WishlistState extends State<Wishlist> {
             print(users);
             if (snap.hasData) {
               print(snap.data);
-
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: users.length,
-                itemBuilder: (context, index) {
-                  print("index $index");
-                  int tpye = 0;
-
-                  return InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 2,
-                                    color: Colors.blue[50],
-                                    offset: Offset(1, 3),
-                                    spreadRadius: 2)
-                              ]),
-                          margin: EdgeInsets.only(
-                            top: size.width * 0.02,
-                            left: size.width * 0.02,
-                            right: size.width * 0.02,
-                          ),
-                          height: size.height * 0.14,
-                          child: Dismissible(
-                            key: ValueKey(index),
-                            secondaryBackground: Container(
-                              color: Colors.red,
-                              padding: EdgeInsets.only(right: 10),
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
+              final children = <Widget>[];
+              users.forEach((doc) {
+                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                if (doc.isDineout == 1) {
+                  children.add(Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    child: Container(
+                      color: Colors.white,
+                      height: size.height * 0.195,
+                      width: size.height * 0.22,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => (DineoutDetailPage(
+                                        dineID: doc.idDR,
+                                      ))));
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
-                            background: Container(
-                              color: Colors.blue,
-                              padding: EdgeInsets.only(left: 10),
-                              alignment: Alignment.centerLeft,
-                              child: Icon(
-                                Icons.add_to_photos,
-                                color: Colors.white,
-                              ),
-                            ),
-
-                            // ignore: missing_return
-                            confirmDismiss: (direction) async {
-                              if (direction == DismissDirection.endToStart) {
-                                final bool res = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content: Text(
-                                            "Are you sure you want to delete ${users[index].itemName}?"),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          FlatButton(
-                                            child: Text(
-                                              "Delete",
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ),
-                                            onPressed: () async {
-                                              // print(
-                                              //     users[index].menuItemId);
-                                              // await wishListServices
-                                              //     .data(users[index]
-                                              //         .menuItemId)
-                                              //     .then((value) =>
-                                              //         fun(value));
-
-                                              // final SharedPreferences cart =
-                                              //     await SharedPreferences
-                                              //         .getInstance();
-                                              // if (idCheck.contains(
-                                              //     dataWishList[0]['id'])) {
-                                              //   setState(() {
-                                              //     countSum = countSum -
-                                              //         dataWishList[0]
-                                              //             ['itemCount'];
-                                              //     totalPrice = totalPrice -
-                                              //         (dataWishList[0][
-                                              //                 'itemCount'] *
-                                              //             dataWishList[0][
-                                              //                 'itemPrice']);
-                                              //     price = price -
-                                              //         (dataWishList[0][
-                                              //                 'itemCount'] *
-                                              //             dataWishList[0][
-                                              //                 'itemPrice']);
-                                              //     cart.setInt(
-                                              //         'price', price);
-                                              //     wishListServices
-                                              //         .deleteUser(
-                                              //             dataWishList[0]
-                                              //                 ['id']);
-                                              //     idCheck.remove(
-                                              //         dataWishList[0]
-                                              //             ['id']);
-                                              //     vendorIdCheck.remove(
-                                              //         dataWishList[0]
-                                              //             ['vendorId']);
-                                              //     checkdata.remove(
-                                              //         dataWishList[0]
-                                              //                 ['menuItemId']
-                                              //             .toString());
-                                              //     print(checkdata);
-                                              //     cart.setStringList(
-                                              //         'addedtocart',
-                                              //         checkdata);
-                                              //   });
-
-                                              //   Navigator.pop(context);
-                                              // } else {
-                                              //   setState(() {
-                                              //     wishListServices
-                                              //         .deleteUser(
-                                              //             dataWishList[0]
-                                              //                 ['id']);
-                                              //     checkdata.remove(
-                                              //         dataWishList[0]
-                                              //                 ['menuItemId']
-                                              //             .toString());
-                                              //     print(checkdata);
-                                              //     cart.setStringList(
-                                              //         'addedtocart',
-                                              //         checkdata);
-                                              //     print(checkdata);
-                                              //     price = price -
-                                              //         (dataWishList[0][
-                                              //                 'itemCount'] *
-                                              //             dataWishList[0][
-                                              //                 'itemPrice']);
-                                              //     cart.setInt(
-                                              //         'price', price);
-                                              //   });
-                                              setState(() {
-                                                wishListServices.deleteUser(
-                                                    users[index].id);
-                                              });
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    });
-
-                                return res;
-                              } else if (direction ==
-                                  DismissDirection.startToEnd) {
-                                await addButtonFunction(tpye, index, users);
-                              }
-                            },
-
-                            child: Row(children: [
-                              Expanded(
-                                  flex: 0,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.topCenter,
-                                        height: size.height * 0.2,
-                                        width: size.width * 0.3,
-                                        child: Container(
-                                          margin: EdgeInsets.only(
-                                              left: size.width * 0.01,
-                                              right: size.width * 0.014,
-                                              top: size.height * 0.008),
-                                          child: ClipRRect(
+                            child: Stack(
+                              children: [
+                                doc.imagepath != null
+                                    ? CachedNetworkImage(
+                                        imageUrl: S3_BASE_PATH + doc.imagepath,
+                                        height: size.height * 0.35,
+                                        width: size.height * 0.35,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          height: size.height * 0.35,
+                                          width: size.height * 0.35,
+                                          decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            child: users[index].imagePath !=
-                                                    null
-                                                ? CachedNetworkImage(
-                                                    imageUrl: S3_BASE_PATH +
-                                                        users[index].imagePath,
-                                                    height: size.height * 0.1,
-                                                    width: size.width * 0.26,
-                                                    fit: BoxFit.cover,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        Center(
-                                                            child:
-                                                                CircularProgressIndicator()),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Image.asset(
-                                                      "assets/images/feasturenttemp.jpeg",
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  )
-                                                : Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
-                                                    height: size.height * 0.1,
-                                                    width: size.width * 0.26,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                            image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover),
                                           ),
                                         ),
+                                        placeholder: (context, url) =>
+                                            Image.asset(
+                                          "assets/images/feasturenttemp.jpeg",
+                                          fit: BoxFit.cover,
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      )
+                                    : Image.asset(
+                                        "assets/images/feasturenttemp.jpeg",
+                                        height: size.height * 0.35,
+                                        width: size.height * 0.35,
+                                        fit: BoxFit.cover,
                                       ),
-                                      // Positioned(
-                                      //   top: size.height * 0.09,
-                                      //   bottom: size.height * 0.02,
-                                      //   left: size.width * 0.058,
-                                      //   right: size.width * 0.058,
-                                      //   child: MaterialButton(
-                                      //     onPressed: () async {
-
-                                      //     },
-                                      //     color: Colors.white,
-                                      //     minWidth: size.width * 0.16,
-                                      //     height: size.height * 0.033,
-                                      //     shape: RoundedRectangleBorder(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(
-                                      //                 14)),
-                                      //     textColor: Colors.white,
-                                      //     child: checkdata.isEmpty
-                                      //         ? Center(
-                                      //             child: Text(
-                                      //               "Add",
-                                      //               style: TextStyle(
-                                      //                   fontSize: MediaQuery.of(
-                                      //                               context)
-                                      //                           .size
-                                      //                           .height *
-                                      //                       0.015,
-                                      //                   color: Colors
-                                      //                       .blueGrey),
-                                      //             ),
-                                      //           )
-                                      //         : checkdata.contains(
-                                      //                 restaurantDataCopy[
-                                      //                             'Menus']
-                                      //                         [index]['id']
-                                      //                     .toString())
-                                      //             ? Center(
-                                      //                 child: Text(
-                                      //                   "Added",
-                                      //                   style: TextStyle(
-                                      //                       fontSize: MediaQuery.of(
-                                      //                                   context)
-                                      //                               .size
-                                      //                               .height *
-                                      //                           0.015,
-                                      //                       color: Colors
-                                      //                           .blueGrey),
-                                      //                 ),
-                                      //               )
-                                      //             : Center(
-                                      //                 child: Text(
-                                      //                   "Add",
-                                      //                   style: TextStyle(
-                                      //                       fontSize: MediaQuery.of(
-                                      //                                   context)
-                                      //                               .size
-                                      //                               .height *
-                                      //                           0.015,
-                                      //                       color: Colors
-                                      //                           .blueGrey),
-                                      //                 ),
-                                      //               ),
-                                      //   ),
-                                      // )
-                                    ],
-                                  )),
-                              Expanded(
-                                  flex: 6,
+                                Align(
+                                  alignment: Alignment.bottomLeft,
                                   child: Container(
-                                    height: size.height * 0.2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              top: size.height * 0.01),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                capitalize(
-                                                    users[index].itemName),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                    fontSize:
-                                                        size.height * 0.019),
-                                              ),
-                                              Spacer(),
-                                              Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 12),
-                                                  child: users[index]
-                                                              .itemtype ==
-                                                          3
-                                                      ? users[index].itemtype ==
-                                                              2
-                                                          ? Container(
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl:
-                                                                    'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
-                                                                height:
-                                                                    size.height *
-                                                                        0.016,
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
-                                                              ),
-                                                            )
-                                                          : Container(
-                                                              child:
-                                                                  Image.asset(
-                                                              "assets/images/eggeterian.png",
-                                                              height:
-                                                                  size.height *
-                                                                      0.016,
-                                                            ))
-                                                      : CachedNetworkImage(
-                                                          imageUrl:
-                                                              'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
-                                                          height: size.height *
-                                                              0.016,
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
-                                                        ))
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: size.height * 0.005),
-
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Container(child: Text("⭐")),
-                                              Text(
-                                                users[index].rating,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        size.height * 0.014,
-                                                    color: Colors.red,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Spacer(),
-                                              Container(
-                                                margin: EdgeInsets.only(
-                                                    right: size.width * 0.1),
-                                                child: Text(
-                                                  "₹${users[index].itemPrice}",
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          size.height * 0.018,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: size.height * 0.003,
-                                        ),
-                                        // Container(
-                                        //   child: Container(
-                                        //       child: restaurantDataCopy[
-                                        //                               'Menus']
-                                        //                           [index]
-                                        //                       ['MenuOffers']
-                                        //                   .length !=
-                                        //               0
-                                        //           ? Row(
-                                        //               children: [
-                                        //                 Image.asset(
-                                        //                   "assets/icons/discount_icon.jpg",
-                                        //                   height:
-                                        //                       size.height *
-                                        //                           0.02,
-                                        //                 ),
-                                        //                 SizedBox(
-                                        //                   width:
-                                        //                       size.width *
-                                        //                           0.006,
-                                        //                 ),
-                                        //                 Container(
-                                        //                   child: restaurantDataCopy['Menus'][index]
-                                        //                                   [
-                                        //                                   'MenuOffers']
-                                        //                               .length >=
-                                        //                           2
-                                        //                       ? Row(
-                                        //                           children: [
-                                        //                             Text(
-                                        //                               "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}, ",
-                                        //                               style: TextStyle(
-                                        //                                   fontSize: size.height * 0.015,
-                                        //                                   color: kTextColor),
-                                        //                             ),
-                                        //                             Text(
-                                        //                               "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['offerId']}",
-                                        //                               style: TextStyle(
-                                        //                                   fontSize: size.height * 0.015,
-                                        //                                   color: kTextColor),
-                                        //                             ),
-                                        //                           ],
-                                        //                         )
-                                        //                       : Text(
-                                        //                           "OfferID ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['offerId']}",
-                                        //                           style: TextStyle(
-                                        //                               fontSize: size.height *
-                                        //                                   0.015,
-                                        //                               color:
-                                        //                                   kTextColor),
-                                        //                         ),
-                                        //                 ),
-                                        //               ],
-                                        //             )
-                                        //           : SizedBox()),
-                                        // ),
-                                      ],
+                                    height: size.height * 0.07,
+                                    width: size.width * 1,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.7),
+                                      borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10)),
                                     ),
-                                  ))
-                            ]),
-                          )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: size.height * 0.063,
+                                            color:
+                                                Colors.black.withOpacity(0.4),
+                                            padding: EdgeInsets.only(
+                                                left: 5, top: 10),
+                                            alignment: Alignment.topLeft,
+                                            child: RichText(
+                                              text: TextSpan(
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                  children: [
+                                                    TextSpan(
+                                                        text: capitalize(
+                                                            "${doc.name}\n"),
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.022,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    TextSpan(
+                                                        text: " ${doc.address}",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.018,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)),
+                                                  ]),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
+                      ),
                     ),
-                  );
-                },
+                  ));
+                }
+                // if (document['id'] == nomines[0] ||
+                //     document['id'] == nomines[1])
+                // children.add(
+                //   Container(
+                //     child: InkWell(
+                //       onTap: () {
+                //         vote(document['id']).then((a) {
+                //           Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //               builder: (context) =>
+                //                   Waitresults(),
+                //             ),
+                //           );
+                //         });
+                //       },
+                //       child: OvalPic(document['photo'], document['couleur']),
+                //     ),
+                //   ),
+                // );
+              });
+
+              return ListView(
+                children: [
+                  ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: users.length,
+                    // ignore: missing_return
+                    itemBuilder: (context, index) {
+                      print("index $index");
+                      var couponDetatil;
+                      if (users[index].isResturent == 1) {
+                        return InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                margin: EdgeInsets.only(
+                                  top: size.width * 0.02,
+                                  left: size.width * 0.02,
+                                  right: size.width * 0.02,
+                                ),
+                                height: size.height * 0.14,
+                                child: Dismissible(
+                                  key: ValueKey(index),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    color: Colors.red,
+                                    padding: EdgeInsets.only(right: 10),
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+
+                                  // ignore: missing_return
+                                  confirmDismiss: (direction) async {
+                                    if (direction ==
+                                        DismissDirection.endToStart) {
+                                      final bool res = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              content: Text(
+                                                  "Are you sure you want to delete ${users[index].name}?"),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                                FlatButton(
+                                                  child: Text(
+                                                    "Delete",
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  ),
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      wishListServices
+                                                          .deleteUser(
+                                                              users[index].id);
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          });
+
+                                      return res;
+                                    }
+                                  },
+
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OfferListPage(
+                                                    restID: users[index].idDR,
+                                                  )));
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 14),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    blurRadius: 2,
+                                                    color: Colors.grey[200],
+                                                    offset: Offset(0, 3),
+                                                    spreadRadius: 2)
+                                              ]),
+                                          margin: EdgeInsets.only(
+                                            left: size.width * 0.02,
+                                            right: size.width * 0.02,
+                                          ),
+                                          height: size.height * 0.135,
+                                          child: Row(children: [
+                                            Expanded(
+                                                flex: 0,
+                                                child: Container(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  height: size.height * 0.2,
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        margin:
+                                                            EdgeInsets.all(8),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          child: users[index]
+                                                                      .imagepath !=
+                                                                  null
+                                                              ? CachedNetworkImage(
+                                                                  imageUrl: S3_BASE_PATH +
+                                                                      users[index]
+                                                                          .imagepath,
+                                                                  height:
+                                                                      size.height *
+                                                                          0.18,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.3,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      Image
+                                                                          .asset(
+                                                                    "assets/images/feasturenttemp.jpeg",
+                                                                    height: size
+                                                                            .height *
+                                                                        0.18,
+                                                                    width:
+                                                                        size.width *
+                                                                            0.3,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                )
+                                                              : Image.asset(
+                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                  height:
+                                                                      size.height *
+                                                                          0.18,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.3,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                flex: 6,
+                                                child: Container(
+                                                  height: size.height * 0.2,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                            top: size.height *
+                                                                0.02),
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              capitalize(
+                                                                  users[index]
+                                                                      .name),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      size.height *
+                                                                          0.02),
+                                                            ),
+                                                            Spacer(),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          12),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height:
+                                                            size.height * 0.005,
+                                                      ),
+                                                      users[index].cusines ==
+                                                              null
+                                                          ? SizedBox()
+                                                          : Container(
+                                                              width:
+                                                                  size.width *
+                                                                      0.38,
+                                                              child: Text(
+                                                                "${users[index].cusines}",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: size
+                                                                          .height *
+                                                                      0.0175,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                      SizedBox(
+                                                        height:
+                                                            size.height * 0.015,
+                                                      ),
+                                                      Container(
+                                                        child: Row(
+                                                          children: [
+                                                            users[index].rating ==
+                                                                    null
+                                                                ? Text(
+                                                                    "⭐1",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.016,
+                                                                        color: Colors
+                                                                            .red,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  )
+                                                                : Container(
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          child:
+                                                                              Text("⭐"),
+                                                                        ),
+                                                                        Text(
+                                                                          users[index]
+                                                                              .rating,
+                                                                          style: TextStyle(
+                                                                              fontSize: size.height * 0.016,
+                                                                              color: Colors.red,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                            Spacer(),
+                                                            couponDetatil ==
+                                                                    null
+                                                                ? SizedBox()
+                                                                : Image.asset(
+                                                                    "assets/icons/discount_icon.jpg",
+                                                                    height: size
+                                                                            .height *
+                                                                        0.02,
+                                                                  ),
+                                                            couponDetatil ==
+                                                                    null
+                                                                ? users[index]
+                                                                            .average ==
+                                                                        null
+                                                                    ? SizedBox()
+                                                                    : Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          right:
+                                                                              12.0,
+                                                                        ),
+                                                                        child:
+                                                                            Text(
+                                                                          "₹ ${users[index].average}",
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: size.height * 0.016,
+                                                                              color: kTextColor),
+                                                                        ),
+                                                                      )
+                                                                : Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .only(
+                                                                      right:
+                                                                          12.0,
+                                                                    ),
+                                                                    child: Text(
+                                                                      couponDetatil,
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          fontSize: size.height *
+                                                                              0.016,
+                                                                          color:
+                                                                              kTextColor),
+                                                                    ),
+                                                                  ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ))
+                                          ])),
+                                    ),
+                                  ),
+                                )),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: children),
+                ],
               );
             } else if (snap.data == null) {
               return Center(
@@ -533,364 +588,168 @@ class _WishlistState extends State<Wishlist> {
               );
             }
           }),
-      //     ListView.builder(
-      //         itemCount: favourite.length,
-      //         itemBuilder: (context, index) {
-      //           return Padding(
-      //             padding: const EdgeInsets.all(8.0),
-      //             child: InkWell(
-      //                 onLongPress: () {
-      //                   Fluttertoast.showToast(msg: "Long Presses");
-      //                 },
-      //                 child: Container(
-      //                   decoration: BoxDecoration(
-      //                       color: Colors.white,
-      //                       borderRadius: BorderRadius.circular(10),
-      //                       boxShadow: [
-      //                         BoxShadow(
-      //                             blurRadius: 2,
-      //                             color: Colors.blue[50],
-      //                             spreadRadius: 3,
-      //                             offset: Offset(0, 3))
-      //                       ]),
-      //                   child: Dismissible(
-      //                     child: Row(
-      //                       children: [
-      //                         Column(
-      //                           crossAxisAlignment: CrossAxisAlignment.start,
-      //                           children: [
-      //                             Container(
-      //                                 width: size.width * 0.76,
-      //                                 height: size.height * 0.11,
-      //                                 child: Row(
-      //                                   children: [
-      //                                     Expanded(
-      //                                       flex: 0,
-      //                                       child: Container(
-      //                                           alignment: Alignment.topLeft,
-      //                                           height: size.height * 0.2,
-      //                                           child: Container(
-      //                                             margin: EdgeInsets.only(
-      //                                                 left: 4,
-      //                                                 right: 4,
-      //                                                 top: 4),
-      //                                             child: ClipRRect(
-      //                                               borderRadius:
-      //                                                   BorderRadius.circular(
-      //                                                       10),
-      //                                               child: CachedNetworkImage(
-      //                                                 imageUrl:
-      //                                                     favourite[index]
-      //                                                         .foodImage,
-      //                                                 errorWidget: (context,
-      //                                                         url, error) =>
-      //                                                     Icon(Icons.error),
-      //                                                 height:
-      //                                                     size.height * 0.09,
-      //                                                 fit: BoxFit.contain,
-      //                                               ),
-      //                                             ),
-      //                                           )),
-      //                                     ),
-      //                                     Expanded(
-      //                                         flex: 6,
-      //                                         child: Container(
-      //                                           margin:
-      //                                               EdgeInsets.only(left: 4),
-      //                                           height: size.height * 0.2,
-      //                                           child: Column(
-      //                                             crossAxisAlignment:
-      //                                                 CrossAxisAlignment
-      //                                                     .start,
-      //                                             mainAxisAlignment:
-      //                                                 MainAxisAlignment.start,
-      //                                             children: [
-      //                                               Container(
-      //                                                 margin: EdgeInsets.only(
-      //                                                   top: 6,
-      //                                                 ),
-      //                                                 child: Row(
-      //                                                   crossAxisAlignment:
-      //                                                       CrossAxisAlignment
-      //                                                           .start,
-      //                                                   children: [
-      //                                                     Text(
-      //                                                       favourite[index]
-      //                                                           .title,
-      //                                                       style: TextStyle(
-      //                                                           fontWeight:
-      //                                                               FontWeight
-      //                                                                   .bold,
-      //                                                           color: Colors
-      //                                                               .black,
-      //                                                           fontSize: 14),
-      //                                                     ),
-      //                                                     Spacer(),
-      //                                                     Padding(
-      //                                                       padding:
-      //                                                           const EdgeInsets
-      //                                                                   .only(
-      //                                                               right:
-      //                                                                   12),
-      //                                                       child:
-      //                                                           CachedNetworkImage(
-      //                                                         imageUrl: favourite[
-      //                                                                 index]
-      //                                                             .vegsymbol,
-      //                                                         errorWidget: (context,
-      //                                                                 url,
-      //                                                                 error) =>
-      //                                                             Icon(Icons
-      //                                                                 .error),
-      //                                                         height:
-      //                                                             size.height *
-      //                                                                 0.016,
-      //                                                       ),
-      //                                                     )
-      //                                                   ],
-      //                                                 ),
-      //                                               ),
-      //                                               SizedBox(
-      //                                                 height: 5,
-      //                                               ),
-      //                                               Container(
-      //                                                 child: Text(
-      //                                                   "${favourite[index].subtitle}",
-      //                                                 ),
-      //                                               ),
-      //                                               SizedBox(
-      //                                                 height: 5,
-      //                                               ),
-      //                                               Container(
-      //                                                 child: Row(
-      //                                                   children: [
-      //                                                     Container(
-      //                                                       child: favourite[
-      //                                                               index]
-      //                                                           .starRating,
-      //                                                     ),
-      //                                                     Text(
-      //                                                       "3.0",
-      //                                                       style: TextStyle(
-      //                                                           fontSize: 15,
-      //                                                           color: Colors
-      //                                                               .red,
-      //                                                           fontWeight:
-      //                                                               FontWeight
-      //                                                                   .bold),
-      //                                                     ),
-      //                                                     SizedBox(
-      //                                                       width: 50,
-      //                                                     ),
-      //                                                     Text(
-      //                                                       "₹${favourite[index].foodPrice}",
-      //                                                       style: TextStyle(
-      //                                                           color: Colors
-      //                                                               .black,
-      //                                                           fontWeight:
-      //                                                               FontWeight
-      //                                                                   .bold),
-      //                                                     ),
-      //                                                     SizedBox(
-      //                                                       width: 20,
-      //                                                     ),
-      //                                                   ],
-      //                                                 ),
-      //                                               ),
-      //                                             ],
-      //                                           ),
-      //                                         )),
-      //                                   ],
-      //                                 )),
-      //                           ],
-      //                         ),
-      //                       ],
-      //                     ),
-
-      //                   ),
-      //                 )),
-      //           );
-      //         }),
-      // //   ],
-      // // )
     );
   }
 
-  addButtonFunction(tpye, index, users) async {
-    final SharedPreferences cart = await SharedPreferences.getInstance();
+  // addButtonFunction(tpye, index, users) async {
+  //   final SharedPreferences cart = await SharedPreferences.getInstance();
 
-    int totalprice = cart.getInt('TotalPrice');
-    int gsttotal = cart.getInt('TotalGst');
-    int totalcount = cart.getInt('TotalCount');
-    int vendorId = cart.getInt('VendorId');
-    setState(() {
-      tpye = users[index].itemtype;
-    });
+  //   int totalprice = cart.getInt('TotalPrice');
+  //   int gsttotal = cart.getInt('TotalGst');
+  //   int totalcount = cart.getInt('TotalCount');
+  //   int vendorId = cart.getInt('VendorId');
+  //   setState(() {
+  //     tpye = users[index].itemtype;
+  //   });
 
-    await services.data(users[index].menuItemId).then((value) => fun(value));
+  //   await services.data(users[index].menuItemId).then((value) => fun(value));
 
-    if (vendorId == 0 || vendorId == users[index].vendorId) {
-      callingLoader();
-      if (data1.isEmpty) {
-        setState(() {
-          itemAddToCart(users[index], tpye);
-          checkdata.add(users[index].menuItemId.toString());
+  //   if (vendorId == 0 || vendorId == users[index].vendorId) {
+  //     callingLoader();
+  //     if (data1.isEmpty) {
+  //       setState(() {
+  //         itemAddToCart(users[index], tpye);
+  //         checkdata.add(users[index].menuItemId.toString());
 
-          totalcount = totalcount + 1;
-          gsttotal = gsttotal + users[index].gst;
-          totalprice = totalprice + users[index].itemPrice;
+  //         totalcount = totalcount + 1;
+  //         gsttotal = gsttotal + users[index].gst;
+  //         totalprice = totalprice + users[index].itemPrice;
 
-          vendorId = users[index].vendorId;
-          cart.setInt('VendorId', vendorId);
-          cart.setInt('TotalPrice', totalprice);
-          cart.setInt('TotalGst', gsttotal);
-          cart.setInt('TotalCount', totalcount);
+  //         vendorId = users[index].vendorId;
+  //         cart.setInt('VendorId', vendorId);
+  //         cart.setInt('TotalPrice', totalprice);
+  //         cart.setInt('TotalGst', gsttotal);
+  //         cart.setInt('TotalCount', totalcount);
 
-          cart.setStringList('addedtocart', checkdata);
-          final snackBar = SnackBar(
-            duration: Duration(seconds: 1),
-            backgroundColor: Colors.lightBlueAccent[200],
-            content: Text("${users[index].itemName} is added to cart"),
-            action: SnackBarAction(
-              textColor: Colors.redAccent,
-              label: "View Cart",
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartScreen()));
-              },
-            ),
-          );
+  //         cart.setStringList('addedtocart', checkdata);
+  //         final snackBar = SnackBar(
+  //           duration: Duration(seconds: 1),
+  //           backgroundColor: Colors.lightBlueAccent[400],
+  //           content: Text("${users[index].itemName} is added to cart"),
+  //           action: SnackBarAction(
+  //             textColor: Colors.redAccent,
+  //             label: "View Cart",
+  //             onPressed: () {
+  //               Navigator.push(context,
+  //                   MaterialPageRoute(builder: (context) => CartScreen()));
+  //             },
+  //           ),
+  //         );
 
-          Scaffold.of(context).showSnackBar(snackBar);
-          // snackBarData =
-          //     "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
-        });
+  //         _scaffoldKey.currentState.showSnackBar(snackBar);
+  //       });
+  //     } else {
+  //       if (data1[0]['menuItemId'] != users[index].menuItemId) {
+  //         setState(() {
+  //           itemAddToCart(index, tpye);
+  //           checkdata.add(users[index].menuItemId.toString());
 
-        // Scaffold.of(context)
-        //     .showSnackBar(snackBar);
-      } else {
-        if (data1[0]['menuItemId'] != users[index].menuItemId) {
-          setState(() {
-            itemAddToCart(index, tpye);
-            checkdata.add(users[index].menuItemId.toString());
+  //           totalcount = totalcount + 1;
+  //           gsttotal = gsttotal + users[index].gst;
+  //           totalprice = totalprice + users[index].itemPrice;
 
-            totalcount = totalcount + 1;
-            gsttotal = gsttotal + users[index].gst;
-            totalprice = totalprice + users[index].itemPrice;
+  //           vendorId = users[index].vendorId;
+  //           cart.setInt('VendorId', vendorId);
+  //           cart.setInt('TotalPrice', totalprice);
+  //           cart.setInt('TotalGst', gsttotal);
+  //           cart.setInt('TotalCount', totalcount);
 
-            vendorId = users[index].vendorId;
-            cart.setInt('VendorId', vendorId);
-            cart.setInt('TotalPrice', totalprice);
-            cart.setInt('TotalGst', gsttotal);
-            cart.setInt('TotalCount', totalcount);
+  //           cart.setStringList('addedtocart', checkdata);
+  //           final snackBar = SnackBar(
+  //             duration: Duration(seconds: 1),
+  //             backgroundColor: Colors.lightBlueAccent[400],
+  //             content: Text("${users[index].itemName} is added to cart"),
+  //             action: SnackBarAction(
+  //               textColor: Colors.redAccent,
+  //               label: "View Cart",
+  //               onPressed: () {
+  //                 Navigator.push(context,
+  //                     MaterialPageRoute(builder: (context) => CartScreen()));
+  //               },
+  //             ),
+  //           );
 
-            cart.setStringList('addedtocart', checkdata);
-            final snackBar = SnackBar(
-              duration: Duration(seconds: 1),
-              backgroundColor: Colors.lightBlueAccent[200],
-              content: Text("${users[index].itemName} is added to cart"),
-              action: SnackBarAction(
-                textColor: Colors.redAccent,
-                label: "View Cart",
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CartScreen()));
-                },
-              ),
-            );
+  //           _scaffoldKey.currentState.showSnackBar(snackBar);
+  //         });
+  //       } else {
+  //         setState(() {
+  //           final snackBar = SnackBar(
+  //             duration: Duration(seconds: 1),
+  //             backgroundColor: Colors.lightBlueAccent[400],
+  //             content:
+  //                 Text("${users[index].itemName} is already added to cart"),
+  //             action: SnackBarAction(
+  //               textColor: Colors.redAccent,
+  //               label: "View Cart",
+  //               onPressed: () {
+  //                 Navigator.push(context,
+  //                     MaterialPageRoute(builder: (context) => CartScreen()));
+  //               },
+  //             ),
+  //           );
 
-            Scaffold.of(context).showSnackBar(snackBar);
-            // snackBarData =
-            //     "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
-          });
-        } else {
-          setState(() {
-            final snackBar = SnackBar(
-              duration: Duration(seconds: 1),
-              backgroundColor: Colors.lightBlueAccent[200],
-              content:
-                  Text("${users[index].itemName} is already added to cart"),
-              action: SnackBarAction(
-                textColor: Colors.redAccent,
-                label: "View Cart",
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CartScreen()));
-                },
-              ),
-            );
+  //           _scaffoldKey.currentState.showSnackBar(snackBar);
+  //         });
+  //         print("match");
+  //       }
+  //     }
+  //     Navigator.pop(context);
+  //   } else {
+  //     showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //               content:
+  //                   Text("Do you want to order food from different resturent"),
+  //               actions: <Widget>[
+  //                 FlatButton(
+  //                   child: Text(
+  //                     "No",
+  //                     style: TextStyle(color: Colors.black),
+  //                   ),
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                   },
+  //                 ),
+  //                 FlatButton(
+  //                   child: Text(
+  //                     "Yes",
+  //                     style: TextStyle(color: Colors.black),
+  //                   ),
+  //                   onPressed: () async {
+  //                     callingLoader();
+  //                     removeCartForNewData();
+  //                     setState(() {});
+  //                     getList();
+  //                     Navigator.pop(context);
+  //                     Navigator.pop(context);
+  //                     await addButtonFunction(tpye, index, users);
+  //                   },
+  //                 ),
+  //               ]);
+  //         });
+  //   }
+  // }
 
-            Scaffold.of(context).showSnackBar(snackBar);
-            // snackBarData =
-            //     "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
-          });
-          print("match");
-        }
-      }
-      Navigator.pop(context);
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-                content:
-                    Text("Do you want to order food from different resturent"),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      "No",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text(
-                      "Yes",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    onPressed: () async {
-                      callingLoader();
-                      removeCartForNewData();
-                      setState(() {});
-                      getList();
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      await addButtonFunction(tpye, index, users);
-                    },
-                  ),
-                ]);
-          });
-    }
-  }
-
-  itemAddToCart(index, tpye) async {
-    final SharedPreferences cart = await SharedPreferences.getInstance();
-
-    // var sum = cart.getInt('price');
-    // sum = sum + index.itemPrice;
-    // cart.setInt('price', sum);
-    // print(sum);
-    setState(() {
-      // itemCount.add(value)
-      services.saveUser(
-          index.itemPrice,
-          1,
-          index.vendorId,
-          index.menuItemId,
-          index.imagePath,
-          index.itemName,
-          "Add".toString(),
-          tpye,
-          0,
-          index.vendorName,
-          index.gst,
-          0,
-          null,
-          index.rating.toString());
-    });
-  }
+  // itemAddToCart(index, tpye) async {
+  //   setState(() {
+  //     services.saveUser(
+  //         index.itemPrice,
+  //         1,
+  //         index.vendorId,
+  //         index.menuItemId,
+  //         index.imagePath,
+  //         index.itemName,
+  //         "Add".toString(),
+  //         tpye,
+  //         0,
+  //         index.vendorName,
+  //         index.gst,
+  //         0,
+  //         null,
+  //         index.rating.toString());
+  //   });
+  // }
 
   fun(value) {
     setState(() {

@@ -88,7 +88,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           left: size.width * 0.05, right: size.width * 0.05),
                       child: TextField(
                         obscureText: false,
-                        //readOnly: _for Password,
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
                         controller: _phonecontroller,
@@ -96,7 +95,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
                         ],
                         maxLength: 10,
-
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: const BorderRadius.all(

@@ -7,31 +7,26 @@ var dataWishList;
 
 class WishListService {
   void saveUser(
-      int itemPrice,
-      int itemCount,
-      int vendorId,
-      int menuItemId,
-      String imagePath,
-      String itemName,
-      String itemStatus,
-      int itemtype,
-      int isSelected,
-      String vendorName,
-      int gst,
-      String rating) {
+    int isDineout,
+    int isResturent,
+    String average,
+    String imagepath,
+    String name,
+    int idDR,
+    String rating,
+    String address,
+    String cusines,
+  ) {
     WishListDBhelper.insert('wishListDat', {
-      'itemPrice': itemPrice,
-      'itemCount': itemCount,
-      'vendorId': vendorId,
-      'menuItemId': menuItemId,
-      'imagePath': imagePath,
-      'itemName': itemName,
-      'itemStatus': itemStatus,
-      'itemtype': itemtype,
-      'isSelected': isSelected,
-      'vendorName': vendorName,
-      'gst': gst,
-      'rating': rating
+      'isDineout': isDineout,
+      'isResturent': isResturent,
+      'average': average,
+      'imagepath': imagepath,
+      'name': name,
+      'idDR': idDR,
+      'rating': rating,
+      'address': address,
+      'cusines': cusines,
     });
   }
 
@@ -39,19 +34,17 @@ class WishListService {
     final usersList = await WishListDBhelper.getData('wishListDat');
     return usersList
         .map((item) => WishListClass(
-            id: item['id'],
-            itemPrice: item['itemPrice'],
-            itemCount: item['itemCount'],
-            vendorId: item['vendorId'],
-            menuItemId: item['menuItemId'],
-            imagePath: item['imagePath'],
-            itemName: item['itemName'],
-            itemStatus: item['itemStatus'],
-            itemtype: item['itemtype'],
-            isSelected: item['isSelected'],
-            vendorName: item['vendorName'],
-            gst: item['gst'],
-            rating: item['rating']))
+              id: item['id'],
+              isDineout: item['isDineout'],
+              isResturent: item['isResturent'],
+              average: item['average'],
+              imagepath: item['imagepath'],
+              name: item['name'],
+              idDR: item['idDR'],
+              rating: item['rating'],
+              address: item['address'],
+              cusines: item['cusines'],
+            ))
         .toList();
   }
 

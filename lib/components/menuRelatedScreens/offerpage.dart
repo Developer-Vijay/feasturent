@@ -4,12 +4,13 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/components/ontap_offer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 import '../../shimmer_effect.dart';
 
@@ -25,15 +26,10 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
   int i;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  void initState() {
-    super.initState();
-    fetchposterOffer();
-    fetchOfferBanner();
-    fetchAllRestaurant();
-  }
-
   var restaurantData;
   Future<List<dynamic>> fetchAllRestaurant() async {
+    fetchOfferBanner();
+    fetchposterOffer();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getresturent");
 
@@ -47,33 +43,38 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
           longitude.toString(),
     );
     print("data fetch");
-    restaurantData = json.decode(result.body)['data'];
-    return restaurantData;
+    if (result.statusCode == 200) {
+      restaurantData = json.decode(result.body)['data'];
+      return restaurantData;
+    } else {
+      var tempdata = [];
+      return tempdata;
+    }
   }
 
   var sliderOffers;
+  int psteroffer;
+
   Future<List<dynamic>> fetchposterOffer() async {
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=posterOffer');
     sliderOffers = json.decode(result.body)['data'];
     if (sliderOffers.isEmpty) {
-      if (mounted) {
-        sliderOffers = [];
-      }
-
+      sliderOffers = [];
+      psteroffer = 0;
       print("emapty poster");
 
       return sliderOffers;
     } else {
       print("data here");
       if (sliderOffers[0]['status'] == true) {
-        print("Status is true poster and $sliderOffers");
-
+        print("Status is true poster and ");
+        psteroffer = 1;
         return sliderOffers;
       } else {
-        if (mounted) {
-          sliderOffers = [];
-        }
+        psteroffer = 0;
+        sliderOffers = [];
+
         print("Status is false poster and $sliderOffers");
 
         return sliderOffers;
@@ -82,6 +83,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
   }
 
   var sliderOffer;
+  int offerbanner;
   // ignore: missing_return
   Future<List<dynamic>> fetchOfferBanner() async {
     var result = await http
@@ -89,14 +91,16 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
     sliderOffer = json.decode(result.body)['data'];
     if (sliderOffer.isEmpty) {
       sliderOffer = [];
-
+      offerbanner = 0;
       print("empty banner $sliderOffer");
       return sliderOffer;
     } else {
       print("data here");
       if (sliderOffer[0]['status'] == true) {
+        offerbanner = 1;
         return sliderOffer;
       } else {
+        offerbanner = 0;
         sliderOffer = [];
 
         print("Status is false and banner $sliderOffer");
@@ -105,8 +109,20 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
     }
   }
 
+  int checkposter;
+  int checkbanner;
   @override
   Widget build(BuildContext context) {
+    if (checkbanner != offerbanner) {
+      setState(() {
+        checkbanner = offerbanner;
+      });
+    }
+    if (checkposter != psteroffer) {
+      setState(() {
+        checkposter = psteroffer;
+      });
+    }
     Size size = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -122,276 +138,311 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                       color: Colors.black, fontWeight: FontWeight.bold),
                 )),
             // Slider
-            sliderOffers == []
+            psteroffer == 0
                 ? SizedBox()
-                : sliderOffers == null
-                    ? SizedBox()
-                    : FutureBuilder<List<dynamic>>(
-                        future: fetchposterOffer(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Container(
-                              height: size.height * 0.24,
-                              width: size.width * 1,
-                              margin: EdgeInsets.only(top: size.height * 0.008),
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: EdgeInsets.only(
-                                        left: size.width * 0.03),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    width: size.width * 0.34,
-                                    height: size.height * 0.24,
-                                    child: snapshot.data[index]
-                                                ['OffersAndCoupon']['image'] !=
-                                            null
-                                        ? CachedNetworkImage(
-                                            width: size.width * 0.89722,
-                                            imageUrl: S3_BASE_PATH +
-                                                snapshot.data[index]
-                                                        ['OffersAndCoupon']
-                                                    ['image'],
-                                            imageBuilder:
-                                                (context, imageProvider) =>
-                                                    Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                image: DecorationImage(
-                                                    image: imageProvider,
-                                                    fit: BoxFit.fill),
-                                              ),
-                                            ),
-                                            fit: BoxFit.fill,
-                                            placeholder: (context, url) => Center(
-                                                child:
-                                                    CircularProgressIndicator()),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                          )
-                                        : Image.asset(
-                                            "assets/images/feasturenttemp.jpeg",
-                                            fit: BoxFit.cover,
-                                          ),
-                                  );
+                : Container(
+                    height: size.height * 0.24,
+                    width: size.width * 1,
+                    margin: EdgeInsets.only(top: size.height * 0.008),
+                    child: FutureBuilder<List<dynamic>>(
+                      future: fetchposterOffer(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OnTapOffer(
+                                                data: snapshot.data[index],
+                                              )));
                                 },
-                              ),
-                            );
-                          } else {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 4,
-                              itemBuilder: (context, index) {
-                                return Shimmer.fromColors(
-                                  baseColor: Colors.grey[300],
-                                  highlightColor: Colors.grey[100],
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        left: size.width * 0.03),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    width: size.width * 0.34,
-                                    height: size.height * 0.24,
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.only(left: size.width * 0.03),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
+                                  width: size.width * 0.34,
+                                  height: size.height * 0.24,
+                                  child: snapshot.data[index]['OffersAndCoupon']
+                                              ['image'] !=
+                                          null
+                                      ? CachedNetworkImage(
+                                          width: size.width * 0.89722,
+                                          imageUrl: S3_BASE_PATH +
+                                              snapshot.data[index]
+                                                  ['OffersAndCoupon']['image'],
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fill),
+                                            ),
+                                          ),
+                                          fit: BoxFit.fill,
+                                          placeholder: (context, url) => Center(
+                                              child:
+                                                  CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                        )
+                                      : Image.asset(
+                                          "assets/images/feasturenttemp.jpeg",
+                                          fit: BoxFit.cover,
+                                        ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 4,
+                            itemBuilder: (context, index) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.grey[100],
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.only(left: size.width * 0.03),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  width: size.width * 0.34,
+                                  height: size.height * 0.24,
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
             SizedBox(
               height: size.height * 0.014,
             ),
             // Pamplet
-            sliderOffer == []
+            offerbanner == 0
                 ? SizedBox()
-                : sliderOffer == null
-                    ? SizedBox()
-                    : Container(
-                        height: size.height * 0.14,
-                        width: size.width * 1,
-                        child: FutureBuilder<List<dynamic>>(
-                          future: fetchOfferBanner(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              var leng;
-                              if (snapshot.data.length > 4) {
-                                leng = 4;
-                              } else {
-                                leng = snapshot.data.length;
-                              }
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: leng,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: EdgeInsets.only(
-                                      left: size.width * 0.03,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: index == 0
-                                          ? Colors.orange[600]
-                                          : index == 1
-                                              ? Colors.red[300]
-                                              : index == 2
-                                                  ? Colors.blue[300]
-                                                  : Colors.deepPurple,
-                                    ),
-                                    width: size.width * 0.95,
-                                    height: size.height * 0.14,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: size.height * 0.1,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20)),
-                                            margin: EdgeInsets.only(
-                                              right: size.width * 0.0,
-                                              left: size.width * 0.1,
+                : Container(
+                    height: size.height * 0.14,
+                    width: size.width * 1,
+                    child: FutureBuilder<List<dynamic>>(
+                      future: fetchOfferBanner(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var leng;
+                          if (snapshot.data.length > 4) {
+                            leng = 4;
+                          } else {
+                            leng = snapshot.data.length;
+                          }
+                          return Swiper(
+                            pagination: SwiperPagination(
+                              alignment: Alignment.bottomCenter,
+                              builder: DotSwiperPaginationBuilder(
+                                  color: Colors.grey[300],
+                                  size: 6,
+                                  activeSize: 12),
+                            ),
+                            itemCount: leng,
+                            itemWidth: 300,
+                            layout: SwiperLayout.DEFAULT,
+                            autoplay: true,
+                            autoplayDelay: 2000,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OnTapOffer(
+                                                data: snapshot.data[index],
+                                              )));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: size.width * 0.03,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: index == 0
+                                        ? Colors.orange[600]
+                                        : index == 1
+                                            ? Colors.red[300]
+                                            : index == 2
+                                                ? Colors.blue[300]
+                                                : Colors.deepPurple,
+                                  ),
+                                  width: size.width * 0.95,
+                                  height: size.height * 0.14,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          height: size.height * 0.1,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          margin: EdgeInsets.only(
+                                            right: size.width * 0.0,
+                                            left: size.width * 0.1,
+                                          ),
+                                          child: snapshot.data[index]
+                                                          ['OffersAndCoupon']
+                                                      ['image'] !=
+                                                  null
+                                              ? CachedNetworkImage(
+                                                  width: size.width * 0.89722,
+                                                  imageUrl: S3_BASE_PATH +
+                                                      snapshot.data[index][
+                                                              'OffersAndCoupon']
+                                                          ['image'],
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.fill),
+                                                    ),
+                                                  ),
+                                                  fit: BoxFit.fill,
+                                                  placeholder: (context, url) =>
+                                                      Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                )
+                                              : Image.asset(
+                                                  "assets/images/feasturenttemp.jpeg",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: size.width * 0.05,
+                                      ),
+                                      DottedLine(
+                                        dashGapLength: 0,
+                                        dashGapRadius: 0,
+                                        dashGapColor: Colors.white,
+                                        lineThickness: 2,
+                                        dashColor: Colors.white,
+                                        lineLength: size.height * 0.08,
+                                        direction: Axis.vertical,
+                                      ),
+                                      SizedBox(
+                                        width: size.width * 0.05,
+                                      ),
+                                      Container(
+                                        height: size.height * 0.08,
+                                        alignment: Alignment.topCenter,
+                                        child: Column(children: [
+                                          Container(
+                                            width: size.width * 0.45,
+                                            child: Text(
+                                              capitalize(
+                                                  "${snapshot.data[index]['OffersAndCoupon']['title']}"),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: size.height * 0.028,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
+                                          ),
+                                          Container(
+                                            width: size.width * 0.45,
                                             child: snapshot.data[index]
                                                             ['OffersAndCoupon']
-                                                        ['image'] !=
+                                                        ['description'] !=
                                                     null
-                                                ? CachedNetworkImage(
-                                                    width: size.width * 0.89722,
-                                                    imageUrl: S3_BASE_PATH +
-                                                        snapshot.data[index][
-                                                                'OffersAndCoupon']
-                                                            ['image'],
-                                                    imageBuilder: (context,
-                                                            imageProvider) =>
-                                                        Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                        image: DecorationImage(
-                                                            image:
-                                                                imageProvider,
-                                                            fit: BoxFit.fill),
-                                                      ),
+                                                ? Text(
+                                                    "${snapshot.data[index]['OffersAndCoupon']['description']}",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          size.height * 0.03,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                    fit: BoxFit.fill,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        Center(
-                                                            child:
-                                                                CircularProgressIndicator()),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Icon(Icons.error),
                                                   )
-                                                : Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
-                                                    fit: BoxFit.cover,
+                                                : Text(
+                                                    "${snapshot.data[index]['OffersAndCoupon']['description']}",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          size.height * 0.03,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: size.width * 0.05,
-                                        ),
-                                        DottedLine(
-                                          dashGapLength: 0,
-                                          dashGapRadius: 0,
-                                          dashGapColor: Colors.white,
-                                          lineThickness: 2,
-                                          dashColor: Colors.white,
-                                          lineLength: size.height * 0.08,
-                                          direction: Axis.vertical,
-                                        ),
-                                        SizedBox(
-                                          width: size.width * 0.05,
-                                        ),
-                                        Container(
-                                          height: size.height * 0.08,
-                                          alignment: Alignment.topCenter,
-                                          // margin: EdgeInsets.only(
-                                          //     top: size.height * 0.04, left: size.width * 0.019),
-                                          child: Column(children: [
-                                            Container(
-                                              width: size.width * 0.45,
-                                              child: Text(
-                                                capitalize(
-                                                    "${snapshot.data[index]['OffersAndCoupon']['title']}"),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: size.height * 0.028,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: size.width * 0.45,
-                                              child: Text(
-                                                capitalize(
-                                                    "${snapshot.data[index]['OffersAndCoupon']['description']}"),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: size.height * 0.03,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ]),
-                                        ),
-                                        SizedBox(
-                                          width: 3,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 2,
-                                itemBuilder: (context, index) {
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.grey[300],
-                                    highlightColor: Colors.grey[100],
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                        left: size.width * 0.03,
+                                        ]),
                                       ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white,
+                                      SizedBox(
+                                        width: 3,
                                       ),
-                                      width: size.width * 0.95,
-                                      height: size.height * 0.14,
-                                    ),
-                                  );
-                                },
+                                    ],
+                                  ),
+                                ),
                               );
-                            }
-                          },
-                        ),
-                      ),
+                            },
+                          );
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 2,
+                            itemBuilder: (context, index) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.grey[100],
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: size.width * 0.03,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                  ),
+                                  width: size.width * 0.95,
+                                  height: size.height * 0.14,
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
 
             SizedBox(
               height: size.height * 0.02,
             ),
-            // List Starts from Here
 
             Container(
                 alignment: Alignment.topLeft,
@@ -411,17 +462,28 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
               future: fetchAllRestaurant(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  // if (restaurantData.length >= 10) {
-                  //   listlength = 10;
-                  // } else if (restaurantData.length <= 10) {
-                  //   listlength = restaurantData.length;
-                  // }
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: restaurantData.length,
                     itemBuilder: (context, index) {
+                      double rating = 1.0;
+                      // if (snapshot
+                      //     .data[index]['VendorRatingReviews'].isNotEmpty) {
+                      //   int j =
+                      //       snapshot.data[index]['VendorRatingReviews'].length;
+
+                      //   for (int i = 0; i < j - 1; i++) {
+                      //     rating = rating +
+                      //         double.parse(snapshot.data[index]
+                      //             ['VendorRatingReviews'][i]['rating']);
+                      //   }
+                      //   rating = rating / j;
+                      // } else {
+                      //   rating = 1.0;
+                      // }
+
                       if (snapshot
                           .data[index]['user']['OffersAndCoupons'].isEmpty) {
                         return SizedBox();
@@ -472,6 +534,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => OfferListPage(
+                                        ratingVendor: rating,
                                         restaurantDa: snapshot.data[index])));
                           },
                           child: Padding(
@@ -618,11 +681,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                     Text("⭐"),
                                                               ),
                                                               Text(
-                                                                snapshot
-                                                                    .data[index]
-                                                                        [
-                                                                        'avgRating']
-                                                                    .toString(),
+                                                                "${rating.toInt()}",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         size.height *
@@ -645,7 +704,13 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                               0.02,
                                                         ),
                                                   couponDetatil == null
-                                                      ? SizedBox()
+                                                      ? snapshot.data[index]
+                                                                  ['avgCost'] ==
+                                                              null
+                                                          ? SizedBox()
+                                                          : Text(
+                                                              "₹ ${snapshot.data[index]['avgCost']} Cost for ${snapshot.data[index]['forPeople']}",
+                                                            )
                                                       : Padding(
                                                           padding:
                                                               const EdgeInsets

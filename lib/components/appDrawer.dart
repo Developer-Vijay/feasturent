@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:feasturent_costomer_app/SettingsPage/settings.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/WishList/wishlist.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/Place_Order/my_orders.dart';
+import 'package:feasturent_costomer_app/components/Place_Order/MyOrders/my_orders.dart';
 import 'package:feasturent_costomer_app/components/WalletScreen/walletscreen.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
@@ -66,9 +65,7 @@ class _AppDrawerState extends State<AppDrawer> {
               child: Column(
                 children: [
                   Text(
-                    capitalize(widget.cName) != null
-                        ? capitalize(widget.cName)
-                        : ' ',
+                    widget.cName != null ? widget.cName : ' ',
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.02,
                         color: Colors.white),
@@ -304,37 +301,37 @@ class _AppDrawerState extends State<AppDrawer> {
           SizedBox(
             height: 10,
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text(
-              'Settings',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: setting == true ? Colors.blue : Colors.black87),
-            ),
-            selected: setting,
-            dense: true,
-            onTap: () {
-              setState(() {
-                home = false;
-                myorder = false;
-                wishlist = false;
-                cart = false;
-                setting = true;
-                wallet = false;
-                term = false;
-                policy = false;
-                logout = false;
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsScreen()),
-              );
-              // Update the state of the app.
-              // ...
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.settings),
+          //   title: Text(
+          //     'Settings',
+          //     style: TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: 15,
+          //         color: setting == true ? Colors.blue : Colors.black87),
+          //   ),
+          //   selected: setting,
+          //   dense: true,
+          //   onTap: () {
+          //     setState(() {
+          //       home = false;
+          //       myorder = false;
+          //       wishlist = false;
+          //       cart = false;
+          //       setting = true;
+          //       wallet = false;
+          //       term = false;
+          //       policy = false;
+          //       logout = false;
+          //     });
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => SettingsScreen()),
+          //     );
+          //     // Update the state of the app.
+          //     // ...
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.help_center),
             title: Text(

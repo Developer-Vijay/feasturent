@@ -5,11 +5,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'ontap_offer.dart';
+
+int dataLenght;
 
 class DiscountCard extends StatefulWidget {
-  // const DiscountCard({
-  //   Key key,
-  // }) : super(key: key);
   @override
   _DiscountCardState createState() => _DiscountCardState();
 }
@@ -17,73 +17,39 @@ class DiscountCard extends StatefulWidget {
 class _DiscountCardState extends State<DiscountCard> {
   @override
   void initState() {
-    fetchHomeSliderLength();
     super.initState();
-  }
-
-  int dataLenght;
-
-  Future fetchHomeSliderLength() async {
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api");
-
-    var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
-    if (result.statusCode == 200) {
-      var data = json.decode(result.body)['data'];
-      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      print(data);
-      if (data.isEmpty) {
-        if (mounted) {
-          setState(() {
-            dataLenght = 0;
-          });
-        }
-        print("data not here");
-      } else {
-        print("data here");
-        if (data[0]['status'] == true) {
-          if (mounted) {
-            setState(() {
-              dataLenght = data.length;
-            });
-          }
-        } else {
-          if (mounted) {
-            setState(() {
-              dataLenght = 0;
-            });
-          }
-
-          print("data not here");
-        }
-      }
-
-      print("data  $dataLenght");
-    } else {
-      if (mounted) {
-        setState(() {
-          dataLenght = 0;
-        });
-      }
-    }
+    print(
+        "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+    print("home banner initstate");
   }
 
   var homeOffers;
 
+  // ignore: missing_return
   Future<List<dynamic>> fetchHomeBanner() async {
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api");
+    print(
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api home banner fetch");
 
     var result = await http
         .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
     if (result.statusCode == 200) {
       homeOffers = json.decode(result.body)['data'];
       if (homeOffers.isEmpty) {
-        print("data not here");
+        if (mounted) {
+          setState(() {
+            dataLenght = 0;
+          });
+        }
+        print(" discount home slider data not here");
       } else {
         print("data here");
         if (homeOffers[0]['status'] == true) {
+          print(" discount home slider staus true");
+
           return homeOffers;
         } else {
+          print(" discount home slider staus false");
+
           if (mounted) {
             setState(() {
               dataLenght = 0;
@@ -96,8 +62,20 @@ class _DiscountCardState extends State<DiscountCard> {
     }
   }
 
+  int checher;
   @override
   Widget build(BuildContext context) {
+    print("checher = $checher");
+    print("datalength = $dataLenght");
+    if (checher != dataLenght) {
+      setState(() {
+        checher = dataLenght;
+      });
+      print("discount cherher change screen refresh");
+    }
+    print("home banner build%%%%%%%%%%%%%%%%%%%%^^^^^^^^^^^^^^^^^^^^^");
+    // fetchHomeSliderLength();
+
     Size sized = MediaQuery.of(context).size;
     return dataLenght != 0
         ? Container(
@@ -116,58 +94,69 @@ class _DiscountCardState extends State<DiscountCard> {
                       width: MediaQuery.of(context).size.width,
                       child: Swiper(
                         itemBuilder: (BuildContext context, int index) {
-                          return snapshot.data[index]['OffersAndCoupon']
-                                      ['image'] ==
-                                  null
-                              ? Container(
-                                  padding: EdgeInsets.only(right: 5),
-                                  width: double.infinity,
-                                  height: sized.height * 0.22,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: AssetImage(
-                                            'assets/images/feasturenttemp.jpeg')),
-                                  ),
-                                  child: DecoratedBox(
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => OnTapOffer(
+                                            data: snapshot.data[index],
+                                          )));
+                            },
+                            child: snapshot.data[index]['OffersAndCoupon']
+                                        ['image'] ==
+                                    null
+                                ? Container(
+                                    padding: EdgeInsets.only(
+                                      right: 5,
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
+                                    width: double.infinity,
+                                    height: sized.height * 0.22,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xFFFF961F).withOpacity(0.4),
-                                          kPrimaryColor.withOpacity(0.3),
-                                        ],
+                                      image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: AssetImage(
+                                              'assets/images/feasturenttemp.jpeg')),
+                                    ),
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFFFF961F).withOpacity(0.4),
+                                            kPrimaryColor.withOpacity(0.3),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    padding: EdgeInsets.only(
+                                      right: 5,
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
+                                    width: double.infinity,
+                                    height: sized.height * 0.22,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: CachedNetworkImageProvider(
+                                            S3_BASE_PATH +
+                                                snapshot.data[index]
+                                                        ['OffersAndCoupon']
+                                                    ['image'],
+                                          )),
+                                    ),
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
                                   ),
-                                )
-                              : Container(
-                                  padding: EdgeInsets.only(right: 5),
-                                  width: double.infinity,
-                                  height: sized.height * 0.22,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: CachedNetworkImageProvider(
-                                          S3_BASE_PATH +
-                                              snapshot.data[index]
-                                                  ['OffersAndCoupon']['image'],
-                                        )),
-                                  ),
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xFFFF961F).withOpacity(0.4),
-                                          kPrimaryColor.withOpacity(0.3),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
+                          );
                         },
                         pagination: SwiperPagination(
                           alignment: Alignment.bottomCenter,
@@ -177,6 +166,8 @@ class _DiscountCardState extends State<DiscountCard> {
                         itemCount: snapshot.data.length,
                         itemWidth: 300,
                         layout: SwiperLayout.DEFAULT,
+                        autoplay: true,
+                        autoplayDelay: 2000,
                       ),
                     );
                   } else {

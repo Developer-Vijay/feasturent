@@ -45,6 +45,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     cart.setInt('TotalCount', 0);
     cart.setStringList('addedtocart', itemAdded);
     cart.setStringList('addontocart', addOnAdded);
+    cart.setStringList('recommendDineout', []);
+    cart.setStringList('idDineout', []);
   }
 
   setSession() async {
@@ -138,8 +140,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   'assets/images/boading1.png',
                                 ),
                                 height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                width: MediaQuery.of(context).size.height * 0.4,
+                                    MediaQuery.of(context).size.height * 0.35,
+                                width:
+                                    MediaQuery.of(context).size.height * 0.35,
                               ),
                             ),
                             SizedBox(height: size.height * 0.08),
@@ -176,8 +179,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   'assets/images/boading2.png',
                                 ),
                                 height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                width: MediaQuery.of(context).size.height * 0.4,
+                                    MediaQuery.of(context).size.height * 0.35,
+                                width:
+                                    MediaQuery.of(context).size.height * 0.35,
                               ),
                             ),
                             SizedBox(height: size.height * 0.08),
@@ -220,8 +224,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   'assets/images/boading3.png',
                                 ),
                                 height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                width: MediaQuery.of(context).size.height * 0.4,
+                                    MediaQuery.of(context).size.height * 0.35,
+                                width:
+                                    MediaQuery.of(context).size.height * 0.35,
                               ),
                             ),
                             SizedBox(height: size.height * 0.08),
@@ -231,12 +236,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 style: kTitleStyle,
                               ),
                             ),
-                            // Container(
-                            //   child: Text(
-                            //     "Food For You",
-                            //     style: kTitleStyle,
-                            //   ),
-                            // ),
                             SizedBox(height: size.height * 0.02),
                             Center(
                               child: Text(

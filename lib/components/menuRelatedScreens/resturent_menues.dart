@@ -21,9 +21,11 @@ import 'package:feasturent_costomer_app/components/menuRelatedScreens/customize_
 var infodata;
 
 class OfferListPage extends StatefulWidget {
+  final ratingVendor;
   final restID;
   final restaurantDa;
-  const OfferListPage({Key key, this.restaurantDa, this.restID})
+  const OfferListPage(
+      {Key key, this.restaurantDa, this.restID, this.ratingVendor})
       : super(key: key);
 
   @override
@@ -38,6 +40,7 @@ class _OfferListPageState extends State<OfferListPage> {
       fetchData(widget.restID);
     } else {
       setState(() {
+        ratingVendor =widget.ratingVendor.toInt();
         dataChecker = true;
 
         infodata = widget.restaurantDa;
@@ -50,6 +53,7 @@ class _OfferListPageState extends State<OfferListPage> {
     }
   }
 
+  int ratingVendor;
   int menulistLength;
   bool dataChecker = false;
   bool dataValidator = false;
@@ -79,10 +83,24 @@ class _OfferListPageState extends State<OfferListPage> {
       });
     } else {
       setState(() {
+        menulistLength = restaurantData[0]['Menus'].length;
+
         infodata = restaurantData[0];
         restaurantDataCopy = restaurantData[0];
+      });
+      double ratings = 1.0;
+      // int j = restaurantData[0]['VendorRatingReviews'].length;
+
+      // for (int i = 0; i < j - 1; i++) {
+      //   ratings = ratings +
+      //       double.parse(restaurantData[0]['VendorRatingReviews'][i]['rating']);
+      // }
+      // ratings = ratings / j;
+      setState(() {
+        ratingVendor = ratings.toInt();
         dataChecker = true;
       });
+
       calculateDeliveryTime(restaurantDataCopy);
       getList();
       fetchRestaurantStatus();
@@ -160,7 +178,6 @@ class _OfferListPageState extends State<OfferListPage> {
       }
     }
 
-    // if (timeData.compareTo(resturantStatus[0]['user']['Setting']['storeTimeStart']) != 1)
     return resturantStatus;
   }
 
@@ -209,10 +226,14 @@ class _OfferListPageState extends State<OfferListPage> {
     final SharedPreferences cart = await SharedPreferences.getInstance();
     setState(() {
       checkdata = cart.getStringList('addedtocart');
+      baritemCount = cart.getInt('TotalCount');
+      pricebar = cart.getInt('TotalPrice');
     });
     print(checkdata);
   }
 
+  int baritemCount = 0;
+  int pricebar = 0;
   final services = UserServices();
   int typefood = 0;
   int isSelect = 0;
@@ -241,7 +262,10 @@ class _OfferListPageState extends State<OfferListPage> {
                           0
                       ? Container()
                       : Container(
-                          margin: EdgeInsets.only(bottom: 30),
+                          margin: EdgeInsets.only(
+                              bottom: baritemCount == 0
+                                  ? size.height * 0.03
+                                  : size.height * 0.07),
                           child: MaterialButton(
                             onPressed: () {},
                             child: PopupMenuButton(
@@ -346,9 +370,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                   builder: (context) => ResturentDetail(
                                     restaurantDataInfo: restaurantDataCopy,
                                   ),
-                                  // settings: RouteSettings(
-                                  //   arguments: restaurantDataCopy,
-                                  // ),
                                 ));
                             if (result) {
                               setState(() {});
@@ -359,7 +380,6 @@ class _OfferListPageState extends State<OfferListPage> {
                       ],
                       title: Text(
                         capitalize(restaurantDataCopy['name']),
-                        // resturentIndex.title,
                         style: TextStyle(
                             color: kTextColor,
                             fontWeight: FontWeight.bold,
@@ -378,7 +398,7 @@ class _OfferListPageState extends State<OfferListPage> {
                   body: Column(
                     children: [
                       Expanded(
-                        flex: 23,
+                        flex: 25,
                         child: ListView(
                           children: [
                             Column(
@@ -387,28 +407,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                 SizedBox(
                                   height: size.height * 0.025,
                                 ),
-                                // restaurantDataCopy['type'] == null
-                                //     ? SizedBox()
-                                //     : Column(
-                                //         children: [
-                                //           Container(
-                                //             margin: EdgeInsets.only(
-                                //               left: size.width * 0.03,
-                                //             ),
-                                //             width: size.width * 0.5,
-                                //             child: Text(
-                                //               restaurantDataCopy['type'],
-                                //               overflow: TextOverflow.ellipsis,
-                                //               style: TextStyle(
-                                //                   fontSize: size.height * 0.02,
-                                //                   fontWeight: FontWeight.bold),
-                                //             ),
-                                //           ),
-                                //           SizedBox(
-                                //             height: size.height * 0.005,
-                                //           ),
-                                //         ],
-                                //       ),
                                 Row(
                                   children: [
                                     Container(
@@ -463,126 +461,60 @@ class _OfferListPageState extends State<OfferListPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    restaurantDataCopy['avgRating'] == null
-                                        ? Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
-                                                    child: SmoothStarRating(
-                                                        allowHalfRating: false,
-                                                        onRated: (v) {
-                                                          Text("23");
-                                                        },
-                                                        starCount: 1,
-                                                        rating: 5.0,
-                                                        size:
-                                                            size.height * 0.025,
-                                                        isReadOnly: true,
-                                                        defaultIconData: Icons
-                                                            .star_border_outlined,
-                                                        filledIconData:
-                                                            Icons.star,
-                                                        halfFilledIconData:
-                                                            Icons.star_border,
-                                                        color: Colors.black,
-                                                        borderColor:
-                                                            Colors.black,
-                                                        spacing: 0.0),
-                                                  ),
-                                                  Text(
-                                                    "1",
-                                                    style: offerRowHeadingStyle,
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: size.width * 0.04),
-                                                  child: Text(
-                                                    "Taste 20%",
-                                                    style: offerCommonStyle,
-                                                  ))
-                                            ],
-                                          )
-                                        : Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
-                                                    child: SmoothStarRating(
-                                                        allowHalfRating: false,
-                                                        onRated: (v) {
-                                                          Text("23");
-                                                        },
-                                                        starCount: 1,
-                                                        rating: 5.0,
-                                                        size:
-                                                            size.height * 0.025,
-                                                        isReadOnly: true,
-                                                        defaultIconData: Icons
-                                                            .star_border_outlined,
-                                                        filledIconData:
-                                                            Icons.star,
-                                                        halfFilledIconData:
-                                                            Icons.star_border,
-                                                        color: Colors.black,
-                                                        borderColor:
-                                                            Colors.black,
-                                                        spacing: 0.0),
-                                                  ),
-                                                  Text(
-                                                    "${restaurantDataCopy['avgRating']}",
-                                                    style: offerRowHeadingStyle,
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: size.width * 0.04),
-                                                  child: restaurantDataCopy[
-                                                              'avgRating'] ==
-                                                          5
-                                                      ? Text(
-                                                          "Taste 100%",
-                                                          style:
-                                                              offerCommonStyle,
-                                                        )
-                                                      : restaurantDataCopy[
-                                                                  'avgRating'] ==
-                                                              4
-                                                          ? Text(
-                                                              "Taste 80%",
-                                                              style:
-                                                                  offerCommonStyle,
-                                                            )
-                                                          : restaurantDataCopy[
-                                                                      'avgRating'] ==
-                                                                  3
-                                                              ? Text(
-                                                                  "Taste 60%",
-                                                                  style:
-                                                                      offerCommonStyle,
-                                                                )
-                                                              : restaurantDataCopy[
-                                                                          'avgRating'] ==
-                                                                      2
-                                                                  ? Text(
-                                                                      "Taste 40%",
-                                                                      style:
-                                                                          offerCommonStyle,
-                                                                    )
-                                                                  : Text(
-                                                                      "Taste 20%",
-                                                                      style:
-                                                                          offerCommonStyle,
-                                                                    ))
-                                            ],
-                                          ),
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(left: 10),
+                                              child: SmoothStarRating(
+                                                  allowHalfRating: false,
+                                                  onRated: (v) {
+                                                    Text("23");
+                                                  },
+                                                  starCount: 1,
+                                                  rating: 5.0,
+                                                  size: size.height * 0.025,
+                                                  isReadOnly: true,
+                                                  defaultIconData: Icons
+                                                      .star_border_outlined,
+                                                  filledIconData: Icons.star,
+                                                  halfFilledIconData:
+                                                      Icons.star_border,
+                                                  color: Colors.black,
+                                                  borderColor: Colors.black,
+                                                  spacing: 0.0),
+                                            ),
+                                            Text(
+                                              "$ratingVendor",
+                                              style: offerRowHeadingStyle,
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                            margin: EdgeInsets.only(
+                                                left: size.width * 0.04),
+                                            child: ratingVendor == 5
+                                                ? Text(
+                                                    "Taste 100%",
+                                                  )
+                                                : ratingVendor == 4
+                                                    ? Text(
+                                                        "Taste 80%",
+                                                      )
+                                                    : ratingVendor == 3
+                                                        ? Text(
+                                                            "Taste 60%",
+                                                          )
+                                                        : ratingVendor == 2
+                                                            ? Text(
+                                                                "Taste 40%",
+                                                              )
+                                                            : Text(
+                                                                "Taste 20%",
+                                                              ))
+                                      ],
+                                    ),
                                     Column(
                                       children: [
                                         Text(
@@ -917,153 +849,1699 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 padding: const EdgeInsets.only(
                                                     bottom: 14),
                                                 child: Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        color: status == true
-                                                            ? Colors.white
-                                                            : Colors.blue[50],
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                              blurRadius: 2,
-                                                              color: Colors
-                                                                  .blue[50],
-                                                              offset:
-                                                                  Offset(1, 3),
-                                                              spreadRadius: 2)
-                                                        ]),
-                                                    margin: EdgeInsets.only(
-                                                      left: size.width * 0.02,
-                                                      right: size.width * 0.02,
-                                                    ),
-                                                    height: size.height * 0.14,
-                                                    child: Dismissible(
-                                                      direction:
-                                                          DismissDirection
-                                                              .endToStart,
-                                                      // ignore: missing_return
-                                                      confirmDismiss:
-                                                          (direction) async {
-                                                        if (direction ==
-                                                            DismissDirection
-                                                                .endToStart) {
-                                                          final bool res =
-                                                              await showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (BuildContext
-                                                                          context) {
-                                                                    return AlertDialog(
-                                                                      content: Text(
-                                                                          "Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
-                                                                      actions: <
-                                                                          Widget>[
-                                                                        FlatButton(
-                                                                          child:
-                                                                              Text(
-                                                                            "Cancel",
-                                                                            style:
-                                                                                TextStyle(color: Colors.black),
-                                                                          ),
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                        ),
-                                                                        FlatButton(
-                                                                          child:
-                                                                              Text(
-                                                                            "Delete",
-                                                                            style:
-                                                                                TextStyle(color: Colors.red),
-                                                                          ),
-                                                                          onPressed:
-                                                                              () async {
-                                                                            callingLoader();
-                                                                            print(restaurantDataCopy['Menus'][index]['id']);
-                                                                            await services.data(restaurantDataCopy['Menus'][index]['id']).then((value) =>
-                                                                                fun(value));
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: status == true
+                                                          ? Colors.white
+                                                          : Colors.blue[50],
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            blurRadius: 2,
+                                                            color:
+                                                                Colors.blue[50],
+                                                            offset:
+                                                                Offset(1, 3),
+                                                            spreadRadius: 2)
+                                                      ]),
+                                                  margin: EdgeInsets.only(
+                                                    left: size.width * 0.02,
+                                                    right: size.width * 0.02,
+                                                  ),
+                                                  height: size.height * 0.14,
+                                                  child: checkdata.contains(
+                                                          restaurantDataCopy[
+                                                                      'Menus']
+                                                                  [index]['id']
+                                                              .toString())
+                                                      ? Dismissible(
+                                                          direction: checkdata.contains(
+                                                                  restaurantDataCopy['Menus']
+                                                                              [
+                                                                              index]
+                                                                          ['id']
+                                                                      .toString())
+                                                              ? DismissDirection
+                                                                  .endToStart
+                                                              : DismissDirection
+                                                                  .horizontal,
+                                                          // ignore: missing_return
+                                                          confirmDismiss:
+                                                              // ignore: missing_return
+                                                              (direction) async {
+                                                            if (direction ==
+                                                                DismissDirection
+                                                                    .endToStart) {
+                                                              final bool res =
+                                                                  await showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                        return AlertDialog(
+                                                                          content:
+                                                                              Text("Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
+                                                                          actions: <
+                                                                              Widget>[
+                                                                            FlatButton(
+                                                                              child: Text(
+                                                                                "Cancel",
+                                                                                style: TextStyle(color: Colors.black),
+                                                                              ),
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                            ),
+                                                                            FlatButton(
+                                                                              child: Text(
+                                                                                "Delete",
+                                                                                style: TextStyle(color: Colors.red),
+                                                                              ),
+                                                                              onPressed: () async {
+                                                                                callingLoader();
+                                                                                print(restaurantDataCopy['Menus'][index]['id']);
+                                                                                await services.data(restaurantDataCopy['Menus'][index]['id']).then((value) => fun(value));
 
+                                                                                final SharedPreferences cart = await SharedPreferences.getInstance();
+                                                                                int totalprice = cart.getInt('TotalPrice');
+                                                                                int gsttotal = cart.getInt('TotalGst');
+                                                                                int totalcount = cart.getInt('TotalCount');
+                                                                                int vendorId = cart.getInt('VendorId');
+
+                                                                                if (checkdata.isNotEmpty && checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())) {
+                                                                                  if (data1[0]['itemCount'] == totalcount) {
+                                                                                    setState(() {
+                                                                                      snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
+                                                                                      totalcount = totalcount - data1[0]['itemCount'];
+                                                                                      gsttotal = gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
+                                                                                      totalprice = totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
+                                                                                      vendorId = 0;
+                                                                                      cart.setInt('VendorId', vendorId);
+                                                                                      cart.setInt('TotalPrice', totalprice);
+                                                                                      cart.setInt('TotalGst', gsttotal);
+                                                                                      cart.setInt('TotalCount', totalcount);
+                                                                                      checkdata.remove(data1[0]['menuItemId'].toString());
+                                                                                      print(checkdata);
+                                                                                      cart.setStringList('addedtocart', checkdata);
+                                                                                      removeAddOnWithMenu(data1[0]['addons']);
+
+                                                                                      services.deleteUser(data1[0]['menuItemId']);
+                                                                                      getList();
+                                                                                    });
+                                                                                  } else {
+                                                                                    setState(() {
+                                                                                      snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
+                                                                                      totalcount = totalcount - data1[0]['itemCount'];
+                                                                                      gsttotal = gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
+                                                                                      totalprice = totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
+
+                                                                                      cart.setInt('TotalPrice', totalprice);
+                                                                                      cart.setInt('TotalGst', gsttotal);
+                                                                                      cart.setInt('TotalCount', totalcount);
+                                                                                      checkdata.remove(data1[0]['menuItemId'].toString());
+                                                                                      print(checkdata);
+                                                                                      cart.setStringList('addedtocart', checkdata);
+                                                                                      removeAddOnWithMenu(data1[0]['addons']);
+                                                                                      services.deleteUser(data1[0]['menuItemId']);
+                                                                                      getList();
+                                                                                    });
+                                                                                  }
+                                                                                } else {
+                                                                                  setState(() {
+                                                                                    snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is already remove from cart";
+                                                                                  });
+                                                                                }
+                                                                                Navigator.pop(context);
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        );
+                                                                      });
+                                                              return res;
+                                                            }
+                                                          },
+                                                          key: ValueKey(index),
+                                                          background: Container(
+                                                            color: Colors.red,
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right: 10),
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Icon(
+                                                              Icons.delete,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                          child: Row(children: [
+                                                            Expanded(
+                                                                flex: 0,
+                                                                child: Stack(
+                                                                  children: [
+                                                                    Container(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .topCenter,
+                                                                      height:
+                                                                          size.height *
+                                                                              0.2,
+                                                                      width: size
+                                                                              .width *
+                                                                          0.3,
+                                                                      child:
+                                                                          Container(
+                                                                        margin: EdgeInsets.only(
+                                                                            left: size.width *
+                                                                                0.01,
+                                                                            right: size.width *
+                                                                                0.014,
+                                                                            top:
+                                                                                size.height * 0.008),
+                                                                        child:
+                                                                            ClipRRect(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          child: restaurantDataCopy['Menus'][index]['image1'] != null
+                                                                              ? CachedNetworkImage(
+                                                                                  imageUrl: S3_BASE_PATH + restaurantDataCopy['Menus'][index]['image1'],
+                                                                                  height: size.height * 0.1,
+                                                                                  width: size.width * 0.26,
+                                                                                  fit: BoxFit.cover,
+                                                                                  placeholder: (context, url) => Image.asset(
+                                                                                    "assets/images/feasturenttemp.jpeg",
+                                                                                    height: size.height * 0.1,
+                                                                                    width: size.width * 0.26,
+                                                                                    fit: BoxFit.cover,
+                                                                                  ),
+                                                                                  errorWidget: (context, url, error) => Image.asset(
+                                                                                    "assets/images/feasturenttemp.jpeg",
+                                                                                    fit: BoxFit.cover,
+                                                                                  ),
+                                                                                )
+                                                                              : Image.asset(
+                                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                                  height: size.height * 0.1,
+                                                                                  width: size.width * 0.26,
+                                                                                  fit: BoxFit.cover,
+                                                                                ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Positioned(
+                                                                      top: size
+                                                                              .height *
+                                                                          0.09,
+                                                                      bottom: size
+                                                                              .height *
+                                                                          0.02,
+                                                                      left: size
+                                                                              .width *
+                                                                          0.058,
+                                                                      right: size
+                                                                              .width *
+                                                                          0.058,
+                                                                      child:
+                                                                          MaterialButton(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          if (status ==
+                                                                              true) {
                                                                             final SharedPreferences
                                                                                 cart =
                                                                                 await SharedPreferences.getInstance();
-                                                                            int totalprice =
-                                                                                cart.getInt('TotalPrice');
-                                                                            int gsttotal =
-                                                                                cart.getInt('TotalGst');
-                                                                            int totalcount =
-                                                                                cart.getInt('TotalCount');
+
                                                                             int vendorId =
                                                                                 cart.getInt('VendorId');
 
-                                                                            if (checkdata.isNotEmpty &&
-                                                                                checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())) {
-                                                                              if (data1[0]['itemCount'] == totalcount) {
-                                                                                setState(() {
-                                                                                  snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-                                                                                  totalcount = totalcount - data1[0]['itemCount'];
-                                                                                  gsttotal = gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
-                                                                                  totalprice = totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
-                                                                                  vendorId = 0;
-                                                                                  cart.setInt('VendorId', vendorId);
-                                                                                  cart.setInt('TotalPrice', totalprice);
-                                                                                  cart.setInt('TotalGst', gsttotal);
-                                                                                  cart.setInt('TotalCount', totalcount);
-                                                                                  checkdata.remove(data1[0]['menuItemId'].toString());
-                                                                                  print(checkdata);
-                                                                                  cart.setStringList('addedtocart', checkdata);
-                                                                                  removeAddOnWithMenu(data1[0]['addons']);
+                                                                            await services.data(restaurantDataCopy['Menus'][index]['id']).then((value) =>
+                                                                                fun(value));
 
-                                                                                  services.deleteUser(data1[0]['menuItemId']);
-                                                                                });
+                                                                            if (vendorId == 0 ||
+                                                                                vendorId == restaurantDataCopy['Menus'][index]['vendorId']) {
+                                                                              callingLoader();
+
+                                                                              if (data1.isEmpty) {
+                                                                                if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                  await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                } else {
+                                                                                  tempAddOns = null;
+                                                                                  final result = await showModalBottomSheet(
+                                                                                      isScrollControlled: true,
+                                                                                      isDismissible: false,
+                                                                                      enableDrag: false,
+                                                                                      backgroundColor: Colors.transparent,
+                                                                                      context: context,
+                                                                                      builder: (context) => CustomizeMenu(
+                                                                                            menuData: restaurantDataCopy['Menus'][index],
+                                                                                          ));
+
+                                                                                  if (result != null) {
+                                                                                    if (result > 0) {
+                                                                                      int totalprice = 0;
+                                                                                      int totalgst = 0;
+                                                                                      String title;
+                                                                                      int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                      for (int i = 0; i <= k - 1; i++) {
+                                                                                        if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                          setState(() {
+                                                                                            title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                            totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                            totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                          });
+                                                                                        }
+                                                                                      }
+                                                                                      await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                    } else if (result == 0) {
+                                                                                      await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                    }
+                                                                                  }
+                                                                                }
                                                                               } else {
-                                                                                setState(() {
-                                                                                  snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-                                                                                  totalcount = totalcount - data1[0]['itemCount'];
-                                                                                  gsttotal = gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
-                                                                                  totalprice = totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
+                                                                                if (data1[0]['menuItemId'] != restaurantDataCopy['Menus'][index]['id']) {
+                                                                                  if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                    await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt().toInt, 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                  } else {
+                                                                                    tempAddOns = null;
+                                                                                    final result = await showModalBottomSheet(
+                                                                                        isScrollControlled: true,
+                                                                                        isDismissible: false,
+                                                                                        enableDrag: false,
+                                                                                        backgroundColor: Colors.transparent,
+                                                                                        context: context,
+                                                                                        builder: (context) => CustomizeMenu(
+                                                                                              menuData: restaurantDataCopy['Menus'][index],
+                                                                                            ));
 
-                                                                                  cart.setInt('TotalPrice', totalprice);
-                                                                                  cart.setInt('TotalGst', gsttotal);
-                                                                                  cart.setInt('TotalCount', totalcount);
-                                                                                  checkdata.remove(data1[0]['menuItemId'].toString());
-                                                                                  print(checkdata);
-                                                                                  cart.setStringList('addedtocart', checkdata);
-                                                                                  removeAddOnWithMenu(data1[0]['addons']);
-                                                                                  services.deleteUser(data1[0]['menuItemId']);
-                                                                                });
+                                                                                    if (result != null) {
+                                                                                      if (result > 0) {
+                                                                                        int totalprice = 0;
+                                                                                        int totalgst = 0;
+                                                                                        String title;
+                                                                                        int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                        for (int i = 0; i <= k - 1; i++) {
+                                                                                          title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                          if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                            setState(() {
+                                                                                              totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                              totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                            });
+                                                                                          }
+                                                                                        }
+                                                                                        await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                      } else if (result == 0) {
+                                                                                        await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                      }
+                                                                                    }
+                                                                                  }
+                                                                                } else {
+                                                                                  setState(() {
+                                                                                    snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
+                                                                                  });
+                                                                                  print("match");
+                                                                                }
+                                                                              }
+                                                                              Navigator.pop(context);
+                                                                            } else {
+                                                                              showDialog(
+                                                                                  context: context,
+                                                                                  builder: (BuildContext context) {
+                                                                                    return AlertDialog(content: Text("Do you want to order food from different resturent"), actions: <Widget>[
+                                                                                      FlatButton(
+                                                                                        child: Text(
+                                                                                          "No",
+                                                                                          style: TextStyle(color: Colors.black),
+                                                                                        ),
+                                                                                        onPressed: () {
+                                                                                          Navigator.pop(context);
+                                                                                        },
+                                                                                      ),
+                                                                                      FlatButton(
+                                                                                        child: Text(
+                                                                                          "Yes",
+                                                                                          style: TextStyle(color: Colors.black),
+                                                                                        ),
+                                                                                        onPressed: () async {
+                                                                                          callingLoader();
+                                                                                          removeCartForNewData();
+                                                                                          setState(() {});
+                                                                                          getList();
+                                                                                          Navigator.pop(context);
+                                                                                          Navigator.pop(context);
+                                                                                          if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                            await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                          } else {
+                                                                                            tempAddOns = null;
+                                                                                            final result = await showModalBottomSheet(
+                                                                                                isScrollControlled: true,
+                                                                                                isDismissible: false,
+                                                                                                enableDrag: false,
+                                                                                                backgroundColor: Colors.transparent,
+                                                                                                context: context,
+                                                                                                builder: (context) => CustomizeMenu(
+                                                                                                      menuData: restaurantDataCopy['Menus'][index],
+                                                                                                    ));
+
+                                                                                            if (result != null) {
+                                                                                              if (result > 0) {
+                                                                                                int totalprice = 0;
+                                                                                                int totalgst = 0;
+                                                                                                String title;
+                                                                                                int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                                for (int i = 0; i <= k - 1; i++) {
+                                                                                                  if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                                    setState(() {
+                                                                                                      title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                                      totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                                      totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                                    });
+                                                                                                  }
+                                                                                                }
+                                                                                                await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                              } else if (result == 0) {
+                                                                                                await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                              }
+                                                                                            }
+                                                                                          }
+                                                                                        },
+                                                                                      ),
+                                                                                    ]);
+                                                                                  });
+                                                                            }
+                                                                          } else {
+                                                                            Fluttertoast.showToast(msg: "Not taking orders now");
+                                                                          }
+                                                                        },
+                                                                        color: checkdata.isEmpty
+                                                                            ? Colors.white
+                                                                            : checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())
+                                                                                ? Colors.blue
+                                                                                : Colors.white,
+                                                                        minWidth:
+                                                                            size.width *
+                                                                                0.16,
+                                                                        height: size.height *
+                                                                            0.033,
+                                                                        shape: RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(14)),
+                                                                        // textColor:
+                                                                        //     Colors
+                                                                        //         .white,
+                                                                        child: checkdata.isEmpty
+                                                                            ? Center(
+                                                                                child: Text(
+                                                                                  "Add",
+                                                                                  style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.blueGrey),
+                                                                                ),
+                                                                              )
+                                                                            : checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())
+                                                                                ? Center(
+                                                                                    child: Text(
+                                                                                      "Added",
+                                                                                      style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.white),
+                                                                                    ),
+                                                                                  )
+                                                                                : Center(
+                                                                                    child: Text(
+                                                                                      "Add",
+                                                                                      style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.blueGrey),
+                                                                                    ),
+                                                                                  ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                )),
+                                                            Expanded(
+                                                                flex: 6,
+                                                                child:
+                                                                    Container(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.2,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    children: [
+                                                                      Container(
+                                                                        margin: EdgeInsets.only(
+                                                                            top:
+                                                                                size.height * 0.01),
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              width: size.width * 0.5,
+                                                                              child: Text(
+                                                                                capitalize(restaurantDataCopy['Menus'][index]['title']),
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: size.height * 0.019),
+                                                                              ),
+                                                                            ),
+                                                                            Spacer(),
+                                                                            Padding(
+                                                                                padding: const EdgeInsets.only(right: 12),
+                                                                                child: restaurantDataCopy['Menus'][index]['isNonVeg'] == false
+                                                                                    ? restaurantDataCopy['Menus'][index]['isEgg'] == false
+                                                                                        ? Container(
+                                                                                            child: CachedNetworkImage(
+                                                                                              imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
+                                                                                              height: size.height * 0.016,
+                                                                                              errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                            ),
+                                                                                          )
+                                                                                        : Container(
+                                                                                            child: Image.asset(
+                                                                                            "assets/images/eggeterian.png",
+                                                                                            height: size.height * 0.016,
+                                                                                          ))
+                                                                                    : CachedNetworkImage(
+                                                                                        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
+                                                                                        height: size.height * 0.016,
+                                                                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                      ))
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          height:
+                                                                              size.height * 0.005),
+                                                                      SizedBox(
+                                                                        height: size.height *
+                                                                            0.002,
+                                                                      ),
+                                                                      Container(
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Container(child: Text("⭐")),
+                                                                            Text(
+                                                                              "$rating",
+                                                                              style: TextStyle(fontSize: size.height * 0.014, color: Colors.red, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                            Spacer(),
+                                                                            Container(
+                                                                              margin: EdgeInsets.only(right: size.width * 0.1),
+                                                                              child: Text(
+                                                                                "₹${restaurantDataCopy['Menus'][index]['totalPrice']}",
+                                                                                style: TextStyle(fontSize: size.height * 0.018, color: Colors.black, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height: size.height *
+                                                                            0.003,
+                                                                      ),
+                                                                      Container(
+                                                                        child: Container(
+                                                                            child: restaurantDataCopy['Menus'][index]['MenuOffers'].length != 0
+                                                                                ? Row(
+                                                                                    children: [
+                                                                                      Image.asset(
+                                                                                        "assets/icons/discount_icon.jpg",
+                                                                                        height: size.height * 0.02,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: size.width * 0.006,
+                                                                                      ),
+                                                                                      Container(
+                                                                                        child: restaurantDataCopy['Menus'][index]['MenuOffers'].length >= 2
+                                                                                            ? Row(
+                                                                                                children: [
+                                                                                                  restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
+                                                                                                      ? SizedBox()
+                                                                                                      : Text(
+                                                                                                          " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}, ",
+                                                                                                          style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                        ),
+                                                                                                  restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon'] == null
+                                                                                                      ? SizedBox()
+                                                                                                      : Text(
+                                                                                                          " ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon']}",
+                                                                                                          style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                        ),
+                                                                                                ],
+                                                                                              )
+                                                                                            : restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
+                                                                                                ? SizedBox()
+                                                                                                : Text(
+                                                                                                    " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}",
+                                                                                                    style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                  ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  )
+                                                                                : SizedBox()),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                )),
+                                                            restaurantDataCopy['Menus']
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        'AddonMenus']
+                                                                    .isEmpty
+                                                                ? SizedBox()
+                                                                : RotatedBox(
+                                                                    quarterTurns:
+                                                                        -1,
+                                                                    child: Text(
+                                                                      "Customize",
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color: Colors
+                                                                              .black54,
+                                                                          fontSize:
+                                                                              size.height * 0.015),
+                                                                    )),
+                                                          ]),
+                                                        )
+                                                      : Row(children: [
+                                                          Expanded(
+                                                              flex: 0,
+                                                              child: Stack(
+                                                                children: [
+                                                                  Container(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topCenter,
+                                                                    height:
+                                                                        size.height *
+                                                                            0.2,
+                                                                    width:
+                                                                        size.width *
+                                                                            0.3,
+                                                                    child:
+                                                                        Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          left: size.width *
+                                                                              0.01,
+                                                                          right: size.width *
+                                                                              0.014,
+                                                                          top: size.height *
+                                                                              0.008),
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                        child: restaurantDataCopy['Menus'][index]['image1'] !=
+                                                                                null
+                                                                            ? CachedNetworkImage(
+                                                                                imageUrl: S3_BASE_PATH + restaurantDataCopy['Menus'][index]['image1'],
+                                                                                height: size.height * 0.1,
+                                                                                width: size.width * 0.26,
+                                                                                fit: BoxFit.cover,
+                                                                                placeholder: (context, url) => Image.asset(
+                                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                                  height: size.height * 0.1,
+                                                                                  width: size.width * 0.26,
+                                                                                  fit: BoxFit.cover,
+                                                                                ),
+                                                                                errorWidget: (context, url, error) => Image.asset(
+                                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                                  fit: BoxFit.cover,
+                                                                                ),
+                                                                              )
+                                                                            : Image.asset(
+                                                                                "assets/images/feasturenttemp.jpeg",
+                                                                                height: size.height * 0.1,
+                                                                                width: size.width * 0.26,
+                                                                                fit: BoxFit.cover,
+                                                                              ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Positioned(
+                                                                    top: size
+                                                                            .height *
+                                                                        0.09,
+                                                                    bottom: size
+                                                                            .height *
+                                                                        0.02,
+                                                                    left: size
+                                                                            .width *
+                                                                        0.058,
+                                                                    right: size
+                                                                            .width *
+                                                                        0.058,
+                                                                    child:
+                                                                        MaterialButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        if (status ==
+                                                                            true) {
+                                                                          final SharedPreferences
+                                                                              cart =
+                                                                              await SharedPreferences.getInstance();
+
+                                                                          int vendorId =
+                                                                              cart.getInt('VendorId');
+
+                                                                          await services
+                                                                              .data(restaurantDataCopy['Menus'][index]['id'])
+                                                                              .then((value) => fun(value));
+
+                                                                          if (vendorId == 0 ||
+                                                                              vendorId == restaurantDataCopy['Menus'][index]['vendorId']) {
+                                                                            callingLoader();
+
+                                                                            if (data1.isEmpty) {
+                                                                              if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                              } else {
+                                                                                tempAddOns = null;
+                                                                                final result = await showModalBottomSheet(
+                                                                                    isScrollControlled: true,
+                                                                                    isDismissible: false,
+                                                                                    enableDrag: false,
+                                                                                    backgroundColor: Colors.transparent,
+                                                                                    context: context,
+                                                                                    builder: (context) => CustomizeMenu(
+                                                                                          menuData: restaurantDataCopy['Menus'][index],
+                                                                                        ));
+
+                                                                                if (result != null) {
+                                                                                  if (result > 0) {
+                                                                                    int totalprice = 0;
+                                                                                    int totalgst = 0;
+                                                                                    String title;
+                                                                                    int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                    for (int i = 0; i <= k - 1; i++) {
+                                                                                      if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                        setState(() {
+                                                                                          title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                          totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                          totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                        });
+                                                                                      }
+                                                                                    }
+                                                                                    await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                  } else if (result == 0) {
+                                                                                    await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                  }
+                                                                                }
                                                                               }
                                                                             } else {
-                                                                              setState(() {
-                                                                                snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is already remove from cart";
-                                                                              });
+                                                                              if (data1[0]['menuItemId'] != restaurantDataCopy['Menus'][index]['id']) {
+                                                                                if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                  await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt().toInt, 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                } else {
+                                                                                  tempAddOns = null;
+                                                                                  final result = await showModalBottomSheet(
+                                                                                      isScrollControlled: true,
+                                                                                      isDismissible: false,
+                                                                                      enableDrag: false,
+                                                                                      backgroundColor: Colors.transparent,
+                                                                                      context: context,
+                                                                                      builder: (context) => CustomizeMenu(
+                                                                                            menuData: restaurantDataCopy['Menus'][index],
+                                                                                          ));
+
+                                                                                  if (result != null) {
+                                                                                    if (result > 0) {
+                                                                                      int totalprice = 0;
+                                                                                      int totalgst = 0;
+                                                                                      String title;
+                                                                                      int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                      for (int i = 0; i <= k - 1; i++) {
+                                                                                        title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                        if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                          setState(() {
+                                                                                            totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                            totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                          });
+                                                                                        }
+                                                                                      }
+                                                                                      await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                    } else if (result == 0) {
+                                                                                      await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                              } else {
+                                                                                setState(() {
+                                                                                  snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
+                                                                                });
+                                                                                print("match");
+                                                                              }
                                                                             }
                                                                             Navigator.pop(context);
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  });
-                                                          return res;
-                                                        }
-                                                      },
-                                                      key: ValueKey(index),
-                                                      background: Container(
-                                                        color: Colors.red,
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 10),
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Icon(
-                                                          Icons.delete,
-                                                          color: Colors.white,
+                                                                          } else {
+                                                                            showDialog(
+                                                                                context: context,
+                                                                                builder: (BuildContext context) {
+                                                                                  return AlertDialog(content: Text("Do you want to order food from different resturent"), actions: <Widget>[
+                                                                                    FlatButton(
+                                                                                      child: Text(
+                                                                                        "No",
+                                                                                        style: TextStyle(color: Colors.black),
+                                                                                      ),
+                                                                                      onPressed: () {
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                    ),
+                                                                                    FlatButton(
+                                                                                      child: Text(
+                                                                                        "Yes",
+                                                                                        style: TextStyle(color: Colors.black),
+                                                                                      ),
+                                                                                      onPressed: () async {
+                                                                                        callingLoader();
+                                                                                        removeCartForNewData();
+                                                                                        setState(() {});
+                                                                                        getList();
+                                                                                        Navigator.pop(context);
+                                                                                        Navigator.pop(context);
+                                                                                        if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                          await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                        } else {
+                                                                                          tempAddOns = null;
+                                                                                          final result = await showModalBottomSheet(
+                                                                                              isScrollControlled: true,
+                                                                                              isDismissible: false,
+                                                                                              enableDrag: false,
+                                                                                              backgroundColor: Colors.transparent,
+                                                                                              context: context,
+                                                                                              builder: (context) => CustomizeMenu(
+                                                                                                    menuData: restaurantDataCopy['Menus'][index],
+                                                                                                  ));
+
+                                                                                          if (result != null) {
+                                                                                            if (result > 0) {
+                                                                                              int totalprice = 0;
+                                                                                              int totalgst = 0;
+                                                                                              String title;
+                                                                                              int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                              for (int i = 0; i <= k - 1; i++) {
+                                                                                                if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                                  setState(() {
+                                                                                                    title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                                    totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                                    totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                                  });
+                                                                                                }
+                                                                                              }
+                                                                                              await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                            } else if (result == 0) {
+                                                                                              await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                            }
+                                                                                          }
+                                                                                        }
+                                                                                      },
+                                                                                    ),
+                                                                                  ]);
+                                                                                });
+                                                                          }
+                                                                        } else {
+                                                                          Fluttertoast.showToast(
+                                                                              msg: "Not taking orders now");
+                                                                        }
+                                                                      },
+                                                                      color: checkdata
+                                                                              .isEmpty
+                                                                          ? Colors
+                                                                              .white
+                                                                          : checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())
+                                                                              ? Colors.blue
+                                                                              : Colors.white,
+                                                                      minWidth:
+                                                                          size.width *
+                                                                              0.16,
+                                                                      height: size
+                                                                              .height *
+                                                                          0.033,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(14)),
+                                                                      // textColor:
+                                                                      //     Colors
+                                                                      //         .white,
+                                                                      child: checkdata
+                                                                              .isEmpty
+                                                                          ? Center(
+                                                                              child: Text(
+                                                                                "Add",
+                                                                                style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.blueGrey),
+                                                                              ),
+                                                                            )
+                                                                          : checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())
+                                                                              ? Center(
+                                                                                  child: Text(
+                                                                                    "Added",
+                                                                                    style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.white),
+                                                                                  ),
+                                                                                )
+                                                                              : Center(
+                                                                                  child: Text(
+                                                                                    "Add",
+                                                                                    style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.blueGrey),
+                                                                                  ),
+                                                                                ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              )),
+                                                          Expanded(
+                                                              flex: 6,
+                                                              child: Container(
+                                                                height:
+                                                                    size.height *
+                                                                        0.2,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          top: size.height *
+                                                                              0.01),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Container(
+                                                                            width:
+                                                                                size.width * 0.5,
+                                                                            child:
+                                                                                Text(
+                                                                              capitalize(restaurantDataCopy['Menus'][index]['title']),
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: size.height * 0.019),
+                                                                            ),
+                                                                          ),
+                                                                          Spacer(),
+                                                                          Padding(
+                                                                              padding: const EdgeInsets.only(right: 12),
+                                                                              child: restaurantDataCopy['Menus'][index]['isNonVeg'] == false
+                                                                                  ? restaurantDataCopy['Menus'][index]['isEgg'] == false
+                                                                                      ? Container(
+                                                                                          child: CachedNetworkImage(
+                                                                                            imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
+                                                                                            height: size.height * 0.016,
+                                                                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                          ),
+                                                                                        )
+                                                                                      : Container(
+                                                                                          child: Image.asset(
+                                                                                          "assets/images/eggeterian.png",
+                                                                                          height: size.height * 0.016,
+                                                                                        ))
+                                                                                  : CachedNetworkImage(
+                                                                                      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
+                                                                                      height: size.height * 0.016,
+                                                                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                    ))
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        height: size.height *
+                                                                            0.005),
+                                                                    SizedBox(
+                                                                      height: size
+                                                                              .height *
+                                                                          0.002,
+                                                                    ),
+                                                                    Container(
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Container(
+                                                                              child: Text("⭐")),
+                                                                          Text(
+                                                                            "$rating",
+                                                                            style: TextStyle(
+                                                                                fontSize: size.height * 0.014,
+                                                                                color: Colors.red,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Spacer(),
+                                                                          Container(
+                                                                            margin:
+                                                                                EdgeInsets.only(right: size.width * 0.1),
+                                                                            child:
+                                                                                Text(
+                                                                              "₹${restaurantDataCopy['Menus'][index]['totalPrice']}",
+                                                                              style: TextStyle(fontSize: size.height * 0.018, color: Colors.black, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: size
+                                                                              .height *
+                                                                          0.003,
+                                                                    ),
+                                                                    Container(
+                                                                      child: Container(
+                                                                          child: restaurantDataCopy['Menus'][index]['MenuOffers'].length != 0
+                                                                              ? Row(
+                                                                                  children: [
+                                                                                    Image.asset(
+                                                                                      "assets/icons/discount_icon.jpg",
+                                                                                      height: size.height * 0.02,
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: size.width * 0.006,
+                                                                                    ),
+                                                                                    Container(
+                                                                                      child: restaurantDataCopy['Menus'][index]['MenuOffers'].length >= 2
+                                                                                          ? Row(
+                                                                                              children: [
+                                                                                                restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
+                                                                                                    ? SizedBox()
+                                                                                                    : Text(
+                                                                                                        " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}, ",
+                                                                                                        style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                      ),
+                                                                                                restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon'] == null
+                                                                                                    ? SizedBox()
+                                                                                                    : Text(
+                                                                                                        " ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon']}",
+                                                                                                        style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                      ),
+                                                                                              ],
+                                                                                            )
+                                                                                          : restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
+                                                                                              ? SizedBox()
+                                                                                              : Text(
+                                                                                                  " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}",
+                                                                                                  style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                ),
+                                                                                    ),
+                                                                                  ],
+                                                                                )
+                                                                              : SizedBox()),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              )),
+                                                          restaurantDataCopy['Menus']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'AddonMenus']
+                                                                  .isEmpty
+                                                              ? SizedBox()
+                                                              : RotatedBox(
+                                                                  quarterTurns:
+                                                                      -1,
+                                                                  child: Text(
+                                                                    "Customize",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .black54,
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.015),
+                                                                  )),
+                                                        ]),
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return SizedBox();
+                                          }
+                                        },
+                                      )
+                                    : SizedBox(),
+                                menulistLength >= 8
+                                    ? SizedBox(
+                                        height: size.height * 0.002,
+                                      )
+                                    : SizedBox(),
+                                Container(
+                                    alignment: Alignment.topLeft,
+                                    margin: EdgeInsets.only(
+                                        left: size.width * 0.05),
+                                    child: Text("All Menus",
+                                        style: offerRecommendStyle)),
+
+                                SizedBox(
+                                  height: size.height * 0.022,
+                                ),
+                                // List 2
+                                ListView.builder(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: menulistLength,
+                                  itemBuilder: (context, index) {
+                                    int tpye = 0;
+                                    double rating = 1.0;
+                                    int ratingLength = 1;
+                                    if (restaurantDataCopy['Menus'][index]
+                                            ['ReviewAndRatings']
+                                        .isNotEmpty) {
+                                      int k = restaurantDataCopy['Menus'][index]
+                                              ['ReviewAndRatings']
+                                          .length;
+                                      ratingLength = k;
+                                      for (int i = 0; i <= k - 1; i++) {
+                                        if (rating <=
+                                            double.parse(
+                                                restaurantDataCopy['Menus']
+                                                            [index]
+                                                        ['ReviewAndRatings'][i]
+                                                    ['rating'])) {
+                                          rating = double.parse(
+                                              restaurantDataCopy['Menus'][index]
+                                                      ['ReviewAndRatings'][i]
+                                                  ['rating']);
+                                        }
+                                      }
+                                    }
+                                    return InkWell(
+                                      onTap: () async {
+                                        var menuD;
+                                        var name;
+                                        setState(() {
+                                          menuD = restaurantDataCopy['Menus']
+                                              [index];
+                                          name = restaurantDataCopy['name'];
+                                        });
+                                        final result = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FoodSlider(
+                                                      menuData: menuD,
+                                                      menuStatus: status,
+                                                      restaurentName: name,
+                                                      rating: rating,
+                                                      ratinglength:
+                                                          ratingLength,
+                                                    )));
+                                        if (result) {
+                                          setState(() {});
+                                          getList();
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 14),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: status == true
+                                                    ? Colors.white
+                                                    : Colors.blue[50],
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 2,
+                                                      color: Colors.blue[50],
+                                                      offset: Offset(1, 3),
+                                                      spreadRadius: 2)
+                                                ]),
+                                            margin: EdgeInsets.only(
+                                              left: size.width * 0.02,
+                                              right: size.width * 0.02,
+                                            ),
+                                            height: size.height * 0.14,
+                                            child:
+                                                checkdata.contains(
+                                                        restaurantDataCopy[
+                                                                    'Menus']
+                                                                [index]['id']
+                                                            .toString())
+                                                    ? Dismissible(
+                                                        direction:
+                                                            DismissDirection
+                                                                .endToStart,
+                                                        // ignore: missing_return
+                                                        confirmDismiss:
+                                                            // ignore: missing_return
+                                                            (direction) async {
+                                                          if (direction ==
+                                                              DismissDirection
+                                                                  .endToStart) {
+                                                            final bool res =
+                                                                await showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return AlertDialog(
+                                                                        content:
+                                                                            Text("Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
+                                                                        actions: <
+                                                                            Widget>[
+                                                                          FlatButton(
+                                                                            child:
+                                                                                Text(
+                                                                              "Cancel",
+                                                                              style: TextStyle(color: Colors.black),
+                                                                            ),
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          ),
+                                                                          FlatButton(
+                                                                            child:
+                                                                                Text(
+                                                                              "Delete",
+                                                                              style: TextStyle(color: Colors.red),
+                                                                            ),
+                                                                            onPressed:
+                                                                                () async {
+                                                                              callingLoader();
+                                                                              print(restaurantDataCopy['Menus'][index]['id']);
+                                                                              await services.data(restaurantDataCopy['Menus'][index]['id']).then((value) => fun(value));
+
+                                                                              final SharedPreferences cart = await SharedPreferences.getInstance();
+                                                                              int totalprice = cart.getInt('TotalPrice');
+                                                                              int gsttotal = cart.getInt('TotalGst');
+                                                                              int totalcount = cart.getInt('TotalCount');
+                                                                              int vendorId = cart.getInt('VendorId');
+
+                                                                              if (checkdata.isNotEmpty && checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())) {
+                                                                                if (data1[0]['itemCount'] == totalcount) {
+                                                                                  setState(() {
+                                                                                    snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
+                                                                                    totalcount = totalcount - data1[0]['itemCount'];
+                                                                                    gsttotal = gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
+                                                                                    totalprice = totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
+                                                                                    vendorId = 0;
+                                                                                    cart.setInt('VendorId', vendorId);
+                                                                                    cart.setInt('TotalPrice', totalprice);
+                                                                                    cart.setInt('TotalGst', gsttotal);
+                                                                                    cart.setInt('TotalCount', totalcount);
+                                                                                    checkdata.remove(data1[0]['menuItemId'].toString());
+                                                                                    print(checkdata);
+                                                                                    cart.setStringList('addedtocart', checkdata);
+                                                                                    removeAddOnWithMenu(data1[0]['addons']);
+
+                                                                                    services.deleteUser(data1[0]['menuItemId']);
+                                                                                    getList();
+                                                                                  });
+                                                                                } else {
+                                                                                  setState(() {
+                                                                                    snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
+                                                                                    totalcount = totalcount - data1[0]['itemCount'];
+                                                                                    gsttotal = gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
+                                                                                    totalprice = totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
+
+                                                                                    cart.setInt('TotalPrice', totalprice);
+                                                                                    cart.setInt('TotalGst', gsttotal);
+                                                                                    cart.setInt('TotalCount', totalcount);
+                                                                                    checkdata.remove(data1[0]['menuItemId'].toString());
+                                                                                    print(checkdata);
+                                                                                    cart.setStringList('addedtocart', checkdata);
+                                                                                    removeAddOnWithMenu(data1[0]['addons']);
+                                                                                    services.deleteUser(data1[0]['menuItemId']);
+                                                                                    getList();
+                                                                                  });
+                                                                                }
+                                                                              } else {
+                                                                                setState(() {
+                                                                                  snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is already remove from cart";
+                                                                                });
+                                                                              }
+                                                                              Navigator.pop(context);
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    });
+                                                            return res;
+                                                          }
+                                                        },
+                                                        key: ValueKey(index),
+                                                        background: Container(
+                                                          color: Colors.red,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 10),
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      child: Row(children: [
+                                                        child: Row(children: [
+                                                          Expanded(
+                                                              flex: 0,
+                                                              child: Stack(
+                                                                children: [
+                                                                  Container(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topCenter,
+                                                                    height:
+                                                                        size.height *
+                                                                            0.2,
+                                                                    width:
+                                                                        size.width *
+                                                                            0.3,
+                                                                    child:
+                                                                        Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          left: size.width *
+                                                                              0.01,
+                                                                          right: size.width *
+                                                                              0.014,
+                                                                          top: size.height *
+                                                                              0.008),
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                        child: restaurantDataCopy['Menus'][index]['image1'] !=
+                                                                                null
+                                                                            ? CachedNetworkImage(
+                                                                                imageUrl: S3_BASE_PATH + restaurantDataCopy['Menus'][index]['image1'],
+                                                                                height: size.height * 0.1,
+                                                                                width: size.width * 0.26,
+                                                                                fit: BoxFit.cover,
+                                                                                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                                                errorWidget: (context, url, error) => Image.asset(
+                                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                                  fit: BoxFit.cover,
+                                                                                ),
+                                                                              )
+                                                                            : Image.asset(
+                                                                                "assets/images/feasturenttemp.jpeg",
+                                                                                height: size.height * 0.1,
+                                                                                width: size.width * 0.26,
+                                                                                fit: BoxFit.cover,
+                                                                              ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Positioned(
+                                                                    top: size
+                                                                            .height *
+                                                                        0.09,
+                                                                    bottom: size
+                                                                            .height *
+                                                                        0.02,
+                                                                    left: size
+                                                                            .width *
+                                                                        0.058,
+                                                                    right: size
+                                                                            .width *
+                                                                        0.058,
+                                                                    child:
+                                                                        MaterialButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        if (status ==
+                                                                            true) {
+                                                                          final SharedPreferences
+                                                                              cart =
+                                                                              await SharedPreferences.getInstance();
+
+                                                                          int vendorId =
+                                                                              cart.getInt('VendorId');
+
+                                                                          await services
+                                                                              .data(restaurantDataCopy['Menus'][index]['id'])
+                                                                              .then((value) => fun(value));
+
+                                                                          if (vendorId == 0 ||
+                                                                              vendorId == restaurantDataCopy['Menus'][index]['vendorId']) {
+                                                                            callingLoader();
+
+                                                                            if (data1.isEmpty) {
+                                                                              if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                              } else {
+                                                                                tempAddOns = null;
+                                                                                final result = await showModalBottomSheet(
+                                                                                    isScrollControlled: true,
+                                                                                    isDismissible: false,
+                                                                                    enableDrag: false,
+                                                                                    backgroundColor: Colors.transparent,
+                                                                                    context: context,
+                                                                                    builder: (context) => CustomizeMenu(
+                                                                                          menuData: restaurantDataCopy['Menus'][index],
+                                                                                        ));
+
+                                                                                if (result != null) {
+                                                                                  if (result > 0) {
+                                                                                    int totalprice = 0;
+                                                                                    int totalgst = 0;
+                                                                                    String title;
+                                                                                    int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                    for (int i = 0; i <= k - 1; i++) {
+                                                                                      if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                        setState(() {
+                                                                                          title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                          totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                          totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                        });
+                                                                                      }
+                                                                                    }
+                                                                                    await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                  } else if (result == 0) {
+                                                                                    await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            } else {
+                                                                              if (data1[0]['menuItemId'] != restaurantDataCopy['Menus'][index]['id']) {
+                                                                                if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                  await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                } else {
+                                                                                  tempAddOns = null;
+                                                                                  final result = await showModalBottomSheet(
+                                                                                      isScrollControlled: true,
+                                                                                      isDismissible: false,
+                                                                                      enableDrag: false,
+                                                                                      backgroundColor: Colors.transparent,
+                                                                                      context: context,
+                                                                                      builder: (context) => CustomizeMenu(
+                                                                                            menuData: restaurantDataCopy['Menus'][index],
+                                                                                          ));
+
+                                                                                  if (result != null) {
+                                                                                    if (result > 0) {
+                                                                                      int totalprice = 0;
+                                                                                      int totalgst = 0;
+                                                                                      String title;
+                                                                                      int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                      for (int i = 0; i <= k - 1; i++) {
+                                                                                        title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                        if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                          setState(() {
+                                                                                            totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                            totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                          });
+                                                                                        }
+                                                                                      }
+                                                                                      await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                    } else if (result == 0) {
+                                                                                      await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                              } else {
+                                                                                setState(() {
+                                                                                  snackBarData = "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
+                                                                                });
+                                                                                print("match");
+                                                                              }
+                                                                            }
+                                                                            Navigator.pop(context);
+                                                                          } else {
+                                                                            showDialog(
+                                                                                context: context,
+                                                                                builder: (BuildContext context) {
+                                                                                  return AlertDialog(content: Text("Do you want to order food from different resturent"), actions: <Widget>[
+                                                                                    FlatButton(
+                                                                                      child: Text(
+                                                                                        "No",
+                                                                                        style: TextStyle(color: Colors.black),
+                                                                                      ),
+                                                                                      onPressed: () {
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                    ),
+                                                                                    FlatButton(
+                                                                                      child: Text(
+                                                                                        "Yes",
+                                                                                        style: TextStyle(color: Colors.black),
+                                                                                      ),
+                                                                                      onPressed: () async {
+                                                                                        callingLoader();
+                                                                                        removeCartForNewData();
+                                                                                        setState(() {});
+                                                                                        getList();
+                                                                                        Navigator.pop(context);
+                                                                                        Navigator.pop(context);
+                                                                                        if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
+                                                                                          await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                        } else {
+                                                                                          tempAddOns = null;
+                                                                                          final result = await showModalBottomSheet(
+                                                                                              isScrollControlled: true,
+                                                                                              isDismissible: false,
+                                                                                              enableDrag: false,
+                                                                                              backgroundColor: Colors.transparent,
+                                                                                              context: context,
+                                                                                              builder: (context) => CustomizeMenu(
+                                                                                                    menuData: restaurantDataCopy['Menus'][index],
+                                                                                                  ));
+
+                                                                                          if (result != null) {
+                                                                                            if (result > 0) {
+                                                                                              int totalprice = 0;
+                                                                                              int totalgst = 0;
+                                                                                              String title;
+                                                                                              int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
+                                                                                              for (int i = 0; i <= k - 1; i++) {
+                                                                                                if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
+                                                                                                  setState(() {
+                                                                                                    title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
+                                                                                                    totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                                    totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                                  });
+                                                                                                }
+                                                                                              }
+                                                                                              await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
+                                                                                            } else if (result == 0) {
+                                                                                              await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                            }
+                                                                                          }
+                                                                                        }
+                                                                                      },
+                                                                                    ),
+                                                                                  ]);
+                                                                                });
+                                                                          }
+                                                                        } else {
+                                                                          Fluttertoast.showToast(
+                                                                              msg: "Not taking orders now");
+                                                                        }
+                                                                      },
+                                                                      color: checkdata
+                                                                              .isEmpty
+                                                                          ? Colors
+                                                                              .white
+                                                                          : checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())
+                                                                              ? Colors.blue
+                                                                              : Colors.white,
+                                                                      minWidth:
+                                                                          size.width *
+                                                                              0.16,
+                                                                      height: size
+                                                                              .height *
+                                                                          0.033,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(14)),
+                                                                      child: checkdata
+                                                                              .isEmpty
+                                                                          ? Center(
+                                                                              child: Text(
+                                                                                "Add",
+                                                                                style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.blueGrey),
+                                                                              ),
+                                                                            )
+                                                                          : checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())
+                                                                              ? Center(
+                                                                                  child: Text(
+                                                                                    "Added",
+                                                                                    style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.white),
+                                                                                  ),
+                                                                                )
+                                                                              : Center(
+                                                                                  child: Text(
+                                                                                    "Add",
+                                                                                    style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.blueGrey),
+                                                                                  ),
+                                                                                ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              )),
+                                                          Expanded(
+                                                              flex: 6,
+                                                              child: Container(
+                                                                height:
+                                                                    size.height *
+                                                                        0.2,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          top: size.height *
+                                                                              0.01),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Container(
+                                                                            width:
+                                                                                size.width * 0.5,
+                                                                            child:
+                                                                                Text(
+                                                                              capitalize(restaurantDataCopy['Menus'][index]['title']),
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: size.height * 0.019),
+                                                                            ),
+                                                                          ),
+                                                                          Spacer(),
+                                                                          Padding(
+                                                                              padding: const EdgeInsets.only(right: 12),
+                                                                              child: restaurantDataCopy['Menus'][index]['isNonVeg'] == false
+                                                                                  ? restaurantDataCopy['Menus'][index]['isEgg'] == false
+                                                                                      ? Container(
+                                                                                          child: CachedNetworkImage(
+                                                                                            imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
+                                                                                            height: size.height * 0.016,
+                                                                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                          ),
+                                                                                        )
+                                                                                      : Container(
+                                                                                          child: Image.asset(
+                                                                                          "assets/images/eggeterian.png",
+                                                                                          height: size.height * 0.016,
+                                                                                        ))
+                                                                                  : CachedNetworkImage(
+                                                                                      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
+                                                                                      height: size.height * 0.016,
+                                                                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                                    ))
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        height: size.height *
+                                                                            0.005),
+                                                                    SizedBox(
+                                                                      height: size
+                                                                              .height *
+                                                                          0.002,
+                                                                    ),
+                                                                    Container(
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Container(
+                                                                              child: Text("⭐")),
+                                                                          Text(
+                                                                            "$rating",
+                                                                            style: TextStyle(
+                                                                                fontSize: size.height * 0.014,
+                                                                                color: Colors.red,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Spacer(),
+                                                                          Container(
+                                                                            margin:
+                                                                                EdgeInsets.only(right: size.width * 0.1),
+                                                                            child:
+                                                                                Text(
+                                                                              "₹${restaurantDataCopy['Menus'][index]['totalPrice']}",
+                                                                              style: TextStyle(fontSize: size.height * 0.018, color: Colors.black, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: size
+                                                                              .height *
+                                                                          0.003,
+                                                                    ),
+                                                                    Container(
+                                                                      child: Container(
+                                                                          child: restaurantDataCopy['Menus'][index]['MenuOffers'].length != 0
+                                                                              ? Row(
+                                                                                  children: [
+                                                                                    Image.asset(
+                                                                                      "assets/icons/discount_icon.jpg",
+                                                                                      height: size.height * 0.02,
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: size.width * 0.006,
+                                                                                    ),
+                                                                                    Container(
+                                                                                      child: restaurantDataCopy['Menus'][index]['MenuOffers'].length >= 2
+                                                                                          ? Row(
+                                                                                              children: [
+                                                                                                restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
+                                                                                                    ? SizedBox()
+                                                                                                    : Text(
+                                                                                                        " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}, ",
+                                                                                                        style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                      ),
+                                                                                                restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon'] == null
+                                                                                                    ? SizedBox()
+                                                                                                    : Text(
+                                                                                                        " ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon']}",
+                                                                                                        style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                      ),
+                                                                                              ],
+                                                                                            )
+                                                                                          : restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
+                                                                                              ? SizedBox()
+                                                                                              : Text(
+                                                                                                  " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}",
+                                                                                                  style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
+                                                                                                ),
+                                                                                    ),
+                                                                                  ],
+                                                                                )
+                                                                              : SizedBox()),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              )),
+                                                          restaurantDataCopy['Menus']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'AddonMenus']
+                                                                  .isEmpty
+                                                              ? SizedBox()
+                                                              : RotatedBox(
+                                                                  quarterTurns:
+                                                                      -1,
+                                                                  child: Text(
+                                                                    "Customize",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .black54,
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.015),
+                                                                  )),
+                                                        ]),
+                                                      )
+                                                    : Row(children: [
                                                         Expanded(
                                                             flex: 0,
                                                             child: Stack(
@@ -1179,14 +2657,14 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                     if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
                                                                                       setState(() {
                                                                                         title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
-                                                                                        totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                        totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                                        totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                        totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
                                                                                       });
                                                                                     }
                                                                                   }
                                                                                   await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
                                                                                 } else if (result == 0) {
-                                                                                  await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                  await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
                                                                                 }
                                                                               }
                                                                             }
@@ -1194,7 +2672,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                             if (data1[0]['menuItemId'] !=
                                                                                 restaurantDataCopy['Menus'][index]['id']) {
                                                                               if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
-                                                                                await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
                                                                               } else {
                                                                                 tempAddOns = null;
                                                                                 final result = await showModalBottomSheet(
@@ -1217,14 +2695,14 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                       title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
                                                                                       if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
                                                                                         setState(() {
-                                                                                          totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                          totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                                          totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                          totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
                                                                                         });
                                                                                       }
                                                                                     }
                                                                                     await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
                                                                                   } else if (result == 0) {
-                                                                                    await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                    await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
                                                                                   }
                                                                                 }
                                                                               }
@@ -1264,7 +2742,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                       Navigator.pop(context);
                                                                                       Navigator.pop(context);
                                                                                       if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
-                                                                                        await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                        await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
                                                                                       } else {
                                                                                         tempAddOns = null;
                                                                                         final result = await showModalBottomSheet(
@@ -1287,14 +2765,14 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                               if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
                                                                                                 setState(() {
                                                                                                   title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
-                                                                                                  totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                                  totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
+                                                                                                  totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
+                                                                                                  totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'].toInt();
                                                                                                 });
                                                                                               }
                                                                                             }
                                                                                             await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
                                                                                           } else if (result == 0) {
-                                                                                            await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
+                                                                                            await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'].toInt(), 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
                                                                                           }
                                                                                         }
                                                                                       }
@@ -1308,11 +2786,14 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                             msg:
                                                                                 "Not taking orders now");
                                                                       }
-
-                                                                      // await addButtonFunction(tpye, index);
                                                                     },
-                                                                    color: Colors
-                                                                        .white,
+                                                                    color: checkdata
+                                                                            .isEmpty
+                                                                        ? Colors
+                                                                            .white
+                                                                        : checkdata.contains(restaurantDataCopy['Menus'][index]['id'].toString())
+                                                                            ? Colors.blue
+                                                                            : Colors.white,
                                                                     minWidth:
                                                                         size.width *
                                                                             0.16,
@@ -1322,9 +2803,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                     shape: RoundedRectangleBorder(
                                                                         borderRadius:
                                                                             BorderRadius.circular(14)),
-                                                                    textColor:
-                                                                        Colors
-                                                                            .white,
                                                                     child: checkdata
                                                                             .isEmpty
                                                                         ? Center(
@@ -1338,7 +2816,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                             ? Center(
                                                                                 child: Text(
                                                                                   "Added",
-                                                                                  style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.blueGrey),
+                                                                                  style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.015, color: Colors.white),
                                                                                 ),
                                                                               )
                                                                             : Center(
@@ -1415,50 +2893,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                       height: size
                                                                               .height *
                                                                           0.005),
-                                                                  // Container(
-                                                                  //   child: Row(
-                                                                  //     children: [
-                                                                  //       Container(
-                                                                  //         child: restaurantDataCopy['Menus']
-                                                                  //                             [
-                                                                  //                             index]
-                                                                  //                         [
-                                                                  //                         'vendorCategoryId']
-                                                                  //                      ==
-                                                                  //                 "null"
-                                                                  //             ? Image.asset(
-                                                                  //                 "assets/icons/discount_icon.jpg",
-                                                                  //                 height:
-                                                                  //                     size.height *
-                                                                  //                         0.02,
-                                                                  //               )
-                                                                  //             : SizedBox(),
-                                                                  //       ),
-                                                                  //       SizedBox(
-                                                                  //         width: size.width *
-                                                                  //             0.006,
-                                                                  //       ),
-                                                                  //       Text(restaurantDataCopy[
-                                                                  //                         'Menus']
-                                                                  //                     [index]
-                                                                  //                 ['Category']
-                                                                  //             ['name'],
-                                                                  //         restaurantDataCopy[
-                                                                  //                         'Menus']
-                                                                  //                     [index]
-                                                                  //                 ['Category']
-                                                                  //             ['name'],
-                                                                  //         style: TextStyle(
-                                                                  //             fontSize:
-                                                                  //                 size.height *
-                                                                  //                     0.014,
-                                                                  //             fontWeight:
-                                                                  //                 FontWeight
-                                                                  //                     .bold),
-                                                                  //       ),
-                                                                  //     ],
-                                                                  //   ),
-                                                                  // ),
                                                                   SizedBox(
                                                                     height: size
                                                                             .height *
@@ -1562,954 +2996,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           size.height *
                                                                               0.015),
                                                                 )),
-                                                      ]),
-                                                    )),
-                                              ),
-                                            );
-                                          } else {
-                                            return SizedBox();
-                                          }
-                                        },
-                                      )
-                                    : SizedBox(),
-                                menulistLength >= 8
-                                    ? SizedBox(
-                                        height: size.height * 0.002,
-                                      )
-                                    : SizedBox(),
-                                Container(
-                                    alignment: Alignment.topLeft,
-                                    margin: EdgeInsets.only(
-                                        left: size.width * 0.05),
-                                    child: Text("All Menus",
-                                        style: offerRecommendStyle)),
-
-                                SizedBox(
-                                  height: size.height * 0.022,
-                                ),
-                                // List 2
-                                ListView.builder(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: menulistLength,
-                                  itemBuilder: (context, index) {
-                                    int tpye = 0;
-                                    double rating = 1.0;
-                                    int ratingLength = 1;
-                                    if (restaurantDataCopy['Menus'][index]
-                                            ['ReviewAndRatings']
-                                        .isNotEmpty) {
-                                      int k = restaurantDataCopy['Menus'][index]
-                                              ['ReviewAndRatings']
-                                          .length;
-                                      ratingLength = k;
-                                      for (int i = 0; i <= k - 1; i++) {
-                                        if (rating <=
-                                            double.parse(
-                                                restaurantDataCopy['Menus']
-                                                            [index]
-                                                        ['ReviewAndRatings'][i]
-                                                    ['rating'])) {
-                                          rating = double.parse(
-                                              restaurantDataCopy['Menus'][index]
-                                                      ['ReviewAndRatings'][i]
-                                                  ['rating']);
-                                        }
-                                      }
-                                    }
-                                    return InkWell(
-                                      onTap: () async {
-                                        var menuD;
-                                        var name;
-                                        setState(() {
-                                          menuD = restaurantDataCopy['Menus']
-                                              [index];
-                                          name = restaurantDataCopy['name'];
-                                        });
-                                        final result = await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FoodSlider(
-                                                      menuData: menuD,
-                                                      menuStatus: status,
-                                                      restaurentName: name,
-                                                      rating: rating,
-                                                      ratinglength:
-                                                          ratingLength,
-                                                    )));
-                                        if (result) {
-                                          setState(() {});
-                                          getList();
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 14),
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: status == true
-                                                    ? Colors.white
-                                                    : Colors.blue[50],
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      blurRadius: 2,
-                                                      color: Colors.blue[50],
-                                                      offset: Offset(1, 3),
-                                                      spreadRadius: 2)
-                                                ]),
-                                            margin: EdgeInsets.only(
-                                              left: size.width * 0.02,
-                                              right: size.width * 0.02,
-                                            ),
-                                            height: size.height * 0.14,
-                                            child: Dismissible(
-                                              direction:
-                                                  DismissDirection.endToStart,
-                                              // ignore: missing_return
-                                              confirmDismiss:
-                                                  (direction) async {
-                                                if (direction ==
-                                                    DismissDirection
-                                                        .endToStart) {
-                                                  final bool res =
-                                                      await showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              content: Text(
-                                                                  "Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
-                                                              actions: <Widget>[
-                                                                FlatButton(
-                                                                  child: Text(
-                                                                    "Cancel",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                ),
-                                                                FlatButton(
-                                                                  child: Text(
-                                                                    "Delete",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .red),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () async {
-                                                                    callingLoader();
-                                                                    print(restaurantDataCopy['Menus']
-                                                                            [
-                                                                            index]
-                                                                        ['id']);
-                                                                    await services
-                                                                        .data(restaurantDataCopy['Menus'][index]
-                                                                            [
-                                                                            'id'])
-                                                                        .then((value) =>
-                                                                            fun(value));
-
-                                                                    final SharedPreferences
-                                                                        cart =
-                                                                        await SharedPreferences
-                                                                            .getInstance();
-                                                                    int totalprice =
-                                                                        cart.getInt(
-                                                                            'TotalPrice');
-                                                                    int gsttotal =
-                                                                        cart.getInt(
-                                                                            'TotalGst');
-                                                                    int totalcount =
-                                                                        cart.getInt(
-                                                                            'TotalCount');
-                                                                    int vendorId =
-                                                                        cart.getInt(
-                                                                            'VendorId');
-
-                                                                    if (checkdata
-                                                                            .isNotEmpty &&
-                                                                        checkdata
-                                                                            .contains(restaurantDataCopy['Menus'][index]['id'].toString())) {
-                                                                      if (data1[0]
-                                                                              [
-                                                                              'itemCount'] ==
-                                                                          totalcount) {
-                                                                        setState(
-                                                                            () {
-                                                                          snackBarData =
-                                                                              "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-                                                                          totalcount =
-                                                                              totalcount - data1[0]['itemCount'];
-                                                                          gsttotal =
-                                                                              gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
-                                                                          totalprice =
-                                                                              totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
-                                                                          vendorId =
-                                                                              0;
-                                                                          cart.setInt(
-                                                                              'VendorId',
-                                                                              vendorId);
-                                                                          cart.setInt(
-                                                                              'TotalPrice',
-                                                                              totalprice);
-                                                                          cart.setInt(
-                                                                              'TotalGst',
-                                                                              gsttotal);
-                                                                          cart.setInt(
-                                                                              'TotalCount',
-                                                                              totalcount);
-                                                                          checkdata
-                                                                              .remove(data1[0]['menuItemId'].toString());
-                                                                          print(
-                                                                              checkdata);
-                                                                          cart.setStringList(
-                                                                              'addedtocart',
-                                                                              checkdata);
-                                                                          removeAddOnWithMenu(data1[0]
-                                                                              [
-                                                                              'addons']);
-
-                                                                          services.deleteUser(data1[0]
-                                                                              [
-                                                                              'menuItemId']);
-                                                                        });
-                                                                      } else {
-                                                                        setState(
-                                                                            () {
-                                                                          snackBarData =
-                                                                              "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-                                                                          totalcount =
-                                                                              totalcount - data1[0]['itemCount'];
-                                                                          gsttotal =
-                                                                              gsttotal - (data1[0]['itemCount'] * data1[0]['gst']);
-                                                                          totalprice =
-                                                                              totalprice - (data1[0]['itemCount'] * data1[0]['itemPrice']);
-
-                                                                          cart.setInt(
-                                                                              'TotalPrice',
-                                                                              totalprice);
-                                                                          cart.setInt(
-                                                                              'TotalGst',
-                                                                              gsttotal);
-                                                                          cart.setInt(
-                                                                              'TotalCount',
-                                                                              totalcount);
-                                                                          checkdata
-                                                                              .remove(data1[0]['menuItemId'].toString());
-                                                                          print(
-                                                                              checkdata);
-                                                                          cart.setStringList(
-                                                                              'addedtocart',
-                                                                              checkdata);
-                                                                          removeAddOnWithMenu(data1[0]
-                                                                              [
-                                                                              'addons']);
-                                                                          services.deleteUser(data1[0]
-                                                                              [
-                                                                              'menuItemId']);
-                                                                        });
-                                                                      }
-                                                                    } else {
-                                                                      setState(
-                                                                          () {
-                                                                        snackBarData =
-                                                                            "${restaurantDataCopy['Menus'][index]['title']} is already remove from cart";
-                                                                      });
-                                                                    }
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                ),
-                                                              ],
-                                                            );
-                                                          });
-                                                  return res;
-                                                }
-                                              },
-                                              key: ValueKey(index),
-                                              background: Container(
-                                                color: Colors.red,
-                                                padding:
-                                                    EdgeInsets.only(right: 10),
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Icon(
-                                                  Icons.delete,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              child: Row(children: [
-                                                Expanded(
-                                                    flex: 0,
-                                                    child: Stack(
-                                                      children: [
-                                                        Container(
-                                                          alignment: Alignment
-                                                              .topCenter,
-                                                          height:
-                                                              size.height * 0.2,
-                                                          width:
-                                                              size.width * 0.3,
-                                                          child: Container(
-                                                            margin: EdgeInsets.only(
-                                                                left:
-                                                                    size.width *
-                                                                        0.01,
-                                                                right:
-                                                                    size.width *
-                                                                        0.014,
-                                                                top:
-                                                                    size.height *
-                                                                        0.008),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              child: restaurantDataCopy['Menus']
-                                                                              [
-                                                                              index]
-                                                                          [
-                                                                          'image1'] !=
-                                                                      null
-                                                                  ? CachedNetworkImage(
-                                                                      imageUrl: S3_BASE_PATH +
-                                                                          restaurantDataCopy['Menus'][index]
-                                                                              [
-                                                                              'image1'],
-                                                                      height:
-                                                                          size.height *
-                                                                              0.1,
-                                                                      width: size
-                                                                              .width *
-                                                                          0.26,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      placeholder: (context,
-                                                                              url) =>
-                                                                          Center(
-                                                                              child: CircularProgressIndicator()),
-                                                                      errorWidget: (context,
-                                                                              url,
-                                                                              error) =>
-                                                                          Image
-                                                                              .asset(
-                                                                        "assets/images/feasturenttemp.jpeg",
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )
-                                                                  : Image.asset(
-                                                                      "assets/images/feasturenttemp.jpeg",
-                                                                      height:
-                                                                          size.height *
-                                                                              0.1,
-                                                                      width: size
-                                                                              .width *
-                                                                          0.26,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Positioned(
-                                                          top: size.height *
-                                                              0.09,
-                                                          bottom: size.height *
-                                                              0.02,
-                                                          left: size.width *
-                                                              0.058,
-                                                          right: size.width *
-                                                              0.058,
-                                                          child: MaterialButton(
-                                                            onPressed:
-                                                                () async {
-                                                              if (status ==
-                                                                  true) {
-                                                                final SharedPreferences
-                                                                    cart =
-                                                                    await SharedPreferences
-                                                                        .getInstance();
-
-                                                                int vendorId =
-                                                                    cart.getInt(
-                                                                        'VendorId');
-
-                                                                await services
-                                                                    .data(restaurantDataCopy['Menus']
-                                                                            [
-                                                                            index]
-                                                                        ['id'])
-                                                                    .then((value) =>
-                                                                        fun(value));
-
-                                                                if (vendorId ==
-                                                                        0 ||
-                                                                    vendorId ==
-                                                                        restaurantDataCopy['Menus'][index]
-                                                                            [
-                                                                            'vendorId']) {
-                                                                  callingLoader();
-
-                                                                  if (data1
-                                                                      .isEmpty) {
-                                                                    if (restaurantDataCopy['Menus'][index]
-                                                                            [
-                                                                            'AddonMenus']
-                                                                        .isEmpty) {
-                                                                      await addButtonFunction(
-                                                                          tpye,
-                                                                          index,
-                                                                          restaurantDataCopy['Menus'][index]
-                                                                              [
-                                                                              'totalPrice'],
-                                                                          restaurantDataCopy['Menus'][index]
-                                                                              [
-                                                                              'gstAmount'],
-                                                                          0,
-                                                                          null,
-                                                                          restaurantDataCopy['Menus'][index]
-                                                                              [
-                                                                              'title'],
-                                                                          rating);
-                                                                    } else {
-                                                                      tempAddOns =
-                                                                          null;
-                                                                      final result = await showModalBottomSheet(
-                                                                          isScrollControlled: true,
-                                                                          isDismissible: false,
-                                                                          enableDrag: false,
-                                                                          backgroundColor: Colors.transparent,
-                                                                          context: context,
-                                                                          builder: (context) => CustomizeMenu(
-                                                                                menuData: restaurantDataCopy['Menus'][index],
-                                                                              ));
-
-                                                                      if (result !=
-                                                                          null) {
-                                                                        if (result >
-                                                                            0) {
-                                                                          int totalprice =
-                                                                              0;
-                                                                          int totalgst =
-                                                                              0;
-                                                                          String
-                                                                              title;
-                                                                          int k =
-                                                                              restaurantDataCopy['Menus'][index]['AddonMenus'].length;
-                                                                          for (int i = 0;
-                                                                              i <= k - 1;
-                                                                              i++) {
-                                                                            if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] ==
-                                                                                result) {
-                                                                              setState(() {
-                                                                                title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
-                                                                                totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                              });
-                                                                            }
-                                                                          }
-                                                                          await addButtonFunction(
-                                                                              tpye,
-                                                                              index,
-                                                                              totalprice,
-                                                                              totalgst,
-                                                                              result,
-                                                                              tempAddOns,
-                                                                              title,
-                                                                              rating);
-                                                                        } else if (result ==
-                                                                            0) {
-                                                                          await addButtonFunction(
-                                                                              tpye,
-                                                                              index,
-                                                                              restaurantDataCopy['Menus'][index]['totalPrice'],
-                                                                              restaurantDataCopy['Menus'][index]['gstAmount'],
-                                                                              0,
-                                                                              tempAddOns,
-                                                                              restaurantDataCopy['Menus'][index]['title'],
-                                                                              rating);
-                                                                        }
-                                                                      }
-                                                                    }
-                                                                  } else {
-                                                                    if (data1[0]
-                                                                            [
-                                                                            'menuItemId'] !=
-                                                                        restaurantDataCopy['Menus'][index]
-                                                                            [
-                                                                            'id']) {
-                                                                      if (restaurantDataCopy['Menus'][index]
-                                                                              [
-                                                                              'AddonMenus']
-                                                                          .isEmpty) {
-                                                                        await addButtonFunction(
-                                                                            tpye,
-                                                                            index,
-                                                                            restaurantDataCopy['Menus'][index]['totalPrice'],
-                                                                            restaurantDataCopy['Menus'][index]['gstAmount'],
-                                                                            0,
-                                                                            null,
-                                                                            restaurantDataCopy['Menus'][index]['title'],
-                                                                            rating);
-                                                                      } else {
-                                                                        tempAddOns =
-                                                                            null;
-                                                                        final result = await showModalBottomSheet(
-                                                                            isScrollControlled: true,
-                                                                            isDismissible: false,
-                                                                            enableDrag: false,
-                                                                            backgroundColor: Colors.transparent,
-                                                                            context: context,
-                                                                            builder: (context) => CustomizeMenu(
-                                                                                  menuData: restaurantDataCopy['Menus'][index],
-                                                                                ));
-
-                                                                        if (result !=
-                                                                            null) {
-                                                                          if (result >
-                                                                              0) {
-                                                                            int totalprice =
-                                                                                0;
-                                                                            int totalgst =
-                                                                                0;
-                                                                            String
-                                                                                title;
-                                                                            int k =
-                                                                                restaurantDataCopy['Menus'][index]['AddonMenus'].length;
-                                                                            for (int i = 0;
-                                                                                i <= k - 1;
-                                                                                i++) {
-                                                                              title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
-                                                                              if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
-                                                                                setState(() {
-                                                                                  totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                  totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                });
-                                                                              }
-                                                                            }
-                                                                            await addButtonFunction(
-                                                                                tpye,
-                                                                                index,
-                                                                                totalprice,
-                                                                                totalgst,
-                                                                                result,
-                                                                                tempAddOns,
-                                                                                title,
-                                                                                rating);
-                                                                          } else if (result ==
-                                                                              0) {
-                                                                            await addButtonFunction(
-                                                                                tpye,
-                                                                                index,
-                                                                                restaurantDataCopy['Menus'][index]['totalPrice'],
-                                                                                restaurantDataCopy['Menus'][index]['gstAmount'],
-                                                                                0,
-                                                                                tempAddOns,
-                                                                                restaurantDataCopy['Menus'][index]['title'],
-                                                                                rating);
-                                                                          }
-                                                                        }
-                                                                      }
-                                                                    } else {
-                                                                      setState(
-                                                                          () {
-                                                                        snackBarData =
-                                                                            "${restaurantDataCopy['Menus'][index]['title']} is already added to cart";
-                                                                      });
-                                                                      print(
-                                                                          "match");
-                                                                    }
-                                                                  }
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                } else {
-                                                                  showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                              context) {
-                                                                        return AlertDialog(
-                                                                            content:
-                                                                                Text("Do you want to order food from different resturent"),
-                                                                            actions: <Widget>[
-                                                                              FlatButton(
-                                                                                child: Text(
-                                                                                  "No",
-                                                                                  style: TextStyle(color: Colors.black),
-                                                                                ),
-                                                                                onPressed: () {
-                                                                                  Navigator.pop(context);
-                                                                                },
-                                                                              ),
-                                                                              FlatButton(
-                                                                                child: Text(
-                                                                                  "Yes",
-                                                                                  style: TextStyle(color: Colors.black),
-                                                                                ),
-                                                                                onPressed: () async {
-                                                                                  callingLoader();
-                                                                                  removeCartForNewData();
-                                                                                  setState(() {});
-                                                                                  getList();
-                                                                                  Navigator.pop(context);
-                                                                                  Navigator.pop(context);
-                                                                                  if (restaurantDataCopy['Menus'][index]['AddonMenus'].isEmpty) {
-                                                                                    await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, null, restaurantDataCopy['Menus'][index]['title'], rating);
-                                                                                  } else {
-                                                                                    tempAddOns = null;
-                                                                                    final result = await showModalBottomSheet(
-                                                                                        isScrollControlled: true,
-                                                                                        isDismissible: false,
-                                                                                        enableDrag: false,
-                                                                                        backgroundColor: Colors.transparent,
-                                                                                        context: context,
-                                                                                        builder: (context) => CustomizeMenu(
-                                                                                              menuData: restaurantDataCopy['Menus'][index],
-                                                                                            ));
-
-                                                                                    if (result != null) {
-                                                                                      if (result > 0) {
-                                                                                        int totalprice = 0;
-                                                                                        int totalgst = 0;
-                                                                                        String title;
-                                                                                        int k = restaurantDataCopy['Menus'][index]['AddonMenus'].length;
-                                                                                        for (int i = 0; i <= k - 1; i++) {
-                                                                                          if (restaurantDataCopy['Menus'][index]['AddonMenus'][i]['id'] == result) {
-                                                                                            setState(() {
-                                                                                              title = "${restaurantDataCopy['Menus'][index]['AddonMenus'][i]['title']} ${restaurantDataCopy['Menus'][index]['title']}";
-                                                                                              totalprice = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['amount'] + restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                              totalgst = restaurantDataCopy['Menus'][index]['AddonMenus'][i]['gstAmount'];
-                                                                                            });
-                                                                                          }
-                                                                                        }
-                                                                                        await addButtonFunction(tpye, index, totalprice, totalgst, result, tempAddOns, title, rating);
-                                                                                      } else if (result == 0) {
-                                                                                        await addButtonFunction(tpye, index, restaurantDataCopy['Menus'][index]['totalPrice'], restaurantDataCopy['Menus'][index]['gstAmount'], 0, tempAddOns, restaurantDataCopy['Menus'][index]['title'], rating);
-                                                                                      }
-                                                                                    }
-                                                                                  }
-                                                                                },
-                                                                              ),
-                                                                            ]);
-                                                                      });
-                                                                }
-                                                              } else {
-                                                                Fluttertoast
-                                                                    .showToast(
-                                                                        msg:
-                                                                            "Not taking orders now");
-                                                              }
-
-                                                              // await addButtonFunction(tpye, index);
-                                                            },
-                                                            color: Colors.white,
-                                                            minWidth:
-                                                                size.width *
-                                                                    0.16,
-                                                            height:
-                                                                size.height *
-                                                                    0.033,
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            14)),
-                                                            textColor:
-                                                                Colors.white,
-                                                            child: checkdata
-                                                                    .isEmpty
-                                                                ? Center(
-                                                                    child: Text(
-                                                                      "Add",
-                                                                      style: TextStyle(
-                                                                          fontSize: MediaQuery.of(context).size.height *
-                                                                              0.015,
-                                                                          color:
-                                                                              Colors.blueGrey),
-                                                                    ),
-                                                                  )
-                                                                : checkdata.contains(restaurantDataCopy['Menus'][index]
-                                                                            [
-                                                                            'id']
-                                                                        .toString())
-                                                                    ? Center(
-                                                                        child:
-                                                                            Text(
-                                                                          "Added",
-                                                                          style: TextStyle(
-                                                                              fontSize: MediaQuery.of(context).size.height * 0.015,
-                                                                              color: Colors.blueGrey),
-                                                                        ),
-                                                                      )
-                                                                    : Center(
-                                                                        child:
-                                                                            Text(
-                                                                          "Add",
-                                                                          style: TextStyle(
-                                                                              fontSize: MediaQuery.of(context).size.height * 0.015,
-                                                                              color: Colors.blueGrey),
-                                                                        ),
-                                                                      ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )),
-                                                Expanded(
-                                                    flex: 6,
-                                                    child: Container(
-                                                      height: size.height * 0.2,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.only(
-                                                                top:
-                                                                    size.height *
-                                                                        0.01),
-                                                            child: Row(
-                                                              children: [
-                                                                Container(
-                                                                  width:
-                                                                      size.width *
-                                                                          0.5,
-                                                                  child: Text(
-                                                                    capitalize(restaurantDataCopy['Menus']
-                                                                            [
-                                                                            index]
-                                                                        [
-                                                                        'title']),
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            size.height *
-                                                                                0.019),
-                                                                  ),
-                                                                ),
-                                                                Spacer(),
-                                                                Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        right:
-                                                                            12),
-                                                                    child: restaurantDataCopy['Menus'][index]['isNonVeg'] ==
-                                                                            false
-                                                                        ? restaurantDataCopy['Menus'][index]['isEgg'] ==
-                                                                                false
-                                                                            ? Container(
-                                                                                child: CachedNetworkImage(
-                                                                                  imageUrl: 'https://www.pngkey.com/png/full/261-2619381_chitr-veg-symbol-svg-veg-and-non-veg.png',
-                                                                                  height: size.height * 0.016,
-                                                                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                                                                ),
-                                                                              )
-                                                                            : Container(
-                                                                                child: Image.asset(
-                                                                                "assets/images/eggeterian.png",
-                                                                                height: size.height * 0.016,
-                                                                              ))
-                                                                        : CachedNetworkImage(
-                                                                            imageUrl:
-                                                                                'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/1200px-Non_veg_symbol.svg.png',
-                                                                            height:
-                                                                                size.height * 0.016,
-                                                                            errorWidget: (context, url, error) =>
-                                                                                Icon(Icons.error),
-                                                                          ))
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                              height:
-                                                                  size.height *
-                                                                      0.005),
-                                                          // Container(
-                                                          //   child: Row(
-                                                          //     children: [
-                                                          //       Container(
-                                                          //         child: restaurantDataCopy['Menus']
-                                                          //                             [
-                                                          //                             index]
-                                                          //                         [
-                                                          //                         'vendorCategoryId']
-                                                          //                      ==
-                                                          //                 "null"
-                                                          //             ? Image.asset(
-                                                          //                 "assets/icons/discount_icon.jpg",
-                                                          //                 height:
-                                                          //                     size.height *
-                                                          //                         0.02,
-                                                          //               )
-                                                          //             : SizedBox(),
-                                                          //       ),
-                                                          //       SizedBox(
-                                                          //         width: size.width *
-                                                          //             0.006,
-                                                          //       ),
-                                                          //       Text(restaurantDataCopy[
-                                                          //                         'Menus']
-                                                          //                     [index]
-                                                          //                 ['Category']
-                                                          //             ['name'],
-                                                          //         restaurantDataCopy[
-                                                          //                         'Menus']
-                                                          //                     [index]
-                                                          //                 ['Category']
-                                                          //             ['name'],
-                                                          //         style: TextStyle(
-                                                          //             fontSize:
-                                                          //                 size.height *
-                                                          //                     0.014,
-                                                          //             fontWeight:
-                                                          //                 FontWeight
-                                                          //                     .bold),
-                                                          //       ),
-                                                          //     ],
-                                                          //   ),
-                                                          // ),
-                                                          SizedBox(
-                                                            height:
-                                                                size.height *
-                                                                    0.002,
-                                                          ),
-                                                          Container(
-                                                            child: Row(
-                                                              children: [
-                                                                Container(
-                                                                    child: Text(
-                                                                        "⭐")),
-                                                                Text(
-                                                                  "$rating",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          size.height *
-                                                                              0.014,
-                                                                      color: Colors
-                                                                          .red,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                                Spacer(),
-                                                                Container(
-                                                                  margin: EdgeInsets.only(
-                                                                      right: size
-                                                                              .width *
-                                                                          0.1),
-                                                                  child: Text(
-                                                                    "₹${restaurantDataCopy['Menus'][index]['totalPrice']}",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            size.height *
-                                                                                0.018,
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height:
-                                                                size.height *
-                                                                    0.003,
-                                                          ),
-                                                          Container(
-                                                            child: Container(
-                                                                child: restaurantDataCopy['Menus'][index]['MenuOffers']
-                                                                            .length !=
-                                                                        0
-                                                                    ? Row(
-                                                                        children: [
-                                                                          Image
-                                                                              .asset(
-                                                                            "assets/icons/discount_icon.jpg",
-                                                                            height:
-                                                                                size.height * 0.02,
-                                                                          ),
-                                                                          SizedBox(
-                                                                            width:
-                                                                                size.width * 0.006,
-                                                                          ),
-                                                                          Container(
-                                                                            child: restaurantDataCopy['Menus'][index]['MenuOffers'].length >= 2
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
-                                                                                          ? SizedBox()
-                                                                                          : Text(
-                                                                                              " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}, ",
-                                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                                            ),
-                                                                                      restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon'] == null
-                                                                                          ? SizedBox()
-                                                                                          : Text(
-                                                                                              " ${restaurantDataCopy['Menus'][index]['MenuOffers'][1]['OffersAndCoupon']['coupon']}",
-                                                                                              style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                                            ),
-                                                                                    ],
-                                                                                  )
-                                                                                : restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon'] == null
-                                                                                    ? SizedBox()
-                                                                                    : Text(
-                                                                                        " ${restaurantDataCopy['Menus'][index]['MenuOffers'][0]['OffersAndCoupon']['coupon']}",
-                                                                                        style: TextStyle(fontSize: size.height * 0.015, color: kTextColor),
-                                                                                      ),
-                                                                          ),
-                                                                        ],
-                                                                      )
-                                                                    : SizedBox()),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )),
-                                                restaurantDataCopy['Menus']
-                                                                [index]
-                                                            ['AddonMenus']
-                                                        .isEmpty
-                                                    ? SizedBox()
-                                                    : RotatedBox(
-                                                        quarterTurns: -1,
-                                                        child: Text(
-                                                          "Customize",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors
-                                                                  .black54,
-                                                              fontSize:
-                                                                  size.height *
-                                                                      0.015),
-                                                        )),
-                                              ]),
-                                            )),
+                                                      ])),
                                       ),
                                     );
                                   },
@@ -2522,46 +3009,76 @@ class _OfferListPageState extends State<OfferListPage> {
                           ],
                         ),
                       ),
-                      Expanded(
-                          flex: 2,
-                          child: Container(
-                            height: size.height * 1,
-                            color: Colors.white,
-                            child: Container(
-                              height: size.height * 0.01,
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              width: size.width * 1,
-                              color: Colors.lightBlueAccent[200],
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: size.width * 0.65,
-                                    child: Text(
-                                      snackBarData,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                      baritemCount == 0
+                          ? SizedBox()
+                          : Expanded(
+                              flex: 3,
+                              child: Container(
+                                height: size.height * 1,
+                                color: Colors.white,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25)),
+                                    border:
+                                        Border.all(color: Colors.blueAccent),
+                                    // color: Colors.grey[200],
                                   ),
-                                  Spacer(),
-                                  FlatButton(
-                                    textColor: Colors.redAccent,
-                                    child: Text("View Cart"),
-                                    onPressed: () async {
-                                      final result = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CartScreen()));
-                                      if (result) {
-                                        setState(() {});
-                                        getList();
-                                      }
-                                    },
+                                  height: size.height * 0.01,
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  width: size.width * 1,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: size.width * 0.4,
+                                        child: Text(
+                                          "$baritemCount Items | ₹ $pricebar",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      MaterialButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25)),
+                                        color: Colors.blue,
+                                        // minWidth: size.width * 0.4,
+                                        // height: size.height * 0.03,
+                                        textColor: Colors.white,
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.shopping_cart_outlined,
+                                              color: Colors.blue[50],
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "View Cart",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        onPressed: () async {
+                                          final result = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CartScreen()));
+                                          if (result) {
+                                            setState(() {});
+                                            getList();
+                                          }
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ))
+                                ),
+                              ))
                     ],
                   )),
     );
@@ -2614,9 +3131,6 @@ class _OfferListPageState extends State<OfferListPage> {
             snackBarData =
                 "${restaurantDataCopy['Menus'][index]['title']} is added to cart";
           });
-
-          // Scaffold.of(context)
-          //     .showSnackBar(snackBar);
         } else {
           if (data1[0]['menuItemId'] !=
               restaurantDataCopy['Menus'][index]['id']) {
@@ -2709,6 +3223,7 @@ class _OfferListPageState extends State<OfferListPage> {
           addons,
           rating.toString());
     });
+    getList();
   }
 
   fun(value) {
