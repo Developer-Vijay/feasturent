@@ -26,8 +26,6 @@ class _MenuDartState extends State<MenuDart> {
     return Container(
         child: widget.data['restaurantMenuImages'].isNotEmpty
             ? Swiper(
-                autoplay: true,
-                autoplayDelay: 2000,
                 itemCount: widget.data['restaurantMenuImages'].length,
                 controller: controller,
                 pagination:

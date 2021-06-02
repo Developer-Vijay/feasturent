@@ -65,7 +65,9 @@ class _ResturentDetailState extends State<ResturentDetail> {
     ResturentMenu(
       resturentMenu: infodata,
     ),
-    ReturentReview(),
+    ReturentReview(
+      resturentRatingid: infodata['id'],
+    ),
   ];
   appbarText() {
     if (_page == 0) {
@@ -195,7 +197,7 @@ class _ResturentDetailState extends State<ResturentDetail> {
       print(k);
       var categoryData = '';
       if (k != 0) {
-        for (int j = 1; j <= k - 1; j++) {
+        for (int j = 0; j <= k - 1; j++) {
           categoryData =
               '$categoryData ${data['cuisines'][j]['Category']['name']},';
         }

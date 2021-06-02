@@ -468,7 +468,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: restaurantData.length,
                     itemBuilder: (context, index) {
-                      double rating = 1.0;
+                      // double rating = 1.0;
                       // if (snapshot
                       //     .data[index]['VendorRatingReviews'].isNotEmpty) {
                       //   int j =
@@ -521,7 +521,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                         print(k);
                         var categoryData = '';
                         if (k != 0) {
-                          for (int j = 1; j <= k - 1; j++) {
+                          for (int j = 0; j <= k - 1; j++) {
                             categoryData =
                                 '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
                           }
@@ -534,7 +534,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => OfferListPage(
-                                        ratingVendor: rating,
+                                        ratingVendor: snapshot.data[index]
+                                            ['avgRating'],
                                         restaurantDa: snapshot.data[index])));
                           },
                           child: Padding(
@@ -681,7 +682,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                     Text("⭐"),
                                                               ),
                                                               Text(
-                                                                "${rating.toInt()}",
+                                                                "${snapshot.data[index]['avgRating']}",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         size.height *

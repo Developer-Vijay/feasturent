@@ -30,7 +30,7 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                       print(k);
                       var categoryData = '';
                       if (k != 0) {
-                        for (int j = 1; j <= k - 1; j++) {
+                        for (int j = 0; j <= k - 1; j++) {
                           categoryData =
                               '$categoryData${offerTapData['restaurant'][i]['VendorInfo']['cuisines'][j]['Category']['name']},';
                         }
@@ -45,6 +45,8 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                                   builder: (context) => OfferListPage(
                                         restID: offerTapData['restaurant'][i]
                                             ['VendorInfo']['id'],
+                                        ratingVendor: offerTapData['restaurant']
+                                            [i]['VendorInfo']['avgRating'],
                                       )));
                         },
                         child: Padding(
@@ -212,7 +214,10 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                                           Container(
                                             child: Row(
                                               children: [
-                                                1 == 1
+                                                offerTapData['restaurant'][i]
+                                                                ['VendorInfo']
+                                                            ['avgRating'] ==
+                                                        null
                                                     ? Text(
                                                         "⭐1",
                                                         style: TextStyle(
@@ -225,7 +230,7 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                                                                     .bold),
                                                       )
                                                     : Text(
-                                                        "⭐1",
+                                                        "${offerTapData['restaurant'][i]['VendorInfo']['avgRating']}",
                                                         style: TextStyle(
                                                             fontSize:
                                                                 size.height *

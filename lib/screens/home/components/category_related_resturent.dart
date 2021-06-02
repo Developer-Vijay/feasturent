@@ -111,7 +111,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         var couponDetatil;
-                        double rating = 1.0;
+                        // double rating = 1.0;
                         // int j =
                         //     snapshot.data[index]['VendorRatingReviews'].length;
 
@@ -152,13 +152,26 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                 "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                           }
                         }
+                        int k = snapshot.data[index]['cuisines'].length;
+
+                        var categoryData = '';
+                        if (k != 0) {
+                          for (int j = 0; j <= k - 1; j++) {
+                            categoryData =
+                                '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
+                          }
+                        } else {
+                          categoryData = null;
+                        }
+                        print(categoryData);
                         return InkWell(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => OfferListPage(
-                                        ratingVendor: rating,
+                                        ratingVendor: snapshot.data[index]
+                                            ['avgRating'],
                                         restaurantDa: snapshot.data[index])));
                           },
                           child: Padding(
@@ -262,14 +275,12 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                             SizedBox(
                                               height: size.height * 0.005,
                                             ),
-                                            snapshot.data[index]['cuisines'][0]
-                                                        ['Category']['name'] ==
-                                                    null
+                                            categoryData == null
                                                 ? SizedBox()
                                                 : Container(
-                                                    width: size.width * 0.5,
+                                                    width: size.width * 0.38,
                                                     child: Text(
-                                                      "${snapshot.data[index]['cuisines'][0]['Category']['name']}",
+                                                      "$categoryData",
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: TextStyle(
@@ -285,10 +296,9 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                             Container(
                                               child: Row(
                                                 children: [
-                                                  snapshot
-                                                          .data[index][
-                                                              'VendorRatingReviews']
-                                                          .isEmpty
+                                                  snapshot.data[index]
+                                                              ['avgRating'] ==
+                                                          null
                                                       ? Text(
                                                           "⭐1",
                                                           style: TextStyle(
@@ -308,7 +318,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                                     Text("⭐"),
                                                               ),
                                                               Text(
-                                                                "${rating.toInt()}",
+                                                                "${snapshot.data[index]['avgRating']}",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         size.height *

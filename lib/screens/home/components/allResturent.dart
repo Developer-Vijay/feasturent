@@ -29,6 +29,7 @@ class _AllResturentState extends State<AllResturent> {
   String _authorization = '';
   void initState() {
     super.initState();
+    print(" initstate  ${DateTime.now()}");
   }
 
   Future fetchHomebaanerLength() async {
@@ -96,10 +97,13 @@ class _AllResturentState extends State<AllResturent> {
 
   var restaurantData;
   Future<List<dynamic>> fetchAllRestaurant() async {
+    print(" from listview builder  ${DateTime.now()}");
+
     fetchHomeSliderLength();
     fetchHomebaanerLength();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
+    print(" hit resturent api  ${DateTime.now()}");
 
     var result = await http.get(
       APP_ROUTES +
@@ -112,6 +116,8 @@ class _AllResturentState extends State<AllResturent> {
     );
     print(_authorization);
     restaurantData = json.decode(result.body)['data'];
+    print(" after hit result  ${DateTime.now()}");
+
     if (restaurantData.isEmpty) {
       return restaurantData;
     } else {
@@ -190,7 +196,7 @@ class _AllResturentState extends State<AllResturent> {
                 itemCount: listlength,
                 itemBuilder: (context, index) {
                   var couponDetatil;
-                  double rating = 1.0;
+                  // double rating = 1.0;
                   // int j = snapshot.data[index]['VendorRatingReviews'].length;
 
                   // for (int i = 0; i < j - 1; i++) {
@@ -236,7 +242,7 @@ class _AllResturentState extends State<AllResturent> {
                   print(k);
                   var categoryData = '';
                   if (k != 0) {
-                    for (int j = 1; j <= k - 1; j++) {
+                    for (int j = 0; j <= k - 1; j++) {
                       categoryData =
                           '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
                     }
@@ -249,7 +255,8 @@ class _AllResturentState extends State<AllResturent> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => OfferListPage(
-                                  ratingVendor: rating,
+                                  ratingVendor: snapshot.data[index]
+                                      ['avgRating'],
                                   restaurantDa: snapshot.data[index])));
                     },
                     child: Padding(
@@ -386,7 +393,7 @@ class _AllResturentState extends State<AllResturent> {
                                                           child: Text("⭐"),
                                                         ),
                                                         Text(
-                                                          "${rating.toInt()}",
+                                                          "${snapshot.data[index]['avgRating']}",
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.height *

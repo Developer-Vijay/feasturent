@@ -31,7 +31,7 @@ class _DetailResturentState extends State<DetailResturent> {
       var categoryData = '';
 
       if (k != 0) {
-        for (int j = 1; j <= k - 1; j++) {
+        for (int j = 0; j <= k - 1; j++) {
           categoryData =
               '$categoryData ${data['cuisines'][j]['Category']['name']},';
         }
@@ -105,7 +105,7 @@ class _DetailResturentState extends State<DetailResturent> {
                                     allowHalfRating: true,
                                     onRated: (value) {},
                                     starCount: 5,
-                                    rating: data['avgRating'].toDouble(),
+                                    rating: double.parse(data['avgRating']),
                                     size: 23.0,
                                     isReadOnly: true,
                                     defaultIconData: Icons.star_border_outlined,
@@ -286,6 +286,17 @@ class _DetailResturentState extends State<DetailResturent> {
                                     style: TextStyle(
                                         fontSize: 15, color: Colors.black54),
                                   ),
+                          ),
+                    data['fssaiNumber'] == null
+                        ? SizedBox()
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            child: Text(
+                              "FSSAI Number:- ${data['fssaiNumber']}",
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.black),
+                            ),
                           ),
                     data['Address']['latitude'].isEmpty &&
                             data['Address']['longitude'].isEmpty

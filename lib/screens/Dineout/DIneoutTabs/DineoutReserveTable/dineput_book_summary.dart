@@ -9,6 +9,7 @@ import '../../../../notificationsfiles.dart';
 
 // ignore: must_be_immutable
 class DineoutBookingSummary extends StatefulWidget {
+  final phone;
   var date;
   var time;
   var malecount;
@@ -20,6 +21,7 @@ class DineoutBookingSummary extends StatefulWidget {
   var data;
   DineoutBookingSummary(
       {this.date,
+      this.phone,
       this.time,
       this.malecount,
       this.adult,
@@ -46,6 +48,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
   var filledname;
   var phone;
   var username;
+  int userid;
   var usermobilenumber;
   var useremailid;
   var email;
@@ -54,7 +57,6 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
   var dateis;
   var maleguest;
   var guests;
-  var totaladults;
   var childguest;
   var sendateis;
   var femaleguests;
@@ -64,12 +66,10 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     timeis = widget.time;
     dateis = widget.date;
     sendateis = widget.senddate;
-    totaladults = widget.adult;
     maleguest = widget.malecount;
     femaleguests = widget.femalecount;
     childguest = widget.childcount;
     guests = widget.totalguest;
-    print(totaladults);
     print(dateis);
     getuserdata();
   }
@@ -79,7 +79,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     username = prefs.getString('name');
     usermobilenumber = prefs.getString('userNumber');
     useremailid = prefs.getString('userEmail');
-
+    userid = prefs.getInt('userId');
     _emailController.text = useremailid;
     _nameController.text = username;
     _phoneController.text = usermobilenumber;
@@ -176,15 +176,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 2,
-                        spreadRadius: 4,
-                        color: Colors.blue[100],
-                        offset: Offset(3, 3))
-                  ],
-                  borderRadius: BorderRadius.circular(10)),
+                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
               child: ListView(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -247,7 +239,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
               onPressed: () {
                 data();
               },
-              child: Text("Continue to Reserve"),
+              child: Text("Continue to Booking"),
               color: Colors.blue,
               textColor: Colors.white,
               minWidth: size.width * 0.7,
@@ -306,11 +298,12 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
     if (_isValidate == true) {
       callingLoader();
       Map data = {
+        "userId": "$userid",
         "vendorId": "${widget.data['id']}",
-        "member": "$guests",
+        "male": "$maleguest",
         "child": "$childguest",
-        "adult": "$totaladults",
-        "bookingDate": "$sendateis",
+        "female": "$femaleguests",
+        "customerBookingDate": "$sendateis",
         "specialRequest": _specialRequestController.text,
         "customerPhone": _phoneController.text,
         "customerName": _nameController.text,
@@ -337,6 +330,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
               context,
               MaterialPageRoute(
                   builder: (context) => DineoutConfirmed(
+                        phone: widget.phone,
+                        bookingid: responseData['data']['bookingId'],
                         dateconfirm: dateis,
                         timeconfirm: timeis,
                         wholedata: email,

@@ -149,7 +149,7 @@ class _DineoutOfferTabPageState extends State<DineoutOfferTabPage> {
                                     Container(
                                         child: couponDetatil != null
                                             ? Text(
-                                                "₹ $couponDetatil",
+                                                "$couponDetatil",
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 16,
@@ -190,35 +190,52 @@ class _DineoutOfferTabPageState extends State<DineoutOfferTabPage> {
                                 SizedBox(
                                   height: 6,
                                 ),
-                                Text(
-                                  "Avaliable All Days",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Container(
-                                  width: size.width * 1,
-                                  decoration: BoxDecoration(
-                                      color: Colors.amber[100],
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      data['user']['OffersAndCoupons'][index]
-                                          ['description'],
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 6,
-                                  width: size.width * 0.9,
-                                  color: Colors.blue,
-                                ),
+                                data['user']['OffersAndCoupons'][index]
+                                            ['description'] ==
+                                        ''
+                                    ? SizedBox()
+                                    : Text(
+                                        "Avaliable All Time",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                data['user']['OffersAndCoupons'][index]
+                                            ['description'] ==
+                                        ''
+                                    ? SizedBox()
+                                    : SizedBox(
+                                        height: 5,
+                                      ),
+                                data['user']['OffersAndCoupons'][index]
+                                            ['description'] ==
+                                        ''
+                                    ? SizedBox()
+                                    : Container(
+                                        width: size.width * 1,
+                                        decoration: BoxDecoration(
+                                            color: Colors.amber[100],
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            data['user']['OffersAndCoupons']
+                                                [index]['description'],
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                data['user']['OffersAndCoupons'][index]
+                                            ['description'] ==
+                                        ''
+                                    ? SizedBox()
+                                    : Container(
+                                        height: 6,
+                                        width: size.width * 0.9,
+                                        color: Colors.blue,
+                                      ),
                               ],
                             ),
                           )),

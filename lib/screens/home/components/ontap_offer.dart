@@ -3,12 +3,9 @@ import 'package:feasturent_costomer_app/screens/home/components/ontap_restsurent
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/constants.dart';
-import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
-import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
 import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../../shimmer_effect.dart';
 import 'offer_filter.dart ';
 
 var offerTapData;

@@ -150,6 +150,8 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => OfferListPage(
+                                          ratingVendor: snapshot.data[index]
+                                              ['avgRating'],
                                           restID: snapshot.data[index]['id'],
                                         )));
                           },

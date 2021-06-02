@@ -1,5 +1,6 @@
 import 'package:feasturent_costomer_app/screens/home/components/allResturent.dart';
 import 'package:feasturent_costomer_app/screens/home/components/popular.dart';
+import 'package:feasturent_costomer_app/screens/home/components/sure_resturent.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/screens/home/components/category_list.dart';
 import 'package:feasturent_costomer_app/screens/home/components/discount_card.dart';
@@ -42,6 +43,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                     DiscountCard(),
                     CategoryList(),
                     CategoriesList(),
+                    SureResturent(),
                     PopularList(),
                     AllResturent(),
                     Container(

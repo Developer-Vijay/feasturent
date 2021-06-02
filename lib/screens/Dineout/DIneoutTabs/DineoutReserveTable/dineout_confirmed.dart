@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class DineoutConfirmed extends StatefulWidget {
+  final phone;
+  final bookingid;
   var dateconfirm;
   var timeconfirm;
   var guest;
@@ -17,6 +19,8 @@ class DineoutConfirmed extends StatefulWidget {
 
   DineoutConfirmed(
       {this.dateconfirm,
+      this.phone,
+      this.bookingid,
       this.guest,
       this.name,
       this.timeconfirm,
@@ -32,6 +36,7 @@ class DineoutConfirmed extends StatefulWidget {
 
 class _DineoutConfirmedState extends State<DineoutConfirmed> {
   var date;
+  var bookingid;
   var timeis;
   var guest;
   var wholedat;
@@ -42,6 +47,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
   @override
   void initState() {
     super.initState();
+    bookingid = widget.bookingid;
     date = widget.dateconfirm;
     timeis = widget.timeconfirm;
     guest = widget.guest;
@@ -82,9 +88,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
             ),
             title: Text("Booking Summary"),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          body: ListView(
             children: [
               SizedBox(
                 height: size.height * 0.03,
@@ -95,7 +99,7 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
                     margin: EdgeInsets.only(left: 12),
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "Table Status - Confirmed",
+                      "Table Status - Booked",
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.green[400],
@@ -126,6 +130,20 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Booking Id"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "$bookingid",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text("Date & Time"),
@@ -195,13 +213,22 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("6789012345"),
+                              child: Text("${widget.phone}"),
                             ),
                           ],
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(child: Icon(Icons.call)),
+                          child: InkWell(
+                              onTap: () async {
+                                var url = 'tel:${widget.phone}';
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: CircleAvatar(child: Icon(Icons.call))),
                         )
                       ],
                     )
@@ -211,20 +238,20 @@ class _DineoutConfirmedState extends State<DineoutConfirmed> {
               SizedBox(
                 height: size.height * 0.06,
               ),
-              Center(
-                child: MaterialButton(
-                  onPressed: () {
-                    Fluttertoast.showToast(msg: "Api needed to be integrate");
-                  },
-                  child: Text("Cancel"),
-                  color: Colors.red[700],
-                  textColor: Colors.white,
-                  minWidth: size.width * 0.9,
-                  height: size.height * 0.06,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              )
+              // Center(
+              //   child: MaterialButton(
+              //     onPressed: () {
+              //       Fluttertoast.showToast(msg: "Api needed to be integrate");
+              //     },
+              //     child: Text("Cancel"),
+              //     color: Colors.red[700],
+              //     textColor: Colors.white,
+              //     minWidth: size.width * 0.9,
+              //     height: size.height * 0.06,
+              //     shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10)),
+              //   ),
+              // )
             ],
           )),
     );

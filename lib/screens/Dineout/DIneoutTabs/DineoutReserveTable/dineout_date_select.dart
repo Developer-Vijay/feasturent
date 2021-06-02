@@ -9,9 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:date_time_format/date_time_format.dart';
 
 class DineoutDateSelection extends StatefulWidget {
+  final phone;
   final cate;
   final data;
-  const DineoutDateSelection({this.data, this.cate});
+  const DineoutDateSelection({this.data, this.cate, this.phone});
   @override
   _DineoutDateSelectionState createState() => _DineoutDateSelectionState();
 }
@@ -28,46 +29,162 @@ final pageController = PageController(initialPage: 0);
 
 class _DineoutDateSelectionState extends State<DineoutDateSelection> {
   List<TimeList> breaskfastList = [
-    TimeList(isSelected1: true, isSelected: false, time: "9:00 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "9:15 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "9:30 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "9:45 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "10:00 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "10:15 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "10:30 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "10:45 AM"),
-    TimeList(isSelected1: false, isSelected: false, time: "11:00 AM"),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "09:00 AM",
+        format: "AM",
+        hour: 09),
+    TimeList(
+        isSelected1: false,
+        isSelected: false,
+        time: "09:30 AM",
+        format: "AM",
+        hour: 09),
+    TimeList(
+        isSelected1: false,
+        isSelected: false,
+        time: "10:00 AM",
+        format: "AM",
+        hour: 10),
+    TimeList(
+        isSelected1: false,
+        isSelected: false,
+        time: "10:30 AM",
+        format: "AM",
+        hour: 10),
+    TimeList(
+        isSelected1: false,
+        isSelected: false,
+        time: "11:00 AM",
+        format: "AM",
+        hour: 10),
   ];
 
   List<TimeList> lunchlist = [
-    TimeList(isSelected1: true, isSelected: false, time: "12:00 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "12:15 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "12:30 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "1:00 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "1:15 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "1:30 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "1:45 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "2:00 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "2:15 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "2:30 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "2:45 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "3:00 PM"),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "12:00 PM",
+        format: 'PM',
+        hour: 12),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "12:30 PM",
+        format: 'PM',
+        hour: 12),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "01:00 PM",
+        format: 'PM',
+        hour: 13),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "01:30 PM",
+        format: 'PM',
+        hour: 13),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "02:00 PM",
+        format: 'PM',
+        hour: 14),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "02:30 PM",
+        format: 'PM',
+        hour: 14),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "03:00 PM",
+        format: 'PM',
+        hour: 15),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "03:30 PM",
+        format: 'PM',
+        hour: 15),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "04:00 PM",
+        format: 'PM',
+        hour: 16),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "04:30 PM",
+        format: 'PM',
+        hour: 16),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "05:00 PM",
+        format: 'PM',
+        hour: 17),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "05:30 PM",
+        format: 'PM',
+        hour: 17),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "06:00 PM",
+        format: 'PM',
+        hour: 18),
   ];
 
   List<TimeList> dinnerlist = [
-    TimeList(isSelected1: true, isSelected: false, time: "7:00 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "7:15 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "7:30 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "7:45 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "8:00 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "8:15 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "8:30 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "8:45 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "9:00 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "9:15 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "9:30 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "9:45 PM"),
-    TimeList(isSelected1: true, isSelected: false, time: "10:00 PM"),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "07:00 PM",
+        format: 'PM',
+        hour: 19),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "07:30 PM",
+        format: 'PM',
+        hour: 19),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "08:00 PM",
+        format: 'PM',
+        hour: 20),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "08:30 PM",
+        format: 'PM',
+        hour: 20),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "09:00 PM",
+        format: 'PM',
+        hour: 21),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "09:30 PM",
+        format: 'PM',
+        hour: 21),
+    TimeList(
+        isSelected1: true,
+        isSelected: false,
+        time: "10:00 PM",
+        format: ' PM',
+        hour: 22),
   ];
 
   int isSelect = 0;
@@ -81,8 +198,80 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
     isSelected = true;
   }
 
+  cleardata() {
+    int k = lunchlist.length - 1;
+    for (int i = 0; i <= k; i++) {
+      setState(() {
+        lunchlist[i].isSelected = false;
+      });
+    }
+    int l = breaskfastList.length - 1;
+    for (int m = 0; m <= l; m++) {
+      setState(() {
+        breaskfastList[m].isSelected = false;
+      });
+    }
+    int x = dinnerlist.length - 1;
+    for (int y = 0; y <= x; y++) {
+      setState(() {
+        dinnerlist[y].isSelected = false;
+      });
+    }
+  }
+
+  timeChecker(month, day, data, index) {
+    int hours = data[index].hour;
+    print("time $hours");
+    var format = data[index].format;
+    print("format $format");
+    print("month $month");
+
+    print("day $day");
+
+    int cuHour = int.parse(DateTime.now().format('H'));
+    var cuFormat = DateTime.now().format('A');
+    var cuday = DateTime.now().format('d');
+    var cuMonth = DateTime.now().format('m');
+    if (month == cuMonth) {
+      print("month matched");
+      if (day == cuday) {
+        print("day matched");
+
+        if (hours <= cuHour) {
+          print("hours matched");
+          cleardata();
+          setState(() {
+            time = null;
+          });
+          Fluttertoast.showToast(msg: 'currently unable');
+        } else {
+          setState(() {
+            data[index].isSelected = true;
+            time = "${data[index].time}";
+          });
+        }
+      } else {
+        setState(() {
+          data[index].isSelected = true;
+          time = "${data[index].time}";
+        });
+      }
+    } else {
+      setState(() {
+        data[index].isSelected = true;
+        time = "${data[index].time}";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(DateTime.now());
+    print(DateTime.now().format('h'));
+    print(DateTime.now().format('A'));
+    print(DateTime.now().format('d'));
+    print(DateTime.now().format('m'));
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: Container(
@@ -347,22 +536,18 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                         selected: lunchlist[index].isSelected,
                         showCheckmark: true,
                         onSelected: (value) {
-                          int k = lunchlist.length - 1;
-                          for (int i = 0; i <= k; i++) {
-                            setState(() {
-                              lunchlist[i].isSelected = false;
-                            });
-                          }
+                          cleardata();
                           if (lunchlist[index].isSelected == true) {
+                            print("i think");
                             setState(() {
                               lunchlist[index].isSelected = false;
-                              time = "${lunchlist[index].time}";
+                              time = null;
                             });
                           } else {
-                            setState(() {
-                              lunchlist[index].isSelected = true;
-                              time = "${lunchlist[index].time}";
-                            });
+                            timeChecker(selectedDate.format('m'),
+                                selectedDate.format('d'), lunchlist, index);
+
+                            print("i dont think");
                           }
                         },
                       );
@@ -407,22 +592,18 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                           selected: breaskfastList[index].isSelected,
                           showCheckmark: true,
                           onSelected: (value) {
-                            int k = breaskfastList.length - 1;
-                            for (int i = 0; i <= k; i++) {
-                              setState(() {
-                                breaskfastList[i].isSelected = false;
-                              });
-                            }
+                            cleardata();
                             if (breaskfastList[index].isSelected == true) {
                               setState(() {
                                 breaskfastList[index].isSelected = false;
-                                time = "${breaskfastList[index].time}";
+                                time = null;
                               });
                             } else {
-                              setState(() {
-                                breaskfastList[index].isSelected = true;
-                                time = "${breaskfastList[index].time}";
-                              });
+                              timeChecker(
+                                  selectedDate.format('m'),
+                                  selectedDate.format('d'),
+                                  breaskfastList,
+                                  index);
                             }
                           },
                         ),
@@ -466,22 +647,15 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                         showCheckmark: true,
                         checkmarkColor: Colors.white,
                         onSelected: (value) {
-                          int k = dinnerlist.length - 1;
-                          for (int i = 0; i <= k; i++) {
-                            setState(() {
-                              dinnerlist[i].isSelected = false;
-                            });
-                          }
+                          cleardata();
                           if (dinnerlist[index].isSelected == true) {
                             setState(() {
                               dinnerlist[index].isSelected = false;
-                              time = "${dinnerlist[index].time}";
+                              time = null;
                             });
                           } else {
-                            setState(() {
-                              dinnerlist[index].isSelected = true;
-                              time = "${dinnerlist[index].time}";
-                            });
+                            timeChecker(selectedDate.format('m'),
+                                selectedDate.format('d'), dinnerlist, index);
                           }
                         },
                         // avatar: Icon(
@@ -503,6 +677,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => DineoutAddMembers(
+                              phone: widget.phone,
                               data: widget.data,
                               senddate: selectedDate.format("\d-\M-\Y"),
                               date: selectedDate.format("\d-\M-\Y-\D"),

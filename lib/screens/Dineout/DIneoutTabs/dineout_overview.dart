@@ -1,7 +1,10 @@
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_date_select.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineoutlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants.dart';
@@ -21,7 +24,16 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
   void initState() {
     super.initState();
     data = widget.data;
+    getSession();
     fetchCategory();
+  }
+
+  bool status = false;
+  Future<void> getSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      status = prefs.getBool("_isAuthenticate");
+    });
   }
 
   Future<void> openMap(double latitude, double longitude) async {
@@ -188,18 +200,27 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                   child: ListTile(
                     onTap: () {
                       if (dineoutlist[index].number == 3) {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (context) => Container(
-                                height: size.height * 0.6,
-                                child: DineoutDateSelection(
-                                  cate: categoryData,
-                                  data: data,
-                                )));
+                        if (status == true) {
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context) => Container(
+                                  height: size.height * 0.6,
+                                  child: DineoutDateSelection(
+                                    cate: categoryData,
+                                    data: data,
+                                    phone: data['contact'],
+                                  )));
+                        } else {
+                          Fluttertoast.showToast(msg: "Please login First");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
+                        }
                       } else {
                         print(dineoutlist[index].number);
                       }
@@ -444,7 +465,6 @@ class _PortfolioGallerySubPageState extends State<PortfolioGallerySubPage> {
                 : Padding(
                     padding: const EdgeInsets.only(left: 8, right: 8),
                     child: Container(
-                        height: 80,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),

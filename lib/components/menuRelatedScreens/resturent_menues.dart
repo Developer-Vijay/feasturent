@@ -39,8 +39,12 @@ class _OfferListPageState extends State<OfferListPage> {
     if (widget.restID != null) {
       fetchData(widget.restID);
     } else {
+      if (widget.ratingVendor != null) {
+        setState(() {
+          ratingVendor = widget.ratingVendor.toInt();
+        });
+      }
       setState(() {
-        ratingVendor =widget.ratingVendor.toInt();
         dataChecker = true;
 
         infodata = widget.restaurantDa;
@@ -53,7 +57,7 @@ class _OfferListPageState extends State<OfferListPage> {
     }
   }
 
-  int ratingVendor;
+  int ratingVendor = 1;
   int menulistLength;
   bool dataChecker = false;
   bool dataValidator = false;
@@ -88,16 +92,11 @@ class _OfferListPageState extends State<OfferListPage> {
         infodata = restaurantData[0];
         restaurantDataCopy = restaurantData[0];
       });
-      double ratings = 1.0;
-      // int j = restaurantData[0]['VendorRatingReviews'].length;
-
-      // for (int i = 0; i < j - 1; i++) {
-      //   ratings = ratings +
-      //       double.parse(restaurantData[0]['VendorRatingReviews'][i]['rating']);
-      // }
-      // ratings = ratings / j;
+    
+      if (restaurantData[0]['avgRating'] != null) {
+        ratingVendor = restaurantData[0]['avgRating'].toInt();
+      }
       setState(() {
-        ratingVendor = ratings.toInt();
         dataChecker = true;
       });
 
@@ -782,7 +781,9 @@ class _OfferListPageState extends State<OfferListPage> {
                                             horizontal: 10),
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
-                                        itemCount: menulistLength,
+                                        itemCount: menulistLength >= 10
+                                            ? 10
+                                            : menulistLength,
                                         itemBuilder: (context, index) {
                                           int tpye = 0;
                                           double rating = 1.0;
@@ -795,20 +796,18 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 .length;
                                             ratingLength = k;
                                             for (int i = 0; i <= k - 1; i++) {
-                                              if (rating <=
+                                              rating = rating +
                                                   double.parse(
                                                       restaurantDataCopy[
                                                                       'Menus']
                                                                   [index]
                                                               [
                                                               'ReviewAndRatings']
-                                                          [i]['rating'])) {
-                                                rating = double.parse(
-                                                    restaurantDataCopy['Menus']
-                                                                [index]
-                                                            ['ReviewAndRatings']
-                                                        [i]['rating']);
-                                              }
+                                                          [i]['rating']);
+                                            }
+                                            rating = rating / k;
+                                            if (rating >= 5) {
+                                              rating = 5.0;
                                             }
                                           }
                                           if (rating > 2.5) {
@@ -1916,17 +1915,16 @@ class _OfferListPageState extends State<OfferListPage> {
                                           .length;
                                       ratingLength = k;
                                       for (int i = 0; i <= k - 1; i++) {
-                                        if (rating <=
+                                        rating = rating +
                                             double.parse(
                                                 restaurantDataCopy['Menus']
                                                             [index]
                                                         ['ReviewAndRatings'][i]
-                                                    ['rating'])) {
-                                          rating = double.parse(
-                                              restaurantDataCopy['Menus'][index]
-                                                      ['ReviewAndRatings'][i]
-                                                  ['rating']);
-                                        }
+                                                    ['rating']);
+                                      }
+                                      rating = rating / k;
+                                      if (rating >= 5) {
+                                        rating = 5.0;
                                       }
                                     }
                                     return InkWell(
