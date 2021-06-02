@@ -196,7 +196,6 @@ class _AddRatingPageState extends State<AddRatingPage> {
       print(jsonTags);
       var decode = jsonDecode(jsonTags);
       print(decode);
-      var newencode = jsonEncode(decode);
 
       final prefs = await SharedPreferences.getInstance();
       userId = prefs.getInt('userId');

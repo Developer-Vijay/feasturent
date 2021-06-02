@@ -51,6 +51,9 @@ class TimeList {
   bool isSelected = false;
   bool isSelected1 = false;
   var time;
+  var hour;
+  var format;
 
-  TimeList({this.time, this.isSelected, this.isSelected1});
+  TimeList(
+      {this.time, this.isSelected, this.isSelected1, this.format, this.hour});
 }

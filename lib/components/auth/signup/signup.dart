@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/auth/signup/otpcheck.dart';
-import 'package:feasturent_costomer_app/components/common/validator.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/messageWrapper.dart';
 import 'package:flutter/material.dart';

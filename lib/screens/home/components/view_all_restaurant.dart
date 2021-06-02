@@ -31,7 +31,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           itemCount: restaurantData.length,
           itemBuilder: (context, index) {
-            double rating = 1.0;
+            // double rating = 1.0;
             // int j = restaurantData[index]['VendorRatingReviews'].length;
 
             // for (int i = 0; i < j - 1; i++) {
@@ -77,7 +77,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
             print(k);
             var categoryData = '';
             if (k != 0) {
-              for (int j = 1; j <= k - 1; j++) {
+              for (int j = 0; j <= k - 1; j++) {
                 categoryData =
                     '$categoryData${restaurantData[index]['cuisines'][j]['Category']['name']},';
               }
@@ -90,7 +90,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => OfferListPage(
-                            ratingVendor: rating,
+                            ratingVendor: restaurantData[index]['avgRating'],
                             restaurantDa: restaurantData[index])));
               },
               child: Padding(
@@ -206,9 +206,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                 Container(
                                   child: Row(
                                     children: [
-                                      restaurantData[index]
-                                                  ['VendorRatingReviews']
-                                              .isEmpty
+                                      restaurantData[index]['avgRating'] == null
                                           ? Text(
                                               "⭐1",
                                               style: TextStyle(
@@ -222,7 +220,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                                 child: Text("⭐"),
                                               ),
                                               Text(
-                                                "${rating.toInt()}",
+                                                "${restaurantData[index]['avgRating']}",
                                                 style: TextStyle(
                                                     fontSize:
                                                         size.height * 0.016,

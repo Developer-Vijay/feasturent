@@ -34,7 +34,8 @@ class _DishSearchState extends State<DishSearch> {
                                           rating: 1.0,
                                           ratinglength: 1,
                                           menuStatus: true,
-                                          restaurentName: null,
+                                          restaurentName: resultData['dish']
+                                              [index]['VendorInfo']['name'],
                                           dishID: resultData['dish'][index]
                                               ['id'],
                                         )));

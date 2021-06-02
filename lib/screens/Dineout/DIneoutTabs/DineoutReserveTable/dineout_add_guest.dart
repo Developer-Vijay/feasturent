@@ -1,4 +1,3 @@
-import 'package:dotted_line/dotted_line.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineput_book_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,19 +6,21 @@ import '../../../../constants.dart';
 
 // ignore: must_be_immutable
 class DineoutAddMembers extends StatefulWidget {
+  final phone;
   var date;
   var time;
   var data;
   var senddate;
-  DineoutAddMembers({this.date, this.time, this.senddate, this.data});
+  DineoutAddMembers(
+      {this.date, this.time, this.senddate, this.data, this.phone});
   @override
   _DineoutAddMembersState createState() => _DineoutAddMembersState();
 }
 
 class _DineoutAddMembersState extends State<DineoutAddMembers> {
-  int counter = 0;
-  int counter1 = 0;
-  int counter2 = 0;
+  int male = 0;
+  int female = 0;
+  int children = 0;
   int adult = 0;
   int guest = 0;
 
@@ -29,9 +30,9 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
   @override
   void initState() {
     super.initState();
-    counter = 0;
-    counter1 = 0;
-    counter2 = 0;
+    male = 0;
+    female = 0;
+    children = 0;
     showdate = widget.date;
     showtime = widget.time;
     senddate = widget.senddate;
@@ -40,15 +41,15 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
   @override
   void dispose() {
     super.dispose();
-    counter = 0;
-    counter1 = 0;
-    counter2 = 0;
+    male = 0;
+    female = 0;
+    children = 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    guest = counter + counter1 + counter2;
-    adult = counter + counter1;
+    guest = male + female + children;
+    adult = male + female;
     print(guest);
     Size size = MediaQuery.of(context).size;
     return SafeArea(
@@ -259,37 +260,54 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                                     SizedBox(
                                       height: 6,
                                     ),
-                                    Text(
-                                      "Avaliable All Days",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      width: size.width * 1,
-                                      decoration: BoxDecoration(
-                                          color: Colors.amber[100],
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          widget.data['user']
-                                                  ['OffersAndCoupons'][index]
-                                              ['description'],
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 6,
-                                      width: size.width * 0.9,
-                                      color: Colors.blue,
-                                    ),
+                                    widget.data['user']['OffersAndCoupons']
+                                                [index]['description'] ==
+                                            ''
+                                        ? SizedBox()
+                                        : Text(
+                                            "Avaliable All Time",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                    widget.data['user']['OffersAndCoupons']
+                                                [index]['description'] ==
+                                            ''
+                                        ? SizedBox()
+                                        : SizedBox(
+                                            height: 5,
+                                          ),
+                                    widget.data['user']['OffersAndCoupons']
+                                                [index]['description'] ==
+                                            ''
+                                        ? SizedBox()
+                                        : Container(
+                                            width: size.width * 1,
+                                            decoration: BoxDecoration(
+                                                color: Colors.amber[100],
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                widget.data['user']
+                                                        ['OffersAndCoupons']
+                                                    [index]['description'],
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                    widget.data['user']['OffersAndCoupons']
+                                                [index]['description'] ==
+                                            ''
+                                        ? SizedBox()
+                                        : Container(
+                                            height: 6,
+                                            width: size.width * 0.9,
+                                            color: Colors.blue,
+                                          ),
                                   ],
                                 ),
                               )),
@@ -305,7 +323,7 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12),
               child: Container(
-                height: size.height * 0.25,
+                height: size.height * 0.3,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
@@ -338,139 +356,217 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
                           ),
                         )),
                     SizedBox(height: size.height * 0.04),
-                    Row(
-                      children: [
-                        Spacer(),
-                        Text(
-                          "Adults",
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: size.width * 0.06,
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.blueGrey[50],
-                          foregroundColor: Colors.blue,
-                          radius: 12,
-                          child: InkWell(
-                            onTap: () {
-                              if (counter1 == 0) {
-                                setState(() {
-                                  counter1 = 0;
-                                });
-                              } else {
-                                setState(() {
-                                  counter1--;
-                                });
-                              }
-                            },
-                            child: Icon(
-                              Icons.remove,
-                              size: 18,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 100,
+                            child: Text(
+                              "Male",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          "$counter1",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.blueGrey[50],
-                          foregroundColor: Colors.blue,
-                          radius: 12,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                counter1++;
-                              });
-                            },
-                            child: Icon(
-                              Icons.add,
-                              size: 18,
-                            ),
+                          SizedBox(
+                            width: size.width * 0.06,
                           ),
-                        ),
-                        Spacer(),
-                        DottedLine(
-                          dashGapLength: 0,
-                          dashGapRadius: 0,
-                          dashGapColor: Colors.black45,
-                          lineThickness: 2,
-                          dashColor: Colors.black45,
-                          lineLength: size.height * 0.05,
-                          direction: Axis.vertical,
-                        ),
-                        Spacer(),
-                        Text(
-                          "Children",
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: size.width * 0.06,
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.blueGrey[50],
-                          foregroundColor: Colors.blue,
-                          radius: 12,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (counter2 == 0) {
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                if (male == 0) {
                                   setState(() {
-                                    counter2 = 0;
+                                    male = 0;
                                   });
                                 } else {
                                   setState(() {
-                                    counter2--;
+                                    male--;
                                   });
                                 }
-                              });
-                            },
-                            child: Icon(
-                              Icons.remove,
-                              size: 18,
+                              },
+                              child: Icon(
+                                Icons.remove,
+                                size: 18,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          "$counter2",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.blueGrey[50],
-                          foregroundColor: Colors.blue,
-                          radius: 12,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                counter2++;
-                              });
-                            },
-                            child: Icon(
-                              Icons.add,
-                              size: 18,
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            "$male",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  male++;
+                                });
+                              },
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                              ),
                             ),
                           ),
-                        ),
-                        Spacer()
-                      ],
+                          Spacer(),
+                        ],
+                      ),
                     ),
                     SizedBox(
-                      height: size.height * 0.01,
+                      height: size.height * 0.02,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 100,
+                            child: Text(
+                              "Female",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.06,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (female == 0) {
+                                    setState(() {
+                                      female = 0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      female--;
+                                    });
+                                  }
+                                });
+                              },
+                              child: Icon(
+                                Icons.remove,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            "$female",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  female++;
+                                });
+                              },
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                          Spacer()
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 100,
+                            child: Text(
+                              "Children",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.06,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                if (children == 0) {
+                                  setState(() {
+                                    children = 0;
+                                  });
+                                } else {
+                                  setState(() {
+                                    children--;
+                                  });
+                                }
+                              },
+                              child: Icon(
+                                Icons.remove,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            "$children",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.blueGrey[50],
+                            foregroundColor: Colors.blue,
+                            radius: 12,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  children++;
+                                });
+                              },
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -483,19 +579,20 @@ class _DineoutAddMembersState extends State<DineoutAddMembers> {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: MaterialButton(
                 onPressed: () {
-                  if (counter1 == 0) {
+                  if (male == 0 && female == 0) {
                     Fluttertoast.showToast(msg: 'Please add no. of guest');
                   } else {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => DineoutBookingSummary(
+                                  phone: widget.phone,
                                   date: showdate,
                                   time: showtime,
                                   data: widget.data,
-                                  femalecount: counter,
-                                  malecount: counter1,
-                                  childcount: counter2,
+                                  femalecount: female,
+                                  malecount: male,
+                                  childcount: children,
                                   totalguest: guest,
                                   senddate: senddate,
                                   adult: adult,

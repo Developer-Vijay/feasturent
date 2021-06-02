@@ -117,7 +117,7 @@ class _WalletDesignState extends State<WalletDesign> {
                                 children: [
                                   Container(
                                     padding: EdgeInsets.only(top: 5),
-                                    height: size.height * 0.375,
+                                    height: size.height * 0.3715,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         boxShadow: [

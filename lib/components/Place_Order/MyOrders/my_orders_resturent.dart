@@ -44,9 +44,8 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
     });
   }
 
-  List<String> cancelreason = [];
-  DateTime time;
-  DateTime currentTime = DateTime.now();
+  // List<String> cancelreason = [];
+  // DateTime time;
 
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
@@ -88,7 +87,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
     if (result.statusCode == 200) {
       wholeorders = ordersData;
       resturentorders = ordersData['userOrdersList'];
-      dineoutorders = ordersData['userOrdersList'];
+      dineoutorders = ordersData['userBookingList'];
       return resturentorders;
     } else if (result.statusCode == 401) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -122,15 +121,151 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
     super.dispose();
   }
 
-  void alertBox() {}
+  // void alertBox() {}
 
-  bool isDisabled = false;
-  void timercondition() {
-    if (time.compareTo(currentTime) > currentTime.minute) {
-      isDisabled = false;
-    } else {
-      isDisabled = true;
-    }
+  // bool isDisabled = false;
+  // void timercondition() {
+  //   if (time.compareTo(currentTime) > currentTime.minute) {
+  //     isDisabled = false;
+  //   } else {
+  //     isDisabled = true;
+  //   }
+  // }
+
+  Future cancelOrder(index) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Center(child: Text("CANCELLATION")),
+                titleTextStyle:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
+                content: Container(
+                  height: 240,
+                  width: 200,
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: cancel.length,
+                        itemBuilder: (context, index) {
+                          return CheckboxListTile(
+                            onChanged: (value) {
+                              for (int i = 0; i <= cancel.length - 1; i++) {
+                                setState(() {
+                                  cancel[i].value = false;
+                                });
+                              }
+                              setState(() {
+                                cancel[index].value = value;
+                                canceldata = cancel[index].title;
+                              });
+                            },
+                            value: cancel[index].value,
+                            title: Text(capitalize(cancel[index].title)),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  FlatButton(
+                    child: Text("Done"),
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      var userid = prefs.getInt('userId');
+                      _authorization = prefs.getString('sessionToken');
+                      _authorization = prefs.getString('sessionToken');
+                      String _refreshtoken = prefs.getString('refreshToken');
+
+                      print(
+                          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
+                      var response = await http.post(
+                          APP_ROUTES +
+                              'userOrders' +
+                              '?key=BYID&id=${ordersData[index]['id']}',
+                          headers: {
+                            "authorization": _authorization,
+                            "refreshtoken": _refreshtoken,
+                          });
+                      if (response.statusCode == 200) {
+                        if (ordersData[index]['deliveryStatus'] == 'ACCEPTED') {
+                          Fluttertoast.showToast(
+                              msg:
+                                  "Can't cancel order delivery boy assigned...");
+                        } else {
+                          var response = await http.post(
+                              APP_ROUTES +
+                                  'cancelOrder' +
+                                  '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata',
+                              headers: {
+                                "authorization": _authorization,
+                                "refreshtoken": _refreshtoken,
+                              });
+                          if (response.statusCode == 200) {
+                            Map socketData = {
+                              'iconUrl': '',
+                              'message':
+                                  "Order ${ordersData[index]['id']} has been cancelled",
+                              'theme': 'red',
+                              'userName':
+                                  '${ordersData[index]['VendorInfo']['user']['login']['userName']}'
+                            };
+
+                            socket.emit("pushNotification", socketData);
+
+                            refreshList();
+                            Navigator.pop(context);
+
+                            Fluttertoast.showToast(msg: "ordercancelled");
+                          } else if (response.statusCode == 401) {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.remove(
+                              'name',
+                            );
+                            prefs.remove('sessionToken');
+                            prefs.remove('refreshToken');
+                            prefs.remove('userNumber');
+                            prefs.remove('userProfile');
+                            prefs.remove('customerName');
+                            prefs.remove('userId');
+                            prefs.remove('loginId');
+                            prefs.remove('userEmail');
+                            prefs.remove("loginBy");
+                            takeUser = false;
+                            emailid = null;
+                            photo = null;
+                            userName = null;
+
+                            prefs.setBool("_isAuthenticate", false);
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Order Cancellqation time is Finished");
+                            Navigator.pop(context);
+
+                            refreshList();
+                          }
+                        }
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Something went wrong. Can't cancel order");
+                      }
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        });
   }
 
   @override
@@ -208,177 +343,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                         // ignore: missing_return
                         itemBuilder: (BuildContext context, index) {
                           print("data length orders $datalength");
-                          Future cancelOrder() async {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return StatefulBuilder(
-                                    builder: (context, setState) {
-                                      return AlertDialog(
-                                        title:
-                                            Center(child: Text("CANCELLATION")),
-                                        titleTextStyle: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.w700),
-                                        content: Container(
-                                          height: 240,
-                                          width: 200,
-                                          child: Column(
-                                            children: [
-                                              ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount: cancel.length,
-                                                itemBuilder: (context, index) {
-                                                  return CheckboxListTile(
-                                                    onChanged: (value) {
-                                                      for (int i = 0;
-                                                          i <=
-                                                              cancel.length - 1;
-                                                          i++) {
-                                                        setState(() {
-                                                          cancel[i].value =
-                                                              false;
-                                                        });
-                                                      }
-                                                      setState(() {
-                                                        cancel[index].value =
-                                                            value;
-                                                        canceldata =
-                                                            cancel[index].title;
-                                                      });
-                                                    },
-                                                    value: cancel[index].value,
-                                                    title: Text(capitalize(
-                                                        cancel[index].title)),
-                                                  );
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        actions: [
-                                          FlatButton(
-                                            child: Text("Done"),
-                                            onPressed: () async {
-                                              final prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              var userid =
-                                                  prefs.getInt('userId');
-                                              _authorization = prefs
-                                                  .getString('sessionToken');
-                                              _authorization = prefs
-                                                  .getString('sessionToken');
-                                              String _refreshtoken = prefs
-                                                  .getString('refreshToken');
-
-                                              print(
-                                                  "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
-                                              var response = await http.post(
-                                                  APP_ROUTES +
-                                                      'userOrders' +
-                                                      '?key=BYID&id=${ordersData[index]['id']}',
-                                                  headers: {
-                                                    "authorization":
-                                                        _authorization,
-                                                    "refreshtoken":
-                                                        _refreshtoken,
-                                                  });
-                                              if (response.statusCode == 200) {
-                                                if (ordersData[index]
-                                                        ['deliveryStatus'] ==
-                                                    'ACCEPTED') {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Can't cancel order delivery boy assigned...");
-                                                } else {
-                                                  var response = await http.post(
-                                                      APP_ROUTES +
-                                                          'cancelOrder' +
-                                                          '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata',
-                                                      headers: {
-                                                        "authorization":
-                                                            _authorization,
-                                                        "refreshtoken":
-                                                            _refreshtoken,
-                                                      });
-                                                  if (response.statusCode ==
-                                                      200) {
-                                                    Map socketData = {
-                                                      'iconUrl': '',
-                                                      'message':
-                                                          "Order ${ordersData[index]['id']} has been cancelled",
-                                                      'theme': 'red',
-                                                      'userName':
-                                                          '${ordersData[index]['VendorInfo']['user']['login']['userName']}'
-                                                    };
-
-                                                    socket.emit(
-                                                        "pushNotification",
-                                                        socketData);
-
-                                                    refreshList();
-                                                    Navigator.pop(context);
-
-                                                    Fluttertoast.showToast(
-                                                        msg: "ordercancelled");
-                                                  } else if (response
-                                                          .statusCode ==
-                                                      401) {
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    prefs.remove(
-                                                      'name',
-                                                    );
-                                                    prefs
-                                                        .remove('sessionToken');
-                                                    prefs
-                                                        .remove('refreshToken');
-                                                    prefs.remove('userNumber');
-                                                    prefs.remove('userProfile');
-                                                    prefs
-                                                        .remove('customerName');
-                                                    prefs.remove('userId');
-                                                    prefs.remove('loginId');
-                                                    prefs.remove('userEmail');
-                                                    prefs.remove("loginBy");
-                                                    takeUser = false;
-                                                    emailid = null;
-                                                    photo = null;
-                                                    userName = null;
-
-                                                    prefs.setBool(
-                                                        "_isAuthenticate",
-                                                        false);
-
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                LoginPage()));
-                                                  } else {
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "Order Cancellqation time is Finished");
-                                                    Navigator.pop(context);
-
-                                                    refreshList();
-                                                  }
-                                                }
-                                              } else {
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                        "Something went wrong. Can't cancel order");
-                                              }
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    },
-                                  );
-                                });
-                          }
+                          DateTime currentTime = DateTime.now();
 
                           DateTime _timed =
                               DateTime.parse(snapshot.data[index]['createdAt']);
@@ -390,6 +355,32 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                           var data3 = data2.format("\h:\i \A");
                           print(currentTime.difference(data2));
                           print(data3);
+
+                          int orderyear = int.parse(data4.format('Y'));
+                          int ordermonth = int.parse(data4.format('m'));
+                          int orderday = int.parse(data4.format('d'));
+                          int orderhrs = int.parse(data4.format('H'));
+                          int ordermins = int.parse(data4.format('i'));
+
+                          int currentyear = int.parse(currentTime.format('Y'));
+                          int currentmonth = int.parse(currentTime.format('m'));
+                          int currentday = int.parse(currentTime.format('d'));
+                          int currenthrs = int.parse(currentTime.format('H'));
+                          int currentmins = int.parse(currentTime.format('i'));
+
+                          print("order day = ${data4.format('d')}");
+                          print("order months = ${data4.format('m')}");
+                          print("order year = ${data4.format('Y')}");
+                          print("order hrs = ${data4.format('H')}");
+                          print("order mins = ${data4.format('i')}");
+
+                          print(
+                              "@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@");
+                          print("current day = ${currentTime.format('d')}");
+                          print("current months = ${currentTime.format('m')}");
+                          print("current year = ${currentTime.format('Y')}");
+                          print("current hrs = ${currentTime.format('H')}");
+                          print("current mins = ${currentTime.format('i')}");
                           if (snapshot.data[index]['orderMenues'].isEmpty) {
                             return SizedBox();
                           } else if (snapshot
@@ -766,22 +757,29 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                                             ['orderStatus'] !=
                                                         "CANCELED"
                                                     ? Container(
-                                                        child: currentTime
-                                                                    .minute ==
-                                                                data2.minute
-                                                            ? MaterialButton(
-                                                                child: Text(
-                                                                    "Cancel"),
-                                                                color:
-                                                                    Colors.red,
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                onPressed: () {
-                                                                  cancelOrder();
-                                                                },
-                                                              )
-                                                            : SizedBox())
+                                                        child: orderyear !=
+                                                                currentyear
+                                                            ? SizedBox()
+                                                            : ordermonth !=
+                                                                    currentmonth
+                                                                ? SizedBox()
+                                                                : orderday !=
+                                                                        currentday
+                                                                    ? SizedBox()
+                                                                    : orderhrs !=
+                                                                            currenthrs
+                                                                        ? SizedBox()
+                                                                        : ordermins ==
+                                                                                currentmins
+                                                                            ? MaterialButton(
+                                                                                child: Text("Cancel"),
+                                                                                color: Colors.red,
+                                                                                textColor: Colors.white,
+                                                                                onPressed: () {
+                                                                                  cancelOrder(index);
+                                                                                },
+                                                                              )
+                                                                            : SizedBox())
                                                     : SizedBox()),
                                           ],
                                         )
@@ -817,185 +815,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                           // ignore: missing_return
                           itemBuilder: (BuildContext context, index) {
                             print("data length orders $datalength");
-                            Future cancelOrder() async {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return StatefulBuilder(
-                                      builder: (context, setState) {
-                                        return AlertDialog(
-                                          title: Center(
-                                              child: Text("CANCELLATION")),
-                                          titleTextStyle: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.w700),
-                                          content: Container(
-                                            height: 240,
-                                            width: 200,
-                                            child: Column(
-                                              children: [
-                                                ListView.builder(
-                                                  shrinkWrap: true,
-                                                  itemCount: cancel.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return CheckboxListTile(
-                                                      onChanged: (value) {
-                                                        for (int i = 0;
-                                                            i <=
-                                                                cancel.length -
-                                                                    1;
-                                                            i++) {
-                                                          setState(() {
-                                                            cancel[i].value =
-                                                                false;
-                                                          });
-                                                        }
-                                                        setState(() {
-                                                          cancel[index].value =
-                                                              value;
-                                                          canceldata =
-                                                              cancel[index]
-                                                                  .title;
-                                                        });
-                                                      },
-                                                      value:
-                                                          cancel[index].value,
-                                                      title: Text(capitalize(
-                                                          cancel[index].title)),
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          actions: [
-                                            FlatButton(
-                                              child: Text("Done"),
-                                              onPressed: () async {
-                                                final prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                var userid =
-                                                    prefs.getInt('userId');
-                                                _authorization = prefs
-                                                    .getString('sessionToken');
-                                                _authorization = prefs
-                                                    .getString('sessionToken');
-                                                String _refreshtoken = prefs
-                                                    .getString('refreshToken');
-
-                                                print(
-                                                    "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
-                                                var response = await http.post(
-                                                    APP_ROUTES +
-                                                        'userOrders' +
-                                                        '?key=BYID&id=${ordersData[index]['id']}',
-                                                    headers: {
-                                                      "authorization":
-                                                          _authorization,
-                                                      "refreshtoken":
-                                                          _refreshtoken,
-                                                    });
-                                                if (response.statusCode ==
-                                                    200) {
-                                                  if (ordersData[index]
-                                                          ['deliveryStatus'] ==
-                                                      'ACCEPTED') {
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "Can't cancel order delivery boy assigned...");
-                                                  } else {
-                                                    var response = await http.post(
-                                                        APP_ROUTES +
-                                                            'cancelOrder' +
-                                                            '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata',
-                                                        headers: {
-                                                          "authorization":
-                                                              _authorization,
-                                                          "refreshtoken":
-                                                              _refreshtoken,
-                                                        });
-                                                    if (response.statusCode ==
-                                                        200) {
-                                                      Map socketData = {
-                                                        'iconUrl': '',
-                                                        'message':
-                                                            "Order ${ordersData[index]['id']} has been cancelled",
-                                                        'theme': 'red',
-                                                        'userName':
-                                                            '${ordersData[index]['VendorInfo']['user']['login']['userName']}'
-                                                      };
-
-                                                      socket.emit(
-                                                          "pushNotification",
-                                                          socketData);
-
-                                                      refreshList();
-                                                      Navigator.pop(context);
-
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "ordercancelled");
-                                                    } else if (response
-                                                            .statusCode ==
-                                                        401) {
-                                                      SharedPreferences prefs =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      prefs.remove(
-                                                        'name',
-                                                      );
-                                                      prefs.remove(
-                                                          'sessionToken');
-                                                      prefs.remove(
-                                                          'refreshToken');
-                                                      prefs
-                                                          .remove('userNumber');
-                                                      prefs.remove(
-                                                          'userProfile');
-                                                      prefs.remove(
-                                                          'customerName');
-                                                      prefs.remove('userId');
-                                                      prefs.remove('loginId');
-                                                      prefs.remove('userEmail');
-                                                      prefs.remove("loginBy");
-                                                      takeUser = false;
-                                                      emailid = null;
-                                                      photo = null;
-                                                      userName = null;
-
-                                                      prefs.setBool(
-                                                          "_isAuthenticate",
-                                                          false);
-
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  LoginPage()));
-                                                    } else {
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "Order Cancellqation time is Finished");
-                                                      Navigator.pop(context);
-
-                                                      refreshList();
-                                                    }
-                                                  }
-                                                } else {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Something went wrong. Can't cancel order");
-                                                }
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  });
-                            }
+                            DateTime currentTime = DateTime.now();
 
                             DateTime _timed =
                                 DateTime.parse(snapshot[index]['createdAt']);
@@ -1005,7 +825,38 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                             print(data2);
                             var data5 = data4.format("\d-\m\-\Y-\h:\i \A");
                             var data3 = data2.format("\h:\i \A");
-                            print(currentTime.difference(data2));
+
+                            int orderyear = int.parse(data4.format('Y'));
+                            int ordermonth = int.parse(data4.format('m'));
+                            int orderday = int.parse(data4.format('d'));
+                            int orderhrs = int.parse(data4.format('H'));
+                            int ordermins = int.parse(data4.format('i'));
+
+                            int currentyear =
+                                int.parse(currentTime.format('Y'));
+                            int currentmonth =
+                                int.parse(currentTime.format('m'));
+                            int currentday = int.parse(currentTime.format('d'));
+                            int currenthrs = int.parse(currentTime.format('H'));
+                            int currentmins =
+                                int.parse(currentTime.format('i'));
+
+                            print("order day = ${data4.format('d')}");
+                            print("order months = ${data4.format('m')}");
+                            print("order year = ${data4.format('Y')}");
+                            print("order hrs = ${data4.format('H')}");
+                            print("order mins = ${data4.format('i')}");
+
+                            print(
+                                "@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@");
+                            print("current day = ${currentTime.format('d')}");
+                            print(
+                                "current months = ${currentTime.format('m')}");
+                            print("current year = ${currentTime.format('Y')}");
+                            print("current hrs = ${currentTime.format('H')}");
+                            print("current mins = ${currentTime.format('i')}");
+
+                            // print(currentTime.difference(data2));
                             print(data3);
                             if (snapshot[index]['orderMenues'].isEmpty) {
                               return SizedBox();
@@ -1380,23 +1231,28 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                                               ['orderStatus'] !=
                                                           "CANCELED"
                                                       ? Container(
-                                                          child: currentTime
-                                                                      .minute ==
-                                                                  data2.minute
-                                                              ? MaterialButton(
-                                                                  child: Text(
-                                                                      "Cancel"),
-                                                                  color: Colors
-                                                                      .red,
-                                                                  textColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  onPressed:
-                                                                      () {
-                                                                    cancelOrder();
-                                                                  },
-                                                                )
-                                                              : SizedBox())
+                                                          child: orderyear !=
+                                                                  currentyear
+                                                              ? SizedBox()
+                                                              : ordermonth !=
+                                                                      currentmonth
+                                                                  ? SizedBox()
+                                                                  : orderday !=
+                                                                          currentday
+                                                                      ? SizedBox()
+                                                                      : orderhrs !=
+                                                                              currenthrs
+                                                                          ? SizedBox()
+                                                                          : ordermins == currentmins
+                                                                              ? MaterialButton(
+                                                                                  child: Text("Cancel"),
+                                                                                  color: Colors.red,
+                                                                                  textColor: Colors.white,
+                                                                                  onPressed: () {
+                                                                                    cancelOrder(index);
+                                                                                  },
+                                                                                )
+                                                                              : SizedBox())
                                                       : SizedBox()),
                                             ],
                                           )

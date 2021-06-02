@@ -532,7 +532,30 @@ class _FoodSliderState extends State<FoodSlider> {
                                                 ),
                                               ]),
                                             ),
-
+                                            Row(children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 30, top: 2),
+                                                child: Text("Resturent Name: ",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    )),
+                                              ),
+                                              Container(
+                                                width: size.width * 0.5,
+                                                child: Text(
+                                                  widget.restaurentName,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              )
+                                            ]),
                                             // Price
                                             Row(
                                               mainAxisAlignment:
