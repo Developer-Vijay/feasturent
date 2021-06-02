@@ -205,14 +205,19 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                                                     placeholder: (context,
                                                             url) =>
                                                         Center(
-                                                            child:
-                                                                CircularProgressIndicator()),
+                                                            child: Image.asset(
+                                                      "assets/images/defaultdineout.jpg",
+                                                      height:
+                                                          size.height * 0.24,
+                                                      width: size.width * 0.32,
+                                                      fit: BoxFit.cover,
+                                                    )),
                                                     errorWidget:
                                                         (context, url, error) =>
                                                             Icon(Icons.error),
                                                   )
                                                 : Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
+                                                    "assets/images/defaultdineout.jpg",
                                                     height: size.height * 0.24,
                                                     width: size.width * 0.32,
                                                     fit: BoxFit.cover,

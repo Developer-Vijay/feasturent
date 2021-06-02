@@ -106,7 +106,7 @@ class _SwipperState extends State<Swipper> {
                                               image: DecorationImage(
                                                 fit: BoxFit.fill,
                                                 image: AssetImage(
-                                                  "assets/images/NoImage.png.jpeg",
+                                                  "assets/images/feasturenttemp.jpeg",
                                                 ),
                                               )),
                                         )
@@ -126,7 +126,7 @@ class _SwipperState extends State<Swipper> {
                                                             ['image'] ==
                                                         null
                                                     ? Image.asset(
-                                                        "assets/images/NoImage.png.jpeg",
+                                                        "assets/images/feasturenttemp.jpeg",
                                                         fit: BoxFit.fill,
                                                       )
                                                     : CachedNetworkImageProvider(

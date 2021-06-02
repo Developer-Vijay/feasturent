@@ -65,7 +65,7 @@ class _OnTapDineOutTabState extends State<OnTapDineOutTab> {
                                                 width: size.width * 0.46,
                                                 placeholder: (context, url) =>
                                                     Image.asset(
-                                                  "assets/images/feasturenttemp.jpeg",
+                                                  "assets/images/defaultdineout.jpg",
                                                   height: size.height * 0.27,
                                                   width: size.width * 0.46,
                                                   fit: BoxFit.cover,
@@ -75,7 +75,7 @@ class _OnTapDineOutTabState extends State<OnTapDineOutTab> {
                                                         Icon(Icons.error),
                                               )
                                             : Image.asset(
-                                                "assets/images/feasturenttemp.jpeg",
+                                                "assets/images/defaultdineout.jpg",
                                                 height: size.height * 0.27,
                                                 width: size.width * 0.46,
                                                 fit: BoxFit.cover,

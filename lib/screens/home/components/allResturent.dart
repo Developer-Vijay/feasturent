@@ -302,7 +302,7 @@ class _AllResturentState extends State<AllResturent> {
                                                   fit: BoxFit.fill,
                                                   placeholder: (context, url) =>
                                                       Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
+                                                    "assets/images/defaultrestaurent.png",
                                                     height: size.height * 0.18,
                                                     width: size.width * 0.3,
                                                     fit: BoxFit.cover,
@@ -312,7 +312,7 @@ class _AllResturentState extends State<AllResturent> {
                                                           Icon(Icons.error),
                                                 )
                                               : Image.asset(
-                                                  "assets/images/feasturenttemp.jpeg",
+                                                  "assets/images/defaultrestaurent.png",
                                                   height: size.height * 0.18,
                                                   width: size.width * 0.3,
                                                   fit: BoxFit.cover,

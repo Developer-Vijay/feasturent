@@ -58,14 +58,14 @@ class ViewAllPopular extends StatelessWidget {
                                   ),
                                 ),
                                 placeholder: (context, url) => Image.asset(
-                                  "assets/images/feasturenttemp.jpeg",
+                                  "assets/images/defaultdineout.jpg",
                                   fit: BoxFit.cover,
                                 ),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),
                               )
                             : Image.asset(
-                                "assets/images/feasturenttemp.jpeg",
+                                "assets/images/defaultdineout.jpg",
                                 height: sized.height * 0.35,
                                 width: sized.height * 0.35,
                                 fit: BoxFit.cover,

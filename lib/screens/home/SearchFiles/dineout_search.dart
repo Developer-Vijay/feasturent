@@ -62,7 +62,7 @@ class _DineoutSearchState extends State<DineoutSearch> {
                                                 width: size.width * 0.46,
                                                 placeholder: (context, url) =>
                                                     Image.asset(
-                                                  "assets/images/feasturenttemp.jpeg",
+                                                  "assets/images/defaultdineout.jpg",
                                                   height: size.height * 0.27,
                                                   width: size.width * 0.46,
                                                   fit: BoxFit.cover,
@@ -72,7 +72,7 @@ class _DineoutSearchState extends State<DineoutSearch> {
                                                         Icon(Icons.error),
                                               )
                                             : Image.asset(
-                                                "assets/images/feasturenttemp.jpeg",
+                                                "assets/images/defaultdineout.jpg",
                                                 height: size.height * 0.27,
                                                 width: size.width * 0.46,
                                                 fit: BoxFit.cover,

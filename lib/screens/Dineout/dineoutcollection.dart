@@ -169,67 +169,120 @@ class _CollectionsState extends State<Collections> {
                                               )));
                                 },
                                 child: Container(
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.only(
-                                    left: size.width * 0.04,
-                                  ),
-                                  height: size.height * 0.2,
-                                  width: size.width * 0.34,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      image: snapshot.data[index]['user']
-                                                  ['profile'] !=
-                                              null
-                                          ? DecorationImage(
-                                              image: CachedNetworkImageProvider(
-                                                  S3_BASE_PATH +
-                                                      snapshot.data[index]
-                                                          ['user']['profile']),
-                                              fit: BoxFit.cover)
-                                          : DecorationImage(
-                                              image: CachedNetworkImageProvider(
-                                                  "https://im1.dineout.co.in/images/uploads/restaurant/sharpen/2/u/y/p20941-15700828565d959028e9f28.jpg?tr=tr:n-medium"),
-                                              fit: BoxFit.cover)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: size.height * 0.062,
-                                        color: Colors.black.withOpacity(0.4),
-                                        margin: EdgeInsets.only(
-                                            top: size.height * 0.143),
-                                        padding:
-                                            EdgeInsets.only(left: 5, top: 10),
-                                        alignment: Alignment.topLeft,
-                                        child: RichText(
-                                          text: TextSpan(
-                                              style: TextStyle(
-                                                color: Colors.white,
+                                    margin: EdgeInsets.only(
+                                      left: size.width * 0.04,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        snapshot.data[index]['user']
+                                                    ['profile'] !=
+                                                null
+                                            ? CachedNetworkImage(
+                                                imageUrl: S3_BASE_PATH +
+                                                    snapshot.data[index]['user']
+                                                        ['profile'],
+                                                height: size.height * 0.2,
+                                                width: size.width * 0.34,
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  height: size.height * 0.2,
+                                                  width: size.width * 0.34,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    Image.asset(
+                                                  "assets/images/defaultdineout.jpg",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              )
+                                            : Image.asset(
+                                                "assets/images/defaultdineout.jpg",
+                                                height: size.height * 0.2,
+                                                width: size.width * 0.34,
+                                                fit: BoxFit.cover,
                                               ),
-                                              children: [
-                                                TextSpan(
-                                                    text: capitalize(
-                                                        "${snapshot.data[index]['name']}\n"),
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.height * 0.022,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                TextSpan(
-                                                    text:
-                                                        " ${snapshot.data[index]['Address']['city']}",
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.height * 0.018,
-                                                        fontWeight:
-                                                            FontWeight.w600)),
-                                              ]),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                        Align(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Container(
+                                            height: size.height * 0.07,
+                                            width: size.width * 0.34,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(10),
+                                                  bottomRight:
+                                                      Radius.circular(10)),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    height: size.height * 0.063,
+                                                    color: Colors.black
+                                                        .withOpacity(0.4),
+                                                    padding: EdgeInsets.only(
+                                                        left: 5, top: 10),
+                                                    alignment:
+                                                        Alignment.topLeft,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                          ),
+                                                          children: [
+                                                            TextSpan(
+                                                                text: capitalize(
+                                                                    "${snapshot.data[index]['name']}\n"),
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        size.height *
+                                                                            0.022,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)),
+                                                            TextSpan(
+                                                                text:
+                                                                    " ${snapshot.data[index]['Address']['city']}",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        size.height *
+                                                                            0.018,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600)),
+                                                          ]),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )),
                               );
                             },
                           );

@@ -54,7 +54,7 @@ class _DineoutGalleryState extends State<DineoutGallery> {
                         loop: false,
                         itemBuilder: (context, index) {
                           return Image.asset(
-                            "assets/images/NoImage.png.jpeg",
+                            "assets/images/defaultdineout.jpg",
                             fit: BoxFit.cover,
                           );
                         }))));

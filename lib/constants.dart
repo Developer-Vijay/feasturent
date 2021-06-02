@@ -124,79 +124,6 @@ final walletProfileName =
 
 final walletIconStyle = TextStyle(fontSize: 12, color: Colors.blueGrey);
 
-class Productmodel {
-  final foodtitle;
-  final titleprice;
-  Productmodel({this.foodtitle, this.titleprice});
-}
-
-List<Productmodel> add1 = [];
-List<Productmodel> addon = [
-  Productmodel(foodtitle: "Regular", titleprice: "₹ 0"),
-  Productmodel(foodtitle: "Wheat", titleprice: "₹ 10"),
-  Productmodel(foodtitle: "Barbeque Mayonese", titleprice: "₹ 10"),
-  Productmodel(foodtitle: "Cheese", titleprice: "₹ 17"),
-];
-
-class Review {
-  final icon;
-
-  final text;
-
-  Review({this.icon, this.text});
-}
-
-List<Review> policy = [
-  Review(
-      icon: Icon(Icons.paste_outlined),
-      text: "Review Your order and address details to avoid\n cancellation"),
-  Review(
-      icon: Icon(
-        Icons.timer,
-        color: Colors.blue,
-      ),
-      text:
-          "if you choose to cancel you can do it within 60 \n seconds after placing the order"),
-  Review(
-      icon: Icon(
-        Icons.monetization_on_outlined,
-        color: Colors.blue,
-      ),
-      text: "Review Your order and address details to avoid\n cancellation"),
-  Review(
-      icon: Icon(
-        Icons.clean_hands,
-        color: Colors.blue,
-      ),
-      text: "Review Your order and address details to avoid\n cancellation"),
-  Review(
-      icon: Icon(
-        Icons.wash,
-        color: Colors.blue,
-      ),
-      text: "Review Your order and address details to avoid\n cancellation"),
-  Review(
-      icon: Icon(Icons.paste_outlined),
-      text: "Review Your order and address details to avoid\n cancellation"),
-];
-
-class SearchList {
-  String title;
-  String subtitle;
-
-  SearchList({
-    this.title,
-    this.subtitle,
-  });
-}
-
-List<SearchList> searchedlist = [
-  SearchList(title: "Chole Bhature", subtitle: "Pandi ji Paratha Wala"),
-  SearchList(title: "Rajma Chawal", subtitle: "Dhaba da Shaba"),
-  SearchList(title: "Noodles", subtitle: "Foodie Cafe"),
-  SearchList(title: "Soup", subtitle: "Samrat Restaurant")
-];
-
 class FilterList {
   var name;
   int pagecount;
@@ -291,58 +218,6 @@ List<SettingsList> settingpanel = [
       title: "Notifications Settings",
       subtitle: "Change your email or delete your account",
       icon: Icon(Icons.notifications))
-];
-
-var barimages = [
-  "https://media.gettyimages.com/photos/wooden-table-in-front-of-abstract-blurred-restaurant-lights-of-bar-picture-id1250327071?k=6&m=1250327071&s=612x612&w=0&h=z_gcxwIlFxPxrPh3XX3maljIx7Nqg4Ct2hA6LKjgYqM=",
-  "https://media.gettyimages.com/photos/waiter-serves-beers-at-a-bar-on-the-eve-of-the-mandatory-closure-of-picture-id1228945616?k=6&m=1228945616&s=612x612&w=0&h=d-qVLDUFwS5hZzJuXKGosaY6O0TYEL09T9EXAVyjLJ4="
-];
-
-final imageList = [
-  "https://media.gettyimages.com/photos/nightclub-picture-id157532720?k=6&m=157532720&s=612x612&w=0&h=oan-SIIOcol4NRhRWpJ_Vd2k6FzFE24Ub4zmK4SjNzM=",
-  "https://media.gettyimages.com/photos/interior-of-empty-bar-at-night-picture-id826837298?k=6&m=826837298&s=612x612&w=0&h=-hIbnJFk265RDKqfykcNmKXlge91c0ynk3hDAGvjESI=",
-  "https://media.gettyimages.com/photos/empty-nightclub-dance-floor-picture-id1053940970?k=6&m=1053940970&s=612x612&w=0&h=2VsbM5AKs7sLlklQ7m0iN6lTg_7ulDB4jZfdrG5t36M=",
-  "https://media.gettyimages.com/photos/bartender-making-cocktails-at-retro-bar-for-mature-couple-picture-id991839156?k=6&m=991839156&s=612x612&w=0&h=nXyZjg1b9XlVeNQUJp3wy3WkiAirt0ZkocsPmBrQe00=",
-];
-
-class PopularOnFeasturent {
-  String categoryName = '';
-  String categoryImage;
-  PopularOnFeasturent({
-    this.categoryName,
-    this.categoryImage,
-  });
-}
-
-List<PopularOnFeasturent> popularonfeast = [
-  PopularOnFeasturent(
-      categoryImage:
-          "https://image.shutterstock.com/z/stock-photo-chole-bhature-or-chick-pea-curry-and-fried-puri-served-in-terracotta-crockery-over-white-1072270610.jpg",
-      categoryName: "Chole Bhature"),
-  PopularOnFeasturent(
-      categoryImage:
-          "https://image.shutterstock.com/z/stock-photo-traditional-dumpling-vegetarian-momos-food-from-nepal-served-with-tomato-chutney-over-moody-plate-1719536887.jpg",
-      categoryName: "Specail Momos"),
-  PopularOnFeasturent(
-      categoryImage:
-          "https://image.shutterstock.com/image-photo/arabian-spicy-food-concept-homemade-600w-1199926645.jpg",
-      categoryName: "Tandoori Chicken"),
-  PopularOnFeasturent(
-      categoryImage:
-          "https://image.shutterstock.com/z/stock-photo-big-cheeseburger-with-lots-of-cheese-stock-photo-side-view-of-a-cheeseburger-on-a-black-brick-wall-1680415567.jpg",
-      categoryName: "Cheese Burger"),
-  PopularOnFeasturent(
-      categoryImage:
-          "https://image.shutterstock.com/z/stock-photo-chicken-kabsa-homemade-arabian-biryani-overhead-view-1048188121.jpg",
-      categoryName: "Chicken Biryani"),
-  PopularOnFeasturent(
-      categoryImage:
-          "https://image.shutterstock.com/z/stock-photo-palak-paneer-curry-made-up-of-spinach-and-cottage-cheese-popular-indian-healthy-lunch-dinner-food-620862170.jpg",
-      categoryName: "Palak Paneer"),
-  PopularOnFeasturent(
-      categoryImage:
-          "https://image.shutterstock.com/z/stock-photo-masala-dosa-indian-savory-crepes-with-potato-filling-top-down-view-783911236.jpg",
-      categoryName: "Masala Dosa"),
 ];
 
 class CancelOrderList {

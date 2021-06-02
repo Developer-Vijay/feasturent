@@ -246,7 +246,7 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
                                       itemCount: data['dineoutImages'].length,
                                     )
                                   : Image.asset(
-                                      "assets/images/NoImage.png.jpeg",
+                                      "assets/images/defaultdineout.jpg",
                                       fit: BoxFit.cover,
                                     )),
                         ),

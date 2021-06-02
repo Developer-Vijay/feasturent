@@ -74,7 +74,7 @@ class _DetailResturentState extends State<DetailResturent> {
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     )
                   : Image.asset(
-                      "assets/images/feasturenttemp.jpeg",
+                      "assets/images/defaultrestaurent.png",
                       fit: BoxFit.cover,
                     ),
             ),

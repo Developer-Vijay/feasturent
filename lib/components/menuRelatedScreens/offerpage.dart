@@ -592,7 +592,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                             Icon(Icons.error),
                                                       )
                                                     : Image.asset(
-                                                        "assets/images/feasturenttemp.jpeg",
+                                                        "assets/images/defaultrestaurent.png",
                                                         height:
                                                             size.height * 0.18,
                                                         width: size.width * 0.3,

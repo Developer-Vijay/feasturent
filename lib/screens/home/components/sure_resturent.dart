@@ -506,7 +506,7 @@ class _SureResturentState extends State<SureResturent> {
                                                           Icon(Icons.error),
                                                   placeholder: (context, url) =>
                                                       Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
+                                                    "assets/images/defaultrestaurent.png",
                                                     fit: BoxFit.cover,
                                                   ),
                                                 )
@@ -514,6 +514,7 @@ class _SureResturentState extends State<SureResturent> {
                                                   height: double.infinity,
                                                   width: double.infinity,
                                                   decoration: BoxDecoration(
+                                                    color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
                                                           blurRadius: 3,
@@ -526,7 +527,7 @@ class _SureResturentState extends State<SureResturent> {
                                                             12),
                                                     image: DecorationImage(
                                                         image: AssetImage(
-                                                            "assets/images/feasturenttemp.jpeg"),
+                                                            "assets/images/defaultrestaurent.png"),
                                                         fit: BoxFit.cover),
                                                   ),
                                                 )
