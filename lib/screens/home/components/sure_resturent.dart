@@ -15,6 +15,8 @@ extension StringExtension on String {
   }
 }
 
+var restaurantDatafinal1;
+
 class SureResturent extends StatefulWidget {
   const SureResturent({
     Key key,
@@ -22,44 +24,41 @@ class SureResturent extends StatefulWidget {
   @override
   _SureResturentState createState() => _SureResturentState();
 }
-  var listlength1 = 0;
+
+var listlength1 = 0;
 var restaurantData1;
+
 class _SureResturentState extends State<SureResturent> {
   String _authorization = '';
   void initState() {
     super.initState();
   }
 
-  
-fetchAllRestaurant() async {
-        return allresturentmemoizer.runOnce(() async {
+  fetchAllRestaurant() async {
+    return allresturentmemoizer.runOnce(() async {
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
-
-
-
-
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
-
-    var result = await http.get(
-      Uri.parse( APP_ROUTES +
-          'getRestaurantInfos' +
-          '?key=ALL' +
-          '&latitude=' +
-          latitude.toString() +
-          '&longitude=' +
-          longitude.toString(),)
-     
-    );
-    print(_authorization);
-    restaurantData1 = json.decode(result.body)['data'];
-    if (restaurantData1.isEmpty) {
-      return restaurantData1;
-    } else {
-      restaurantData1 = restaurantData1;
-      return restaurantData1;
-    }
-  });}
+      var result = await http.get(Uri.parse(
+        APP_ROUTES +
+            'getRestaurantInfos' +
+            '?key=ALL' +
+            '&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
+      ));
+      print(_authorization);
+      restaurantData1 = json.decode(result.body)['data'];
+      restaurantDatafinal1 = json.decode(result.body)['data'];
+      if (restaurantData1.isEmpty) {
+        return restaurantData1;
+      } else {
+        restaurantData1 = restaurantData1;
+        return restaurantData1;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
+import 'package:feasturent_costomer_app/screens/home/components/sure_resturent.dart';
 import 'package:feasturent_costomer_app/screens/home/components/view_all_restaurant.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -23,8 +25,8 @@ class AllResturent extends StatefulWidget {
   @override
   _AllResturentState createState() => _AllResturentState();
 }
-  var listlength = 0;
-  var restaurantData3;
+
+var listlength = 0;
 
 class _AllResturentState extends State<AllResturent> {
   String _authorization = '';
@@ -37,8 +39,8 @@ class _AllResturentState extends State<AllResturent> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api length home banner");
 
-    var result = await http
-        .get(Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner'));
+    var result = await http.get(
+        Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner'));
     if (result.statusCode == 200) {
       var data = json.decode(result.body)['data'];
       print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -71,9 +73,8 @@ class _AllResturentState extends State<AllResturent> {
   }
 
   Future fetchHomeSliderLength() async {
-    var result = await http
-        .get(    Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider')
-);
+    var result = await http.get(
+        Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider'));
     var data = json.decode(result.body)['data'];
     if (data.isEmpty) {
       if (mounted) {
@@ -81,7 +82,7 @@ class _AllResturentState extends State<AllResturent> {
       }
       print("data not here");
     } else {
-      print("data her e");
+      print("data here");
       if (data[0]['status'] == true) {
         if (mounted) {
           checkDataLenght = data.length;
@@ -97,38 +98,32 @@ class _AllResturentState extends State<AllResturent> {
     print("data length $checkDataLenght");
   }
 
-   fetchAllRestaurant() async {
+  fetchAllRestaurant() async {
     print(" from listview builder  ${DateTime.now()}");
-            return allresturentmemoizer.runOnce(() async {
+    return allresturentmemoizer.runOnce(() async {
+      fetchHomeSliderLength();
+      fetchHomebaanerLength();
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
+      print(" hit resturent api  ${DateTime.now()}");
 
+      var result = await http.get(Uri.parse(
+        APP_ROUTES +
+            'getRestaurantInfos' +
+            '?key=ALL' +
+            '&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
+      ));
+      print(_authorization);
+      restaurantDatafinal1 = json.decode(result.body)['data'];
 
-    fetchHomeSliderLength();
-    fetchHomebaanerLength();
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
-    print(" hit resturent api  ${DateTime.now()}");
-
-    var result = await http.get(
-      Uri.parse(APP_ROUTES +
-          'getRestaurantInfos' +
-          '?key=ALL' +
-          '&latitude=' +
-          latitude.toString() +
-          '&longitude=' +
-          longitude.toString(),)
-      
-    );
-    print(_authorization);
-    restaurantData3 = json.decode(result.body)['data'];
-    print(" after hit result  ${DateTime.now()}");
-
-    if (restaurantData3.isEmpty) {
-      return restaurantData3;
-    } else {
-      restaurantData3 = restaurantData3;
-      return restaurantData3;
-    }
-  });}
+      var dataset = json.decode(result.body)['data'];
+      print(" after hit result  ${DateTime.now()}");
+      return dataset;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +146,13 @@ class _AllResturentState extends State<AllResturent> {
             Container(
                 child: TextButton(
                     onPressed: () {
-                      if (restaurantData3 != null) {
+                      print(restaurantDatafinal1);
+                      if (restaurantDatafinal1 != null) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ViewallRestaurant(
-                                restData: restaurantData3,
+                                restData: restaurantDatafinal1,
                               ),
                             ));
                       }

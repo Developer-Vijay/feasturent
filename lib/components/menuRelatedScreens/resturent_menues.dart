@@ -94,9 +94,9 @@ class _OfferListPageState extends State<OfferListPage> {
         restaurantDataCopy = restaurantData[0];
       });
     
-      if (restaurantData[0]['avgRating'] != null) {
-        ratingVendor = restaurantData[0]['avgRating'].toInt();
-      }
+      // if (restaurantData[0]['avgRating'] != null) {
+      //   ratingVendor =int.parse( restaurantData[0]['avgRating']);
+      // }
       setState(() {
         dataChecker = true;
       });

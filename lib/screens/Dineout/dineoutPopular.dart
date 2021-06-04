@@ -75,7 +75,7 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
     Size size = MediaQuery.of(context).size;
     return Container(
         child: Container(
-            child: FutureBuilder<List>(
+            child: FutureBuilder(
       future: getpopulardineouts(),
 // ignore: missing_return
       builder: (context, snapshot) {

@@ -20,35 +20,32 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
   int status = 1;
   var responseData1;
   // ignore: missing_return
-  Future getpopulardineouts() async {
-            return collectionmemoizer.runOnce(() async {
-
-    getDineoutBanner();
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
-    var response = await http.get(
-      Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
-     );
-    if (response.statusCode == 200) {
-      responseData1 = json.decode(response.body)['data'];
+  getpopulardineouts() async {
+    return collectionmemoizer.runOnce(() async {
+      getDineoutBanner();
       print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
+      var response =
+          await http.get(Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL'));
+      if (response.statusCode == 200) {
+        responseData1 = json.decode(response.body)['data'];
+        print(
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-      return responseData1;
-    } else if (response.statusCode == 204) {
-      responseData1 = [];
-      return responseData1;
-    }
+        return responseData1;
+      } else if (response.statusCode == 204) {
+        responseData1 = [];
+        return responseData1;
+      }
+    });
   }
-            );}
+
   Future getDineoutBanner() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  utiltsedineout");
 
-    var result = await http
-        .get(
-          Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner')
-          );
+    var result = await http.get(
+        Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner'));
     if (result.statusCode == 200) {
       var homeOffers = json.decode(result.body)['data'];
       if (homeOffers.isEmpty) {
@@ -71,7 +68,7 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
     Size size = MediaQuery.of(context).size;
     return Container(
         child: Container(
-            child: FutureBuilder<List>(
+            child: FutureBuilder(
       future: getpopulardineouts(),
 // ignore: missing_return
       builder: (context, snapshot) {
