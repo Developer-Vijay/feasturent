@@ -67,13 +67,14 @@ class _OfferListPageState extends State<OfferListPage> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
     var result = await http.get(
-      APP_ROUTES +
+      Uri.parse(   APP_ROUTES +
           'getRestaurantInfos' +
           '?key=BYID&id=$id' +
           '&latitude=' +
           latitude.toString() +
           '&longitude=' +
-          longitude.toString(),
+          longitude.toString(),)
+   
     );
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");
@@ -143,20 +144,24 @@ class _OfferListPageState extends State<OfferListPage> {
     if (restaurantDataCopy['user']['Setting'] == null) {
       status = false;
       WidgetsBinding.instance.addPostFrameCallback(
+          // ignore: deprecated_member_use
           (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
     } else {
       status = restaurantDataCopy['user']['Setting']['isActive'];
       if (status == false) {
         WidgetsBinding.instance.addPostFrameCallback(
+            // ignore: deprecated_member_use
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
         print(
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturent");
 
-        var result = await http.get(APP_ROUTES +
+        var result = await http.get(
+          Uri.parse(APP_ROUTES +
             'getRestaurantInfos' +
             '?key=BYID&id=' +
-            id.toString());
+            id.toString()));
+          
 
         if (mounted) {
           setState(() {
@@ -164,11 +169,13 @@ class _OfferListPageState extends State<OfferListPage> {
             if (resturantStatus[0]['user']['Setting'] == null) {
               status = false;
               WidgetsBinding.instance.addPostFrameCallback((_) =>
+                  // ignore: deprecated_member_use
                   _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
             } else {
               status = resturantStatus[0]['user']['Setting']['isActive'];
               if (status == false) {
                 WidgetsBinding.instance.addPostFrameCallback((_) =>
+                    // ignore: deprecated_member_use
                     _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
               }
             }
@@ -354,7 +361,7 @@ class _OfferListPageState extends State<OfferListPage> {
                   appBar: AppBar(
                       backgroundColor: Colors.white,
                       actions: [
-                        FlatButton(
+                        TextButton(
                           child: Text(
                             "More Info..",
                             style: TextStyle(
@@ -904,7 +911,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                               Text("Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
                                                                           actions: <
                                                                               Widget>[
-                                                                            FlatButton(
+                                                                            TextButton(
                                                                               child: Text(
                                                                                 "Cancel",
                                                                                 style: TextStyle(color: Colors.black),
@@ -913,7 +920,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                 Navigator.pop(context);
                                                                               },
                                                                             ),
-                                                                            FlatButton(
+                                                                            TextButton(
                                                                               child: Text(
                                                                                 "Delete",
                                                                                 style: TextStyle(color: Colors.red),
@@ -1169,7 +1176,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                   context: context,
                                                                                   builder: (BuildContext context) {
                                                                                     return AlertDialog(content: Text("Do you want to order food from different resturent"), actions: <Widget>[
-                                                                                      FlatButton(
+                                                                                      TextButton(
                                                                                         child: Text(
                                                                                           "No",
                                                                                           style: TextStyle(color: Colors.black),
@@ -1178,7 +1185,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                           Navigator.pop(context);
                                                                                         },
                                                                                       ),
-                                                                                      FlatButton(
+                                                                                      TextButton(
                                                                                         child: Text(
                                                                                           "Yes",
                                                                                           style: TextStyle(color: Colors.black),
@@ -1601,7 +1608,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                 context: context,
                                                                                 builder: (BuildContext context) {
                                                                                   return AlertDialog(content: Text("Do you want to order food from different resturent"), actions: <Widget>[
-                                                                                    FlatButton(
+                                                                                    TextButton(
                                                                                       child: Text(
                                                                                         "No",
                                                                                         style: TextStyle(color: Colors.black),
@@ -1610,7 +1617,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                         Navigator.pop(context);
                                                                                       },
                                                                                     ),
-                                                                                    FlatButton(
+                                                                                    TextButton(
                                                                                       child: Text(
                                                                                         "Yes",
                                                                                         style: TextStyle(color: Colors.black),
@@ -2004,7 +2011,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                             Text("Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
                                                                         actions: <
                                                                             Widget>[
-                                                                          FlatButton(
+                                                                          TextButton(
                                                                             child:
                                                                                 Text(
                                                                               "Cancel",
@@ -2015,7 +2022,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                               Navigator.pop(context);
                                                                             },
                                                                           ),
-                                                                          FlatButton(
+                                                                          TextButton(
                                                                             child:
                                                                                 Text(
                                                                               "Delete",
@@ -2269,7 +2276,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                 context: context,
                                                                                 builder: (BuildContext context) {
                                                                                   return AlertDialog(content: Text("Do you want to order food from different resturent"), actions: <Widget>[
-                                                                                    FlatButton(
+                                                                                    TextButton(
                                                                                       child: Text(
                                                                                         "No",
                                                                                         style: TextStyle(color: Colors.black),
@@ -2278,7 +2285,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                         Navigator.pop(context);
                                                                                       },
                                                                                     ),
-                                                                                    FlatButton(
+                                                                                    TextButton(
                                                                                       child: Text(
                                                                                         "Yes",
                                                                                         style: TextStyle(color: Colors.black),
@@ -2718,7 +2725,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                               context: context,
                                                                               builder: (BuildContext context) {
                                                                                 return AlertDialog(content: Text("Do you want to order food from different resturent"), actions: <Widget>[
-                                                                                  FlatButton(
+                                                                                  TextButton(
                                                                                     child: Text(
                                                                                       "No",
                                                                                       style: TextStyle(color: Colors.black),
@@ -2727,7 +2734,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                                       Navigator.pop(context);
                                                                                     },
                                                                                   ),
-                                                                                  FlatButton(
+                                                                                  TextButton(
                                                                                     child: Text(
                                                                                       "Yes",
                                                                                       style: TextStyle(color: Colors.black),
@@ -3169,7 +3176,7 @@ class _OfferListPageState extends State<OfferListPage> {
                   content: Text(
                       "Do you want to order food from different resturent"),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         "No",
                         style: TextStyle(color: Colors.black),
@@ -3178,7 +3185,7 @@ class _OfferListPageState extends State<OfferListPage> {
                         Navigator.pop(context);
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         "Yes",
                         style: TextStyle(color: Colors.black),

@@ -6,14 +6,13 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'ontap_offer.dart';
-
+import 'package:async/async.dart';
 int dataLenght;
 
 class DiscountCard extends StatefulWidget {
   @override
   _DiscountCardState createState() => _DiscountCardState();
 }
-
 class _DiscountCardState extends State<DiscountCard> {
   @override
   void initState() {
@@ -26,12 +25,16 @@ class _DiscountCardState extends State<DiscountCard> {
   var homeOffers;
 
   // ignore: missing_return
-  Future<List<dynamic>> fetchHomeBanner() async {
+   fetchHomeBanner() async {
+        return discountmemoizer.runOnce(() async {
+
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api home banner fetch");
 
     var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
+        .get(
+          Uri.parse( APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner')
+         );
     if (result.statusCode == 200) {
       homeOffers = json.decode(result.body)['data'];
       if (homeOffers.isEmpty) {
@@ -61,7 +64,7 @@ class _DiscountCardState extends State<DiscountCard> {
       }
     }
   }
-
+        );}
   int checher;
   @override
   Widget build(BuildContext context) {
@@ -79,8 +82,8 @@ class _DiscountCardState extends State<DiscountCard> {
     Size sized = MediaQuery.of(context).size;
     return dataLenght != 0
         ? Container(
-            child: FutureBuilder<List<dynamic>>(
-                future: fetchHomeBanner(),
+            child: FutureBuilder(
+                future: this.fetchHomeBanner(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Container(

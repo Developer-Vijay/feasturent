@@ -60,7 +60,9 @@ class _AddressListState extends State<AddressList> {
 
     _authorization = prefs.getString('sessionToken');
     var response =
-        await http.delete(USER_API + 'deleteOrderAdress/$addressid', headers: {
+        await http.delete(
+          Uri.parse(USER_API + 'deleteOrderAdress/$addressid')
+          , headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
@@ -112,7 +114,8 @@ class _AddressListState extends State<AddressList> {
 
     _authorization = prefs.getString('sessionToken');
     var response = await http.get(
-        USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid',
+      Uri.parse( USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid')
+       ,
         headers: {
           "Content-type": "application/json",
           "authorization": _authorization,
@@ -188,7 +191,7 @@ class _AddressListState extends State<AddressList> {
                 Expanded(
                   flex: 1,
                   child: total < 10
-                      ? FlatButton(
+                      ? TextButton(
                           onPressed: () {},
                           child: InkWell(
                             onTap: () async {

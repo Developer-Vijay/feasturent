@@ -93,7 +93,7 @@ class _OrderConfirmResturentState extends State<OrderConfirmResturent> {
         builder: (context) => AlertDialog(
               content: Text("Check your order status in MyOrder"),
               actions: [
-                FlatButton(
+                TextButton(
                   child: Text("Okay"),
                   onPressed: () {
                     Navigator.push(context,

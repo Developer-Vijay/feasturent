@@ -75,12 +75,13 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
     _authorization = prefs.getString('sessionToken');
     String _refreshtoken = prefs.getString('refreshToken');
 
-    var result = await http
-        .get(APP_ROUTES + 'userOrders' + '?key=BYUSER&id=$userid2', headers: {
-      "Content-type": "application/json",
-      "authorization": _authorization,
-      "refreshtoken": _refreshtoken,
-    });
+    var result = await http.get(
+        Uri.parse(APP_ROUTES + 'userOrders' + '?key=BYUSER&id=$userid2'),
+        headers: {
+          "Content-type": "application/json",
+          "authorization": _authorization,
+          "refreshtoken": _refreshtoken,
+        });
     ordersData = json.decode(result.body)['data'];
     print(ordersData);
     datalength = ordersData.length;
@@ -172,7 +173,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                   ),
                 ),
                 actions: [
-                  FlatButton(
+                  TextButton(
                     child: Text("Done"),
                     onPressed: () async {
                       final prefs = await SharedPreferences.getInstance();
@@ -184,9 +185,9 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                       print(
                           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
                       var response = await http.post(
-                          APP_ROUTES +
+                          Uri.parse(APP_ROUTES +
                               'userOrders' +
-                              '?key=BYID&id=${ordersData[index]['id']}',
+                              '?key=BYID&id=${ordersData[index]['id']}'),
                           headers: {
                             "authorization": _authorization,
                             "refreshtoken": _refreshtoken,
@@ -198,9 +199,9 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                   "Can't cancel order delivery boy assigned...");
                         } else {
                           var response = await http.post(
-                              APP_ROUTES +
+                              Uri.parse(APP_ROUTES +
                                   'cancelOrder' +
-                                  '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata',
+                                  '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata'),
                               headers: {
                                 "authorization": _authorization,
                                 "refreshtoken": _refreshtoken,

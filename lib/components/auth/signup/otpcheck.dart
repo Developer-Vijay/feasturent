@@ -38,7 +38,9 @@ class _OtpCheckerState extends State<OtpChecker> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  verify otp");
 
     print("approved");
-    var response = await http.post(AUTH_API + 'verifyOtp', body: {
+    var response = await http.post(
+      Uri.parse( AUTH_API + 'verifyOtp')
+     , body: {
       'otp': _otpController.text,
       'userId': widget.resgUserId.toString()
     });
@@ -62,7 +64,8 @@ class _OtpCheckerState extends State<OtpChecker> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  resend otp");
 
     var response = await http.get(
-      AUTH_API + 'resendOtp/' + widget.resgUserId.toString(),
+      Uri.parse(AUTH_API + 'resendOtp/' + widget.resgUserId.toString())
+      ,
     );
 
     var responseData = jsonDecode(response.body);
@@ -225,7 +228,7 @@ ${widget.phone} mobile number''',
                         Container(
                           margin: EdgeInsets.only(left: size.width * 0.01),
                           //alignment: Alignment.topLeft,
-                          child: FlatButton(
+                          child: TextButton(
                             child: Text(
                               " Resend the otp",
                               style: TextStyle(

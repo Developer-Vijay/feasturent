@@ -213,7 +213,7 @@ class _SignupPageState extends State<SignupPage> {
                         },
                       ),
                       //Term & Condition
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           _launchURL();
                         },
@@ -253,6 +253,7 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(
                           fontWeight: FontWeight.w800, color: Colors.black),
                     ),
+                    // ignore: deprecated_member_use
                     FlatButton(
                       padding: EdgeInsets.zero,
                       minWidth: 60,
@@ -297,7 +298,9 @@ class _SignupPageState extends State<SignupPage> {
         print(
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  signup");
 
-        var response = await http.post(USER_API + 'signup', body: {
+        var response = await http.post(
+          Uri.parse(  USER_API + 'signup')
+        , body: {
           'userName': _userNameController.text,
           'password': _passwordController.text,
           'phone': _phoneNumberController.text,

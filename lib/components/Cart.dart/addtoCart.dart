@@ -37,13 +37,15 @@ class _CartScreenState extends State<CartScreen> {
   Future fetchRestaurantStatus(id) async {
     print("******************  get resturent API hitting*********************");
     var result = await http.get(
-        APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString());
+      Uri.parse( APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString()))
+       ;
 
     if (mounted) {
       resturantStatus = json.decode(result.body)['data'];
 
       if (resturantStatus.isEmpty) {
         WidgetsBinding.instance.addPostFrameCallback(
+            // ignore: deprecated_member_use
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
         if (resturantStatus[0]['user']['Setting'] == null) {
@@ -64,7 +66,9 @@ class _CartScreenState extends State<CartScreen> {
                 "Check menues avaliblity &&&&&&&&&&&&&&&&&&^^^^^^^^^^^^^^^%%%%%%%%%%");
 
             var fetchData =
-                await http.get(APP_ROUTES + 'getMenues' + '?key=ALL');
+                await http.get(
+                  Uri.parse(APP_ROUTES + 'getMenues' + '?key=ALL'))
+                  ;
 
             if (mounted) {
               if (fetchData.statusCode == 200) {
@@ -1007,7 +1011,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                                             Navigator.of(context).pop();
                                                                                           },
                                                                                         ),
-                                                                                        FlatButton(
+                                                                                        TextButton(
                                                                                           child: Text(
                                                                                             "Delete",
                                                                                             style: TextStyle(color: Colors.red),
