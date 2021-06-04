@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
+import 'package:async/async.dart';
 
 class CategoryRelatedMenues extends StatefulWidget {
   final categoryName;
@@ -63,15 +64,18 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
     print(checkitem);
   }
 
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
   var restaurantDataCopy;
   var restaurantMenu;
   var restaurantData;
+
+  
 
   Future<List<dynamic>> fetchAllRestaurant() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
-    var result = await http.get(
+    var result = await http.get(Uri.parse(
       APP_ROUTES +
           'getRestaurantInfos' +
           '?key=BYCATID&id=$cateId' +
@@ -79,7 +83,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
           latitude.toString() +
           '&longitude=' +
           longitude.toString(),
-    );
+    ));
     var restaurantfullData = json.decode(result.body)['data'];
     if (restaurantfullData.isEmpty) {
       restaurantData = [];

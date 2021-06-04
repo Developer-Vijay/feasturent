@@ -65,7 +65,8 @@ class _FoodSliderState extends State<FoodSlider> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get menu APi hit 111111111111111^^^^^^^^^^^^*****************!!!!!!!!!!@@@@@@@^^^^^^^^^^112222222222222233333333333388888888888 ");
 
     var result = await http.get(
-      APP_ROUTES + 'getMenues' + '?key=BYID&id=$id',
+      Uri.parse(APP_ROUTES + 'getMenues' + '?key=BYID&id=$id')
+      ,
     );
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");
@@ -905,7 +906,7 @@ class _FoodSliderState extends State<FoodSlider> {
                                                                     "Do you want to order food from different resturent"),
                                                                 actions: <
                                                                     Widget>[
-                                                                  FlatButton(
+                                                                  TextButton(
                                                                     child: Text(
                                                                       "No",
                                                                       style: TextStyle(
@@ -918,7 +919,7 @@ class _FoodSliderState extends State<FoodSlider> {
                                                                           context);
                                                                     },
                                                                   ),
-                                                                  FlatButton(
+                                                                  TextButton(
                                                                     child: Text(
                                                                       "Yes",
                                                                       style: TextStyle(
@@ -1262,7 +1263,7 @@ class _FoodSliderState extends State<FoodSlider> {
                         Navigator.pop(context);
                       },
                     ),
-                    FlatButton(
+                   TextButton(
                       child: Text(
                         "Yes",
                         style: TextStyle(color: Colors.black),

@@ -1,15 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
-import 'package:feasturent_costomer_app/screens/home/components/view_all_restaurant.dart';
+import 'package:feasturent_costomer_app/screens/home/components/discount_card.dart';
+import 'package:feasturent_costomer_app/screens/home/components/popular.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'discount_card.dart';
-import 'popular.dart';
-import '../../../shimmer_effect.dart';
 
 extension StringExtension on String {
   String capitalize() {
@@ -24,102 +22,44 @@ class SureResturent extends StatefulWidget {
   @override
   _SureResturentState createState() => _SureResturentState();
 }
-
+  var listlength1 = 0;
+var restaurantData1;
 class _SureResturentState extends State<SureResturent> {
-  var listlength = 0;
   String _authorization = '';
   void initState() {
     super.initState();
   }
 
-  // Future fetchHomebaanerLength() async {
-  //   print(
-  //       "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api length home banner");
+  
+fetchAllRestaurant() async {
+        return allresturentmemoizer.runOnce(() async {
 
-  //   var result = await http
-  //       .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
-  //   if (result.statusCode == 200) {
-  //     var data = json.decode(result.body)['data'];
-  //     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-  //     if (data.isEmpty) {
-  //       if (mounted) {
-  //         dataLenght = 0;
-  //       }
-  //       print("data not here");
-  //     } else {
-  //       print("data here");
-  //       if (data[0]['status'] == true) {
-  //         if (mounted) {
-  //           dataLenght = 1;
-  //         }
-  //       } else {
-  //         if (mounted) {
-  //           dataLenght = 0;
-  //         }
 
-  //         print("data not here");
-  //       }
-  //     }
 
-  //     print("data  $dataLenght");
-  //   } else {
-  //     if (mounted) {
-  //       dataLenght = 0;
-  //     }
-  //   }
-  // }
 
-  // Future fetchHomeSliderLength() async {
-  //   var result = await http
-  //       .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
-  //   var data = json.decode(result.body)['data'];
-  //   if (data.isEmpty) {
-  //     if (mounted) {
-  //       checkDataLenght = 0;
-  //     }
-  //     print("data not here");
-  //   } else {
-  //     print("data her e");
-  //     if (data[0]['status'] == true) {
-  //       if (mounted) {
-  //         checkDataLenght = data.length;
-  //       }
-  //     } else {
-  //       if (mounted) {
-  //         checkDataLenght = 0;
-  //       }
-  //       print("data not here");
-  //     }
-  //   }
 
-  //   print("data length $checkDataLenght");
-  // }
-
-  var restaurantData;
-  Future<List<dynamic>> fetchAllRestaurant() async {
-    // fetchHomeSliderLength();
-    // fetchHomebaanerLength();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
     var result = await http.get(
-      APP_ROUTES +
+      Uri.parse( APP_ROUTES +
           'getRestaurantInfos' +
           '?key=ALL' +
           '&latitude=' +
           latitude.toString() +
           '&longitude=' +
-          longitude.toString(),
+          longitude.toString(),)
+     
     );
     print(_authorization);
-    restaurantData = json.decode(result.body)['data'];
-    if (restaurantData.isEmpty) {
-      return restaurantData;
+    restaurantData1 = json.decode(result.body)['data'];
+    if (restaurantData1.isEmpty) {
+      return restaurantData1;
     } else {
-      restaurantData = restaurantData;
-      return restaurantData;
+      restaurantData1 = restaurantData1;
+      return restaurantData1;
     }
-  }
+  });}
 
   @override
   Widget build(BuildContext context) {
@@ -174,21 +114,21 @@ class _SureResturentState extends State<SureResturent> {
         SizedBox(
           height: size.height * 0.017,
         ),
-        FutureBuilder<List<dynamic>>(
-          future: fetchAllRestaurant(),
+        FutureBuilder(
+          future: this.fetchAllRestaurant(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              if (restaurantData.length >= 5) {
-                listlength = 5;
-              } else if (restaurantData.length <= 5) {
-                listlength = restaurantData.length;
+              if (restaurantData1.length >= 5) {
+                listlength1 = 5;
+              } else if (restaurantData1.length <= 5) {
+                listlength1 = restaurantData1.length;
               }
 
               return Container(
                 height: size.height * 0.435,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: listlength,
+                  itemCount: listlength1,
                   itemBuilder: (context, index) {
                     var couponDetatil;
                     // double rating = 1.0;

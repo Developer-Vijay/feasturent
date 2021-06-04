@@ -18,11 +18,13 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
   int status = 1;
   var responseData1;
   // ignore: missing_return
-  Future<List> getpopulardineouts() async {
+   getpopulardineouts() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
-
-    var response = await http.get(APP_ROUTES + 'dineout' + '?key=ALL');
+        return collectionmemoizer.runOnce(() async {
+    var response = await http.get(
+      Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
+      );
 
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
@@ -34,7 +36,7 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
       responseData1 = [];
       return responseData1;
     }
-  }
+  });}
 
   @override
   Widget build(BuildContext context) {

@@ -242,7 +242,9 @@ class _ResetPasswordState extends State<ResetPassword> {
       String _refreshtoken = prefs.getString('refreshToken');
 
       final http.Response response =
-          await http.post(AUTH_API + 'changePassword', body: {
+          await http.post(
+            Uri.parse(AUTH_API + 'changePassword')
+            , body: {
         'oldPassword': _oldpasswordcontroller.text,
         'newPassword': _newpasswordcontroller.text,
         "userId": "$userId"

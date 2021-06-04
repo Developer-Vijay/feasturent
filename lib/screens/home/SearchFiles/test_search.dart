@@ -72,8 +72,10 @@ class _SearchFieldState extends State<SearchField> {
 
   onSearchTextChanged(String text) async {
     print("#################### $text");
-    final response = await http.get(APP_ROUTES +
-        'appSearch?searchKey=$text&latitude=$latitude&longitude=$longitude');
+    final response = await http.get(
+      Uri.parse( APP_ROUTES +
+        'appSearch?searchKey=$text&latitude=$latitude&longitude=$longitude')
+     );
 
     if (mounted) {
       setState(() {

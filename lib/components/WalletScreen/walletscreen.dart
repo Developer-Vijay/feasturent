@@ -50,7 +50,9 @@ class _WalletDesignState extends State<WalletDesign> {
     print("***************************************");
     print(_authorization);
     var result = await http
-        .get(PAYMENT_API + 'userWalletAndTransaction/$userid', headers: {
+        .get(
+          Uri.parse(PAYMENT_API + 'userWalletAndTransaction/$userid')
+          , headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,

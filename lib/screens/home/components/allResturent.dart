@@ -23,9 +23,10 @@ class AllResturent extends StatefulWidget {
   @override
   _AllResturentState createState() => _AllResturentState();
 }
+  var listlength = 0;
+  var restaurantData3;
 
 class _AllResturentState extends State<AllResturent> {
-  var listlength = 0;
   String _authorization = '';
   void initState() {
     super.initState();
@@ -37,7 +38,7 @@ class _AllResturentState extends State<AllResturent> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api length home banner");
 
     var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner');
+        .get(Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner'));
     if (result.statusCode == 200) {
       var data = json.decode(result.body)['data'];
       print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -71,7 +72,8 @@ class _AllResturentState extends State<AllResturent> {
 
   Future fetchHomeSliderLength() async {
     var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
+        .get(    Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider')
+);
     var data = json.decode(result.body)['data'];
     if (data.isEmpty) {
       if (mounted) {
@@ -95,9 +97,10 @@ class _AllResturentState extends State<AllResturent> {
     print("data length $checkDataLenght");
   }
 
-  var restaurantData;
-  Future<List<dynamic>> fetchAllRestaurant() async {
+   fetchAllRestaurant() async {
     print(" from listview builder  ${DateTime.now()}");
+            return allresturentmemoizer.runOnce(() async {
+
 
     fetchHomeSliderLength();
     fetchHomebaanerLength();
@@ -106,25 +109,26 @@ class _AllResturentState extends State<AllResturent> {
     print(" hit resturent api  ${DateTime.now()}");
 
     var result = await http.get(
-      APP_ROUTES +
+      Uri.parse(APP_ROUTES +
           'getRestaurantInfos' +
           '?key=ALL' +
           '&latitude=' +
           latitude.toString() +
           '&longitude=' +
-          longitude.toString(),
+          longitude.toString(),)
+      
     );
     print(_authorization);
-    restaurantData = json.decode(result.body)['data'];
+    restaurantData3 = json.decode(result.body)['data'];
     print(" after hit result  ${DateTime.now()}");
 
-    if (restaurantData.isEmpty) {
-      return restaurantData;
+    if (restaurantData3.isEmpty) {
+      return restaurantData3;
     } else {
-      restaurantData = restaurantData;
-      return restaurantData;
+      restaurantData3 = restaurantData3;
+      return restaurantData3;
     }
-  }
+  });}
 
   @override
   Widget build(BuildContext context) {
@@ -145,14 +149,14 @@ class _AllResturentState extends State<AllResturent> {
                 )),
             Spacer(),
             Container(
-                child: FlatButton(
+                child: TextButton(
                     onPressed: () {
-                      if (restaurantData != null) {
+                      if (restaurantData3 != null) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ViewallRestaurant(
-                                restData: restaurantData,
+                                restData: restaurantData3,
                               ),
                             ));
                       }
@@ -179,14 +183,14 @@ class _AllResturentState extends State<AllResturent> {
         SizedBox(
           height: size.height * 0.017,
         ),
-        FutureBuilder<List<dynamic>>(
-          future: fetchAllRestaurant(),
+        FutureBuilder(
+          future: this.fetchAllRestaurant(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              if (restaurantData.length >= 10) {
+              if (snapshot.data.length >= 10) {
                 listlength = 10;
-              } else if (restaurantData.length <= 10) {
-                listlength = restaurantData.length;
+              } else if (snapshot.data.length <= 10) {
+                listlength = snapshot.data.length;
               }
 
               return ListView.builder(

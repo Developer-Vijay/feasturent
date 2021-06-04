@@ -20,13 +20,15 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
   int status = 1;
   var responseData1;
   // ignore: missing_return
-  Future<List> getpopulardineouts() async {
+  Future getpopulardineouts() async {
+            return collectionmemoizer.runOnce(() async {
+
     getDineoutBanner();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
-
-    var response = await http.get(APP_ROUTES + 'dineout' + '?key=ALL');
-
+    var response = await http.get(
+      Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
+     );
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
       print(
@@ -38,13 +40,15 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
       return responseData1;
     }
   }
-
+            );}
   Future getDineoutBanner() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  utiltsedineout");
 
     var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner');
+        .get(
+          Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner')
+          );
     if (result.statusCode == 200) {
       var homeOffers = json.decode(result.body)['data'];
       if (homeOffers.isEmpty) {

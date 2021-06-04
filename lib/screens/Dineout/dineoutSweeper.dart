@@ -17,12 +17,16 @@ class Swipper extends StatefulWidget {
 class _SwipperState extends State<Swipper> {
   var homeOffers;
   // ignore: missing_return
-  Future<List<dynamic>> getDineoutBanner() async {
+   getDineoutBanner() async {
+             return dineoutbannermemoizer.runOnce(() async {
+
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  utiltsedineout");
 
     var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner');
+        .get(
+          Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR&for=dineoutBanner')
+          );
     if (result.statusCode == 200) {
       homeOffers = json.decode(result.body)['data'];
       if (homeOffers.isEmpty) {
@@ -48,7 +52,7 @@ class _SwipperState extends State<Swipper> {
       return homeOffers;
     }
   }
-
+             );}
   int checkbanner;
   @override
   Widget build(BuildContext context) {
@@ -62,8 +66,8 @@ class _SwipperState extends State<Swipper> {
     return dineoutofferlength == 0
         ? SizedBox()
         : Container(
-            child: FutureBuilder<List<dynamic>>(
-                future: getDineoutBanner(),
+            child: FutureBuilder(
+                future: this.getDineoutBanner(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(

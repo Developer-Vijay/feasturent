@@ -73,13 +73,14 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
     var result = await http.get(
-      APP_ROUTES +
+      Uri.parse(   APP_ROUTES +
           'getRestaurantInfos' +
           '?key=KEYWORD&value=$quickName' +
           '&latitude=' +
           latitude.toString() +
           '&longitude=' +
-          longitude.toString(),
+          longitude.toString(),)
+   
     );
     var restaurantfullData = json.decode(result.body)['data'];
     if (restaurantfullData.isEmpty) {

@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'package:flutter_swiper/flutter_swiper.dart';
-
 import '../../shimmer_effect.dart';
 
 class OfferPageScreen extends StatefulWidget {
@@ -19,94 +18,100 @@ class OfferPageScreen extends StatefulWidget {
   _OfferPageScreenState createState() => _OfferPageScreenState();
 }
 
+var restaurantData2;
+
 class _OfferPageScreenState extends State<OfferPageScreen> {
   var random;
-
   int sum = 0;
   int i;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  var restaurantData;
-  Future<List<dynamic>> fetchAllRestaurant() async {
-    fetchOfferBanner();
-    fetchposterOffer();
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getresturent");
+  fetchAllRestaurant() async {
+    return allresturentmemoizer.runOnce(() async {
+      fetchOfferBanner();
+      fetchposterOffer();
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getresturent");
 
-    var result = await http.get(
-      APP_ROUTES +
-          'getRestaurantInfos' +
-          '?key=ALL' +
-          '&latitude=' +
-          latitude.toString() +
-          '&longitude=' +
-          longitude.toString(),
-    );
-    print("data fetch");
-    if (result.statusCode == 200) {
-      restaurantData = json.decode(result.body)['data'];
-      return restaurantData;
-    } else {
-      var tempdata = [];
-      return tempdata;
-    }
+      var result = await http.get(Uri.parse(
+        APP_ROUTES +
+            'getRestaurantInfos' +
+            '?key=ALL' +
+            '&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
+      ));
+      print("data fetch");
+      if (result.statusCode == 200) {
+        restaurantData2 = json.decode(result.body)['data'];
+        return restaurantData2;
+      } else {
+        var tempdata = [];
+        return tempdata;
+      }
+    });
   }
 
   var sliderOffers;
   int psteroffer;
+  fetchposterOffer() async {
+    return offerbannermemoizer.runOnce(() async {
+      var result = await http.get(Uri.parse(
+          APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=posterOffer'));
+      sliderOffers = json.decode(result.body)['data'];
+      if (sliderOffers.isEmpty) {
+        sliderOffers = [];
+        psteroffer = 0;
+        print("emapty poster");
 
-  Future<List<dynamic>> fetchposterOffer() async {
-    var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=posterOffer');
-    sliderOffers = json.decode(result.body)['data'];
-    if (sliderOffers.isEmpty) {
-      sliderOffers = [];
-      psteroffer = 0;
-      print("emapty poster");
-
-      return sliderOffers;
-    } else {
-      print("data here");
-      if (sliderOffers[0]['status'] == true) {
-        print("Status is true poster and ");
-        psteroffer = 1;
         return sliderOffers;
       } else {
-        psteroffer = 0;
-        sliderOffers = [];
+        print("data here");
+        if (sliderOffers[0]['status'] == true) {
+          print("Status is true poster and ");
+          psteroffer = 1;
+          return sliderOffers;
+        } else {
+          psteroffer = 0;
+          sliderOffers = [];
 
-        print("Status is false poster and $sliderOffers");
+          print("Status is false poster and $sliderOffers");
 
-        return sliderOffers;
+          return sliderOffers;
+        }
       }
-    }
+    });
   }
 
+  // );}
   var sliderOffer;
   int offerbanner;
   // ignore: missing_return
-  Future<List<dynamic>> fetchOfferBanner() async {
-    var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=offerBanner');
-    sliderOffer = json.decode(result.body)['data'];
-    if (sliderOffer.isEmpty) {
-      sliderOffer = [];
-      offerbanner = 0;
-      print("empty banner $sliderOffer");
-      return sliderOffer;
-    } else {
-      print("data here");
-      if (sliderOffer[0]['status'] == true) {
-        offerbanner = 1;
+  fetchOfferBanner() async {
+    return offerslidermemoizer.runOnce(() async {
+      var result = await http.get(Uri.parse(
+          APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=offerBanner'));
+      sliderOffer = json.decode(result.body)['data'];
+      if (sliderOffer.isEmpty) {
+        sliderOffer = [];
+        offerbanner = 0;
+        print("empty banner $sliderOffer");
         return sliderOffer;
       } else {
-        offerbanner = 0;
-        sliderOffer = [];
+        print("data here");
+        if (sliderOffer[0]['status'] == true) {
+          offerbanner = 1;
+          return sliderOffer;
+        } else {
+          offerbanner = 0;
+          sliderOffer = [];
 
-        print("Status is false and banner $sliderOffer");
-        return sliderOffer;
+          print("Status is false and banner $sliderOffer");
+          return sliderOffer;
+        }
       }
-    }
+    });
   }
 
   int checkposter;
@@ -144,8 +149,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                     height: size.height * 0.24,
                     width: size.width * 1,
                     margin: EdgeInsets.only(top: size.height * 0.008),
-                    child: FutureBuilder<List<dynamic>>(
-                      future: fetchposterOffer(),
+                    child: FutureBuilder(
+                      future: this.fetchposterOffer(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListView.builder(
@@ -237,8 +242,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                 : Container(
                     height: size.height * 0.14,
                     width: size.width * 1,
-                    child: FutureBuilder<List<dynamic>>(
-                      future: fetchOfferBanner(),
+                    child: FutureBuilder(
+                      future: this.fetchOfferBanner(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           var leng;
@@ -365,7 +370,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: size.height * 0.028,
+                                                fontSize: size.height * 0.021,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -458,15 +463,15 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
             ),
             // Important Data
 
-            FutureBuilder<List<dynamic>>(
-              future: fetchAllRestaurant(),
+            FutureBuilder(
+              future: this.fetchAllRestaurant(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: restaurantData.length,
+                    itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       // double rating = 1.0;
                       // if (snapshot

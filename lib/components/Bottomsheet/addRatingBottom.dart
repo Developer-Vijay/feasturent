@@ -65,6 +65,7 @@ class _AddRatingPageState extends State<AddRatingPage> {
           flex: 1,
           child: Container(
               alignment: Alignment.topRight,
+              // ignore: deprecated_member_use
               child: FlatButton(
                 onPressed: () {
                   _AddComment();
@@ -215,7 +216,9 @@ class _AddRatingPageState extends State<AddRatingPage> {
       var requestBody = jsonEncode(data);
       print(requestBody);
       var response = await http
-          .post(COMMON_API + 'ratingReview', body: requestBody, headers: {
+          .post(
+            Uri.parse( COMMON_API + 'ratingReview')
+           , body: requestBody, headers: {
         "authorization": authorization,
         "refreshToken": refreshToken,
         "Content-Type": "application/json"

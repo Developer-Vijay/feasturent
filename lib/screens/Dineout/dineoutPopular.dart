@@ -47,24 +47,27 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
   int status = 1;
   var responseData1;
   // ignore: missing_return
-  Future<List> getpopulardineouts() async {
+  getpopulardineouts() async {
     fetchDineoutShared();
 
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
-
-    var response = await http.get(APP_ROUTES + 'popularDineout?limit=null');
-
-    if (response.statusCode == 200) {
-      responseData1 = json.decode(response.body)['data'];
+    return popluardineoutmemoizer.runOnce(() async {
       print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
 
-      return responseData1;
-    } else if (response.statusCode == 204) {
-      responseData1 = [];
-      return responseData1;
-    }
+      var response =
+          await http.get(Uri.parse(APP_ROUTES + 'popularDineout?limit=null'));
+
+      if (response.statusCode == 200) {
+        responseData1 = json.decode(response.body)['data'];
+        print(
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        return responseData1;
+      } else if (response.statusCode == 204) {
+        responseData1 = [];
+        return responseData1;
+      }
+    });
   }
 
   @override

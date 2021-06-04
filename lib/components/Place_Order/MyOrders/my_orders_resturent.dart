@@ -75,12 +75,13 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
     _authorization = prefs.getString('sessionToken');
     String _refreshtoken = prefs.getString('refreshToken');
 
-    var result = await http
-        .get(APP_ROUTES + 'userOrders' + '?key=BYUSER&id=$userid2', headers: {
-      "Content-type": "application/json",
-      "authorization": _authorization,
-      "refreshtoken": _refreshtoken,
-    });
+    var result = await http.get(
+        Uri.parse(APP_ROUTES + 'userOrders' + '?key=BYUSER&id=$userid2'),
+        headers: {
+          "Content-type": "application/json",
+          "authorization": _authorization,
+          "refreshtoken": _refreshtoken,
+        });
     ordersData = json.decode(result.body)['data'];
     print(ordersData);
     datalength = ordersData.length;
@@ -172,7 +173,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                   ),
                 ),
                 actions: [
-                  FlatButton(
+                  TextButton(
                     child: Text("Done"),
                     onPressed: () async {
                       if (canceldata == null) {
@@ -186,7 +187,6 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                         _authorization = prefs.getString('sessionToken');
                         _authorization = prefs.getString('sessionToken');
                         String _refreshtoken = prefs.getString('refreshToken');
-
                         print(
                             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
                         var response = await http.get(

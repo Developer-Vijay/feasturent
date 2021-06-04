@@ -67,7 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<dynamic>> fetchwelcomeBanner() async {
     try {
       var result = await http
-          .get(APP_ROUTES + 'utilities' + '?key=BYFOR&for=welcomePopup');
+          .get(
+            Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR&for=welcomePopup')
+            );
       print(_authorization);
       homeBanner = json.decode(result.body)['data'];
       if (result.statusCode == 200) {
@@ -103,11 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => AlertDialog(
               title: Text("Do you really want to exit"),
               actions: [
-                FlatButton(
+                TextButton(
                   child: Text("No"),
                   onPressed: () => Navigator.pop(context, false),
                 ),
-                FlatButton(
+                TextButton(
                   child: Text("Yes"),
                   onPressed: () {
                     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
@@ -118,7 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   int _page;
-  List<Widget> tabPages = [
+  List
+  <Widget> 
+  tabPages = [
     HomePageBody(),
     OfferPageScreen(),
     DineoutHomePage(),
@@ -270,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get users form server");
 
       var response = await http.get(
-          USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),
+      Uri.parse(USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),) ,   
           headers: {
             "authorization": _authorization,
             "refreshtoken": _refreshtoken,
@@ -515,49 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             appBar: _buildAppBar(_page),
-            body:
-                // Stack(
-                //   children: <Widget>[
-                //     new Offstage(
-                //       offstage: _page != 0,
-                //       child: new TickerMode(
-                //           enabled: _page == 0, child: HomePageBody() //MainScreen(),
-                //           ),
-                //     ),
-                //     new Offstage(
-                //       offstage: _page != 1,
-                //       child: new TickerMode(
-                //         enabled: _page == 1,
-                //         child: OfferPageScreen(),
-                //       ),
-                //     ),
-                //     new Offstage(
-                //       offstage: _page != 2,
-                //       child: new TickerMode(
-                //         enabled: _page == 2,
-                //         child: DineoutHomePage(),
-                //       ),
-                //     ),
-                //     new Offstage(
-                //       offstage: _page != 3,
-                //       child: new TickerMode(
-                //         enabled: _page == 3,
-                //         child: UserProfilePage(),
-                //       ),
-                //     ),
-                //   ],
-                // )
-
-                tabPages[_page]
-            // IndexedStack(
-
-            //   children: [
-            //     HomePageBody(),
-            //     OfferPageScreen(),
-            //     DineoutHomePage(),
-            //     UserProfilePage(),
-            //   ],
-            // )
+            body:tabPages[_page]
             ),
       ),
     );

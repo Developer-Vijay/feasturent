@@ -44,11 +44,15 @@ class _CollectionsState extends State<Collections> {
 
   var responseData;
   // ignore: missing_return
-  Future<List> getdineouts() async {
+  getdineouts() async {
     fetchDineoutShared();
+            return collectionmemoizer.runOnce(() async {
+
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineout");
-    var response = await http.get(APP_ROUTES + 'dineout' + '?key=ALL');
+    var response = await http.get(
+      Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
+      );
     if (response.statusCode == 200) {
       responseData = json.decode(response.body)['data'];
       print(
@@ -59,7 +63,7 @@ class _CollectionsState extends State<Collections> {
       responseData = [];
       return responseData;
     }
-  }
+  });}
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +136,6 @@ class _CollectionsState extends State<Collections> {
                                     onTap: () async {
                                       final SharedPreferences cart =
                                           await SharedPreferences.getInstance();
-
                                       var dataAddtoList = snapshot.data[index];
                                       var newdata = json.encode(dataAddtoList);
                                       if (idDataList.contains(snapshot

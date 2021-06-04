@@ -16,6 +16,7 @@ class CategoriesList extends StatefulWidget {
   @override
   _CategoriesListState createState() => _CategoriesListState();
 }
+  var catdata;
 
 class _CategoriesListState extends State<CategoriesList> {
   final AsyncMemoizer _memoizer = AsyncMemoizer();
@@ -25,29 +26,18 @@ class _CategoriesListState extends State<CategoriesList> {
     super.initState();
   }
 
-// @override
-// void didUpdateWidget(FutureBuilder<T> oldWidget) {
-//   super.didUpdateWidget(oldWidget);
-//   if (oldWidget.future != widget.future) {
-//     if (_activeCallbackIdentity != null) {
-//       _unsubscribe();
-//       _snapshot = _snapshot.inState(ConnectionState.none);
-//     }
-//     _subscribe();
-//   }
-// }
+fetchCategories() async {
+            return categorymemoizer.runOnce(() async {
 
-  var data;
-  fetchCategories() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  hitting api category");
 
-    return this._memoizer.runOnce(() async {
-      var result = await http.get(APP_ROUTES + 'getCategories?key=ALL');
-      data = json.decode(result.body)['data'];
-      return data;
-    });
-  }
+    var result = await http.get(
+      Uri.parse(APP_ROUTES + 'getCategories?key=ALL')
+      );
+    catdata = json.decode(result.body)['data'];
+    return catdata;
+  });}
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +59,14 @@ class _CategoriesListState extends State<CategoriesList> {
             ),
             Spacer(),
             Container(
-                child: FlatButton(
+                child: TextButton(
                     onPressed: () {
-                      if (data != null) {
+                      if (catdata != null) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  ViewAllCategory(categoryData: data),
+                                  ViewAllCategory(categoryData: catdata),
                             ));
                       }
                     },

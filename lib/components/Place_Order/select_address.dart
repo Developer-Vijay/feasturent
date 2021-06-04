@@ -67,7 +67,9 @@ class _SelectAddressState extends State<SelectAddress> {
     String _refreshtoken = prefs.getString('refreshToken');
 
     var response =
-        await http.delete(USER_API + 'deleteOrderAdress/$addressid', headers: {
+        await http.delete(
+          Uri.parse(USER_API + 'deleteOrderAdress/$addressid')
+          , headers: {
       "Content-type": "application/json",
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
@@ -119,7 +121,8 @@ class _SelectAddressState extends State<SelectAddress> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getorderaddress");
     var response = await http.get(
-        USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid',
+      Uri.parse( USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid')
+       ,
         headers: {
           "Content-type": "application/json",
           "authorization": _authorization,
@@ -173,7 +176,8 @@ class _SelectAddressState extends State<SelectAddress> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getorderaddress");
     var response = await http.get(
-        USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid',
+      Uri.parse(  USER_API + 'getOrderAddress' + '?key=BYUSERID&id=$userid')
+      ,
         headers: {
           "Content-type": "application/json",
           "authorization": _authorization,
