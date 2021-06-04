@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'category_related_resturent.dart';
+import 'package:async/async.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({
@@ -17,19 +18,35 @@ class CategoriesList extends StatefulWidget {
 }
 
 class _CategoriesListState extends State<CategoriesList> {
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
   @override
   void initState() {
     super.initState();
   }
 
+// @override
+// void didUpdateWidget(FutureBuilder<T> oldWidget) {
+//   super.didUpdateWidget(oldWidget);
+//   if (oldWidget.future != widget.future) {
+//     if (_activeCallbackIdentity != null) {
+//       _unsubscribe();
+//       _snapshot = _snapshot.inState(ConnectionState.none);
+//     }
+//     _subscribe();
+//   }
+// }
+
   var data;
-  Future<List<dynamic>> fetchCategories() async {
+  fetchCategories() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  hitting api category");
 
-    var result = await http.get(APP_ROUTES + 'getCategories?key=ALL');
-    data = json.decode(result.body)['data'];
-    return data;
+    return this._memoizer.runOnce(() async {
+      var result = await http.get(APP_ROUTES + 'getCategories?key=ALL');
+      data = json.decode(result.body)['data'];
+      return data;
+    });
   }
 
   @override
@@ -84,8 +101,8 @@ class _CategoriesListState extends State<CategoriesList> {
           ],
         ),
         Container(
-            child: FutureBuilder<List<dynamic>>(
-          future: fetchCategories(),
+            child: FutureBuilder(
+          future: this.fetchCategories(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               int legnth;

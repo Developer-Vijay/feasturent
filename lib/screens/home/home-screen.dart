@@ -515,15 +515,50 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             appBar: _buildAppBar(_page),
-            body: IndexedStack(
-              index: _page,
-              children: [
-                HomePageBody(),
-                OfferPageScreen(),
-                DineoutHomePage(),
-                UserProfilePage(),
-              ],
-            )),
+            body:
+                // Stack(
+                //   children: <Widget>[
+                //     new Offstage(
+                //       offstage: _page != 0,
+                //       child: new TickerMode(
+                //           enabled: _page == 0, child: HomePageBody() //MainScreen(),
+                //           ),
+                //     ),
+                //     new Offstage(
+                //       offstage: _page != 1,
+                //       child: new TickerMode(
+                //         enabled: _page == 1,
+                //         child: OfferPageScreen(),
+                //       ),
+                //     ),
+                //     new Offstage(
+                //       offstage: _page != 2,
+                //       child: new TickerMode(
+                //         enabled: _page == 2,
+                //         child: DineoutHomePage(),
+                //       ),
+                //     ),
+                //     new Offstage(
+                //       offstage: _page != 3,
+                //       child: new TickerMode(
+                //         enabled: _page == 3,
+                //         child: UserProfilePage(),
+                //       ),
+                //     ),
+                //   ],
+                // )
+
+                tabPages[_page]
+            // IndexedStack(
+
+            //   children: [
+            //     HomePageBody(),
+            //     OfferPageScreen(),
+            //     DineoutHomePage(),
+            //     UserProfilePage(),
+            //   ],
+            // )
+            ),
       ),
     );
   }

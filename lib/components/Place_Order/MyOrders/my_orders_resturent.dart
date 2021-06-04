@@ -132,7 +132,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
   //   }
   // }
 
-  Future cancelOrder(index) async {
+  Future cancelOrder(data) async {
     showDialog(
         context: context,
         builder: (context) {
@@ -175,89 +175,110 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                   FlatButton(
                     child: Text("Done"),
                     onPressed: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      var userid = prefs.getInt('userId');
-                      _authorization = prefs.getString('sessionToken');
-                      _authorization = prefs.getString('sessionToken');
-                      String _refreshtoken = prefs.getString('refreshToken');
+                      if (canceldata == null) {
+                        Fluttertoast.showToast(
+                            msg: "Please select cancel reason");
+                      } else {
+                        print(data['id']);
+                        callingLoader();
+                        final prefs = await SharedPreferences.getInstance();
+                        var userid = prefs.getInt('userId');
+                        _authorization = prefs.getString('sessionToken');
+                        _authorization = prefs.getString('sessionToken');
+                        String _refreshtoken = prefs.getString('refreshToken');
 
-                      print(
-                          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
-                      var response = await http.post(
-                          APP_ROUTES +
-                              'userOrders' +
-                              '?key=BYID&id=${ordersData[index]['id']}',
-                          headers: {
-                            "authorization": _authorization,
-                            "refreshtoken": _refreshtoken,
-                          });
-                      if (response.statusCode == 200) {
-                        if (ordersData[index]['deliveryStatus'] == 'ACCEPTED') {
+                        print(
+                            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  cancel order");
+                        var response = await http.get(
+                            APP_ROUTES +
+                                'userOrders' +
+                                '?key=BYID&id=${data['id']}',
+                            headers: {
+                              "authorization": _authorization,
+                              "refreshtoken": _refreshtoken,
+                            });
+                        print("check order status");
+                        print(response.statusCode);
+                        if (response.statusCode == 200) {
+                          var newdata = json.decode(response.body)['data'];
+                          print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+                          print(newdata);
+                          if (newdata['userOrdersList'][0]['orderStatus'] ==
+                              'ACCEPTED') {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+
+                            Fluttertoast.showToast(
+                                msg:
+                                    "Can't cancel order delivery boy assigned...");
+                          } else {
+                            var response = await http.post(
+                                APP_ROUTES +
+                                    'cancelOrder' +
+                                    '?orderId=${data['id']}&userId=$userid&reason=$canceldata',
+                                headers: {
+                                  "authorization": _authorization,
+                                  "refreshtoken": _refreshtoken,
+                                });
+                            if (response.statusCode == 200) {
+                              Map socketData = {
+                                'iconUrl': '',
+                                'message':
+                                    "Order ${data['id']} has been cancelled",
+                                'theme': 'red',
+                                'userName':
+                                    '${data['VendorInfo']['user']['login']['userName']}'
+                              };
+
+                              socket.emit("pushNotification", socketData);
+
+                              refreshList();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Fluttertoast.showToast(
+                                  msg: "Order has been cancelled");
+                            } else if (response.statusCode == 401) {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.remove(
+                                'name',
+                              );
+                              prefs.remove('sessionToken');
+                              prefs.remove('refreshToken');
+                              prefs.remove('userNumber');
+                              prefs.remove('userProfile');
+                              prefs.remove('customerName');
+                              prefs.remove('userId');
+                              prefs.remove('loginId');
+                              prefs.remove('userEmail');
+                              prefs.remove("loginBy");
+                              takeUser = false;
+                              emailid = null;
+                              photo = null;
+                              userName = null;
+
+                              prefs.setBool("_isAuthenticate", false);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Order Cancellation time is finished");
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              refreshList();
+                            }
+                          }
+                        } else {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                           Fluttertoast.showToast(
                               msg:
-                                  "Can't cancel order delivery boy assigned...");
-                        } else {
-                          var response = await http.post(
-                              APP_ROUTES +
-                                  'cancelOrder' +
-                                  '?orderId=${ordersData[index]['id']}&userId=$userid&reason=$canceldata',
-                              headers: {
-                                "authorization": _authorization,
-                                "refreshtoken": _refreshtoken,
-                              });
-                          if (response.statusCode == 200) {
-                            Map socketData = {
-                              'iconUrl': '',
-                              'message':
-                                  "Order ${ordersData[index]['id']} has been cancelled",
-                              'theme': 'red',
-                              'userName':
-                                  '${ordersData[index]['VendorInfo']['user']['login']['userName']}'
-                            };
-
-                            socket.emit("pushNotification", socketData);
-
-                            refreshList();
-                            Navigator.pop(context);
-
-                            Fluttertoast.showToast(msg: "ordercancelled");
-                          } else if (response.statusCode == 401) {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            prefs.remove(
-                              'name',
-                            );
-                            prefs.remove('sessionToken');
-                            prefs.remove('refreshToken');
-                            prefs.remove('userNumber');
-                            prefs.remove('userProfile');
-                            prefs.remove('customerName');
-                            prefs.remove('userId');
-                            prefs.remove('loginId');
-                            prefs.remove('userEmail');
-                            prefs.remove("loginBy");
-                            takeUser = false;
-                            emailid = null;
-                            photo = null;
-                            userName = null;
-
-                            prefs.setBool("_isAuthenticate", false);
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Order Cancellqation time is Finished");
-                            Navigator.pop(context);
-
-                            refreshList();
-                          }
+                                  "Something went wrong. Can't cancel order now");
                         }
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "Something went wrong. Can't cancel order");
                       }
                     },
                   )
@@ -266,6 +287,22 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
             },
           );
         });
+  }
+
+  callingLoader() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
   }
 
   @override
@@ -776,7 +813,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                                                                 color: Colors.red,
                                                                                 textColor: Colors.white,
                                                                                 onPressed: () {
-                                                                                  cancelOrder(index);
+                                                                                  cancelOrder(snapshot.data[index]);
                                                                                 },
                                                                               )
                                                                             : SizedBox())
@@ -1249,7 +1286,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                                                                   color: Colors.red,
                                                                                   textColor: Colors.white,
                                                                                   onPressed: () {
-                                                                                    cancelOrder(index);
+                                                                                    cancelOrder(snapshot[index]);
                                                                                   },
                                                                                 )
                                                                               : SizedBox())

@@ -190,6 +190,7 @@ class _AddRatingPageState extends State<AddRatingPage> {
     // for name
 
     if (isValidate == true) {
+      callingLoader();
       print("good to go");
       print(inputs);
       var jsonTags = jsonEncode(inputs);
@@ -224,7 +225,8 @@ class _AddRatingPageState extends State<AddRatingPage> {
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
         Navigator.pop(context);
-        Fluttertoast.showToast(msg: "${responseData['message']}");
+        Navigator.pop(context);
+        Fluttertoast.showToast(msg: "Thanks for giving your precious  time");
       } else if (response.statusCode == 401) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove(
@@ -245,16 +247,40 @@ class _AddRatingPageState extends State<AddRatingPage> {
         userName = null;
 
         prefs.setBool("_isAuthenticate", false);
+        Navigator.pop(context);
+        Navigator.pop(context);
 
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
+        Navigator.pop(context);
+        Navigator.pop(context);
+
         print(response.body);
         // var responseData = json.decode(response.body);
         // Fluttertoast.showToast(msg: "${responseData['message']}");
       }
     } else {
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: "Something went wrong...");
+
       print("Error occured");
     }
+  }
+
+  callingLoader() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
   }
 }
