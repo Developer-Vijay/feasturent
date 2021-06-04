@@ -19,11 +19,11 @@ class _ReturentReviewState extends State<ReturentReview> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents Rating ${widget.resturentRatingid}");
 
-    var result = await http.get(
+    var result = await http.get(Uri.parse(
       COMMON_API +
           'ratingReview' +
-          '?key=BYVENDOR&id=${widget.resturentRatingid}',
-    );
+          '?key=BYVENDOR&id=${widget.resturentRatingid}   ',
+    ));
     print(result);
     var data = json.decode(result.body)['data'];
 

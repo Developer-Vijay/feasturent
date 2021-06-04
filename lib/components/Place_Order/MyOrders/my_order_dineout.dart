@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../constants.dart';
 import '../../../shimmer_effect.dart';
@@ -46,17 +45,18 @@ class _MyOrdersDineoutState extends State<MyOrdersDineout> {
                   var data3 = data2.format("\l");
                   var data8 = data2.format("\h:\i \A");
 
-                  int orderyear = int.parse(data4.format('Y'));
-                  int ordermonth = int.parse(data4.format('m'));
-                  int orderday = int.parse(data4.format('d'));
-                  int orderhrs = int.parse(data4.format('H'));
-                  int ordermins = int.parse(data4.format('i'));
+                  // int orderyear = int.parse(data4.format('Y'));
+                  // int ordermonth = int.parse(data4.format('m'));
+                  // int orderday = int.parse(data4.format('d'));
+                  // int orderhrs = int.parse(data4.format('H'));
+                  // int ordermins = int.parse(data4.format('i'));
 
-                  int currentyear = int.parse(currentTime.format('Y'));
-                  int currentmonth = int.parse(currentTime.format('m'));
-                  int currentday = int.parse(currentTime.format('d'));
-                  int currenthrs = int.parse(currentTime.format('H'));
-                  int currentmins = int.parse(currentTime.format('i'));
+                  // // ignore: unused_local_variable
+                  // int currentyear = int.parse(currentTime.format('Y'));
+                  // int currentmonth = int.parse(currentTime.format('m'));
+                  // int currentday = int.parse(currentTime.format('d'));
+                  // int currenthrs = int.parse(currentTime.format('H'));
+                  // int currentmins = int.parse(currentTime.format('i'));
 
                   print("order day = ${data4.format('d')}");
                   print("order months = ${data4.format('m')}");

@@ -2152,7 +2152,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
 
     var response =
-        await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
+        await http.post(
+          Uri.parse( APP_ROUTES + 'itemOrder')
+         , body: requestBody, headers: {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
       "Content-Type": "application/json"
@@ -2243,7 +2245,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
     var response =
-        await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
+        await http.post(
+          Uri.parse(APP_ROUTES + 'itemOrder')
+          , body: requestBody, headers: {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
       "Content-Type": "application/json"
@@ -2347,7 +2351,9 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
     var response =
-        await http.post(APP_ROUTES + 'itemOrder', body: requestBody, headers: {
+        await http.post(
+          Uri.parse(APP_ROUTES + 'itemOrder')
+          , body: requestBody, headers: {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
       "Content-Type": "application/json"

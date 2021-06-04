@@ -64,6 +64,7 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
     }
   }
 
+  // ignore: deprecated_member_use
   List<bool> inputs = new List<bool>();
   fun(value) {
     setState(() {

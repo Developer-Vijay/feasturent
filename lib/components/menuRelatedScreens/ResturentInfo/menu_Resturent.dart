@@ -52,6 +52,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
         status = false;
       });
       WidgetsBinding.instance.addPostFrameCallback(
+          // ignore: deprecated_member_use
           (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
     } else {
       setState(() {
@@ -59,6 +60,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
       });
       if (status == false) {
         WidgetsBinding.instance.addPostFrameCallback(
+            // ignore: deprecated_member_use
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
@@ -638,7 +640,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                         content: Text(
                                                             "Do you want to order food from different resturent"),
                                                         actions: <Widget>[
-                                                          FlatButton(
+                                                          TextButton(
                                                             child: Text(
                                                               "No",
                                                               style: TextStyle(
@@ -650,7 +652,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                                                   context);
                                                             },
                                                           ),
-                                                          FlatButton(
+                                                          TextButton(
                                                             child: Text(
                                                               "Yes",
                                                               style: TextStyle(
@@ -1183,7 +1185,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                   content: Text(
                       "Do you want to order food from different resturent"),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         "No",
                         style: TextStyle(color: Colors.black),
@@ -1192,7 +1194,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                         Navigator.pop(context);
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         "Yes",
                         style: TextStyle(color: Colors.black),

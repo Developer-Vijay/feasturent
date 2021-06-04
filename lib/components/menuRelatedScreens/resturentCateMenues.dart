@@ -77,6 +77,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
         status = false;
       });
       WidgetsBinding.instance.addPostFrameCallback(
+          // ignore: deprecated_member_use
           (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
     } else {
       setState(() {
@@ -84,6 +85,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
       });
       if (status == false) {
         WidgetsBinding.instance.addPostFrameCallback(
+            // ignore: deprecated_member_use
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
@@ -597,7 +599,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                                 "Do you want to order food from different resturent"),
                                                                         actions: <
                                                                             Widget>[
-                                                                          FlatButton(
+                                                                          TextButton(
                                                                             child:
                                                                                 Text(
                                                                               "No",
@@ -608,7 +610,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                                               Navigator.pop(context);
                                                                             },
                                                                           ),
-                                                                          FlatButton(
+                                                                          TextButton(
                                                                             child:
                                                                                 Text(
                                                                               "Yes",
@@ -1093,7 +1095,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                   content: Text(
                       "Do you want to order food from different resturent"),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         "No",
                         style: TextStyle(color: Colors.black),
@@ -1102,7 +1104,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                         Navigator.pop(context);
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         "Yes",
                         style: TextStyle(color: Colors.black),

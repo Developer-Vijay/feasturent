@@ -122,6 +122,7 @@ class _OfferForPlaceOrderState extends State<OfferForPlaceOrder> {
                                   controller.clear();
                                 }),
                           ),
+                          // ignore: deprecated_member_use
                           FlatButton(
                               color: Colors.green,
                               onPressed: () async {
@@ -155,9 +156,10 @@ class _OfferForPlaceOrderState extends State<OfferForPlaceOrder> {
                                   String _refreshtoken =
                                       prefs.getString('refreshToken');
                                   var response = await http.get(
-                                      APP_ROUTES +
+                                    Uri.parse(APP_ROUTES +
                                           'checkApplyOffer' +
-                                          '?userId=${widget.userid}&coupon=${controller.text}',
+                                          '?userId=${widget.userid}&coupon=${controller.text}')
+                                      ,
                                       headers: {
                                         "authorization": _authorization,
                                         "refreshtoken": _refreshtoken,

@@ -15,6 +15,7 @@ class CategoriesList extends StatefulWidget {
   @override
   _CategoriesListState createState() => _CategoriesListState();
 }
+  var catdata;
 
 class _CategoriesListState extends State<CategoriesList> {
   @override
@@ -22,15 +23,18 @@ class _CategoriesListState extends State<CategoriesList> {
     super.initState();
   }
 
-  var data;
-  Future<List<dynamic>> fetchCategories() async {
+fetchCategories() async {
+            return categorymemoizer.runOnce(() async {
+
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  hitting api category");
 
-    var result = await http.get(APP_ROUTES + 'getCategories?key=ALL');
-    data = json.decode(result.body)['data'];
-    return data;
-  }
+    var result = await http.get(
+      Uri.parse(APP_ROUTES + 'getCategories?key=ALL')
+      );
+    catdata = json.decode(result.body)['data'];
+    return catdata;
+  });}
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +56,14 @@ class _CategoriesListState extends State<CategoriesList> {
             ),
             Spacer(),
             Container(
-                child: FlatButton(
+                child: TextButton(
                     onPressed: () {
-                      if (data != null) {
+                      if (catdata != null) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  ViewAllCategory(categoryData: data),
+                                  ViewAllCategory(categoryData: catdata),
                             ));
                       }
                     },
@@ -84,8 +88,8 @@ class _CategoriesListState extends State<CategoriesList> {
           ],
         ),
         Container(
-            child: FutureBuilder<List<dynamic>>(
-          future: fetchCategories(),
+            child: FutureBuilder(
+          future: this.fetchCategories(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               int legnth;

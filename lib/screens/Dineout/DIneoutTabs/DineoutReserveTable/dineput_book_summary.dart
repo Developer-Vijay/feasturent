@@ -317,7 +317,9 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  book table");
 
       var response =
-          await http.post(APP_ROUTES + 'bookTable', body: bookbody, headers: {
+          await http.post(
+            Uri.parse(  APP_ROUTES + 'bookTable')
+          , body: bookbody, headers: {
         "Content-Type": "application/json",
       });
       var responseData = jsonDecode(response.body);

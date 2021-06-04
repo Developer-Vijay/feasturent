@@ -36,7 +36,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(top: 4),
+              padding: EdgeInsets.only(top: 2),
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Color(0xffF8F9FE),
@@ -402,7 +402,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         builder: (context) => AlertDialog(
                               title: Text("Do you really want to logout"),
                               actions: [
-                                FlatButton(
+                                TextButton(
                                   child: Text("Yes"),
                                   onPressed: () async {
                                     setState(() {
@@ -448,7 +448,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                             builder: (context) => LoginPage()));
                                   },
                                 ),
-                                FlatButton(
+                                TextButton(
                                   child: Text("No"),
                                   onPressed: () {
                                     Navigator.pop(context);

@@ -18,11 +18,14 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
   int status = 1;
   var responseData1;
   // ignore: missing_return
-  Future<List> getpopulardineouts() async {
+   getpopulardineouts() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
+        return collectionmemoizer.runOnce(() async {
 
-    var response = await http.get(APP_ROUTES + 'popularDineout?limit=null');
+    var response = await http.get(
+      Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
+      );
 
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
@@ -34,7 +37,7 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
       responseData1 = [];
       return responseData1;
     }
-  }
+  });}
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +63,8 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
             Container(
                 margin: EdgeInsets.only(top: 8, left: 15, bottom: 5),
                 height: size.height * 0.20,
-                child: FutureBuilder<List>(
-                  future: getpopulardineouts(),
+                child: FutureBuilder(
+                  future: this.getpopulardineouts(),
 // ignore: missing_return
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {

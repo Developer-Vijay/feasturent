@@ -116,7 +116,8 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get dineout search");
 
     var result = await http.get(
-      APP_ROUTES + 'dineout?key=BYID&id=$id',
+      Uri.parse(APP_ROUTES + 'dineout?key=BYID&id=$id')
+      ,
     );
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");

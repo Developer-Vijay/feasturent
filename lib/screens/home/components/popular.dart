@@ -9,6 +9,7 @@ import '../slider.dart';
 import 'ViewAllPopular.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'ontap_offer.dart';
+  var popdata;
 
 int checkDataLenght;
 
@@ -23,28 +24,30 @@ class _PopularListState extends State<PopularList> {
     super.initState();
   }
 
-  var data;
-  Future<List<dynamic>> fetchPopular() async {
+ fetchPopular() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getpopular menues");
+        return popularMenumemoizer.runOnce(() async {
 
-    var result = await http.get(APP_ROUTES + 'getPopularMenues');
+    var result = await http.get(Uri.parse(APP_ROUTES + 'getPopularMenues'));
     if (result.statusCode == 200) {
-      data = json.decode(result.body)['data'];
+      popdata = json.decode(result.body)['data'];
       print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      return data;
+      return popdata;
     } else {
-      data = [];
-      return data;
+      popdata = [];
+      return popdata;
     }
-  }
+  });}
 
   var sliderOffers;
 
   // ignore: missing_return
-  Future<List<dynamic>> fetchHomeSlider() async {
-    var result = await http
-        .get(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider');
+fetchHomeSlider() async {
+            return homeslidermemoizer.runOnce(() async {
+
+    var result = await http.get(
+        Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider'));
     sliderOffers = json.decode(result.body)['data'];
     if (sliderOffers.isEmpty) {
       print("data not here");
@@ -54,7 +57,7 @@ class _PopularListState extends State<PopularList> {
         return sliderOffers;
       }
     }
-  }
+  });}
 
   int checher;
 
@@ -90,7 +93,7 @@ class _PopularListState extends State<PopularList> {
             Spacer(),
             Container(
                 alignment: Alignment.topRight,
-                child: FlatButton(
+                child: TextButton(
                   onPressed: () {
                     // showModalBottomSheet(
                     //     enableDrag: true,
@@ -100,12 +103,12 @@ class _PopularListState extends State<PopularList> {
                     //         height: size.height * 0.8,
                     //         child: AddRatingPage(data: data)));
 
-                    if (data != null) {
+                    if (popdata != null) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ViewAllPopular(
-                                    popularData: data,
+                                    popularData: popdata,
                                   )));
                     }
                   },
@@ -132,8 +135,8 @@ class _PopularListState extends State<PopularList> {
         ),
         Container(
             height: size.height * 0.14,
-            child: FutureBuilder<List<dynamic>>(
-              future: fetchPopular(),
+            child: FutureBuilder(
+              future: this.fetchPopular(),
               builder: (context, snap) {
                 if (snap.hasData) {
                   int legnth;
@@ -331,8 +334,8 @@ class _PopularListState extends State<PopularList> {
             : Container(
                 margin: EdgeInsets.all(16),
                 height: size.height * 0.18,
-                child: FutureBuilder<List<dynamic>>(
-                  future: fetchHomeSlider(),
+                child: FutureBuilder(
+                  future: this.fetchHomeSlider(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return snapshot.data.length >= 2
