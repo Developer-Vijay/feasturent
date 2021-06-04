@@ -122,14 +122,14 @@ class _WishlistState extends State<Wishlist> {
                                         ),
                                         placeholder: (context, url) =>
                                             Image.asset(
-                                          "assets/images/feasturenttemp.jpeg",
+                                          "assets/images/defaultdineout.jpg",
                                           fit: BoxFit.cover,
                                         ),
                                         errorWidget: (context, url, error) =>
                                             Icon(Icons.error),
                                       )
                                     : Image.asset(
-                                        "assets/images/feasturenttemp.jpeg",
+                                        "assets/images/defaultdineout.jpg",
                                         height: size.height * 0.35,
                                         width: size.height * 0.35,
                                         fit: BoxFit.cover,
@@ -369,7 +369,7 @@ class _WishlistState extends State<Wishlist> {
                                                                           url) =>
                                                                       Image
                                                                           .asset(
-                                                                    "assets/images/feasturenttemp.jpeg",
+                                                                    "assets/images/defaultrestaurent.png",
                                                                     height: size
                                                                             .height *
                                                                         0.18,
@@ -386,7 +386,7 @@ class _WishlistState extends State<Wishlist> {
                                                                           .error),
                                                                 )
                                                               : Image.asset(
-                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                  "assets/images/defaultrestaurent.png",
                                                                   height:
                                                                       size.height *
                                                                           0.18,

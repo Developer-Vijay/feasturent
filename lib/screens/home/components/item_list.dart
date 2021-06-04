@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'category_related_resturent.dart';
+import 'package:async/async.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({
@@ -18,6 +19,8 @@ class CategoriesList extends StatefulWidget {
   var catdata;
 
 class _CategoriesListState extends State<CategoriesList> {
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
   @override
   void initState() {
     super.initState();

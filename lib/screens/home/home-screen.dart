@@ -520,27 +520,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             appBar: _buildAppBar(_page),
             body:tabPages[_page]
-             
-              //  HomePageBody(),
-                // OfferPageScreen(),
-                // DineoutHomePage(),
-                // UserProfilePage(),
-            ),)
+            ),
+      ),
     );
-            // IndexedStack(
-              // index: _page,
-            //   ListView(
-                
-            //   children: [
-            //     HomePageBody(),
-            //     OfferPageScreen(),
-            //     DineoutHomePage(),
-            //     UserProfilePage(),
-            //   ],
-            // // )
-            //   )
-            
-    //   ),
-    // );
   }
 }

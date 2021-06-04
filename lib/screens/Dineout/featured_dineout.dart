@@ -26,11 +26,9 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
     getDineoutBanner();
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
-
     var response = await http.get(
       Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
      );
-
     if (response.statusCode == 200) {
       responseData1 = json.decode(response.body)['data'];
       print(
@@ -72,44 +70,41 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20, bottom: 5, top: 20),
-              child: Text(
-                "Featured Dineout",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: kTextColor,
-                    fontSize: size.height * 0.025),
-              ),
-            ),
-          ],
-        ),
-        Container(
-            height: size.height * 0.31,
-            child: FutureBuilder(
-              future: this.getpopulardineouts(),
+        child: Container(
+            child: FutureBuilder<List>(
+      future: getpopulardineouts(),
 // ignore: missing_return
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data.isEmpty
-                      ? SizedBox(
-                          child: Center(
-                            child: Text("No data Available"),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data.isEmpty
+              ? SizedBox()
+              : Container(
+                  height: size.height * 0.36,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, bottom: 5, top: 20),
+                            child: Text(
+                              "Featured Dineout",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: kTextColor,
+                                  fontSize: size.height * 0.025),
+                            ),
                           ),
-                        )
-                      : Container(
-                          child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Padding(
+                        ],
+                      ),
+                      Expanded(
+                        child: Container(
+                            height: size.height * 0.31,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return Padding(
                                   padding:
                                       const EdgeInsets.only(top: 4.0, left: 15),
                                   child: Container(
@@ -227,37 +222,62 @@ class _FeaturedDineoutState extends State<FeaturedDineout> {
                                               ],
                                             )),
                                       )),
-                                ),
-                              ],
-                            );
-                          },
-                        ));
-                } else {
-                  return Container(
+                                );
+                              },
+                            )),
+                      ),
+                    ],
+                  ),
+                );
+        } else {
+          return Container(
+            height: size.height * 0.36,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, bottom: 5, top: 20),
+                      child: Text(
+                        "Featured Dineout",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: kTextColor,
+                            fontSize: size.height * 0.025),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                      height: size.height * 0.31,
                       child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 4.0, left: 15),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300],
-                          highlightColor: Colors.grey[100],
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.white),
-                            height: size.height * 0.27,
-                            width: size.width * 0.6,
-                          ),
-                        ),
-                      );
-                    },
-                  ));
-                }
-              },
-            )),
-      ],
-    ));
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 4,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 4.0, left: 15),
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey[300],
+                              highlightColor: Colors.grey[100],
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white),
+                                height: size.height * 0.27,
+                                width: size.width * 0.6,
+                              ),
+                            ),
+                          );
+                        },
+                      )),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    )));
   }
 }

@@ -99,13 +99,19 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                                                               url) =>
                                                           Center(
                                                               child:
-                                                                  CircularProgressIndicator()),
+                                                                  Image.asset(
+                                                        "assets/images/defaultrestaurent.png",
+                                                        height:
+                                                            size.height * 0.18,
+                                                        width: size.width * 0.3,
+                                                        fit: BoxFit.cover,
+                                                      )),
                                                       errorWidget: (context,
                                                               url, error) =>
                                                           Icon(Icons.error),
                                                     )
                                                   : Image.asset(
-                                                      "assets/images/feasturenttemp.jpeg",
+                                                      "assets/images/defaultrestaurent.png",
                                                       height:
                                                           size.height * 0.18,
                                                       width: size.width * 0.3,

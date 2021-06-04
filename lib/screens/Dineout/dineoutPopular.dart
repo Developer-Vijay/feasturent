@@ -74,202 +74,243 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                "Popular Dineout Areas",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: kTextColor,
-                    fontSize: size.height * 0.025),
-              ),
-            ),
-            Spacer(),
-            Container(
-                child: TextButton(
-                    onPressed: () async {
-                      if (responseData1 != null) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ViewAllPopular(data: responseData1),
-                            ));
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 15),
-                          child: Text(
-                            "View All",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: kPrimaryColor),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_right_rounded,
-                          color: kSecondaryTextColor,
-                        ),
-                      ],
-                    )))
-          ],
-        ),
-        Container(
-            height: size.height * 0.24,
-            child: FutureBuilder(
-              future: this.getpopulardineouts(),
+        child: Container(
+            child: FutureBuilder<List>(
+      future: getpopulardineouts(),
 // ignore: missing_return
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data.isEmpty
-                      ? SizedBox(
-                          child: Center(
-                            child: Text("No data Available"),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data.isEmpty
+              ? SizedBox()
+              : Container(
+                  height: size.height * 0.30,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Text(
+                              "Popular Dineout Areas",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: kTextColor,
+                                  fontSize: size.height * 0.025),
+                            ),
                           ),
-                        )
-                      : Container(
-                          child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 4.0, left: 15),
-                              child: Container(
-                                  height: size.height * 0.24,
-                                  width: size.width * 0.32,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      final SharedPreferences cart =
-                                          await SharedPreferences.getInstance();
+                          Spacer(),
+                          Container(
+                              child: FlatButton(
+                                  onPressed: () async {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ViewAllPopular(
+                                              data: snapshot.data),
+                                        ));
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: Text(
+                                          "View All",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: kPrimaryColor),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_right_rounded,
+                                        color: kSecondaryTextColor,
+                                      ),
+                                    ],
+                                  )))
+                        ],
+                      ),
+                      Expanded(
+                        child: Container(
+                            height: size.height * 0.24,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 4.0, left: 15),
+                                  child: Container(
+                                      height: size.height * 0.24,
+                                      width: size.width * 0.32,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          final SharedPreferences cart =
+                                              await SharedPreferences
+                                                  .getInstance();
 
-                                      var dataAddtoList =
-                                          snapshot.data[index]['VendorInfo'];
-                                      var newdata = json.encode(dataAddtoList);
-                                      if (idDataList.contains(snapshot
-                                          .data[index]['VendorInfo']['id']
-                                          .toString())) {
-                                        print("removing adding dinout");
-                                        int k = idDataList.indexOf(snapshot
-                                            .data[index]['VendorInfo']['id']
-                                            .toString());
-                                        datadine.removeAt(k);
-                                        idDataList.removeAt(k);
+                                          var dataAddtoList = snapshot
+                                              .data[index]['VendorInfo'];
+                                          var newdata =
+                                              json.encode(dataAddtoList);
+                                          if (idDataList.contains(snapshot
+                                              .data[index]['VendorInfo']['id']
+                                              .toString())) {
+                                            print("removing adding dinout");
+                                            int k = idDataList.indexOf(snapshot
+                                                .data[index]['VendorInfo']['id']
+                                                .toString());
+                                            datadine.removeAt(k);
+                                            idDataList.removeAt(k);
 
-                                        idDataList.add(snapshot.data[index]
-                                                ['VendorInfo']['id']
-                                            .toString());
-                                        datadine.add(newdata);
-                                        cart.setStringList(
-                                            'recommendDineout', datadine);
-                                        cart.setStringList(
-                                            'idDineout', idDataList);
-                                      } else {
-                                        idDataList.add(snapshot.data[index]
-                                                ['VendorInfo']['id']
-                                            .toString());
-                                        datadine.add(newdata);
-                                        cart.setStringList(
-                                            'recommendDineout', datadine);
-                                        cart.setStringList(
-                                            'idDineout', idDataList);
-                                      }
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DineoutDetailPage(
-                                                    data: snapshot.data[index]
-                                                        ['VendorInfo'],
-                                                  )));
-                                    },
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Stack(
-                                          children: [
-                                            snapshot.data[index]['VendorInfo']
-                                                        ['user']['profile'] !=
-                                                    null
-                                                ? CachedNetworkImage(
-                                                    imageUrl: S3_BASE_PATH +
-                                                        snapshot.data[index]
-                                                                ['VendorInfo']
-                                                            ['user']['profile'],
-                                                    fit: BoxFit.cover,
-                                                    height: size.height * 0.24,
-                                                    width: size.width * 0.32,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        Center(
-                                                            child:
-                                                                CircularProgressIndicator()),
-                                                    errorWidget:
-                                                        (context, url, error) =>
+                                            idDataList.add(snapshot.data[index]
+                                                    ['VendorInfo']['id']
+                                                .toString());
+                                            datadine.add(newdata);
+                                            cart.setStringList(
+                                                'recommendDineout', datadine);
+                                            cart.setStringList(
+                                                'idDineout', idDataList);
+                                          } else {
+                                            idDataList.add(snapshot.data[index]
+                                                    ['VendorInfo']['id']
+                                                .toString());
+                                            datadine.add(newdata);
+                                            cart.setStringList(
+                                                'recommendDineout', datadine);
+                                            cart.setStringList(
+                                                'idDineout', idDataList);
+                                          }
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DineoutDetailPage(
+                                                        data:
+                                                            snapshot.data[index]
+                                                                ['VendorInfo'],
+                                                      )));
+                                        },
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            child: Stack(
+                                              children: [
+                                                snapshot.data[index]
+                                                                ['VendorInfo'][
+                                                            'user']['profile'] !=
+                                                        null
+                                                    ? CachedNetworkImage(
+                                                        imageUrl: S3_BASE_PATH +
+                                                            snapshot.data[index]
+                                                                    [
+                                                                    'VendorInfo']
+                                                                [
+                                                                'user']['profile'],
+                                                        fit: BoxFit.cover,
+                                                        height:
+                                                            size.height * 0.24,
+                                                        width:
+                                                            size.width * 0.32,
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            Center(
+                                                                child:
+                                                                    Image.asset(
+                                                          "assets/images/defaultdineout.jpg",
+                                                          height: size.height *
+                                                              0.24,
+                                                          width:
+                                                              size.width * 0.32,
+                                                          fit: BoxFit.cover,
+                                                        )),
+                                                        errorWidget: (context,
+                                                                url, error) =>
                                                             Icon(Icons.error),
-                                                  )
-                                                : Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
-                                                    height: size.height * 0.24,
-                                                    width: size.width * 0.32,
-                                                    fit: BoxFit.cover,
+                                                      )
+                                                    : Image.asset(
+                                                        "assets/images/defaultdineout.jpg",
+                                                        height:
+                                                            size.height * 0.24,
+                                                        width:
+                                                            size.width * 0.32,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Container(
+                                                    height: size.height * 0.05,
+                                                    width: size.width * 1,
+                                                    color: Colors.black
+                                                        .withOpacity(0.7),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 5),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          snapshot.data[index][
+                                                                          'VendorInfo']
+                                                                      [
+                                                                      'name'] !=
+                                                                  null
+                                                              ? Text(
+                                                                  capitalize(
+                                                                      "${snapshot.data[index]['VendorInfo']['name']}"),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          size.height *
+                                                                              0.025,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .white),
+                                                                )
+                                                              : Text("Name"),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
-                                            Align(
-                                              alignment: Alignment.bottomLeft,
-                                              child: Container(
-                                                height: size.height * 0.05,
-                                                width: size.width * 1,
-                                                color: Colors.black
-                                                    .withOpacity(0.7),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 5),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      snapshot.data[index][
-                                                                      'VendorInfo']
-                                                                  ['name'] !=
-                                                              null
-                                                          ? Text(
-                                                              capitalize(
-                                                                  "${snapshot.data[index]['VendorInfo']['name']}"),
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      size.height *
-                                                                          0.025,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white),
-                                                            )
-                                                          : Text("Name"),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  )),
-                            );
-                          },
-                        ));
-                } else {
-                  return Container(
+                                                )
+                                              ],
+                                            )),
+                                      )),
+                                );
+                              },
+                            )),
+                      ),
+                    ],
+                  ),
+                );
+        } else {
+          return Container(
+            height: size.height * 0.30,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        "Popular Dineout Areas",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: kTextColor,
+                            fontSize: size.height * 0.025),
+                      ),
+                    ),
+                    Spacer(),
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    height: size.height * 0.24,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: 5,
@@ -291,11 +332,13 @@ class _PopularDininingListsState extends State<PopularDininingLists> {
                         );
                       },
                     ),
-                  );
-                }
-              },
-            )),
-      ],
-    ));
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    )));
   }
 }

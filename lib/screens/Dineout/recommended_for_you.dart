@@ -65,38 +65,37 @@ class _RecommendedForUState extends State<RecommendedForU> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20, bottom: 10),
-              child: Text(
-                "Recommended For You",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: kTextColor,
-                    fontSize: size.height * 0.025),
-              ),
-            ),
-          ],
-        ),
-        Container(
-            height: size.height * 0.26,
+        child: Container(
             child: FutureBuilder<List>(
-              future: getpopulardineouts(),
+      future: getpopulardineouts(),
 // ignore: missing_return
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data.isEmpty
-                      ? SizedBox(
-                          child: Center(
-                            child: Text("No data Available"),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data.isEmpty
+              ? SizedBox()
+              : Container(
+                  height: size.height * 0.32,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 20, bottom: 10),
+                            child: Text(
+                              "Recommended For You",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: kTextColor,
+                                  fontSize: size.height * 0.025),
+                            ),
                           ),
-                        )
-                      : Container(
-                          child: ListView.builder(
+                        ],
+                      ),
+                      Expanded(
+                          child: Container(
+                        height: size.height * 0.26,
+                        child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
@@ -217,33 +216,59 @@ class _RecommendedForUState extends State<RecommendedForU> {
                                   )),
                             );
                           },
-                        ));
-                } else {
-                  return Container(
-                      child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 4.0, left: 15),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300],
-                          highlightColor: Colors.grey[100],
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.white),
-                            height: size.height * 0.24,
-                            width: size.width * 0.4,
-                          ),
                         ),
-                      );
-                    },
-                  ));
-                }
-              },
-            )),
-      ],
-    ));
+                      )),
+                    ],
+                  ),
+                );
+        } else {
+          return Container(
+              height: size.height * 0.32,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, bottom: 10),
+                        child: Text(
+                          "Recommended For You",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: kTextColor,
+                              fontSize: size.height * 0.025),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: size.height * 0.26,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 4,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 4.0, left: 15),
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey[300],
+                              highlightColor: Colors.grey[100],
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white),
+                                height: size.height * 0.24,
+                                width: size.width * 0.4,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ));
+        }
+      },
+    )));
   }
 }

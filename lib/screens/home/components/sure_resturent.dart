@@ -446,7 +446,7 @@ fetchAllRestaurant() async {
                                                           Icon(Icons.error),
                                                   placeholder: (context, url) =>
                                                       Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
+                                                    "assets/images/defaultrestaurent.png",
                                                     fit: BoxFit.cover,
                                                   ),
                                                 )
@@ -454,6 +454,7 @@ fetchAllRestaurant() async {
                                                   height: double.infinity,
                                                   width: double.infinity,
                                                   decoration: BoxDecoration(
+                                                    color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
                                                           blurRadius: 3,
@@ -466,7 +467,7 @@ fetchAllRestaurant() async {
                                                             12),
                                                     image: DecorationImage(
                                                         image: AssetImage(
-                                                            "assets/images/feasturenttemp.jpeg"),
+                                                            "assets/images/defaultrestaurent.png"),
                                                         fit: BoxFit.cover),
                                                   ),
                                                 )

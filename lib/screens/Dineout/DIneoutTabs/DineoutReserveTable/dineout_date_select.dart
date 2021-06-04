@@ -293,7 +293,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
                           ),
                         )
                       : Image.asset(
-                          "assets/images/feasturenttemp.jpeg",
+                          "assets/images/defaultdineout.jpg",
                           width: size.width * 0.2,
                           height: size.height * 0.1,
                           fit: BoxFit.cover,
