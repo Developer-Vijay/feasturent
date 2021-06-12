@@ -4,7 +4,6 @@ import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_
 import 'package:feasturent_costomer_app/screens/home/components/sure_resturent.dart';
 import 'package:feasturent_costomer_app/screens/home/components/view_all_restaurant.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../../../constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -183,9 +182,9 @@ class _AllResturentState extends State<AllResturent> {
           future: this.fetchAllRestaurant(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.length >= 10) {
-                listlength = 10;
-              } else if (snapshot.data.length <= 10) {
+              if (snapshot.data.length >= 15) {
+                listlength = 15;
+              } else if (snapshot.data.length <= 15) {
                 listlength = snapshot.data.length;
               }
 
@@ -375,10 +374,10 @@ class _AllResturentState extends State<AllResturent> {
                                       Container(
                                         child: Row(
                                           children: [
-                                            snapshot.data[index]['avgRating'] ==
-                                                    null
+                                            snapshot.data[index]['avgRating']
+                                                    .isEmpty
                                                 ? Text(
-                                                    "⭐1",
+                                                    "⭐1.0",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.height * 0.016,
@@ -393,7 +392,7 @@ class _AllResturentState extends State<AllResturent> {
                                                           child: Text("⭐"),
                                                         ),
                                                         Text(
-                                                          "${snapshot.data[index]['avgRating']}",
+                                                          "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.height *

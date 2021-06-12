@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'category_related_resturent.dart';
-import 'package:async/async.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({

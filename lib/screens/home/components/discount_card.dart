@@ -6,13 +6,14 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'ontap_offer.dart';
-import 'package:async/async.dart';
+
 int dataLenght;
 
 class DiscountCard extends StatefulWidget {
   @override
   _DiscountCardState createState() => _DiscountCardState();
 }
+
 class _DiscountCardState extends State<DiscountCard> {
   @override
   void initState() {
@@ -25,46 +26,44 @@ class _DiscountCardState extends State<DiscountCard> {
   var homeOffers;
 
   // ignore: missing_return
-   fetchHomeBanner() async {
-        return discountmemoizer.runOnce(() async {
+  fetchHomeBanner() async {
+    return discountmemoizer.runOnce(() async {
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api home banner fetch");
 
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ hitting api home banner fetch");
-
-    var result = await http
-        .get(
-          Uri.parse( APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner')
-         );
-    if (result.statusCode == 200) {
-      homeOffers = json.decode(result.body)['data'];
-      if (homeOffers.isEmpty) {
-        if (mounted) {
-          setState(() {
-            dataLenght = 0;
-          });
-        }
-        print(" discount home slider data not here");
-      } else {
-        print("data here");
-        if (homeOffers[0]['status'] == true) {
-          print(" discount home slider staus true");
-
-          return homeOffers;
-        } else {
-          print(" discount home slider staus false");
-
+      var result = await http.get(Uri.parse(
+          APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeBanner'));
+      if (result.statusCode == 200) {
+        homeOffers = json.decode(result.body)['data'];
+        if (homeOffers.isEmpty) {
           if (mounted) {
             setState(() {
               dataLenght = 0;
             });
           }
-          homeOffers = [];
-          return homeOffers;
+          print(" discount home slider data not here");
+        } else {
+          print("data here");
+          if (homeOffers[0]['status'] == true) {
+            print(" discount home slider staus true");
+
+            return homeOffers;
+          } else {
+            print(" discount home slider staus false");
+
+            if (mounted) {
+              setState(() {
+                dataLenght = 0;
+              });
+            }
+            homeOffers = [];
+            return homeOffers;
+          }
         }
       }
-    }
+    });
   }
-        );}
+
   int checher;
   @override
   Widget build(BuildContext context) {

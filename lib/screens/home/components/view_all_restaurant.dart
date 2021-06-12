@@ -206,9 +206,9 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                 Container(
                                   child: Row(
                                     children: [
-                                      restaurantData[index]['avgRating'] == null
+                                      restaurantData[index]['avgRating'].isEmpty
                                           ? Text(
-                                              "⭐1",
+                                              "⭐1.0",
                                               style: TextStyle(
                                                   fontSize: size.height * 0.016,
                                                   color: Colors.red,
@@ -220,7 +220,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                                 child: Text("⭐"),
                                               ),
                                               Text(
-                                                "${restaurantData[index]['avgRating']}",
+                                                "${restaurantData[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
                                                 style: TextStyle(
                                                     fontSize:
                                                         size.height * 0.016,

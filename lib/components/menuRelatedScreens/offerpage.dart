@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
@@ -665,11 +664,12 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                             Container(
                                               child: Row(
                                                 children: [
-                                                  snapshot.data[index]
-                                                              ['avgRating'] ==
-                                                          null
+                                                  snapshot
+                                                          .data[index]
+                                                              ['avgRating']
+                                                          .isEmpty
                                                       ? Text(
-                                                          "⭐1",
+                                                          "⭐1.0",
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.height *
@@ -687,7 +687,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                     Text("⭐"),
                                                               ),
                                                               Text(
-                                                                "${snapshot.data[index]['avgRating']}",
+                                                                "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         size.height *

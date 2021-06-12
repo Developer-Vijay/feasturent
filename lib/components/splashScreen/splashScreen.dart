@@ -98,16 +98,19 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset('assets/images/feasturent_app_logo.png'),
             SizedBox(
-              height: size.height * 0.5,
+              height: size.height * 0.4,
             ),
             CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xffFF1577)),
-            )
+            ),
+            SizedBox(
+              height: size.height * 0.1,
+            ),
           ],
         ),
       ),

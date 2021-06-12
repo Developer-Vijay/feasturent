@@ -5,6 +5,7 @@ import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/notificationsfiles.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../constants.dart';
 
 class RepeatOrderPage extends StatefulWidget {
@@ -476,6 +477,66 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                             style: orderdetails,
                           ),
                         ),
+                        itemData1['driver'] == null
+                            ? SizedBox()
+                            : SizedBox(
+                                height: size.height * 0.03,
+                              ),
+                        itemData1['driver'] == null
+                            ? SizedBox()
+                            : Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  "Driver Info",
+                                  style: orderHeading,
+                                ),
+                              ),
+                        itemData1['driver'] == null
+                            ? SizedBox()
+                            : Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "${itemData1['driver']['user']['name']}",
+                                          style: orderdetails,
+                                        ),
+                                        itemData1['driver']['user']
+                                                    ['lastName'] ==
+                                                null
+                                            ? SizedBox()
+                                            : Text(
+                                                " ${itemData1['driver']['user']['lastName']}",
+                                                style: orderdetails,
+                                              ),
+                                      ],
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                        onTap: () async {
+                                          var url =
+                                              'tel:${itemData1['driver']['user']['phone']}';
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            throw 'Could not launch $url';
+                                          }
+                                        },
+                                        child: CircleAvatar(
+                                            foregroundColor: Colors.white,
+                                            backgroundColor: Colors.white,
+                                            child: Icon(
+                                              Icons.call,
+                                              color: Colors.green,
+                                            ))),
+                                  )
+                                ],
+                              ),
                         SizedBox(
                           height: size.height * 0.03,
                         ),

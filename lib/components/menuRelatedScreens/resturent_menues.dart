@@ -39,9 +39,9 @@ class _OfferListPageState extends State<OfferListPage> {
     if (widget.restID != null) {
       fetchData(widget.restID);
     } else {
-      if (widget.ratingVendor != null) {
+      if (widget.ratingVendor.isNotEmpty) {
         setState(() {
-          ratingVendor = widget.ratingVendor.toInt();
+          ratingVendor = widget.ratingVendor[0]['avgRating'].toInt();
         });
       }
       setState(() {
@@ -66,16 +66,15 @@ class _OfferListPageState extends State<OfferListPage> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
-    var result = await http.get(
-      Uri.parse(   APP_ROUTES +
+    var result = await http.get(Uri.parse(
+      APP_ROUTES +
           'getRestaurantInfos' +
           '?key=BYID&id=$id' +
           '&latitude=' +
           latitude.toString() +
           '&longitude=' +
-          longitude.toString(),)
-   
-    );
+          longitude.toString(),
+    ));
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");
     print(restaurantData);
@@ -93,10 +92,10 @@ class _OfferListPageState extends State<OfferListPage> {
         infodata = restaurantData[0];
         restaurantDataCopy = restaurantData[0];
       });
-    
-      // if (restaurantData[0]['avgRating'] != null) {
-      //   ratingVendor =int.parse( restaurantData[0]['avgRating']);
-      // }
+
+      if (restaurantData[0]['avgRating'] != null) {
+        ratingVendor = restaurantData[0]['avgRating'][0]['avgRating'].toInt();
+      }
       setState(() {
         dataChecker = true;
       });
@@ -156,14 +155,16 @@ class _OfferListPageState extends State<OfferListPage> {
         print(
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturent");
 
-        var result = await http.get(
-          Uri.parse(APP_ROUTES +
+        var result = await http.get(Uri.parse(APP_ROUTES +
             'getRestaurantInfos' +
             '?key=BYID&id=' +
-            id.toString()));
-          
-
-        if (mounted) {
+            id.toString()+'&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),));
+        print(result.statusCode);
+        if(result.statusCode==200){
+              if (mounted) {
           setState(() {
             resturantStatus = json.decode(result.body)['data'];
             if (resturantStatus[0]['user']['Setting'] == null) {
@@ -181,6 +182,18 @@ class _OfferListPageState extends State<OfferListPage> {
             }
           });
         }
+        }else{
+
+          if(mounted){
+            setState(() {
+               status = false;
+              WidgetsBinding.instance.addPostFrameCallback((_) =>
+                  // ignore: deprecated_member_use
+                  _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+            });
+          }
+        }
+    
       }
     }
 
@@ -443,7 +456,6 @@ class _OfferListPageState extends State<OfferListPage> {
                                       child: Container(
                                         alignment: Alignment.topRight,
                                         margin: EdgeInsets.only(
-                                            top: size.height * 0.01,
                                             right: size.width * 0.033),
                                         child: Text(
                                           "Mobile No- +91 ${restaurantDataCopy['contact']}",
@@ -457,11 +469,11 @@ class _OfferListPageState extends State<OfferListPage> {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: size.height * 0.034,
+                                  height: size.height * 0.030,
                                 ),
                                 DottedLine(),
                                 SizedBox(
-                                  height: size.height * 0.024,
+                                  height: size.height * 0.022,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -560,7 +572,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: size.height * 0.03,
+                                  height: size.height * 0.022,
                                 ),
                                 DottedLine(),
                                 SizedBox(
@@ -762,7 +774,19 @@ class _OfferListPageState extends State<OfferListPage> {
                                             : Text(
                                                 "Currently closed...",
                                                 style: offerRowHeadingStyle,
-                                              ))
+                                              )),
+                                 restaurantDataCopy['isBrand'] != "1"?SizedBox():   Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Image.asset(
+                                          'assets/images/brand.png',
+                                          height: 30,
+                                          width: 50,
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 )),
                                 SizedBox(
@@ -1349,7 +1373,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           children: [
                                                                             Container(child: Text("⭐")),
                                                                             Text(
-                                                                              "$rating",
+                                                                              "${rating.toStringAsFixed(1)}",
                                                                               style: TextStyle(fontSize: size.height * 0.014, color: Colors.red, fontWeight: FontWeight.bold),
                                                                             ),
                                                                             Spacer(),
@@ -1789,7 +1813,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           Container(
                                                                               child: Text("⭐")),
                                                                           Text(
-                                                                            "$rating",
+                                                                            "${rating.toStringAsFixed(1)}",
                                                                             style: TextStyle(
                                                                                 fontSize: size.height * 0.014,
                                                                                 color: Colors.red,
@@ -2454,7 +2478,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           Container(
                                                                               child: Text("⭐")),
                                                                           Text(
-                                                                            "$rating",
+                                                                            "${rating.toStringAsFixed(1)}",
                                                                             style: TextStyle(
                                                                                 fontSize: size.height * 0.014,
                                                                                 color: Colors.red,
@@ -2910,7 +2934,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                             child:
                                                                                 Text("⭐")),
                                                                         Text(
-                                                                          "$rating",
+                                                                          "${rating.toStringAsFixed(1)}",
                                                                           style: TextStyle(
                                                                               fontSize: size.height * 0.014,
                                                                               color: Colors.red,

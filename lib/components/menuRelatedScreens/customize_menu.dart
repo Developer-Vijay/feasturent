@@ -27,7 +27,24 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
     });
     fetchData();
     getList();
+
+    // ignore: unused_local_variable
+    int ratingLength = 1;
+    if (widget.menuData['ReviewAndRatings'].isNotEmpty) {
+      int k = widget.menuData['ReviewAndRatings'].length;
+      ratingLength = k;
+      for (int i = 0; i <= k - 1; i++) {
+        rating = rating +
+            double.parse(widget.menuData['ReviewAndRatings'][i]['rating']);
+      }
+      rating = rating / k;
+      if (rating >= 5) {
+        rating = 5.0;
+      }
+    }
   }
+
+  double rating = 1.0;
 
   final addOnservices = AddOnService();
 
@@ -380,7 +397,7 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
                                     children: [
                                       Container(child: Text("⭐")),
                                       Text(
-                                        "3.0",
+                                        "${rating.toStringAsFixed(1)}",
                                         style: TextStyle(
                                             fontSize: size.height * 0.014,
                                             color: Colors.red,

@@ -122,11 +122,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         //   text: 'Settings',
         //   index: 4,
         // ),
-        ProfileListItem(
-          icon: LineAwesomeIcons.user_plus,
-          text: 'Invite a Friend',
-          index: 5,
-        ),
+        // ProfileListItem(
+        //   icon: LineAwesomeIcons.user_plus,
+        //   text: 'Invite a Friend',
+        //   index: 5,
+        // ),
         ProfileListItem(
           icon: LineAwesomeIcons.alternate_sign_out,
           text: 'Logout',

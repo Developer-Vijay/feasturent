@@ -22,11 +22,12 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: offerTapData['restaurant'].length,
                     itemBuilder: (context, i) {
-                      print(offerTapData['restaurant'][i]['VendorInfo']
-                          ['cuisines']);
-                      int k = offerTapData['restaurant'][i]['VendorInfo']
-                              ['cuisines']
-                          .length;
+                      // print(offerTapData['restaurant'][i]['VendorInfo']
+                      //     ['cuisines']);
+                      // int k = offerTapData['restaurant'][i]['VendorInfo']
+                      //         ['cuisines']
+                      //     .length;
+                      int k = 0;
                       print(k);
                       var categoryData = '';
                       if (k != 0) {
@@ -46,7 +47,8 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                                         restID: offerTapData['restaurant'][i]
                                             ['VendorInfo']['id'],
                                         ratingVendor: offerTapData['restaurant']
-                                            [i]['VendorInfo']['avgRating'],
+                                                [i]['VendorInfo']
+                                            ['reviewAndRatingAvg'],
                                       )));
                         },
                         child: Padding(
@@ -221,11 +223,11 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                                             child: Row(
                                               children: [
                                                 offerTapData['restaurant'][i]
-                                                                ['VendorInfo']
-                                                            ['avgRating'] ==
-                                                        null
+                                                                ['VendorInfo'][
+                                                            'reviewAndRatingAvg']
+                                                        .isEmpty
                                                     ? Text(
-                                                        "⭐1",
+                                                        "⭐1.0",
                                                         style: TextStyle(
                                                             fontSize:
                                                                 size.height *
@@ -236,7 +238,7 @@ class _OnTapResturentTabState extends State<OnTapResturentTab> {
                                                                     .bold),
                                                       )
                                                     : Text(
-                                                        "${offerTapData['restaurant'][i]['VendorInfo']['avgRating']}",
+                                                        "⭐${offerTapData['restaurant'][i]['VendorInfo']['reviewAndRatingAvg'][0]['avgRating'].toStringAsFixed(1)}",
                                                         style: TextStyle(
                                                             fontSize:
                                                                 size.height *
