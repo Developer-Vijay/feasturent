@@ -53,6 +53,7 @@ class _OfferListPageState extends State<OfferListPage> {
       });
       calculateDeliveryTime(restaurantDataCopy);
       getList();
+      // fetchData(48);
       fetchRestaurantStatus();
     }
   }
@@ -65,7 +66,7 @@ class _OfferListPageState extends State<OfferListPage> {
   fetchData(id) async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
-
+    print(id);
     var result = await http.get(Uri.parse(
       APP_ROUTES +
           'getRestaurantInfos' +
@@ -77,8 +78,9 @@ class _OfferListPageState extends State<OfferListPage> {
     ));
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");
+    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
     print(restaurantData);
-
+    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
     if (restaurantData.isEmpty || restaurantData == null) {
       setState(() {
         dataChecker = true;
@@ -137,9 +139,14 @@ class _OfferListPageState extends State<OfferListPage> {
     print("dilebvtimr  $deliverTime");
   }
 
+
+
   int deliverTime;
   Future fetchRestaurantStatus() async {
-    int id = restaurantDataCopy['id'] as int;
+    int id = restaurantDataCopy['id'];
+    print("?????????");
+    print(id);
+    print("?????????");
     if (restaurantDataCopy['user']['Setting'] == null) {
       status = false;
       WidgetsBinding.instance.addPostFrameCallback(
@@ -147,6 +154,7 @@ class _OfferListPageState extends State<OfferListPage> {
           (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
     } else {
       status = restaurantDataCopy['user']['Setting']['isActive'];
+
       if (status == false) {
         WidgetsBinding.instance.addPostFrameCallback(
             // ignore: deprecated_member_use
@@ -155,45 +163,48 @@ class _OfferListPageState extends State<OfferListPage> {
         print(
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturent");
 
-        var result = await http.get(Uri.parse(APP_ROUTES +
-            'getRestaurantInfos' +
-            '?key=BYID&id=' +
-            id.toString()+'&latitude=' +
-            latitude.toString() +
-            '&longitude=' +
-            longitude.toString(),));
+        var result = await http
+            .get(Uri.parse(APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=48'
+                // id.toString()+'&latitude=' +
+                // latitude.toString() +
+                // '&longitude=' +
+                // longitude.toString(),
+                ));
+        print("?????????");
         print(result.statusCode);
-        if(result.statusCode==200){
-              if (mounted) {
-          setState(() {
-            resturantStatus = json.decode(result.body)['data'];
-            if (resturantStatus[0]['user']['Setting'] == null) {
-              status = false;
-              WidgetsBinding.instance.addPostFrameCallback((_) =>
-                  // ignore: deprecated_member_use
-                  _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-            } else {
-              status = resturantStatus[0]['user']['Setting']['isActive'];
-              if (status == false) {
-                WidgetsBinding.instance.addPostFrameCallback((_) =>
-                    // ignore: deprecated_member_use
-                    _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-              }
-            }
-          });
-        }
-        }else{
-
-          if(mounted){
+        print("################");
+        if (result.statusCode == 200) {
+          if (mounted) {
             setState(() {
-               status = false;
+              resturantStatus = json.decode(result.body)['data'];
+              if (resturantStatus[0]['user']['Setting'] == null) {
+                status = false;
+                WidgetsBinding.instance.addPostFrameCallback((_) =>
+                    _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+              } else {
+                status = resturantStatus[0]['user']['Setting']['isActive'];
+                if (status == false) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) =>
+                      _scaffoldKey.currentState
+                          .showSnackBar(restaurantSnackBar));
+                }
+              }
+            });
+          }
+        } 
+        else {
+          print("???????");
+          print(result.statusCode);
+          print("??????????");
+          if (mounted) {
+            setState(() {
+              status = false;
               WidgetsBinding.instance.addPostFrameCallback((_) =>
                   // ignore: deprecated_member_use
                   _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
             });
           }
         }
-    
       }
     }
 
@@ -775,18 +786,20 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 "Currently closed...",
                                                 style: offerRowHeadingStyle,
                                               )),
-                                 restaurantDataCopy['isBrand'] != "1"?SizedBox():   Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Image.asset(
-                                          'assets/images/brand.png',
-                                          height: 30,
-                                          width: 50,
-                                        ),
-                                      ],
-                                    )
+                                    restaurantDataCopy['isBrand'] != "1"
+                                        ? SizedBox()
+                                        : Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Image.asset(
+                                                'assets/images/brand.png',
+                                                height: 30,
+                                                width: 50,
+                                              ),
+                                            ],
+                                          )
                                   ],
                                 )),
                                 SizedBox(

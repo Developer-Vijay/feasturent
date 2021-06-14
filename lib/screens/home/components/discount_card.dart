@@ -25,7 +25,6 @@ class _DiscountCardState extends State<DiscountCard> {
 
   var homeOffers;
 
-  // ignore: missing_return
   fetchHomeBanner() async {
     return discountmemoizer.runOnce(() async {
       print(

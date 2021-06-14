@@ -1,5 +1,6 @@
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/components/splashScreen/splashScreen.dart';
+import 'package:feasturent_costomer_app/notificationsfiles.dart';
 import 'package:flutter/material.dart';
 import 'package:feasturent_costomer_app/constants.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
@@ -41,6 +42,21 @@ class _MyAppState extends State<MyApp> {
     });
     socket.onConnectError((err) {
       print(err);
+    });
+
+    socket.on("broadCastMessage", (socketdata) {
+      print("&&&&&&&&&&&&&&&&&");
+      print(socketdata);
+      Notifications().scheduleNotification(socketdata['username'],socketdata['message'] );
+      print("&&&&&&&&&&&&&&&&&&");
+    });
+
+    socket.on("pushNotification", (socketdata) {
+      print("&&&&&&&&&&&&&&&&&");
+      print(socketdata);
+      Notifications()
+          .scheduleNotification(socketdata['username'], socketdata['message']);
+      print("&&&&&&&&&&&&&&&&&&");
     });
     print("socket.connected");
   }
