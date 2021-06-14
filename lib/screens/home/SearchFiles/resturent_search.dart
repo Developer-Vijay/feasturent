@@ -209,9 +209,11 @@ class _SearchResturentState extends State<SearchResturent> {
                                           Container(
                                             child: Row(
                                               children: [
-                                                1 == 1
+                                                resultData['restaurant'][i][
+                                                            'reviewAndRatingAvg']
+                                                        .isEmpty
                                                     ? Text(
-                                                        "⭐1",
+                                                        "⭐1.0",
                                                         style: TextStyle(
                                                             fontSize:
                                                                 size.height *
@@ -222,7 +224,7 @@ class _SearchResturentState extends State<SearchResturent> {
                                                                     .bold),
                                                       )
                                                     : Text(
-                                                        "⭐1",
+                                                        "⭐${resultData['restaurant'][i]['reviewAndRatingAvg'][0]['avgRating'].toStringAsFixed(1)}",
                                                         style: TextStyle(
                                                             fontSize:
                                                                 size.height *

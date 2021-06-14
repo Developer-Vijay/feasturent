@@ -667,8 +667,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                                                           child:
                                                                               Text("⭐")),
                                                                       Text(
-                                                                        users[index]
-                                                                            .rating,
+                                                                        "${double.parse(users[index].rating).toStringAsFixed(1)}",
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 15,
@@ -2151,10 +2150,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
 
-    var response =
-        await http.post(
-          Uri.parse( APP_ROUTES + 'itemOrder')
-         , body: requestBody, headers: {
+    var response = await http
+        .post(Uri.parse(APP_ROUTES + 'itemOrder'), body: requestBody, headers: {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
       "Content-Type": "application/json"
@@ -2244,10 +2241,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     print(requestBody);
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
-    var response =
-        await http.post(
-          Uri.parse(APP_ROUTES + 'itemOrder')
-          , body: requestBody, headers: {
+    var response = await http
+        .post(Uri.parse(APP_ROUTES + 'itemOrder'), body: requestBody, headers: {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
       "Content-Type": "application/json"
@@ -2350,10 +2345,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     var requestBody = jsonEncode(data);
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  place order");
-    var response =
-        await http.post(
-          Uri.parse(APP_ROUTES + 'itemOrder')
-          , body: requestBody, headers: {
+    var response = await http
+        .post(Uri.parse(APP_ROUTES + 'itemOrder'), body: requestBody, headers: {
       "authorization": _authorization,
       "refreshtoken": _refreshtoken,
       "Content-Type": "application/json"

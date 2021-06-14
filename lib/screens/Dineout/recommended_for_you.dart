@@ -21,7 +21,7 @@ class _RecommendedForUState extends State<RecommendedForU> {
   int status = 1;
   var responseData1;
   // ignore: missing_return
-  Future<List> getpopulardineouts() async {
+  getpopulardineouts() async {
     final SharedPreferences cart = await SharedPreferences.getInstance();
 
     print(
@@ -66,7 +66,7 @@ class _RecommendedForUState extends State<RecommendedForU> {
     Size size = MediaQuery.of(context).size;
     return Container(
         child: Container(
-            child: FutureBuilder<List>(
+            child: FutureBuilder(
       future: getpopulardineouts(),
 // ignore: missing_return
       builder: (context, snapshot) {

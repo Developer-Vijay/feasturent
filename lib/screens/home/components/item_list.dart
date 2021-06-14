@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'category_related_resturent.dart';
-import 'package:async/async.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({
@@ -16,28 +15,26 @@ class CategoriesList extends StatefulWidget {
   @override
   _CategoriesListState createState() => _CategoriesListState();
 }
-  var catdata;
+
+var catdata;
 
 class _CategoriesListState extends State<CategoriesList> {
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
-
   @override
   void initState() {
     super.initState();
   }
 
-fetchCategories() async {
-            return categorymemoizer.runOnce(() async {
+  fetchCategories() async {
+    return categorymemoizer.runOnce(() async {
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  hitting api category");
 
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  hitting api category");
-
-    var result = await http.get(
-      Uri.parse(APP_ROUTES + 'getCategories?key=ALL')
-      );
-    catdata = json.decode(result.body)['data'];
-    return catdata;
-  });}
+      var result =
+          await http.get(Uri.parse(APP_ROUTES + 'getCategories?key=ALL'));
+      catdata = json.decode(result.body)['data'];
+      return catdata;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

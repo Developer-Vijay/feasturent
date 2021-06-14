@@ -367,7 +367,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                               textColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5)),
-                              color: Colors.blue[600],
+                              color: Colors.blue,
                             ),
                           ],
                         ),
@@ -427,7 +427,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                             return Padding(
                               padding: const EdgeInsets.only(
                                   left: 10.0,
-                                  right: 12.0,
+                                  right: 11.0,
                                   top: 20,
                                   bottom: 10.0),
                               child: InkWell(
@@ -963,7 +963,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                                           height:
                                                               size.height * 0.1,
                                                           width:
-                                                              size.width * 0.26,
+                                                              size.width * 0.25,
                                                           errorWidget: (context,
                                                                   url, error) =>
                                                               Icon(Icons.error),
@@ -973,15 +973,15 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                                           height:
                                                               size.height * 0.1,
                                                           width:
-                                                              size.width * 0.26,
+                                                              size.width * 0.25,
                                                           fit: BoxFit.cover,
                                                         ),
                                                 ),
                                               ),
                                               Container(
-                                                width: size.width * 0.5,
+                                                width: size.width * 0.48,
                                                 padding: const EdgeInsets.only(
-                                                    left: 12.0),
+                                                    left: 11.0),
                                                 child: snapshot[index]
                                                                 ['orderMenues']
                                                             .length >=
@@ -1035,7 +1035,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                               Spacer(),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    right: 12.0),
+                                                    right: 11.0),
                                                 child: Text(
                                                   " ${(snapshot[index]['orderPrice'] + snapshot[index]['donation'] - snapshot[index]['discountPrice'])} ₹",
                                                   style: TextStyle(

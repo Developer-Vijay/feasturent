@@ -267,7 +267,7 @@ class _SignupPageState extends State<SignupPage> {
                         "Login",
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
-                          color: Colors.blue[700],
+                          color: Colors.blue[900],
                         ),
                       ),
                     )
@@ -298,9 +298,7 @@ class _SignupPageState extends State<SignupPage> {
         print(
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  signup");
 
-        var response = await http.post(
-          Uri.parse(  USER_API + 'signup')
-        , body: {
+        var response = await http.post(Uri.parse(USER_API + 'signup'), body: {
           'userName': _userNameController.text,
           'password': _passwordController.text,
           'phone': _phoneNumberController.text,

@@ -84,7 +84,7 @@ class _OnOfferBottomSheetState extends State<OnOfferBottomSheet> {
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    capitalize(offerData['description']),
+                    offerData['description'],
                     style: offerCommonStyle,
                   ))
               : SizedBox(),

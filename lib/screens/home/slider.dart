@@ -65,8 +65,7 @@ class _FoodSliderState extends State<FoodSlider> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get menu APi hit 111111111111111^^^^^^^^^^^^*****************!!!!!!!!!!@@@@@@@^^^^^^^^^^112222222222222233333333333388888888888 ");
 
     var result = await http.get(
-      Uri.parse(APP_ROUTES + 'getMenues' + '?key=BYID&id=$id')
-      ,
+      Uri.parse(APP_ROUTES + 'getMenues' + '?key=BYID&id=$id'),
     );
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");
@@ -590,8 +589,12 @@ class _FoodSliderState extends State<FoodSlider> {
                                                   padding:
                                                       const EdgeInsets.only(
                                                           left: 15),
-                                                  child: Text(
-                                                      "${widget.ratinglength} Views"),
+                                                  child: widget.ratinglength ==
+                                                          1
+                                                      ? Text(
+                                                          "${widget.ratinglength} View")
+                                                      : Text(
+                                                          "${widget.ratinglength} Views"),
                                                 ),
                                                 Spacer(),
                                                 Padding(
@@ -1263,7 +1266,7 @@ class _FoodSliderState extends State<FoodSlider> {
                         Navigator.pop(context);
                       },
                     ),
-                   TextButton(
+                    TextButton(
                       child: Text(
                         "Yes",
                         style: TextStyle(color: Colors.black),

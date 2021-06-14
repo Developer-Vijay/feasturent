@@ -916,7 +916,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                                             child: Text("⭐"),
                                           ),
                                           Text(
-                                            "$rating",
+                                            "${rating.toStringAsFixed(1)}",
                                             style: TextStyle(
                                                 fontSize: size.height * 0.014,
                                                 color: Colors.red,

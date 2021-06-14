@@ -215,17 +215,17 @@ class _AddRatingPageState extends State<AddRatingPage> {
 
       var requestBody = jsonEncode(data);
       print(requestBody);
-      var response = await http
-          .post(
-            Uri.parse( COMMON_API + 'ratingReview')
-           , body: requestBody, headers: {
-        "authorization": authorization,
-        "refreshToken": refreshToken,
-        "Content-Type": "application/json"
-      });
+      var response = await http.post(Uri.parse(COMMON_API + 'ratingReview'),
+          body: requestBody,
+          headers: {
+            "authorization": authorization,
+            "refreshToken": refreshToken,
+            "Content-Type": "application/json"
+          });
       print(response.statusCode);
 
       if (response.statusCode == 200) {
+        // ignore: unused_local_variable
         var responseData = json.decode(response.body);
         Navigator.pop(context);
         Navigator.pop(context);

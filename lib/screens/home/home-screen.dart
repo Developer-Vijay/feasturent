@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/offerpage.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/dineouthome.dart';
 import 'package:feasturent_costomer_app/screens/home/components/homePageBody.dart';
-import 'package:feasturent_costomer_app/screens/home/components/notificationPage.dart';
 import 'package:feasturent_costomer_app/screens/profile/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,10 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // ignore: missing_return
   Future<List<dynamic>> fetchwelcomeBanner() async {
     try {
-      var result = await http
-          .get(
-            Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR&for=welcomePopup')
-            );
+      var result = await http.get(
+          Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR&for=welcomePopup'));
       print(_authorization);
       homeBanner = json.decode(result.body)['data'];
       if (result.statusCode == 200) {
@@ -120,9 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   int _page;
-  List
-  <Widget> 
-  tabPages = [
+  List<Widget> tabPages = [
     HomePageBody(),
     OfferPageScreen(),
     DineoutHomePage(),
@@ -274,7 +270,9 @@ class _HomeScreenState extends State<HomeScreen> {
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get users form server");
 
       var response = await http.get(
-      Uri.parse(USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),) ,   
+          Uri.parse(
+            USER_API + 'users?key=SINGLE&userId=' + _customerUserId.toString(),
+          ),
           headers: {
             "authorization": _authorization,
             "refreshtoken": _refreshtoken,
@@ -299,8 +297,53 @@ class _HomeScreenState extends State<HomeScreen> {
           photo = _customerProfile;
           print(_customerName);
         });
+      } else if (responseData['message'] == "Token expired.") {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove(
+          'name',
+        );
+        prefs.remove('sessionToken');
+        prefs.remove('refreshToken');
+        prefs.remove('userNumber');
+        prefs.remove('userProfile');
+        prefs.remove('customerName');
+        prefs.remove('userId');
+        prefs.remove('loginId');
+        prefs.remove('userEmail');
+        prefs.remove("loginBy");
+        takeUser = false;
+        emailid = null;
+        photo = null;
+        userName = null;
+
+        prefs.setBool("_isAuthenticate", false);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         print('User not Login');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove(
+          'name',
+        );
+        prefs.remove('sessionToken');
+        prefs.remove('refreshToken');
+        prefs.remove('userNumber');
+        prefs.remove('userProfile');
+        prefs.remove('customerName');
+        prefs.remove('userId');
+        prefs.remove('loginId');
+        prefs.remove('userEmail');
+        prefs.remove("loginBy");
+        takeUser = false;
+        emailid = null;
+        photo = null;
+        userName = null;
+
+        prefs.setBool("_isAuthenticate", false);
+        setState(() {
+          loginstatus = 0;
+        });
         setState(() {
           loginstatus = 0;
           _customerName = '';
@@ -425,16 +468,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(builder: (context) => SearchField()));
             },
           ),
-          IconButton(
-            icon: SvgPicture.asset(
-              "assets/icons/notification.svg",
-              height: MediaQuery.of(context).size.height * 0.027,
-            ),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NotificationSheet()));
-            },
-          ),
+          // IconButton(
+          //   icon: SvgPicture.asset(
+          //     "assets/icons/notification.svg",
+          //     height: MediaQuery.of(context).size.height * 0.027,
+          //   ),
+          //   onPressed: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => NotificationSheet()));
+          //   },
+          // ),
         ],
         centerTitle: false,
         backgroundColor: Colors.white,
@@ -519,8 +562,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             appBar: _buildAppBar(_page),
-            body:tabPages[_page]
-            ),
+            body: tabPages[_page]),
       ),
     );
   }

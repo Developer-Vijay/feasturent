@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
@@ -36,9 +37,16 @@ class _CartScreenState extends State<CartScreen> {
   var resturantDataStatus;
   Future fetchRestaurantStatus(id) async {
     print("******************  get resturent API hitting*********************");
-    var result = await http.get(
-      Uri.parse( APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=' + id.toString()))
-       ;
+    var result = await http.get(Uri.parse(
+      APP_ROUTES +
+          'getRestaurantInfos' +
+          '?key=BYID&id=' +
+          id.toString() +
+          '&latitude=' +
+          latitude.toString() +
+          '&longitude=' +
+          longitude.toString(),
+    ));
 
     if (mounted) {
       resturantStatus = json.decode(result.body)['data'];
@@ -65,10 +73,8 @@ class _CartScreenState extends State<CartScreen> {
             print(
                 "Check menues avaliblity &&&&&&&&&&&&&&&&&&^^^^^^^^^^^^^^^%%%%%%%%%%");
 
-            var fetchData =
-                await http.get(
-                  Uri.parse(APP_ROUTES + 'getMenues' + '?key=ALL'))
-                  ;
+            var fetchData = await http
+                .get(Uri.parse(APP_ROUTES + 'getMenues' + '?key=ALL'));
 
             if (mounted) {
               if (fetchData.statusCode == 200) {
@@ -586,7 +592,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                                         children: [
                                                                                           Container(child: Text("⭐")),
                                                                                           Text(
-                                                                                            users[index].rating,
+                                                                                            "${double.parse(users[index].rating).toStringAsFixed(1)}",
                                                                                             style: TextStyle(fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
                                                                                           ),
                                                                                           SizedBox(
@@ -1279,7 +1285,7 @@ class _CartScreenState extends State<CartScreen> {
                               " Total no.of Items",
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.blue[800],
+                                  color: Colors.blue[900],
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -1339,7 +1345,7 @@ class _CartScreenState extends State<CartScreen> {
                           textColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)),
-                          color: Colors.blue[600],
+                          color: Colors.blue,
                         ),
                       ),
                     ],

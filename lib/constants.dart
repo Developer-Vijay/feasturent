@@ -9,21 +9,18 @@ import 'components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:async/async.dart';
 
 // Memorizer
- final AsyncMemoizer discountmemoizer = AsyncMemoizer();
- final AsyncMemoizer categorymemoizer = AsyncMemoizer();
- final AsyncMemoizer allresturentmemoizer = AsyncMemoizer();
- final AsyncMemoizer popularMenumemoizer = AsyncMemoizer();
- final AsyncMemoizer homeslidermemoizer = AsyncMemoizer();
- final AsyncMemoizer offerbannermemoizer = AsyncMemoizer();
- final AsyncMemoizer offerslidermemoizer = AsyncMemoizer();
- final AsyncMemoizer dineoutbannermemoizer = AsyncMemoizer();
- final AsyncMemoizer popluardineoutmemoizer = AsyncMemoizer();
- final AsyncMemoizer collectionmemoizer = AsyncMemoizer();
+final AsyncMemoizer discountmemoizer = AsyncMemoizer();
+final AsyncMemoizer categorymemoizer = AsyncMemoizer();
+final AsyncMemoizer allresturentmemoizer = AsyncMemoizer();
+final AsyncMemoizer popularMenumemoizer = AsyncMemoizer();
+final AsyncMemoizer homeslidermemoizer = AsyncMemoizer();
+final AsyncMemoizer offerbannermemoizer = AsyncMemoizer();
+final AsyncMemoizer offerslidermemoizer = AsyncMemoizer();
+final AsyncMemoizer dineoutbannermemoizer = AsyncMemoizer();
+final AsyncMemoizer popluardineoutmemoizer = AsyncMemoizer();
+final AsyncMemoizer collectionmemoizer = AsyncMemoizer();
+final AsyncMemoizer feturememoizer = AsyncMemoizer();
 //  final AsyncMemoizer memoizer = AsyncMemoizer();
-
-
-
-
 
 // capitalize text function
 String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
@@ -67,7 +64,7 @@ GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 //Profile Design
 
-const  kSpacingUnit = 10;
+const kSpacingUnit = 10;
 
 const kDarkPrimaryColor = Color(0xFF212121);
 const kDarkSecondaryColor = Color(0xFF373737);
@@ -76,10 +73,9 @@ const kLightSecondaryColor = Color(0xFFF3F7FB);
 const kAccentColor = Color(0xFFFFC107);
 
 final kTitleTextStyle = TextStyle(
-  fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7),
-  fontWeight: FontWeight.w600,
-  color: Colors.black
-);
+    fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7),
+    fontWeight: FontWeight.w600,
+    color: Colors.black);
 
 final kCaptionTextStyle = TextStyle(
   fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.3),

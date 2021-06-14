@@ -49,14 +49,13 @@ class _WalletDesignState extends State<WalletDesign> {
 
     print("***************************************");
     print(_authorization);
-    var result = await http
-        .get(
-          Uri.parse(PAYMENT_API + 'userWalletAndTransaction/$userid')
-          , headers: {
-      "Content-type": "application/json",
-      "authorization": _authorization,
-      "refreshtoken": _refreshtoken,
-    });
+    var result = await http.get(
+        Uri.parse(PAYMENT_API + 'userWalletAndTransaction/$userid'),
+        headers: {
+          "Content-type": "application/json",
+          "authorization": _authorization,
+          "refreshtoken": _refreshtoken,
+        });
     if (result.statusCode == 200) {
       var walletdetails = json.decode(result.body)['data'];
       print(walletdetails);
@@ -204,35 +203,7 @@ class _WalletDesignState extends State<WalletDesign> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            Column(
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: size.width * 0.06,
-                                                      top: size.height * 0.026),
-                                                  child: CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.blue[100],
-                                                    radius: 22,
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                          Icons.file_download),
-                                                      onPressed: () {},
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: size.width * 0.06,
-                                                      top: size.height * 0.01),
-                                                  child: Text("Sent",
-                                                      style: walletIconStyle),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              width: size.width * 0.01,
-                                            ),
+                                            Spacer(),
                                             Column(
                                               children: [
                                                 Container(
@@ -242,25 +213,53 @@ class _WalletDesignState extends State<WalletDesign> {
                                                     backgroundColor:
                                                         Colors.blue[100],
                                                     radius: 22,
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                          Icons.request_quote),
-                                                      onPressed: () {},
+                                                    child: InkWell(
+                                                      child: Image.asset(
+                                                        "assets/icons/send.png",
+                                                        height: 25,
+                                                        color: Colors.blue[900],
+                                                      ),
+                                                      onTap: () {},
                                                     ),
                                                   ),
                                                 ),
                                                 Container(
                                                   margin: EdgeInsets.only(
-                                                      left: size.width * 0.01,
                                                       top: size.height * 0.01),
-                                                  child: Text("Request",
+                                                  child: Text("Send",
                                                       style: walletIconStyle),
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(
-                                              width: size.width * 0.01,
+                                            Spacer(),
+                                            Column(
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      top: size.height * 0.026),
+                                                  child: CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.blue[100],
+                                                    radius: 22,
+                                                    child: InkWell(
+                                                      child: Image.asset(
+                                                        "assets/icons/debit.png",
+                                                        height: 25,
+                                                        color: Colors.blue[900],
+                                                      ),
+                                                      onTap: () {},
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      top: size.height * 0.01),
+                                                  child: Text("Debit",
+                                                      style: walletIconStyle),
+                                                ),
+                                              ],
                                             ),
+                                            Spacer(),
                                             Column(
                                               children: [
                                                 Container(
@@ -270,52 +269,25 @@ class _WalletDesignState extends State<WalletDesign> {
                                                     backgroundColor:
                                                         Colors.blue[100],
                                                     radius: 22,
-                                                    child: IconButton(
-                                                      icon: Icon(Icons.money),
-                                                      onPressed: () {},
+                                                    child: InkWell(
+                                                      child: Image.asset(
+                                                        "assets/icons/credit.png",
+                                                        height: 25,
+                                                        color: Colors.blue[900],
+                                                      ),
+                                                      onTap: () {},
                                                     ),
                                                   ),
                                                 ),
                                                 Container(
                                                   margin: EdgeInsets.only(
-                                                      left: size.width * 0.01,
                                                       top: size.width * 0.01),
-                                                  child: Text("Loan",
+                                                  child: Text("Credit",
                                                       style: walletIconStyle),
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(
-                                              width: size.width * 0.02,
-                                            ),
-                                            Column(
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: size.width * 0.007,
-                                                      top: size.height * 0.03,
-                                                      right: size.width * 0.04),
-                                                  child: CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.blue[100],
-                                                    radius: 22,
-                                                    child: IconButton(
-                                                      icon: Icon(Icons
-                                                          .wallet_membership),
-                                                      onPressed: () {},
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: size.width * 0.006,
-                                                      top: size.height * 0.01,
-                                                      right: size.width * 0.04),
-                                                  child: Text("Topup",
-                                                      style: walletIconStyle),
-                                                ),
-                                              ],
-                                            )
+                                            Spacer(),
                                           ],
                                         )
                                       ],
@@ -590,7 +562,7 @@ class _WalletDesignState extends State<WalletDesign> {
                                 textColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5)),
-                                color: Colors.blue[600],
+                                color: Colors.blue,
                               ),
                             ],
                           ),

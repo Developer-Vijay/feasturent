@@ -18,25 +18,25 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
   int status = 1;
   var responseData1;
   // ignore: missing_return
-   getpopulardineouts() async {
+  getpopulardineouts() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineoutpopular");
-        return collectionmemoizer.runOnce(() async {
-    var response = await http.get(
-      Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
-      );
+    return collectionmemoizer.runOnce(() async {
+      var response =
+          await http.get(Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL'));
 
-    if (response.statusCode == 200) {
-      responseData1 = json.decode(response.body)['data'];
-      print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      if (response.statusCode == 200) {
+        responseData1 = json.decode(response.body)['data'];
+        print(
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-      return responseData1;
-    } else if (response.statusCode == 204) {
-      responseData1 = [];
-      return responseData1;
-    }
-  });}
+        return responseData1;
+      } else if (response.statusCode == 204) {
+        responseData1 = [];
+        return responseData1;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _BestOfferDineoutState extends State<BestOfferDineout> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-            child: FutureBuilder<List>(
+            child: FutureBuilder(
           future: getpopulardineouts(),
 // ignore: missing_return
           builder: (context, snapshot) {

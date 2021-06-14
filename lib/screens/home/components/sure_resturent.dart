@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
-import 'package:feasturent_costomer_app/screens/home/components/discount_card.dart';
-import 'package:feasturent_costomer_app/screens/home/components/popular.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../constants.dart';
@@ -15,6 +13,8 @@ extension StringExtension on String {
   }
 }
 
+var restaurantDatafinal1;
+
 class SureResturent extends StatefulWidget {
   const SureResturent({
     Key key,
@@ -22,44 +22,41 @@ class SureResturent extends StatefulWidget {
   @override
   _SureResturentState createState() => _SureResturentState();
 }
-  var listlength1 = 0;
+
+var listlength1 = 0;
 var restaurantData1;
+
 class _SureResturentState extends State<SureResturent> {
   String _authorization = '';
   void initState() {
     super.initState();
   }
 
-  
-fetchAllRestaurant() async {
-        return allresturentmemoizer.runOnce(() async {
+  fetchAllRestaurant() async {
+    return allresturentmemoizer.runOnce(() async {
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
-
-
-
-
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
-
-    var result = await http.get(
-      Uri.parse( APP_ROUTES +
-          'getRestaurantInfos' +
-          '?key=ALL' +
-          '&latitude=' +
-          latitude.toString() +
-          '&longitude=' +
-          longitude.toString(),)
-     
-    );
-    print(_authorization);
-    restaurantData1 = json.decode(result.body)['data'];
-    if (restaurantData1.isEmpty) {
-      return restaurantData1;
-    } else {
-      restaurantData1 = restaurantData1;
-      return restaurantData1;
-    }
-  });}
+      var result = await http.get(Uri.parse(
+        APP_ROUTES +
+            'getRestaurantInfos' +
+            '?key=ALL' +
+            '&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
+      ));
+      print(_authorization);
+      restaurantData1 = json.decode(result.body)['data'];
+      restaurantDatafinal1 = json.decode(result.body)['data'];
+      if (restaurantData1.isEmpty) {
+        return restaurantData1;
+      } else {
+        restaurantData1 = restaurantData1;
+        return restaurantData1;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +115,9 @@ fetchAllRestaurant() async {
           future: this.fetchAllRestaurant(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              if (restaurantData1.length >= 5) {
-                listlength1 = 5;
-              } else if (restaurantData1.length <= 5) {
+              if (restaurantData1.length >= 15) {
+                listlength1 = 15;
+              } else if (restaurantData1.length <= 15) {
                 listlength1 = restaurantData1.length;
               }
 
@@ -131,15 +128,6 @@ fetchAllRestaurant() async {
                   itemCount: listlength1,
                   itemBuilder: (context, index) {
                     var couponDetatil;
-                    // double rating = 1.0;
-                    // int j = snapshot.data[index]['VendorRatingReviews'].length;
-
-                    // for (int i = 0; i < j - 1; i++) {
-                    //   rating = rating +
-                    //       double.parse(snapshot.data[index]['VendorRatingReviews']
-                    //           [i]['rating']);
-                    // }
-                    // rating = rating / j;
 
                     if (snapshot
                         .data[index]['user']['OffersAndCoupons'].isEmpty) {
@@ -315,21 +303,72 @@ fetchAllRestaurant() async {
                                                   SizedBox(
                                                     height: size.height * 0.035,
                                                   ),
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                        left: 10),
-                                                    width: size.width * 0.5,
-                                                    child: Text(
-                                                        "${snapshot.data[index]['name']}",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                            fontSize: 17,
-                                                            color: Color(
-                                                                0xff454cb0),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 10,
+                                                                right: 10),
+                                                        width: size.width * 0.4,
+                                                        child: Text(
+                                                            "${snapshot.data[index]['name']}",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                                fontSize: 17,
+                                                                color: Color(
+                                                                    0xff454cb0),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Spacer(),
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                            right: 10),
+                                                        height: 20,
+                                                        width: 40,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.green,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(6),
+                                                        ),
+                                                        child: Center(
+                                                          child: snapshot
+                                                                  .data[index][
+                                                                      'avgRating']
+                                                                  .isEmpty
+                                                              ? Text(
+                                                                  "⭐1.0",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          size.height *
+                                                                              0.018,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                )
+                                                              : Text(
+                                                                  "⭐${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          size.height *
+                                                                              0.018,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                   categoryData == null
                                                       ? SizedBox()
@@ -551,13 +590,6 @@ fetchAllRestaurant() async {
                                           Expanded(
                                             flex: 2,
                                             child: Container(
-                                                decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.blueGrey,
-                                                    )
-                                                  ],
-                                                ),
                                                 height: double.infinity,
                                                 width: double.infinity,
                                                 child: Column(

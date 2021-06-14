@@ -498,7 +498,7 @@ class _EditProfileState extends State<EditProfile> {
                         _isOtpSend2 == false ? _editProfile() : _verifyOtp();
                       },
                       child: _isOtpSend2 == false
-                          ? Text("Edit Profile",
+                          ? Text("Save Profile",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: size.height * 0.02))

@@ -72,16 +72,15 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
-    var result = await http.get(
-      Uri.parse(   APP_ROUTES +
+    var result = await http.get(Uri.parse(
+      APP_ROUTES +
           'getRestaurantInfos' +
           '?key=KEYWORD&value=$quickName' +
           '&latitude=' +
           latitude.toString() +
           '&longitude=' +
-          longitude.toString(),)
-   
-    );
+          longitude.toString(),
+    ));
     var restaurantfullData = json.decode(result.body)['data'];
     if (restaurantfullData.isEmpty) {
       restaurantData = [];
@@ -144,6 +143,17 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                             couponDetatil =
                                 "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                           }
+                        }
+                        int k = snapshot.data[index]['cuisines'].length;
+
+                        var categoryData = '';
+                        if (k != 0) {
+                          for (int j = 0; j <= k - 1; j++) {
+                            categoryData =
+                                '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
+                          }
+                        } else {
+                          categoryData = null;
                         }
                         return InkWell(
                           onTap: () {
@@ -264,14 +274,12 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                                             SizedBox(
                                               height: size.height * 0.005,
                                             ),
-                                            snapshot.data[index]['cuisines'][0]
-                                                        ['Category']['name'] ==
-                                                    null
+                                            categoryData == null
                                                 ? SizedBox()
                                                 : Container(
-                                                    width: size.width * 0.5,
+                                                    width: size.width * 0.38,
                                                     child: Text(
-                                                      "${snapshot.data[index]['cuisines'][0]['Category']['name']}",
+                                                      "$categoryData",
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: TextStyle(
@@ -287,11 +295,12 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                                             Container(
                                               child: Row(
                                                 children: [
-                                                  snapshot.data[index]
-                                                              ['avgRating'] ==
-                                                          null
+                                                  snapshot
+                                                          .data[index]
+                                                              ['avgRating']
+                                                          .isEmpty
                                                       ? Text(
-                                                          "⭐1",
+                                                          "⭐1.0",
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.height *
@@ -309,11 +318,7 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                                                                     Text("⭐"),
                                                               ),
                                                               Text(
-                                                                snapshot
-                                                                    .data[index]
-                                                                        [
-                                                                        'avgRating']
-                                                                    .toString(),
+                                                                "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         size.height *

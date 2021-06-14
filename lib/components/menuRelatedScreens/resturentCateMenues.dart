@@ -824,7 +824,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                                             child: Text("⭐"),
                                                           ),
                                                           Text(
-                                                            "$rating",
+                                                            "${rating.toStringAsFixed(1)}",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                     size.height *

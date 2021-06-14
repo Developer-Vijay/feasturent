@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/resturent_menues.dart';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/screens/home/components/sure_resturent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +12,8 @@ import '../slider.dart';
 import 'ViewAllPopular.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'ontap_offer.dart';
-  var popdata;
+
+var popdata;
 
 int checkDataLenght;
 
@@ -24,40 +28,65 @@ class _PopularListState extends State<PopularList> {
     super.initState();
   }
 
- fetchPopular() async {
+  fetchPopular() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getpopular menues");
-        return popularMenumemoizer.runOnce(() async {
+    return popularMenumemoizer.runOnce(() async {
+      var result = await http.get(Uri.parse(APP_ROUTES + 'getPopularMenues'));
+      if (result.statusCode == 200) {
+        popdata = json.decode(result.body)['data'];
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        return popdata;
+      } else {
+        popdata = [];
+        return popdata;
+      }
+    });
+  }
 
-    var result = await http.get(Uri.parse(APP_ROUTES + 'getPopularMenues'));
-    if (result.statusCode == 200) {
-      popdata = json.decode(result.body)['data'];
-      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      return popdata;
-    } else {
-      popdata = [];
-      return popdata;
-    }
-  });}
+  fetchAllRestaurant() async {
+    return allresturentmemoizer.runOnce(() async {
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
+
+      var result = await http.get(Uri.parse(
+        APP_ROUTES +
+            'getRestaurantInfos' +
+            '?key=ALL' +
+            '&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
+      ));
+      restaurantData1 = json.decode(result.body)['data'];
+      restaurantDatafinal1 = json.decode(result.body)['data'];
+      if (restaurantData1.isEmpty) {
+        return restaurantData1;
+      } else {
+        restaurantData1 = restaurantData1;
+        return restaurantData1;
+      }
+    });
+  }
 
   var sliderOffers;
 
   // ignore: missing_return
-fetchHomeSlider() async {
-            return homeslidermemoizer.runOnce(() async {
-
-    var result = await http.get(
-        Uri.parse(APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider'));
-    sliderOffers = json.decode(result.body)['data'];
-    if (sliderOffers.isEmpty) {
-      print("data not here");
-    } else {
-      print("data here");
-      if (sliderOffers[0]['status'] == true) {
-        return sliderOffers;
+  fetchHomeSlider() async {
+    return homeslidermemoizer.runOnce(() async {
+      var result = await http.get(Uri.parse(
+          APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=homeSlider'));
+      sliderOffers = json.decode(result.body)['data'];
+      if (sliderOffers.isEmpty) {
+        print("data not here");
+      } else {
+        print("data here");
+        if (sliderOffers[0]['status'] == true) {
+          return sliderOffers;
+        }
       }
-    }
-  });}
+    });
+  }
 
   int checher;
 
@@ -467,7 +496,144 @@ fetchHomeSlider() async {
                       );
                     }
                   },
-                ))
+                )),
+        Container(
+          margin: EdgeInsets.only(left: 20),
+          child: Text(
+            "Top Brands For You",
+            style: TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+            child: FutureBuilder(
+          future: this.fetchAllRestaurant(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              int legnth;
+              if (snapshot.data.length >= 50) {
+                legnth = 50;
+              } else {
+                legnth = snapshot.data.length;
+              }
+              return Container(
+                height: size.height * 0.14,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: legnth,
+                  itemBuilder: (context, index) {
+                    return snapshot.data[index]['isBrand'] != "1"
+                        ? SizedBox()
+                        : Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 3,
+                                            color: Colors.blueGrey,
+                                            spreadRadius: 1)
+                                      ],
+                                    ),
+                                    margin: EdgeInsets.only(
+                                        left: size.width * 0.011),
+                                    height: size.height * 0.08,
+                                    width: size.width * 0.24,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OfferListPage(
+                                                          ratingVendor: snapshot
+                                                                  .data[index]
+                                                              ['avgRating'],
+                                                          restaurantDa: snapshot
+                                                              .data[index])));
+                                        },
+                                        child: ClipOval(
+                                            child: snapshot.data[index]['user']
+                                                        ['profile'] !=
+                                                    null
+                                                ? CachedNetworkImage(
+                                                    imageUrl: S3_BASE_PATH +
+                                                        snapshot.data[index]
+                                                            ['user']['profile'],
+                                                    fit: BoxFit.cover,
+                                                    width: size.width * 0.2,
+                                                    height: size.height * 0.2,
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            Image.asset(
+                                                      "assets/images/feasturenttemp.jpeg",
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : Image.asset(
+                                                    "assets/images/feasturenttemp.jpeg",
+                                                    fit: BoxFit.cover,
+                                                    width: size.width * 0.2,
+                                                    height: size.height * 0.2,
+                                                  )),
+                                      ),
+                                    )),
+                              ),
+                              SizedBox(
+                                height: size.height * 0.01,
+                              ),
+                              Text(
+                                capitalize(snapshot.data[index]['name']),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: size.height * 0.017),
+                              )
+                            ],
+                          );
+                  },
+                ),
+              );
+            } else {
+              return Container(
+                height: size.height * 0.14,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        top: 8.0,
+                        left: 10,
+                      ),
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.grey[100],
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          margin: EdgeInsets.only(left: size.width * 0.011),
+                          height: size.height * 0.06,
+                          width: size.width * 0.2,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+          },
+        ))
       ],
     );
   }

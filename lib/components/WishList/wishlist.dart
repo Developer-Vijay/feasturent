@@ -224,7 +224,6 @@ class _WishlistState extends State<Wishlist> {
               return ListView(
                 children: [
                   ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: users.length,
@@ -478,17 +477,27 @@ class _WishlistState extends State<Wishlist> {
                                                           children: [
                                                             users[index].rating ==
                                                                     null
-                                                                ? Text(
-                                                                    "⭐1",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            size.height *
+                                                                ? users[index]
+                                                                            .rating ==
+                                                                        'null'
+                                                                    ? Text(
+                                                                        "⭐1.0",
+                                                                        style: TextStyle(
+                                                                            fontSize: size.height *
                                                                                 0.016,
-                                                                        color: Colors
-                                                                            .red,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  )
+                                                                            color:
+                                                                                Colors.red,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      )
+                                                                    : Text(
+                                                                        "⭐1.0",
+                                                                        style: TextStyle(
+                                                                            fontSize: size.height *
+                                                                                0.016,
+                                                                            color:
+                                                                                Colors.red,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      )
                                                                 : Container(
                                                                     child: Row(
                                                                       children: [
@@ -497,8 +506,7 @@ class _WishlistState extends State<Wishlist> {
                                                                               Text("⭐"),
                                                                         ),
                                                                         Text(
-                                                                          users[index]
-                                                                              .rating,
+                                                                          "${double.parse(users[index].rating).toStringAsFixed(1)}",
                                                                           style: TextStyle(
                                                                               fontSize: size.height * 0.016,
                                                                               color: Colors.red,

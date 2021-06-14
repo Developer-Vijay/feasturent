@@ -46,31 +46,30 @@ class _CollectionsState extends State<Collections> {
   // ignore: missing_return
   getdineouts() async {
     fetchDineoutShared();
-            return collectionmemoizer.runOnce(() async {
-
-    print(
-        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineout");
-    var response = await http.get(
-      Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL')
-      );
-    if (response.statusCode == 200) {
-      responseData = json.decode(response.body)['data'];
+    return collectionmemoizer.runOnce(() async {
       print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  dineout");
+      var response =
+          await http.get(Uri.parse(APP_ROUTES + 'dineout' + '?key=ALL'));
+      if (response.statusCode == 200) {
+        responseData = json.decode(response.body)['data'];
+        print(
+            "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-      return responseData;
-    } else if (response.statusCode == 204) {
-      responseData = [];
-      return responseData;
-    }
-  });}
+        return responseData;
+      } else if (response.statusCode == 204) {
+        responseData = [];
+        return responseData;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
       child: Container(
-        child: FutureBuilder<List<dynamic>>(
+        child: FutureBuilder(
           future: getdineouts(),
           // ignore: missing_return
           builder: (context, snapshot) {

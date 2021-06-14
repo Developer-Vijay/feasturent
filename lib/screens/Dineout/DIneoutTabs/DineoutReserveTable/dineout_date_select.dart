@@ -229,6 +229,7 @@ class _DineoutDateSelectionState extends State<DineoutDateSelection> {
     print("day $day");
 
     int cuHour = int.parse(DateTime.now().format('H'));
+    // ignore: unused_local_variable
     var cuFormat = DateTime.now().format('A');
     var cuday = DateTime.now().format('d');
     var cuMonth = DateTime.now().format('m');

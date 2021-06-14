@@ -87,7 +87,7 @@ class _AppDrawerState extends State<AppDrawer> {
             Container(
                 padding: EdgeInsets.only(top: 4),
                 height: MediaQuery.of(context).size.height * 0.125,
-                child: Image.asset("assets/images/feasturent_app_logo.png")),
+                child: Image.asset("assets/images/app_drawer_logo.png")),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.01,
             ),

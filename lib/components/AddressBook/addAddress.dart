@@ -615,9 +615,8 @@ class _AddAdressState extends State<AddAdress> {
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  addOrderAddress");
 
       _refreshtoken = prefs.getString('refreshToken');
-      var response = await http.post(
-        Uri.parse(USER_API + 'addOrderAddress')
-        , body: {
+      var response =
+          await http.post(Uri.parse(USER_API + 'addOrderAddress'), body: {
         "name": _fullnamecontroller.text,
         "phone": _phonenumbercontroller.text,
         "userId": userid.toString(),
@@ -661,7 +660,8 @@ class _AddAdressState extends State<AddAdress> {
 
         prefs.setBool("_isAuthenticate", false);
         Navigator.pop(context);
-
+        print(
+            "_____________________________________________________ navivate to login page");
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
