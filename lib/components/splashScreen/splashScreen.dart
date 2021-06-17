@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
+import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/onBoarding/appOnBoarding.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../constants.dart';
 
 class SplashScreenApp extends StatefulWidget {
   @override
@@ -17,7 +22,12 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero,() {
+      getCurrentLocation();
+    });
     getSession();
+    
+
     try {
       InternetAddress.lookup('google.com').then((result) {
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -56,6 +66,41 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
 
       previous = connresult;
     });
+  }
+  Future<void> getCurrentLocation() async {
+    try {
+      final geopostion = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        latitude = geopostion.latitude;
+        longitude = geopostion.longitude;
+
+        coordinates = Coordinates(latitude, longitude);
+        print(coordinates);
+      });
+
+      var temp = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      locality = temp.first.featureName;
+      area = temp.first.subLocality;
+      localArea = temp.first.subAdminArea;
+      state = temp.first.adminArea;
+      setState(() async {
+        if (locality == null) {
+          location = "$area , $state";
+        } else if (area == null) {
+          location = "$locality , $state";
+        } else if (state == null) {
+          location = "$locality , $area";
+        } else {
+          location = "$locality , $area , $state";
+        }
+        final SharedPreferences locationShared =
+            await SharedPreferences.getInstance();
+        locationShared.setString('tempLocation', location);
+      });
+    } catch (error) {
+      print(error);
+    }
   }
 
   void _showdialog() {

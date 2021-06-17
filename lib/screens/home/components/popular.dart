@@ -34,7 +34,10 @@ class _PopularListState extends State<PopularList> {
     return popularMenumemoizer.runOnce(() async {
       var result = await http.get(Uri.parse(APP_ROUTES + 'getPopularMenues'));
       if (result.statusCode == 200) {
-        popdata = json.decode(result.body)['data'];
+        setState(() {
+                          popdata = json.decode(result.body)['data'];
+
+                });
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         return popdata;
       } else {
@@ -58,7 +61,10 @@ class _PopularListState extends State<PopularList> {
             '&longitude=' +
             longitude.toString(),
       ));
-      restaurantData1 = json.decode(result.body)['data'];
+      setState(() {
+                    restaurantData1 = json.decode(result.body)['data'];
+
+            });
       restaurantDatafinal1 = json.decode(result.body)['data'];
       if (restaurantData1.isEmpty) {
         return restaurantData1;
@@ -508,7 +514,8 @@ class _PopularListState extends State<PopularList> {
           height: 20,
         ),
         Container(
-            child: FutureBuilder(
+            child: 
+            FutureBuilder(
           future: this.fetchAllRestaurant(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -518,15 +525,17 @@ class _PopularListState extends State<PopularList> {
               } else {
                 legnth = snapshot.data.length;
               }
-              return Container(
+              return  snapshot.data[0]==null ? Center(child: Text("No Restaurants found near you")):
+               Container(
                 height: size.height * 0.14,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: legnth,
                   itemBuilder: (context, index) {
-                    return snapshot.data[index]['isBrand'] != "1"
+                    return snapshot.data[index]['isBrand'] == "1"
                         ? SizedBox()
-                        : Column(
+                        : 
+                        Column(
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
@@ -553,9 +562,9 @@ class _PopularListState extends State<PopularList> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       OfferListPage(
-                                                          ratingVendor: snapshot
-                                                                  .data[index]
-                                                              ['avgRating'],
+                                                          // ratingVendor: snapshot
+                                                          //         .data[index]
+                                                          //     ['avgRating'],
                                                           restaurantDa: snapshot
                                                               .data[index])));
                                         },

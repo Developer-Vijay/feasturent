@@ -39,11 +39,11 @@ class _OfferListPageState extends State<OfferListPage> {
     if (widget.restID != null) {
       fetchData(widget.restID);
     } else {
-      if (widget.ratingVendor.isNotEmpty) {
-        setState(() {
-          ratingVendor = widget.ratingVendor[0]['avgRating'].toInt();
-        });
-      }
+      // if (widget.ratingVendor.isNotEmpty) {
+      //   setState(() {
+      //     ratingVendor = widget.ratingVendor[0]['avgRating'].toInt();
+      //   });
+      // }
       setState(() {
         dataChecker = true;
 
@@ -139,8 +139,6 @@ class _OfferListPageState extends State<OfferListPage> {
     print("dilebvtimr  $deliverTime");
   }
 
-
-
   int deliverTime;
   Future fetchRestaurantStatus() async {
     int id = restaurantDataCopy['id'];
@@ -163,13 +161,15 @@ class _OfferListPageState extends State<OfferListPage> {
         print(
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturent");
 
-        var result = await http
-            .get(Uri.parse(APP_ROUTES + 'getRestaurantInfos' + '?key=BYID&id=48'
-                // id.toString()+'&latitude=' +
-                // latitude.toString() +
-                // '&longitude=' +
-                // longitude.toString(),
-                ));
+        var result = await http.get(Uri.parse(
+          APP_ROUTES +
+              'getRestaurantInfos' +
+              '?key=BYID&id=$id'
+                  '&latitude=' +
+              latitude.toString() +
+              '&longitude=' +
+              longitude.toString(),
+        ));
         print("?????????");
         print(result.statusCode);
         print("################");
@@ -191,20 +191,20 @@ class _OfferListPageState extends State<OfferListPage> {
               }
             });
           }
-        } 
-        else {
-          print("???????");
-          print(result.statusCode);
-          print("??????????");
-          if (mounted) {
-            setState(() {
-              status = false;
-              WidgetsBinding.instance.addPostFrameCallback((_) =>
-                  // ignore: deprecated_member_use
-                  _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-            });
-          }
         }
+        // else {
+        //   print("???????");
+        //   print(result.statusCode);
+        //   print("??????????");
+        //   if (mounted) {
+        //     setState(() {
+        //       status = false;
+        //       WidgetsBinding.instance.addPostFrameCallback((_) =>
+        //           // ignore: deprecated_member_use
+        //           _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+        //     });
+        //   }
+        // }
       }
     }
 
@@ -358,16 +358,23 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 child: ListTile(
                                                   enabled: true,
                                                   selected: index == isSelect,
-                                                  title: Text(
-                                                    capitalize(restaurantDataCopy[
-                                                            'VendorCategories']
-                                                        [index]['title']),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontSize:
-                                                          size.height * 0.02,
-                                                    ),
+                                                  title: Row(
+                                                    children: [
+                                                      Text(
+                                                        capitalize(restaurantDataCopy[
+                                                                'VendorCategories']
+                                                            [index]['title']),
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              size.height * 0.02,
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      Text(" ${restaurantDataCopy['VendorCategories'][index]['title'].length}")
+                                                     
+                                                    ],
                                                   ),
                                                 ),
                                               );
@@ -847,7 +854,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                   [index]
                                                               [
                                                               'ReviewAndRatings']
-                                                          [i]['rating']);
+                                                          [i]['id'].toString());
                                             }
                                             rating = rating / k;
                                             if (rating >= 5) {
@@ -1964,7 +1971,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 restaurantDataCopy['Menus']
                                                             [index]
                                                         ['ReviewAndRatings'][i]
-                                                    ['rating']);
+                                                    ['id'].toString());
                                       }
                                       rating = rating / k;
                                       if (rating >= 5) {

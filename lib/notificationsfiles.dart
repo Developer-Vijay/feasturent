@@ -41,7 +41,7 @@ class Notifications {
     await flutterLocalNotificationsPlugin.schedule(0, title, body,
         scheduledNotificationDateTime, platformChannelSpecifics);
     Future.delayed(Duration.zero, () {
-      FlutterRingtonePlayer.playNotification();
+      FlutterRingtonePlayer.playNotification(asAlarm: true);
     });
   }
 

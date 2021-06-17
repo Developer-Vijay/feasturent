@@ -345,7 +345,7 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
         Map socketData = {
           "for": "DINEOUT BOOKING",
           "iconUrl": null, // if icon so paste url
-          "message": 'Order assigned', // message
+          "message": 'Dineout Booking', // message
           "userName": _nameController.text, // Username required
           "to": "DINEOUT VENDOR", // For whom
           "toneType": "short", // short/long

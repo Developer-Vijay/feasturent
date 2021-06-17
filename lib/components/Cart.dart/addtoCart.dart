@@ -40,8 +40,8 @@ class _CartScreenState extends State<CartScreen> {
     var result = await http.get(Uri.parse(
       APP_ROUTES +
           'getRestaurantInfos' +
-          '?key=BYID&id=' +
-          id.toString() +
+          '?key=BYID&id=$id' +
+          // id.toString() +
           '&latitude=' +
           latitude.toString() +
           '&longitude=' +

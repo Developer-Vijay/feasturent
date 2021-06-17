@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'components/Cart.dart/AddOnDataBase/addon_service.dart';
@@ -63,7 +64,12 @@ const kGoogleApiKey = "AIzaSyCg54XwhQZYIkN7gpaj3wy9__mxvYQB6oE";
 GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 //Profile Design
+var locality;
+var area;
+var localArea;
+var state;
 
+Coordinates coordinates;
 const kSpacingUnit = 10;
 
 const kDarkPrimaryColor = Color(0xFF212121);
