@@ -100,6 +100,7 @@ class _AllResturentState extends State<AllResturent> {
   var shownit;
   var dataset;
   fetchAllRestaurant() async {
+    print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     print(" from listview builder  ${DateTime.now()}");
     return allresturentmemoizer.runOnce(() async {
       fetchHomeSliderLength();
@@ -110,7 +111,6 @@ class _AllResturentState extends State<AllResturent> {
       print(latitude);
       print(longitude);
       var result = await http.get(Uri.parse(
-          // 'https://feasturent.in/api/appRoutes/getRestaurantInfos?key=ALL&latitude=28.690280700000002&longitude=76.9360013'));
         APP_ROUTES +
             'getRestaurantInfos' +
             '?key=ALL' +
@@ -120,7 +120,7 @@ class _AllResturentState extends State<AllResturent> {
             longitude.toString(),
       ));
       restaurantDatafinal1 = json.decode(result.body)['data'];
-
+      print(restaurantDatafinal1);
       if (result.statusCode == 200) {
         print(_authorization);
         setState(() {
@@ -210,7 +210,7 @@ class _AllResturentState extends State<AllResturent> {
                     //     ? Text("No Restaurants Found Near You")
                     //     :
                     Container(
-                  child: snapshot.data[0] == null
+                  child: snapshot.data.length <= 0
                       ? Text("No Restaurants Found Near You")
                       : ListView.builder(
                           padding: EdgeInsets.symmetric(horizontal: 10),

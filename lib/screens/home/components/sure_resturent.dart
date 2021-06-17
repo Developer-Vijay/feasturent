@@ -53,6 +53,10 @@ class _SureResturentState extends State<SureResturent> {
       ));
       print(_authorization);
 
+      print("######################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      print(result.body);
+      print(longitude);
+
       setState(() {
         restaurantData1 = json.decode(result.body)['data'];
         // restaurantDatafinal1 = json.decode(result.body)['data'];
@@ -134,6 +138,8 @@ class _SureResturentState extends State<SureResturent> {
               FutureBuilder(
             future: this.fetchAllRestaurant(),
             builder: (context, snapshot) {
+              print('4444444444444444444444444:::::::::::::::::::::');
+              print(snapshot.data);
               if (snapshot.hasData) {
                 if (restaurantData1.length >= 15) {
                   listlength1 = 15;
@@ -141,7 +147,7 @@ class _SureResturentState extends State<SureResturent> {
                   listlength1 = restaurantData1.length;
                 }
 
-                return snapshot.data[0] == null
+                return snapshot.data.length <= 0
                     ? Text("No Restaurants Found Near You")
                     : Container(
                         height: size.height * 0.435,

@@ -44,8 +44,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
       print("data fetch");
       if (result.statusCode == 200) {
         // setState(() {
-          restaurantData2 = json.decode(result.body)['data'];
-          fetch = restaurantData2;
+        restaurantData2 = json.decode(result.body)['data'];
+        fetch = restaurantData2;
         // });
         return restaurantData2;
       } else {
@@ -466,16 +466,20 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
             // Important Data
 
             Container(
-              child:
-              FutureBuilder(
-                      future: this.fetchAllRestaurant(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                            child: 
-                             snapshot.data[0]==null
-                  ? Center(child: Text("No Restuarnts Found Near You",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)):
-                            ListView.builder(
+              child: FutureBuilder(
+                future: this.fetchAllRestaurant(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      child: snapshot.data.length <= 0
+                          ? Center(
+                              child: Text(
+                              "No Restuarnts Found Near You",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ))
+                          : ListView.builder(
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -533,7 +537,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                         "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
                                   }
 
-                                  int k = snapshot.data[index]['cuisines'].length;
+                                  int k =
+                                      snapshot.data[index]['cuisines'].length;
                                   print(k);
                                   var categoryData = '';
                                   if (k != 0) {
@@ -549,14 +554,16 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => OfferListPage(
-                                                  // ratingVendor: snapshot.data[index]
-                                                  //     ['avgRating'],
-                                                  restaurantDa:
-                                                      snapshot.data[index])));
+                                              builder: (context) =>
+                                                  OfferListPage(
+                                                      // ratingVendor: snapshot.data[index]
+                                                      //     ['avgRating'],
+                                                      restaurantDa: snapshot
+                                                          .data[index])));
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.only(bottom: 14),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 14),
                                       child: Container(
                                           decoration: BoxDecoration(
                                               borderRadius:
@@ -578,19 +585,22 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                             Expanded(
                                                 flex: 0,
                                                 child: Container(
-                                                  alignment: Alignment.topCenter,
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                   height: size.height * 0.2,
                                                   child: Stack(
                                                     children: [
                                                       Container(
-                                                        margin: EdgeInsets.all(8),
+                                                        margin:
+                                                            EdgeInsets.all(8),
                                                         child: ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(10),
                                                           child: snapshot.data[
                                                                               index]
-                                                                          ['user']
+                                                                          [
+                                                                          'user']
                                                                       [
                                                                       'profile'] !=
                                                                   null
@@ -607,8 +617,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                   width:
                                                                       size.width *
                                                                           0.3,
-                                                                  fit:
-                                                                      BoxFit.fill,
+                                                                  fit: BoxFit
+                                                                      .fill,
                                                                   placeholder: (context,
                                                                           url) =>
                                                                       Center(
@@ -642,7 +652,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                   height: size.height * 0.2,
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     mainAxisSize:
                                                         MainAxisSize.max,
                                                     children: [
@@ -653,9 +664,10 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                         child: Row(
                                                           children: [
                                                             Text(
-                                                              capitalize(snapshot
-                                                                      .data[index]
-                                                                  ['name']),
+                                                              capitalize(
+                                                                  snapshot.data[
+                                                                          index]
+                                                                      ['name']),
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -671,7 +683,8 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                               padding:
                                                                   const EdgeInsets
                                                                           .only(
-                                                                      right: 12),
+                                                                      right:
+                                                                          12),
                                                             )
                                                           ],
                                                         ),
@@ -683,17 +696,19 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                       categoryData == null
                                                           ? SizedBox()
                                                           : Container(
-                                                              width: size.width *
-                                                                  0.5,
+                                                              width:
+                                                                  size.width *
+                                                                      0.5,
                                                               child: Text(
                                                                 "$categoryData",
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
-                                                                style: TextStyle(
-                                                                  fontSize:
-                                                                      size.height *
-                                                                          0.0175,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: size
+                                                                          .height *
+                                                                      0.0175,
                                                                   color: Colors
                                                                       .black,
                                                                 ),
@@ -744,15 +759,17 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                             //     ),
                                                             //   ),
                                                             Spacer(),
-                                                            couponDetatil == null
+                                                            couponDetatil ==
+                                                                    null
                                                                 ? SizedBox()
                                                                 : Image.asset(
                                                                     "assets/icons/discount_icon.jpg",
-                                                                    height:
-                                                                        size.height *
-                                                                            0.02,
+                                                                    height: size
+                                                                            .height *
+                                                                        0.02,
                                                                   ),
-                                                            couponDetatil == null
+                                                            couponDetatil ==
+                                                                    null
                                                                 ? snapshot.data[index]
                                                                             [
                                                                             'avgCost'] ==
@@ -765,17 +782,16 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                     padding:
                                                                         const EdgeInsets
                                                                             .only(
-                                                                      right: 12.0,
+                                                                      right:
+                                                                          12.0,
                                                                     ),
                                                                     child: Text(
                                                                       couponDetatil,
                                                                       style: TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight
-                                                                                  .bold,
-                                                                          fontSize:
-                                                                              size.height *
-                                                                                  0.016,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          fontSize: size.height *
+                                                                              0.016,
                                                                           color:
                                                                               kTextColor),
                                                                     ),
@@ -792,12 +808,12 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                 }
                               },
                             ),
-                          );
-                        } else {
-                          return LoadingListPage();
-                        }
-                      },
-                    ),
+                    );
+                  } else {
+                    return LoadingListPage();
+                  }
+                },
+              ),
             )
           ],
         ),

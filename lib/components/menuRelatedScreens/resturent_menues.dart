@@ -361,19 +361,22 @@ class _OfferListPageState extends State<OfferListPage> {
                                                   title: Row(
                                                     children: [
                                                       Text(
-                                                        capitalize(restaurantDataCopy[
-                                                                'VendorCategories']
-                                                            [index]['title']),
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
+                                                        capitalize(
+                                                            restaurantDataCopy[
+                                                                    'VendorCategories']
+                                                                [
+                                                                index]['title']),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: TextStyle(
                                                           fontSize:
-                                                              size.height * 0.02,
+                                                              size.height *
+                                                                  0.02,
                                                         ),
                                                       ),
                                                       Spacer(),
-                                                      Text(" ${restaurantDataCopy['VendorCategories'][index]['title'].length}")
-                                                     
+                                                      Text(
+                                                          " ${restaurantDataCopy['VendorCategories'][index]['Menus'].length}")
                                                     ],
                                                   ),
                                                 ),
@@ -532,22 +535,22 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 left: size.width * 0.04),
                                             child: ratingVendor == 5
                                                 ? Text(
-                                                    "Taste 100%",
+                                                    "Popularity 100%",
                                                   )
                                                 : ratingVendor == 4
                                                     ? Text(
-                                                        "Taste 80%",
+                                                        "Popularity 80%",
                                                       )
                                                     : ratingVendor == 3
                                                         ? Text(
-                                                            "Taste 60%",
+                                                            "Popularity 60%",
                                                           )
                                                         : ratingVendor == 2
                                                             ? Text(
-                                                                "Taste 40%",
+                                                                "Popularity 40%",
                                                               )
                                                             : Text(
-                                                                "Taste 20%",
+                                                                "Popularity 20%",
                                                               ))
                                       ],
                                     ),
@@ -848,13 +851,13 @@ class _OfferListPageState extends State<OfferListPage> {
                                             ratingLength = k;
                                             for (int i = 0; i <= k - 1; i++) {
                                               rating = rating +
-                                                  double.parse(
-                                                      restaurantDataCopy[
+                                                  double.parse(restaurantDataCopy[
                                                                       'Menus']
                                                                   [index]
                                                               [
                                                               'ReviewAndRatings']
-                                                          [i]['id'].toString());
+                                                          [i]['id']
+                                                      .toString());
                                             }
                                             rating = rating / k;
                                             if (rating >= 5) {
@@ -1969,9 +1972,10 @@ class _OfferListPageState extends State<OfferListPage> {
                                         rating = rating +
                                             double.parse(
                                                 restaurantDataCopy['Menus']
-                                                            [index]
-                                                        ['ReviewAndRatings'][i]
-                                                    ['id'].toString());
+                                                                [index]
+                                                            ['ReviewAndRatings']
+                                                        [i]['id']
+                                                    .toString());
                                       }
                                       rating = rating / k;
                                       if (rating >= 5) {
