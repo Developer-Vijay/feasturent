@@ -561,14 +561,14 @@ class _PopularListState extends State<PopularList> {
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OfferListPage(
-                                                                // ratingVendor: snapshot
-                                                                //         .data[index]
-                                                                //     ['avgRating'],
-                                                                restaurantDa:
-                                                                    snapshot.data[
-                                                                        index])));
+                                                        builder: (context) => OfferListPage(
+                                                            ratingVendor: snapshot
+                                                                .data[index][
+                                                                    'avgRating']
+                                                                .toDouble(),
+                                                            restaurantDa:
+                                                                snapshot.data[
+                                                                    index])));
                                               },
                                               child: ClipOval(
                                                   child: snapshot.data[index]
