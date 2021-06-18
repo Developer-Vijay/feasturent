@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class Notifications {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -26,6 +27,10 @@ class Notifications {
       'channel name',
       'channel description',
       icon: 'feasturent',
+      // playSound: true,
+      priority: Priority.high,
+      importance: Importance.max,
+      // sound:"test_sound.mp3",
       largeIcon: DrawableResourceAndroidBitmap('feasturent'),
     );
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
@@ -35,6 +40,9 @@ class Notifications {
     // ignore: deprecated_member_use
     await flutterLocalNotificationsPlugin.schedule(0, title, body,
         scheduledNotificationDateTime, platformChannelSpecifics);
+    Future.delayed(Duration.zero, () {
+      FlutterRingtonePlayer.playNotification(asAlarm: true);
+    });
   }
 
   Future<void> showBigPictureNotification(var contenttitle, var summary,

@@ -97,7 +97,10 @@ class _AllResturentState extends State<AllResturent> {
     print("data length $checkDataLenght");
   }
 
+  var shownit;
+  var dataset;
   fetchAllRestaurant() async {
+    print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     print(" from listview builder  ${DateTime.now()}");
     return allresturentmemoizer.runOnce(() async {
       fetchHomeSliderLength();
@@ -105,7 +108,8 @@ class _AllResturentState extends State<AllResturent> {
       print(
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
       print(" hit resturent api  ${DateTime.now()}");
-
+      print(latitude);
+      print(longitude);
       var result = await http.get(Uri.parse(
         APP_ROUTES +
             'getRestaurantInfos' +
@@ -115,12 +119,20 @@ class _AllResturentState extends State<AllResturent> {
             '&longitude=' +
             longitude.toString(),
       ));
-      print(_authorization);
       restaurantDatafinal1 = json.decode(result.body)['data'];
+      print(restaurantDatafinal1);
+      if (result.statusCode == 200) {
+        print(_authorization);
+        setState(() {
+          shownit = restaurantDatafinal1;
 
-      var dataset = json.decode(result.body)['data'];
-      print(" after hit result  ${DateTime.now()}");
-      return dataset;
+          dataset = json.decode(result.body)['data'];
+        });
+        print(" after hit result  ${DateTime.now()}");
+        return dataset;
+      } else {
+        print(result.statusCode);
+      }
     });
   }
 
@@ -178,295 +190,345 @@ class _AllResturentState extends State<AllResturent> {
         SizedBox(
           height: size.height * 0.017,
         ),
-        FutureBuilder(
-          future: this.fetchAllRestaurant(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.length >= 15) {
-                listlength = 15;
-              } else if (snapshot.data.length <= 15) {
-                listlength = snapshot.data.length;
-              }
+        Container(
+          child:
+              // shownit == null
+              //     ? Text("No Restaurants Found Near You")
+              // :
+              FutureBuilder(
+            future: this.fetchAllRestaurant(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data.length >= 15) {
+                  listlength = 15;
+                } else if (snapshot.data.length <= 15) {
+                  listlength = snapshot.data.length;
+                }
 
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: listlength,
-                itemBuilder: (context, index) {
-                  var couponDetatil;
-                  // double rating = 1.0;
-                  // int j = snapshot.data[index]['VendorRatingReviews'].length;
+                return
+                    // snapshot.data[0] == null
+                    //     ? Text("No Restaurants Found Near You")
+                    //     :
+                    Container(
+                  child: snapshot.data.length <= 0
+                      ? Text("No Restaurants Found Near You")
+                      : ListView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: listlength,
+                          itemBuilder: (context, index) {
+                            var couponDetatil;
+                            // double rating = 1.0;
+                            // int j = snapshot.data[index]['VendorRatingReviews'].length;
 
-                  // for (int i = 0; i < j - 1; i++) {
-                  //   rating = rating +
-                  //       double.parse(snapshot.data[index]['VendorRatingReviews']
-                  //           [i]['rating']);
-                  // }
-                  // rating = rating / j;
+                            // for (int i = 0; i < j - 1; i++) {
+                            //   rating = rating +
+                            //       double.parse(snapshot.data[index]['VendorRatingReviews']
+                            //           [i]['rating']);
+                            // }
+                            // rating = rating / j;
 
-                  if (snapshot
-                      .data[index]['user']['OffersAndCoupons'].isEmpty) {
-                  } else {
-                    if (snapshot.data[index]['user']['OffersAndCoupons'][0]
-                            ['discount'] ==
-                        null) {
-                      String symbol;
-                      if (snapshot.data[index]['user']['OffersAndCoupons'][0]
-                              ['couponDiscountType'] ==
-                          "PERCENT") {
-                        symbol = "%";
-                      } else {
-                        symbol = "₹";
-                      }
+                            if (snapshot.data[index]['user']['OffersAndCoupons']
+                                .isEmpty) {
+                            } else {
+                              if (snapshot.data[index]['user']
+                                      ['OffersAndCoupons'][0]['discount'] ==
+                                  null) {
+                                String symbol;
+                                if (snapshot.data[index]['user']
+                                            ['OffersAndCoupons'][0]
+                                        ['couponDiscountType'] ==
+                                    "PERCENT") {
+                                  symbol = "%";
+                                } else {
+                                  symbol = "₹";
+                                }
 
-                      couponDetatil =
-                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol off";
-                    } else {
-                      String symbol;
-                      if (snapshot.data[index]['user']['OffersAndCoupons'][0]
-                              ['discountType'] ==
-                          "PERCENT") {
-                        symbol = "%";
-                      } else {
-                        symbol = "₹";
-                      }
+                                couponDetatil =
+                                    "${snapshot.data[index]['user']['OffersAndCoupons'][0]['couponDiscount']}$symbol off";
+                              } else {
+                                String symbol;
+                                if (snapshot.data[index]['user']
+                                            ['OffersAndCoupons'][0]
+                                        ['discountType'] ==
+                                    "PERCENT") {
+                                  symbol = "%";
+                                } else {
+                                  symbol = "₹";
+                                }
 
-                      couponDetatil =
-                          "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
-                    }
-                  }
+                                couponDetatil =
+                                    "${snapshot.data[index]['user']['OffersAndCoupons'][0]['discount']}$symbol off";
+                              }
+                            }
 
-                  int k = snapshot.data[index]['cuisines'].length;
-                  print(k);
-                  var categoryData = '';
-                  if (k != 0) {
-                    for (int j = 0; j <= k - 1; j++) {
-                      categoryData =
-                          '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
-                    }
-                  } else {
-                    categoryData = null;
-                  }
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OfferListPage(
-                                  ratingVendor: snapshot.data[index]
-                                      ['avgRating'],
-                                  restaurantDa: snapshot.data[index])));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 2,
-                                    color: Colors.grey[200],
-                                    offset: Offset(0, 3),
-                                    spreadRadius: 2)
-                              ]),
-                          margin: EdgeInsets.only(
-                            left: size.width * 0.02,
-                            right: size.width * 0.02,
-                          ),
-                          height: size.height * 0.135,
-                          child: Row(children: [
-                            Expanded(
-                                flex: 0,
+                            int k = snapshot.data[index]['cuisines'].length;
+                            print(k);
+                            var categoryData = '';
+                            if (k != 0) {
+                              for (int j = 0; j <= k - 1; j++) {
+                                categoryData =
+                                    '$categoryData${snapshot.data[index]['cuisines'][j]['Category']['name']},';
+                              }
+                            } else {
+                              categoryData = null;
+                            }
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OfferListPage(
+                                            ratingVendor: snapshot.data[index]
+                                                ['avgRating'],
+                                            restaurantDa:
+                                                snapshot.data[index])));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 14),
                                 child: Container(
-                                  alignment: Alignment.topCenter,
-                                  height: size.height * 0.2,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.all(8),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: snapshot.data[index]['user']
-                                                      ['profile'] !=
-                                                  null
-                                              ? CachedNetworkImage(
-                                                  imageUrl: S3_BASE_PATH +
-                                                      snapshot.data[index]
-                                                          ['user']['profile'],
-                                                  height: size.height * 0.18,
-                                                  width: size.width * 0.3,
-                                                  fit: BoxFit.fill,
-                                                  placeholder: (context, url) =>
-                                                      Image.asset(
-                                                    "assets/images/defaultrestaurent.png",
-                                                    height: size.height * 0.18,
-                                                    width: size.width * 0.3,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                )
-                                              : Image.asset(
-                                                  "assets/images/defaultrestaurent.png",
-                                                  height: size.height * 0.18,
-                                                  width: size.width * 0.3,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 6,
-                                child: Container(
-                                  height: size.height * 0.2,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            top: size.height * 0.02),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              capitalize(
-                                                  snapshot.data[index]['name']),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                  fontSize: size.height * 0.02),
-                                            ),
-                                            Spacer(),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 12),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: size.height * 0.005,
-                                      ),
-                                      categoryData == null
-                                          ? SizedBox()
-                                          : Container(
-                                              width: size.width * 0.38,
-                                              child: Text(
-                                                "$categoryData",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      size.height * 0.0175,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                      SizedBox(
-                                        height: size.height * 0.015,
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            snapshot.data[index]['avgRating']
-                                                    .isEmpty
-                                                ? Text(
-                                                    "⭐1.0",
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.height * 0.016,
-                                                        color: Colors.red,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )
-                                                : Container(
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          child: Text("⭐"),
-                                                        ),
-                                                        Text(
-                                                          "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
-                                                          style: TextStyle(
-                                                              fontSize:
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 2,
+                                              color: Colors.grey[200],
+                                              offset: Offset(0, 3),
+                                              spreadRadius: 2)
+                                        ]),
+                                    margin: EdgeInsets.only(
+                                      left: size.width * 0.02,
+                                      right: size.width * 0.02,
+                                    ),
+                                    height: size.height * 0.135,
+                                    child: Row(children: [
+                                      Expanded(
+                                          flex: 0,
+                                          child: Container(
+                                            alignment: Alignment.topCenter,
+                                            height: size.height * 0.2,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.all(8),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: snapshot.data[index]
+                                                                    ['user']
+                                                                ['profile'] !=
+                                                            null
+                                                        ? CachedNetworkImage(
+                                                            imageUrl: S3_BASE_PATH +
+                                                                snapshot.data[
+                                                                            index]
+                                                                        ['user']
+                                                                    ['profile'],
+                                                            height:
+                                                                size.height *
+                                                                    0.18,
+                                                            width: size.width *
+                                                                0.3,
+                                                            fit: BoxFit.fill,
+                                                            placeholder:
+                                                                (context,
+                                                                        url) =>
+                                                                    Image.asset(
+                                                              "assets/images/defaultrestaurent.png",
+                                                              height:
                                                                   size.height *
-                                                                      0.016,
-                                                              color: Colors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                                      0.18,
+                                                              width:
+                                                                  size.width *
+                                                                      0.3,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                          )
+                                                        : Image.asset(
+                                                            "assets/images/defaultrestaurent.png",
+                                                            height:
+                                                                size.height *
+                                                                    0.18,
+                                                            width: size.width *
+                                                                0.3,
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                   ),
-                                            Spacer(),
-                                            couponDetatil == null
-                                                ? SizedBox()
-                                                : Image.asset(
-                                                    "assets/icons/discount_icon.jpg",
-                                                    height: size.height * 0.02,
-                                                  ),
-                                            couponDetatil == null
-                                                ? snapshot.data[index]
-                                                            ['avgCost'] ==
-                                                        null
-                                                    ? SizedBox()
-                                                    : Padding(
+                                                ),
+                                              ],
+                                            ),
+                                          )),
+                                      Expanded(
+                                          flex: 6,
+                                          child: Container(
+                                            height: size.height * 0.2,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      top: size.height * 0.02),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        capitalize(
+                                                            snapshot.data[index]
+                                                                ['name']),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.02),
+                                                      ),
+                                                      Spacer(),
+                                                      Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .only(
-                                                          right: 12.0,
-                                                        ),
-                                                        child: Text(
-                                                          "₹ ${snapshot.data[index]['avgCost']} Cost for ${snapshot.data[index]['forPeople']}",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize:
-                                                                  size.height *
-                                                                      0.016,
-                                                              color:
-                                                                  kTextColor),
-                                                        ),
+                                                                    .only(
+                                                                right: 12),
                                                       )
-                                                : Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      right: 12.0,
-                                                    ),
-                                                    child: Text(
-                                                      couponDetatil,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize:
-                                                              size.height *
-                                                                  0.016,
-                                                          color: kTextColor),
-                                                    ),
+                                                    ],
                                                   ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ))
-                          ])),
-                    ),
-                  );
-                },
-              );
-            } else {
-              return LoadingListPage();
-            }
-          },
+                                                ),
+                                                SizedBox(
+                                                  height: size.height * 0.005,
+                                                ),
+                                                categoryData == null
+                                                    ? SizedBox()
+                                                    : Container(
+                                                        width:
+                                                            size.width * 0.38,
+                                                        child: Text(
+                                                          "$categoryData",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                size.height *
+                                                                    0.0175,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                SizedBox(
+                                                  height: size.height * 0.015,
+                                                ),
+                                                Container(
+                                                  child: Row(
+                                                    children: [
+                                                      snapshot.data[index]['avgRating']
+                                                              .isEmpty
+                                                          ? Text(
+                                                              "⭐1.0",
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      size.height * 0.016,
+                                                                  color: Colors.red,
+                                                                  fontWeight:
+                                                                      FontWeight.bold),
+                                                            )
+                                                          : Container(
+                                                              child: Row(
+                                                                children: [
+                                                                  Container(
+                                                                    child: Text("⭐"),
+                                                                  ),
+                                                                  Text(
+                                                                    "${snapshot.data[index]['avgRating']}",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.016,
+                                                                        color: Colors.red,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                      Spacer(),
+                                                      couponDetatil == null
+                                                          ? SizedBox()
+                                                          : Image.asset(
+                                                              "assets/icons/discount_icon.jpg",
+                                                              height:
+                                                                  size.height *
+                                                                      0.02,
+                                                            ),
+                                                      couponDetatil == null
+                                                          ? snapshot.data[index]
+                                                                      [
+                                                                      'avgCost'] ==
+                                                                  null
+                                                              ? SizedBox()
+                                                              : Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                    right: 12.0,
+                                                                  ),
+                                                                  child: Text(
+                                                                    "₹ ${snapshot.data[index]['avgCost']} Cost for ${snapshot.data[index]['forPeople']}",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.016,
+                                                                        color:
+                                                                            kTextColor),
+                                                                  ),
+                                                                )
+                                                          : Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                right: 12.0,
+                                                              ),
+                                                              child: Text(
+                                                                couponDetatil,
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        size.height *
+                                                                            0.016,
+                                                                    color:
+                                                                        kTextColor),
+                                                              ),
+                                                            ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                    ])),
+                              ),
+                            );
+                          },
+                        ),
+                );
+              } else {
+                return LoadingListPage();
+              }
+            },
+          ),
         )
       ],
     );

@@ -34,7 +34,9 @@ class _PopularListState extends State<PopularList> {
     return popularMenumemoizer.runOnce(() async {
       var result = await http.get(Uri.parse(APP_ROUTES + 'getPopularMenues'));
       if (result.statusCode == 200) {
-        popdata = json.decode(result.body)['data'];
+        setState(() {
+          popdata = json.decode(result.body)['data'];
+        });
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         return popdata;
       } else {
@@ -58,7 +60,9 @@ class _PopularListState extends State<PopularList> {
             '&longitude=' +
             longitude.toString(),
       ));
-      restaurantData1 = json.decode(result.body)['data'];
+      setState(() {
+        restaurantData1 = json.decode(result.body)['data'];
+      });
       restaurantDatafinal1 = json.decode(result.body)['data'];
       if (restaurantData1.isEmpty) {
         return restaurantData1;
@@ -88,6 +92,7 @@ class _PopularListState extends State<PopularList> {
     });
   }
 
+  var show;
   int checher;
 
   @override
@@ -501,7 +506,10 @@ class _PopularListState extends State<PopularList> {
           margin: EdgeInsets.only(left: 20),
           child: Text(
             "Top Brands For You",
-            style: TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: kTextColor,
+                fontSize: size.height * 0.025),
           ),
         ),
         SizedBox(
@@ -518,92 +526,102 @@ class _PopularListState extends State<PopularList> {
               } else {
                 legnth = snapshot.data.length;
               }
-              return Container(
-                height: size.height * 0.14,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: legnth,
-                  itemBuilder: (context, index) {
-                    return snapshot.data[index]['isBrand'] != "1"
-                        ? SizedBox()
-                        : Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            blurRadius: 3,
-                                            color: Colors.blueGrey,
-                                            spreadRadius: 1)
-                                      ],
+              return snapshot.data.length <= 0
+                  ? SizedBox()
+                  : Container(
+                      height: size.height * 0.14,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: legnth,
+                        itemBuilder: (context, index) {
+                          return snapshot.data[index]['isBrand'] != "1"
+                              ? SizedBox()
+                              : Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 3,
+                                                  color: Colors.blueGrey,
+                                                  spreadRadius: 1)
+                                            ],
+                                          ),
+                                          margin: EdgeInsets.only(
+                                              left: size.width * 0.011),
+                                          height: size.height * 0.08,
+                                          width: size.width * 0.24,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: FlatButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            OfferListPage(
+                                                                // ratingVendor: snapshot
+                                                                //         .data[index]
+                                                                //     ['avgRating'],
+                                                                restaurantDa:
+                                                                    snapshot.data[
+                                                                        index])));
+                                              },
+                                              child: ClipOval(
+                                                  child: snapshot.data[index]
+                                                                  ['user']
+                                                              ['profile'] !=
+                                                          null
+                                                      ? CachedNetworkImage(
+                                                          imageUrl: S3_BASE_PATH +
+                                                              snapshot.data[
+                                                                          index]
+                                                                      ['user']
+                                                                  ['profile'],
+                                                          fit: BoxFit.cover,
+                                                          width:
+                                                              size.width * 0.2,
+                                                          height:
+                                                              size.height * 0.2,
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
+                                                          placeholder:
+                                                              (context, url) =>
+                                                                  Image.asset(
+                                                            "assets/images/feasturenttemp.jpeg",
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        )
+                                                      : Image.asset(
+                                                          "assets/images/feasturenttemp.jpeg",
+                                                          fit: BoxFit.cover,
+                                                          width:
+                                                              size.width * 0.2,
+                                                          height:
+                                                              size.height * 0.2,
+                                                        )),
+                                            ),
+                                          )),
                                     ),
-                                    margin: EdgeInsets.only(
-                                        left: size.width * 0.011),
-                                    height: size.height * 0.08,
-                                    width: size.width * 0.24,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: FlatButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OfferListPage(
-                                                          ratingVendor: snapshot
-                                                                  .data[index]
-                                                              ['avgRating'],
-                                                          restaurantDa: snapshot
-                                                              .data[index])));
-                                        },
-                                        child: ClipOval(
-                                            child: snapshot.data[index]['user']
-                                                        ['profile'] !=
-                                                    null
-                                                ? CachedNetworkImage(
-                                                    imageUrl: S3_BASE_PATH +
-                                                        snapshot.data[index]
-                                                            ['user']['profile'],
-                                                    fit: BoxFit.cover,
-                                                    width: size.width * 0.2,
-                                                    height: size.height * 0.2,
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Icon(Icons.error),
-                                                    placeholder:
-                                                        (context, url) =>
-                                                            Image.asset(
-                                                      "assets/images/feasturenttemp.jpeg",
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  )
-                                                : Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
-                                                    fit: BoxFit.cover,
-                                                    width: size.width * 0.2,
-                                                    height: size.height * 0.2,
-                                                  )),
-                                      ),
-                                    )),
-                              ),
-                              SizedBox(
-                                height: size.height * 0.01,
-                              ),
-                              Text(
-                                capitalize(snapshot.data[index]['name']),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: size.height * 0.017),
-                              )
-                            ],
-                          );
-                  },
-                ),
-              );
+                                    SizedBox(
+                                      height: size.height * 0.01,
+                                    ),
+                                    Text(
+                                      capitalize(snapshot.data[index]['name']),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: size.height * 0.017),
+                                    )
+                                  ],
+                                );
+                        },
+                      ),
+                    );
             } else {
               return Container(
                 height: size.height * 0.14,

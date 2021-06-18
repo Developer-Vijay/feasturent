@@ -39,11 +39,11 @@ class _OfferListPageState extends State<OfferListPage> {
     if (widget.restID != null) {
       fetchData(widget.restID);
     } else {
-      if (widget.ratingVendor.isNotEmpty) {
-        setState(() {
-          ratingVendor = widget.ratingVendor[0]['avgRating'].toInt();
-        });
-      }
+      // if (widget.ratingVendor.isNotEmpty) {
+      //   setState(() {
+      //     ratingVendor = widget.ratingVendor[0]['avgRating'].toInt();
+      //   });
+      // }
       setState(() {
         dataChecker = true;
 
@@ -53,6 +53,7 @@ class _OfferListPageState extends State<OfferListPage> {
       });
       calculateDeliveryTime(restaurantDataCopy);
       getList();
+      // fetchData(48);
       fetchRestaurantStatus();
     }
   }
@@ -65,7 +66,7 @@ class _OfferListPageState extends State<OfferListPage> {
   fetchData(id) async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
-
+    print(id);
     var result = await http.get(Uri.parse(
       APP_ROUTES +
           'getRestaurantInfos' +
@@ -77,8 +78,9 @@ class _OfferListPageState extends State<OfferListPage> {
     ));
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");
+    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
     print(restaurantData);
-
+    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
     if (restaurantData.isEmpty || restaurantData == null) {
       setState(() {
         dataChecker = true;
@@ -139,7 +141,10 @@ class _OfferListPageState extends State<OfferListPage> {
 
   int deliverTime;
   Future fetchRestaurantStatus() async {
-    int id = restaurantDataCopy['id'] as int;
+    int id = restaurantDataCopy['id'];
+    print("?????????");
+    print(id);
+    print("?????????");
     if (restaurantDataCopy['user']['Setting'] == null) {
       status = false;
       WidgetsBinding.instance.addPostFrameCallback(
@@ -147,6 +152,7 @@ class _OfferListPageState extends State<OfferListPage> {
           (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
     } else {
       status = restaurantDataCopy['user']['Setting']['isActive'];
+
       if (status == false) {
         WidgetsBinding.instance.addPostFrameCallback(
             // ignore: deprecated_member_use
@@ -155,45 +161,50 @@ class _OfferListPageState extends State<OfferListPage> {
         print(
             "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturent");
 
-        var result = await http.get(Uri.parse(APP_ROUTES +
-            'getRestaurantInfos' +
-            '?key=BYID&id=' +
-            id.toString()+'&latitude=' +
-            latitude.toString() +
-            '&longitude=' +
-            longitude.toString(),));
+        var result = await http.get(Uri.parse(
+          APP_ROUTES +
+              'getRestaurantInfos' +
+              '?key=BYID&id=$id'
+                  '&latitude=' +
+              latitude.toString() +
+              '&longitude=' +
+              longitude.toString(),
+        ));
+        print("?????????");
         print(result.statusCode);
-        if(result.statusCode==200){
-              if (mounted) {
-          setState(() {
-            resturantStatus = json.decode(result.body)['data'];
-            if (resturantStatus[0]['user']['Setting'] == null) {
-              status = false;
-              WidgetsBinding.instance.addPostFrameCallback((_) =>
-                  // ignore: deprecated_member_use
-                  _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-            } else {
-              status = resturantStatus[0]['user']['Setting']['isActive'];
-              if (status == false) {
-                WidgetsBinding.instance.addPostFrameCallback((_) =>
-                    // ignore: deprecated_member_use
-                    _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
-              }
-            }
-          });
-        }
-        }else{
-
-          if(mounted){
+        print("################");
+        if (result.statusCode == 200) {
+          if (mounted) {
             setState(() {
-               status = false;
-              WidgetsBinding.instance.addPostFrameCallback((_) =>
-                  // ignore: deprecated_member_use
-                  _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+              resturantStatus = json.decode(result.body)['data'];
+              if (resturantStatus[0]['user']['Setting'] == null) {
+                status = false;
+                WidgetsBinding.instance.addPostFrameCallback((_) =>
+                    _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+              } else {
+                status = resturantStatus[0]['user']['Setting']['isActive'];
+                if (status == false) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) =>
+                      _scaffoldKey.currentState
+                          .showSnackBar(restaurantSnackBar));
+                }
+              }
             });
           }
         }
-    
+        // else {
+        //   print("???????");
+        //   print(result.statusCode);
+        //   print("??????????");
+        //   if (mounted) {
+        //     setState(() {
+        //       status = false;
+        //       WidgetsBinding.instance.addPostFrameCallback((_) =>
+        //           // ignore: deprecated_member_use
+        //           _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
+        //     });
+        //   }
+        // }
       }
     }
 
@@ -347,16 +358,26 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 child: ListTile(
                                                   enabled: true,
                                                   selected: index == isSelect,
-                                                  title: Text(
-                                                    capitalize(restaurantDataCopy[
-                                                            'VendorCategories']
-                                                        [index]['title']),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontSize:
-                                                          size.height * 0.02,
-                                                    ),
+                                                  title: Row(
+                                                    children: [
+                                                      Text(
+                                                        capitalize(
+                                                            restaurantDataCopy[
+                                                                    'VendorCategories']
+                                                                [
+                                                                index]['title']),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              size.height *
+                                                                  0.02,
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      Text(
+                                                          " ${restaurantDataCopy['VendorCategories'][index]['Menus'].length}")
+                                                    ],
                                                   ),
                                                 ),
                                               );
@@ -491,7 +512,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                     Text("23");
                                                   },
                                                   starCount: 1,
-                                                  rating: 5.0,
+                                                  rating: 3.0,
                                                   size: size.height * 0.025,
                                                   isReadOnly: true,
                                                   defaultIconData: Icons
@@ -514,22 +535,22 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 left: size.width * 0.04),
                                             child: ratingVendor == 5
                                                 ? Text(
-                                                    "Taste 100%",
+                                                    "Popularity 100%",
                                                   )
                                                 : ratingVendor == 4
                                                     ? Text(
-                                                        "Taste 80%",
+                                                        "Popularity 80%",
                                                       )
                                                     : ratingVendor == 3
                                                         ? Text(
-                                                            "Taste 60%",
+                                                            "Popularity 60%",
                                                           )
                                                         : ratingVendor == 2
                                                             ? Text(
-                                                                "Taste 40%",
+                                                                "Popularity 40%",
                                                               )
                                                             : Text(
-                                                                "Taste 20%",
+                                                                "Popularity 20%",
                                                               ))
                                       ],
                                     ),
@@ -775,18 +796,20 @@ class _OfferListPageState extends State<OfferListPage> {
                                                 "Currently closed...",
                                                 style: offerRowHeadingStyle,
                                               )),
-                                 restaurantDataCopy['isBrand'] != "1"?SizedBox():   Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Image.asset(
-                                          'assets/images/brand.png',
-                                          height: 30,
-                                          width: 50,
-                                        ),
-                                      ],
-                                    )
+                                    restaurantDataCopy['isBrand'] != "1"
+                                        ? SizedBox()
+                                        : Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Image.asset(
+                                                'assets/images/brand.png',
+                                                height: 30,
+                                                width: 50,
+                                              ),
+                                            ],
+                                          )
                                   ],
                                 )),
                                 SizedBox(
@@ -828,13 +851,13 @@ class _OfferListPageState extends State<OfferListPage> {
                                             ratingLength = k;
                                             for (int i = 0; i <= k - 1; i++) {
                                               rating = rating +
-                                                  double.parse(
-                                                      restaurantDataCopy[
+                                                  double.parse(restaurantDataCopy[
                                                                       'Menus']
                                                                   [index]
                                                               [
                                                               'ReviewAndRatings']
-                                                          [i]['rating']);
+                                                          [i]['id']
+                                                      .toString());
                                             }
                                             rating = rating / k;
                                             if (rating >= 5) {
@@ -1373,7 +1396,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           children: [
                                                                             Container(child: Text("⭐")),
                                                                             Text(
-                                                                              "${rating.toStringAsFixed(1)}",
+                                                                              "${restaurantDataCopy['Menus'][index]['ReviewAndRatings'].length}",
                                                                               style: TextStyle(fontSize: size.height * 0.014, color: Colors.red, fontWeight: FontWeight.bold),
                                                                             ),
                                                                             Spacer(),
@@ -1949,9 +1972,10 @@ class _OfferListPageState extends State<OfferListPage> {
                                         rating = rating +
                                             double.parse(
                                                 restaurantDataCopy['Menus']
-                                                            [index]
-                                                        ['ReviewAndRatings'][i]
-                                                    ['rating']);
+                                                                [index]
+                                                            ['ReviewAndRatings']
+                                                        [i]['id']
+                                                    .toString());
                                       }
                                       rating = rating / k;
                                       if (rating >= 5) {
@@ -2478,7 +2502,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           Container(
                                                                               child: Text("⭐")),
                                                                           Text(
-                                                                            "${rating.toStringAsFixed(1)}",
+                                                                          "${restaurantDataCopy['Menus'][index]['ReviewAndRatings'].length}",
                                                                             style: TextStyle(
                                                                                 fontSize: size.height * 0.014,
                                                                                 color: Colors.red,

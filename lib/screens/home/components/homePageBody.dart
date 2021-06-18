@@ -27,56 +27,58 @@ class _HomePageBodyState extends State<HomePageBody> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        body: RefreshIndicator(
-      key: refreshKey,
-      onRefresh: refreshList,
-      child: Column(
-        children: [
-          Expanded(
-            flex: 18,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Column(
-                  children: [
-                    DiscountCard(),
-                    CategoryList(),
-                    CategoriesList(),
-                    SureResturent(),
-                    PopularList(),
-                    AllResturent(),
-                    Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: size.height * 0.1,
-                              width: size.width * 0.5,
-                              child: Image.asset(
-                                "assets/images/feasturent_app_logo.png",
+    return SafeArea(
+      child: Scaffold(
+          body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: refreshList,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 18,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Column(
+                    children: [
+                      DiscountCard(),
+                      CategoryList(),
+                      CategoriesList(),
+                      SureResturent(),
+                      PopularList(),
+                      AllResturent(),
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: size.height * 0.1,
+                                width: size.width * 0.5,
+                                child: Image.asset(
+                                  "assets/images/feasturent_app_logo.png",
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.01,
-                            ),
-                            Text("Feasturent gives opportunity"),
-                            Text("to Experience the "),
-                            Text("great foods"),
-                          ],
+                              SizedBox(
+                                height: size.height * 0.01,
+                              ),
+                              Text("Feasturent gives opportunity"),
+                              Text("to Experience the "),
+                              Text("great foods"),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    ));
+          ],
+        ),
+      )),
+    );
   }
 }

@@ -49,6 +49,11 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
   }
 
   calculatedata() {
+    print('##########################!!!!!!!!!!!!!!!!!!!!!::::::::::::::::::');
+    print(menuData['Menus'][0]['ReviewAndRatings'].length);
+    print(menuData['Menus'][0]['MenuOffers']);
+    print(menuData['Menus'][0]['AddonMenus']);
+    print('##########################!!!!!!!!!!!!!!!!!!!!!::::::::::::::::::');
     int k = menuData['Menus'].length;
     for (int i = 0; i <= k - 1; i++) {
       if (menuData['Menus'][i]['vendorCategoryId'] != vendorID) {
@@ -210,7 +215,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                   for (int i = 0; i <= k - 1; i++) {
                                     rating = rating +
                                         double.parse(menuData['Menus'][index]
-                                            ['ReviewAndRatings'][i]['rating']);
+                                            ['ReviewAndRatings'][i]['id'].toString());
                                   }
                                   rating = rating / k;
                                   if (rating >= 5) {

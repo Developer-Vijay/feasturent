@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     changePage();
     takeLocation();
     getSession();
-    getCurrentLocation();
+    // getCurrentLocation();
     fetchwelcomeBanner();
   }
 

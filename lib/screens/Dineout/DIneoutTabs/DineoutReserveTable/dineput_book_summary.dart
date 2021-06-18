@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:feasturent_costomer_app/constants.dart';
+import 'package:feasturent_costomer_app/main.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/DineoutReserveTable/dineout_confirmed.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -316,10 +317,8 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
       print(
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  book table");
 
-      var response =
-          await http.post(
-            Uri.parse(  APP_ROUTES + 'bookTable')
-          , body: bookbody, headers: {
+      var response = await http
+          .post(Uri.parse(APP_ROUTES + 'bookTable'), body: bookbody, headers: {
         "Content-Type": "application/json",
       });
       var responseData = jsonDecode(response.body);
@@ -343,6 +342,15 @@ class _DineoutBookingSummaryState extends State<DineoutBookingSummary> {
                         femaleguest1: femaleguests,
                       )));
         });
+        Map socketData = {
+          "for": "DINEOUT BOOKING",
+          "iconUrl": null, // if icon so paste url
+          "message": 'Dineout Booking', // message
+          "userName": _nameController.text, // Username required
+          "to": "DINEOUT VENDOR", // For whom
+          "toneType": "short", // short/long
+        };
+        socket.emit("pushNotifications", socketData);
         Notifications().scheduleNotification(
             "Dear ${_nameController.text}", "Your Table is Booked For $guests");
       } else {
