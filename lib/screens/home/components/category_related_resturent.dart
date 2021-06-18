@@ -27,6 +27,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
       cateId = widget.categoryid;
     });
     print(menuName);
+    print("Category id is $cateId");
     getList();
   }
 
@@ -68,7 +69,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
   var restaurantMenu;
   var restaurantData;
 
-  Future<List<dynamic>> fetchAllRestaurant() async {
+   fetchAllRestaurant() async {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
@@ -85,6 +86,9 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
     if (result.statusCode == 200) {
       setState(() {
         restaurantfullData = json.decode(result.body)['data'];
+        print("?????????????????");
+        print(result.body);
+        print("dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
       });
       if (restaurantfullData.isEmpty) {
         restaurantData = [];
@@ -113,17 +117,22 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
         body: Container(
           child:
            
-          FutureBuilder<List<dynamic>>(
+          FutureBuilder(
             future: fetchAllRestaurant(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return snapshot.data.isNotEmpty
+                return 
+                snapshot.data.isNotEmpty
                     // ignore: unrelated_type_equality_checks
-                    ? snapshot.data[0] == null
-                        ? Center(
-                            child: Text("No Restaurants Found Near you"),
-                          )
-                        : ListView.builder(
+                    ? 
+                    // snapshot.data == null
+                    //     ? 
+                    //     Center(
+                    //         child: Text("No Restaurants Found Near you"),
+                    //       )
+
+                    //     : 
+                        ListView.builder(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
@@ -354,8 +363,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                     child: Row(
                                                       children: [
                                                         snapshot
-                                                                .data[index][
-                                                                    'avgRating']
+                                                                .data[index]['avgRating']
                                                                 .isEmpty
                                                             ? Text(
                                                                 "⭐1.0",
@@ -377,7 +385,7 @@ class _CategoryRelatedMenuesState extends State<CategoryRelatedMenues> {
                                                                           "⭐"),
                                                                     ),
                                                                     Text(
-                                                                      "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
+                                                                      "${snapshot.data[index]['avgRating']}",
                                                                       style: TextStyle(
                                                                           fontSize: size.height *
                                                                               0.016,

@@ -512,7 +512,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                     Text("23");
                                                   },
                                                   starCount: 1,
-                                                  rating: 5.0,
+                                                  rating: 3.0,
                                                   size: size.height * 0.025,
                                                   isReadOnly: true,
                                                   defaultIconData: Icons
@@ -1396,7 +1396,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           children: [
                                                                             Container(child: Text("⭐")),
                                                                             Text(
-                                                                              "${rating.toStringAsFixed(1)}",
+                                                                              "${restaurantDataCopy['Menus'][index]['ReviewAndRatings'].length}",
                                                                               style: TextStyle(fontSize: size.height * 0.014, color: Colors.red, fontWeight: FontWeight.bold),
                                                                             ),
                                                                             Spacer(),
@@ -2502,7 +2502,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           Container(
                                                                               child: Text("⭐")),
                                                                           Text(
-                                                                            "${rating.toStringAsFixed(1)}",
+                                                                          "${restaurantDataCopy['Menus'][index]['ReviewAndRatings'].length}",
                                                                             style: TextStyle(
                                                                                 fontSize: size.height * 0.014,
                                                                                 color: Colors.red,

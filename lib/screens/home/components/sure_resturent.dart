@@ -32,6 +32,8 @@ class _SureResturentState extends State<SureResturent> {
     super.initState();
   }
 
+  bool show = false;
+
   var data2;
   fetchAllRestaurant() async {
     print(latitude);
@@ -42,7 +44,6 @@ class _SureResturentState extends State<SureResturent> {
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
       var result = await http.get(Uri.parse(
-        // 'https://feasturent.in/api/appRoutes/getRestaurantInfos?key=ALL&latitude=28.690280700000002&longitude=76.9360013'
         APP_ROUTES +
             'getRestaurantInfos' +
             '?key=ALL' +
@@ -59,12 +60,13 @@ class _SureResturentState extends State<SureResturent> {
 
       setState(() {
         restaurantData1 = json.decode(result.body)['data'];
-        // restaurantDatafinal1 = json.decode(result.body)['data'];
+        restaurantDatafinal1 = json.decode(result.body)['data'];
       });
       if (result.statusCode == 200) {
         setState(() {
           // restaurantDatafinal1=restaurantData1['data'];
           data2 = json.decode(result.body)['data'];
+          show = false;
         });
 
         if (restaurantData1.isEmpty) {
@@ -95,47 +97,13 @@ class _SureResturentState extends State<SureResturent> {
                       fontSize: size.height * 0.025),
                 )),
             Spacer(),
-            // Container(
-            //     child: FlatButton(
-            //         onPressed: () {
-            //           if (restaurantData != null) {
-            //             Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(
-            //                   builder: (context) => ViewallRestaurant(
-            //                     restData: restaurantData,
-            //                   ),
-            //                 ));
-            //           }
-            //         },
-            //         child: Row(
-            //           children: [
-            //             Container(
-            //               margin: EdgeInsets.only(left: 15),
-            //               child: Text(
-            //                 "View All",
-            //                 style: TextStyle(
-            //                     fontWeight: FontWeight.bold,
-            //                     color: kPrimaryColor),
-            //               ),
-            //             ),
-            //             Icon(
-            //               Icons.arrow_right_rounded,
-            //               color: kSecondaryTextColor,
-            //             ),
-            //           ],
-            //         )))
           ],
         ),
         SizedBox(
           height: size.height * 0.017,
         ),
         Container(
-          child:
-              //  data2 == null
-              //     ? Text("No Restaurants Found Near you")
-              //     :
-              FutureBuilder(
+          child: FutureBuilder(
             future: this.fetchAllRestaurant(),
             builder: (context, snapshot) {
               print('4444444444444444444444444:::::::::::::::::::::');
@@ -148,7 +116,7 @@ class _SureResturentState extends State<SureResturent> {
                 }
 
                 return snapshot.data.length <= 0
-                    ? Text("No Restaurants Found Near You")
+                    ? SizedBox()
                     : Container(
                         height: size.height * 0.435,
                         child: ListView.builder(
@@ -392,49 +360,45 @@ class _SureResturentState extends State<SureResturent> {
                                                                             FontWeight.bold)),
                                                               ),
                                                               Spacer(),
-                                                              // Container(
-                                                              //   margin: EdgeInsets.only(
-                                                              //       right: 10),
-                                                              //   height: 20,
-                                                              //   width: 40,
-                                                              //   decoration:
-                                                              //       BoxDecoration(
-                                                              //     color: Colors.green,
-                                                              //     borderRadius:
-                                                              //         BorderRadius
-                                                              //             .circular(6),
-                                                              //   ),
-                                                              //   child: Center(
-                                                              //     child: snapshot
-                                                              //             .data[index][
-                                                              //                 'avgRating']
-                                                              //             .isEmpty
-                                                              //         ? Text(
-                                                              //             "⭐1.0",
-                                                              //             style: TextStyle(
-                                                              //                 fontSize:
-                                                              //                     size.height *
-                                                              //                         0.018,
-                                                              //                 color: Colors
-                                                              //                     .white,
-                                                              //                 fontWeight:
-                                                              //                     FontWeight
-                                                              //                         .bold),
-                                                              //           )
-                                                              //         : Text(
-                                                              //             "⭐${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
-                                                              //             style: TextStyle(
-                                                              //                 fontSize:
-                                                              //                     size.height *
-                                                              //                         0.018,
-                                                              //                 color: Colors
-                                                              //                     .white,
-                                                              //                 fontWeight:
-                                                              //                     FontWeight
-                                                              //                         .bold),
-                                                              //           ),
-                                                              //   ),
-                                                              // ),
+                                                              Container(
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        right:
+                                                                            10),
+                                                                height: 20,
+                                                                width: 40,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              6),
+                                                                ),
+                                                                child: Center(
+                                                                  child: snapshot
+                                                                          .data[
+                                                                              index]
+                                                                              [
+                                                                              'avgRating']
+                                                                          .isEmpty
+                                                                      ? Text(
+                                                                          "⭐1.0",
+                                                                          style: TextStyle(
+                                                                              fontSize: size.height * 0.018,
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        )
+                                                                      : Text(
+                                                                          "⭐${snapshot.data[index]['avgRating']}",
+                                                                          style: TextStyle(
+                                                                              fontSize: size.height * 0.018,
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                ),
+                                                              ),
                                                             ],
                                                           ),
                                                           categoryData == null

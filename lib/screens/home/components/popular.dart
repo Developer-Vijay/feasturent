@@ -92,6 +92,7 @@ class _PopularListState extends State<PopularList> {
     });
   }
 
+  var show;
   int checher;
 
   @override
@@ -526,14 +527,14 @@ class _PopularListState extends State<PopularList> {
                 legnth = snapshot.data.length;
               }
               return snapshot.data.length <= 0
-                  ? Center(child: Text("No Restaurants found near you"))
+                  ? SizedBox()
                   : Container(
                       height: size.height * 0.14,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: legnth,
                         itemBuilder: (context, index) {
-                          return snapshot.data[index]['isBrand'] == "1"
+                          return snapshot.data[index]['isBrand'] != "1"
                               ? SizedBox()
                               : Column(
                                   children: [

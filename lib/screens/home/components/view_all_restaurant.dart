@@ -34,15 +34,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             itemCount: restaurantData.length,
             itemBuilder: (context, index) {
-              // double rating = 1.0;
-              // int j = restaurantData[index]['VendorRatingReviews'].length;
-
-              // for (int i = 0; i < j - 1; i++) {
-              //   rating = rating +
-              //       double.parse(restaurantData[index]['VendorRatingReviews'][i]
-              //           ['rating']);
-              // }
-              // rating = rating / j;
+             
               var couponDetatil;
 
               if (restaurantData[index]['user']['OffersAndCoupons'].isEmpty) {
@@ -93,7 +85,7 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => OfferListPage(
-                              // ratingVendor: restaurantData[index]['avgRating'],
+                              ratingVendor: restaurantData[index]['avgRating'],
                               restaurantDa: restaurantData[index])));
                 },
                 child: Padding(
@@ -209,30 +201,30 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
                                   Container(
                                     child: Row(
                                       children: [
-                                        // restaurantData[index]['avgRating'].isEmpty
-                                        //     ? Text(
-                                        //         "⭐1.0",
-                                        //         style: TextStyle(
-                                        //             fontSize: size.height * 0.016,
-                                        //             color: Colors.red,
-                                        //             fontWeight: FontWeight.bold),
-                                        //       )
-                                        //     : Container(
-                                        //         child: Row(children: [
-                                        //         Container(
-                                        //           child: Text("⭐"),
-                                        //         ),
-                                        //         Text(
-                                        //           "${restaurantData[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
-                                        //           style: TextStyle(
-                                        //               fontSize:
-                                        //                   size.height * 0.016,
-                                        //               color: Colors.red,
-                                        //               fontWeight:
-                                        //                   FontWeight.bold),
-                                        //         ),
-                                        //       ])
-                                              // ),
+                                        restaurantData[index]['avgRating'].isEmpty
+                                            ? Text(
+                                                "⭐1.0",
+                                                style: TextStyle(
+                                                    fontSize: size.height * 0.016,
+                                                    color: Colors.red,
+                                                    fontWeight: FontWeight.bold),
+                                              )
+                                            : Container(
+                                                child: Row(children: [
+                                                Container(
+                                                  child: Text("⭐"),
+                                                ),
+                                                Text(
+                                                  "${restaurantData[index]['avgRating']}",
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          size.height * 0.016,
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ])
+                                              ),
                                         Spacer(),
                                         couponDetatil == null
                                             ? SizedBox()

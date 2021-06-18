@@ -35,12 +35,13 @@ class _CartScreenState extends State<CartScreen> {
 
   int deliverytime = 0;
   var resturantDataStatus;
-  Future fetchRestaurantStatus(id) async {
+   fetchRestaurantStatus(id) async {
+    print("id is $id");
     print("******************  get resturent API hitting*********************");
     var result = await http.get(Uri.parse(
       APP_ROUTES +
           'getRestaurantInfos' +
-          '?key=BYID&id=$id' +
+          '?key=BYVENDORId&id=$id' +
           // id.toString() +
           '&latitude=' +
           latitude.toString() +
@@ -49,14 +50,14 @@ class _CartScreenState extends State<CartScreen> {
     ));
 
     if (mounted) {
-      resturantStatus = json.decode(result.body)['data'];
+      resturantStatus = json.decode(result.body);
 
       if (resturantStatus.isEmpty) {
         WidgetsBinding.instance.addPostFrameCallback(
             // ignore: deprecated_member_use
             (_) => _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
       } else {
-        if (resturantStatus[0]['user']['Setting'] == null) {
+        if (resturantStatus['data'][0]['user']['Setting'] == null) {
           setState(() {
             status = false;
           });
@@ -64,7 +65,7 @@ class _CartScreenState extends State<CartScreen> {
               _scaffoldKey.currentState.showSnackBar(restaurantSnackBar));
         } else {
           setState(() {
-            status = resturantStatus[0]['user']['Setting']['isActive'];
+            status = resturantStatus['data'][0]['user']['Setting']['isActive'];
           });
           if (status == false) {
             WidgetsBinding.instance.addPostFrameCallback((_) =>
@@ -122,7 +123,7 @@ class _CartScreenState extends State<CartScreen> {
                       msg: '$notAvailMenu are not available now');
                 } else {
                   setState(() {
-                    resturantDataStatus = resturantStatus[0]['user'];
+                    resturantDataStatus = resturantStatus['data'][0]['user'];
                   });
                   print("#################### delivery time  $deliverytime");
                   createstorage();
@@ -139,7 +140,7 @@ class _CartScreenState extends State<CartScreen> {
                       builder: (context) => PlaceOrder(
                             deliveryTime: deliverytime,
                             data: resturantDataStatus,
-                            restUsername: resturantStatus[0]['user']['login']
+                            restUsername: resturantStatus['data'][0]['user']['login']
                                 ['userName'],
                           ));
                   if (result) {

@@ -428,37 +428,37 @@ class _AllResturentState extends State<AllResturent> {
                                                 Container(
                                                   child: Row(
                                                     children: [
-                                                      // snapshot.data[index]['avgRating']
-                                                      //         .isEmpty
-                                                      //     ? Text(
-                                                      //         "⭐1.0",
-                                                      //         style: TextStyle(
-                                                      //             fontSize:
-                                                      //                 size.height * 0.016,
-                                                      //             color: Colors.red,
-                                                      //             fontWeight:
-                                                      //                 FontWeight.bold),
-                                                      //       )
-                                                      //     : Container(
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             Container(
-                                                      //               child: Text("⭐"),
-                                                      //             ),
-                                                      //             Text(
-                                                      //               "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
-                                                      //               style: TextStyle(
-                                                      //                   fontSize:
-                                                      //                       size.height *
-                                                      //                           0.016,
-                                                      //                   color: Colors.red,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight
-                                                      //                           .bold),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       ),
+                                                      snapshot.data[index]['avgRating']
+                                                              .isEmpty
+                                                          ? Text(
+                                                              "⭐1.0",
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      size.height * 0.016,
+                                                                  color: Colors.red,
+                                                                  fontWeight:
+                                                                      FontWeight.bold),
+                                                            )
+                                                          : Container(
+                                                              child: Row(
+                                                                children: [
+                                                                  Container(
+                                                                    child: Text("⭐"),
+                                                                  ),
+                                                                  Text(
+                                                                    "${snapshot.data[index]['avgRating']}",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.016,
+                                                                        color: Colors.red,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
                                                       Spacer(),
                                                       couponDetatil == null
                                                           ? SizedBox()

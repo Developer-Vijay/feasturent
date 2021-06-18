@@ -232,7 +232,7 @@ class _ResturentMenuState extends State<ResturentMenu> {
                   for (int i = 0; i <= k - 1; i++) {
                     rating = rating +
                         double.parse(restaurantDataCopy['Menus'][index]
-                            ['ReviewAndRatings'][i]['rating']);
+                            ['ReviewAndRatings'][i]['id'].toString());
                   }
                   rating = rating / k;
                   if (rating >= 5) {
