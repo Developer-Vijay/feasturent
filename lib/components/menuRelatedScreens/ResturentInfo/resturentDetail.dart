@@ -223,7 +223,7 @@ class _ResturentDetailState extends State<ResturentDetail> {
 
   getItemandNavigateToFavourites(data) async {
     String rating;
-    if (data['avgRating'].isNotEmpty) {
+    if (data['avgRating']) {
       rating = "${data['avgRating']}";
     }
 

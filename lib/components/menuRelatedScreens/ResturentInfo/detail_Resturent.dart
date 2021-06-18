@@ -20,32 +20,35 @@ class _DetailResturentState extends State<DetailResturent> {
     super.initState();
     setState(() {
       data = widget.restaurantInfo;
+      cuisinesLenght = data['cuisines'].length;
     });
-    getcategory();
+    // getcategory(); //Remove because too large logic
   }
 
   int check = 0;
   var categoryData = '';
+  int cuisinesLenght = 0;
+  bool readMore = false;
 
-  getcategory() {
-    if (data['cuisines'] != null) {
-      int k = data['cuisines'].length;
-      print(k);
+  // getcategory() {
+  //   if (data['cuisines'] != null) {
+  //     int k = data['cuisines'].length;
+  //     print(k);
 
-      if (k != 0) {
-        for (int j = 0; j <= k - 1; j++) {
-          categoryData =
-              '$categoryData ${data['cuisines'][j]['Category']['name']},';
-        }
-        category = categoryData;
-        print(category);
-      } else {
-        categoryData = null;
-      }
-    } else {
-      category = "Category/Cuisions";
-    }
-  }
+  //     if (k != 0) {
+  //       for (int j = 0; j <= k - 1; j++) {
+  //         categoryData =
+  //             '$categoryData ${data['cuisines'][j]['Category']['name']},';
+  //       }
+  //       category = categoryData;
+  //       print(category);
+  //     } else {
+  //       categoryData = null;
+  //     }
+  //   } else {
+  //     category = "Category/Cuisions";
+  //   }
+  // }
 
   var category = "Category/Cuisions";
   Future<void> openMap(double latitude, double longitude) async {
@@ -100,7 +103,7 @@ class _DetailResturentState extends State<DetailResturent> {
                           ),
                         ),
                         Spacer(),
-                        data['avgRating'].isEmpty
+                        data['avgRating'] == 0
                             ? SizedBox()
                             : Container(
                                 margin: EdgeInsets.only(right: 15, top: 10),
@@ -108,11 +111,7 @@ class _DetailResturentState extends State<DetailResturent> {
                                     allowHalfRating: true,
                                     onRated: (value) {},
                                     starCount: 5,
-                                    rating:
-                                    (
-                                      double.parse( data['avgRating'])
-                                        
-                                        ),
+                                    rating: data['avgRating'],
                                     size: 23.0,
                                     isReadOnly: true,
                                     defaultIconData: Icons.star_border_outlined,
@@ -127,99 +126,39 @@ class _DetailResturentState extends State<DetailResturent> {
                     SizedBox(
                       height: 10,
                     ),
+                    //Vendor Cuisiness list
                     data['cuisines'].isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15, bottom: 10, right: 50),
-                            child: Text(
-                              capitalize("$category"),
-                              style: GoogleFonts.firaSans(
-                                  fontSize: 13, color: Colors.black),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15, bottom: 10, right: 50),
-                            child: check == 1
-                                ? InkWell(
-                                    onTap: () {
-                                      if (check == 1) {
-                                        setState(() {
-                                          check = null;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          check = 1;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      child: RichText(
-                                        text: TextSpan(
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: capitalize("$category"),
-                                                style: GoogleFonts.firaSans(
-                                                    fontSize: 13,
-                                                    color: Colors.black),
-                                              ),
-                                              TextSpan(
-                                                text: " View less",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.red),
-                                              ),
-                                            ]),
-                                      ),
-
-                                      // Text(
-                                      //   "$category View less",
-                                      //   style: GoogleFonts.firaSans(
-                                      //       fontSize: 13, color: Colors.black),
-                                      // ),
-                                    ),
-                                  )
-                                : InkWell(
-                                    onTap: () {
-                                      if (check == 1) {
-                                        setState(() {
-                                          check = null;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          check = 1;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      width: size.width * 0.8,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            height: 15,
-                                            width: size.width * 0.6,
-                                            child: Text(
-                                              category,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.firaSans(
-                                                  fontSize: 13,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          Text(
-                                            "View more",
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                          ),
+                        ? Text("")
+                        : Container(
+                            padding: EdgeInsets.all(10),
+                            child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: cuisinesLenght,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount:
+                                      MediaQuery.of(context).orientation ==
+                                              Orientation.landscape
+                                          ? 5
+                                          : 3,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                  childAspectRatio: (5 / 1),
+                                ),
+                                itemBuilder: (context, index) {
+                                  return vendorCuisinesList(index, size);
+                                  //Don't remove this, I add show more option here...
+                                  // if (cuisinesLenght > 8) {
+                                  //   readMore = true;
+                                  //   return index < 8
+                                  //       ? vendorCuisinesList(index, size)
+                                  //       : null;
+                                  // } else {
+                                  //   readMore = false;
+                                  //   return vendorCuisinesList(index, size);
+                                  // }
+                                })),
                     Container(
                       margin: EdgeInsets.all(10),
                       height: size.height * 0.1,
@@ -666,6 +605,39 @@ class _DetailResturentState extends State<DetailResturent> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Container vendorCuisinesList(int index, Size size) {
+    return Container(
+      child: Row(
+        children: [
+          ClipOval(
+            child: CachedNetworkImage(
+              imageUrl: S3_BASE_PATH +
+                  data['cuisines'][index]['Category']['iconImage'],
+              height: size.height * 0.04,
+              width: size.width * 0.05,
+              fit: BoxFit.fill,
+              placeholder: (context, url) => Image.asset(
+                "assets/images/defaultrestaurent.png",
+                height: size.height * 0.04,
+                width: size.width * 0.05,
+                fit: BoxFit.cover,
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(data['cuisines'][index]['Category']['name'],
+              style: TextStyle(
+                  fontSize: size.height * 0.016,
+                  color: kPrimaryColor,
+                  fontWeight: FontWeight.bold))
+        ],
       ),
     );
   }

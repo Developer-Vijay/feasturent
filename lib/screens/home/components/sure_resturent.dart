@@ -182,9 +182,10 @@ class _SureResturentState extends State<SureResturent> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   OfferListPage(
-                                                      ratingVendor:
-                                                          snapshot.data[index]
-                                                              ['avgRating'],
+                                                      ratingVendor: snapshot
+                                                          .data[index]
+                                                              ['avgRating']
+                                                          .toDouble(),
                                                       restaurantDa: snapshot
                                                           .data[index])));
                                     },
@@ -364,7 +365,7 @@ class _SureResturentState extends State<SureResturent> {
                                                                 margin: EdgeInsets
                                                                     .only(
                                                                         right:
-                                                                            10),
+                                                                            15),
                                                                 height: 20,
                                                                 width: 40,
                                                                 decoration:
@@ -377,12 +378,10 @@ class _SureResturentState extends State<SureResturent> {
                                                                               6),
                                                                 ),
                                                                 child: Center(
-                                                                  child: snapshot
-                                                                          .data[
-                                                                              index]
+                                                                  child: snapshot.data[index]
                                                                               [
-                                                                              'avgRating']
-                                                                          .isEmpty
+                                                                              'avgRating'] ==
+                                                                          0
                                                                       ? Text(
                                                                           "⭐1.0",
                                                                           style: TextStyle(

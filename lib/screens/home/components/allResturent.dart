@@ -281,7 +281,8 @@ class _AllResturentState extends State<AllResturent> {
                                     MaterialPageRoute(
                                         builder: (context) => OfferListPage(
                                             ratingVendor: snapshot.data[index]
-                                                ['avgRating'],
+                                                    ['avgRating']
+                                                .toDouble(),
                                             restaurantDa:
                                                 snapshot.data[index])));
                               },
@@ -428,22 +429,27 @@ class _AllResturentState extends State<AllResturent> {
                                                 Container(
                                                   child: Row(
                                                     children: [
-                                                      snapshot.data[index]['avgRating']
-                                                              .isEmpty
+                                                      snapshot.data[index][
+                                                                  'avgRating'] ==
+                                                              0
                                                           ? Text(
                                                               "⭐1.0",
                                                               style: TextStyle(
                                                                   fontSize:
-                                                                      size.height * 0.016,
-                                                                  color: Colors.red,
+                                                                      size.height *
+                                                                          0.016,
+                                                                  color: Colors
+                                                                      .red,
                                                                   fontWeight:
-                                                                      FontWeight.bold),
+                                                                      FontWeight
+                                                                          .bold),
                                                             )
                                                           : Container(
                                                               child: Row(
                                                                 children: [
                                                                   Container(
-                                                                    child: Text("⭐"),
+                                                                    child: Text(
+                                                                        "⭐"),
                                                                   ),
                                                                   Text(
                                                                     "${snapshot.data[index]['avgRating']}",
@@ -451,10 +457,10 @@ class _AllResturentState extends State<AllResturent> {
                                                                         fontSize:
                                                                             size.height *
                                                                                 0.016,
-                                                                        color: Colors.red,
+                                                                        color: Colors
+                                                                            .red,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .bold),
+                                                                            FontWeight.bold),
                                                                   ),
                                                                 ],
                                                               ),

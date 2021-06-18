@@ -39,11 +39,9 @@ class _OfferListPageState extends State<OfferListPage> {
     if (widget.restID != null) {
       fetchData(widget.restID);
     } else {
-      // if (widget.ratingVendor.isNotEmpty) {
-      //   setState(() {
-      //     ratingVendor = widget.ratingVendor[0]['avgRating'].toInt();
-      //   });
-      // }
+      setState(() {
+        ratingVendor = widget.ratingVendor;
+      });
       setState(() {
         dataChecker = true;
 
@@ -58,7 +56,7 @@ class _OfferListPageState extends State<OfferListPage> {
     }
   }
 
-  int ratingVendor = 1;
+  double ratingVendor;
   int menulistLength;
   bool dataChecker = false;
   bool dataValidator = false;
@@ -95,9 +93,9 @@ class _OfferListPageState extends State<OfferListPage> {
         restaurantDataCopy = restaurantData[0];
       });
 
-      if (restaurantData[0]['avgRating'] != null) {
-        ratingVendor = restaurantData[0]['avgRating'][0]['avgRating'].toInt();
-      }
+      // if (restaurantData[0]['avgRating'] != null) {
+      //   ratingVendor = restaurantData[0]['avgRating'][0]['avgRating'].toInt();
+      // }
       setState(() {
         dataChecker = true;
       });
@@ -2502,7 +2500,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                                                           Container(
                                                                               child: Text("⭐")),
                                                                           Text(
-                                                                          "${restaurantDataCopy['Menus'][index]['ReviewAndRatings'].length}",
+                                                                            "${restaurantDataCopy['Menus'][index]['ReviewAndRatings'].length}",
                                                                             style: TextStyle(
                                                                                 fontSize: size.height * 0.014,
                                                                                 color: Colors.red,
