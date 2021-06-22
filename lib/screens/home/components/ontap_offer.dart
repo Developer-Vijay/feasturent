@@ -49,8 +49,7 @@ class _OnTapOfferState extends State<OnTapOffer>
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
 
     var result = await http.get(
-      Uri.parse(APP_ROUTES + 'OfferOnVendor/${data['offerId']}')
-      ,
+      Uri.parse(APP_ROUTES + 'OfferOnVendor/${data['offerId']}'),
     );
     if (result.statusCode == 200) {
       restaurantData = json.decode(result.body)['data'];
@@ -71,6 +70,17 @@ class _OnTapOfferState extends State<OnTapOffer>
           });
         }
       }
+    } else {
+      setState(() {
+        offerTapData = {
+          "restaurant": [
+            {"data": "error"}
+          ],
+          "dineout": [
+            {"data": "error"}
+          ]
+        };
+      });
     }
   }
 

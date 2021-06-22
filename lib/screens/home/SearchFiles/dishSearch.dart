@@ -148,7 +148,7 @@ class _DishSearchState extends State<DishSearch> {
                                                             capitalize(
                                                                 resultData['dish']
                                                                         [index]
-                                                                    ['title']),
+                                                                    ['name']),
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -210,8 +210,7 @@ class _DishSearchState extends State<DishSearch> {
                                                     width: size.width * 0.3,
                                                     child: Text(
                                                       resultData['dish'][index]
-                                                              ['VendorInfo']
-                                                          ['name'],
+                                                          ['description'],
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: TextStyle(

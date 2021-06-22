@@ -10,18 +10,17 @@ import 'components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:async/async.dart';
 
 // Memorizer
-final AsyncMemoizer discountmemoizer = AsyncMemoizer();
-final AsyncMemoizer categorymemoizer = AsyncMemoizer();
-final AsyncMemoizer allresturentmemoizer = AsyncMemoizer();
-final AsyncMemoizer popularMenumemoizer = AsyncMemoizer();
-final AsyncMemoizer homeslidermemoizer = AsyncMemoizer();
-final AsyncMemoizer offerbannermemoizer = AsyncMemoizer();
-final AsyncMemoizer offerslidermemoizer = AsyncMemoizer();
-final AsyncMemoizer dineoutbannermemoizer = AsyncMemoizer();
-final AsyncMemoizer popluardineoutmemoizer = AsyncMemoizer();
-final AsyncMemoizer collectionmemoizer = AsyncMemoizer();
-final AsyncMemoizer feturememoizer = AsyncMemoizer();
-//  final AsyncMemoizer memoizer = AsyncMemoizer();
+AsyncMemoizer discountmemoizer = AsyncMemoizer();
+AsyncMemoizer categorymemoizer = AsyncMemoizer();
+AsyncMemoizer allresturentmemoizer = AsyncMemoizer();
+AsyncMemoizer popularMenumemoizer = AsyncMemoizer();
+AsyncMemoizer homeslidermemoizer = AsyncMemoizer();
+AsyncMemoizer offerslidermemoizer = AsyncMemoizer();
+AsyncMemoizer dineoutbannermemoizer = AsyncMemoizer();
+AsyncMemoizer popluardineoutmemoizer = AsyncMemoizer();
+AsyncMemoizer collectionmemoizer = AsyncMemoizer();
+AsyncMemoizer feturememoizer = AsyncMemoizer();
+AsyncMemoizer bestoffermemoizer = AsyncMemoizer();
 
 // capitalize text function
 String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
@@ -35,6 +34,31 @@ const kTextLightColor = Color(0xFF3498E5);
 int registerdUserId;
 const kBackgroundColor = Color(0xFFE4F0FA);
 
+class OrderMode {
+  bool isSelected = false;
+  bool isSelected1 = false;
+  var title;
+
+  OrderMode({this.isSelected, this.isSelected1, this.title});
+}
+
+List<OrderMode> orderMode = [
+  OrderMode(
+    isSelected1: true,
+    isSelected: false,
+    title: "Delivery",
+  ),
+  OrderMode(
+    isSelected1: true,
+    isSelected: false,
+    title: "Schedule",
+  ),
+  OrderMode(
+    isSelected1: true,
+    isSelected: false,
+    title: "TakeAway",
+  ),
+];
 //Api's
 const API_BASE_URL = 'https://feasturent.in/api/';
 const AUTH_API = API_BASE_URL + 'auth/';
@@ -383,6 +407,9 @@ removeAddOnWithMenu(addOnIds) async {
 fun(value) {
   data3New = value;
 }
+
+var orderSchduleDate;
+var orderModeName = "DELIVERY"; // "DELIVERY"  "Schedule"  "TakeAway"
 
 class ChangeJson {
   int id;

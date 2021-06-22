@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:date_time_format/date_time_format.dart';
-
 import '../../../constants.dart';
 import '../../../main.dart';
 
@@ -589,7 +588,7 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                "Date",
+                                                "${snapshot.data[index]['orderMode']}",
                                                 style: textstyle2,
                                               ),
                                             )
@@ -625,200 +624,273 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                         SizedBox(
                                           height: size.height * 0.01,
                                         ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: snapshot.data[index]
-                                                            ['orderStatus'] !=
-                                                        "CANCELED"
-                                                    ? StepProgressIndicator(
-                                                        totalSteps: 4,
-                                                        progressDirection:
-                                                            TextDirection.ltr,
-                                                        unselectedColor:
-                                                            Colors.grey,
-                                                        selectedColor:
-                                                            Colors.green,
-                                                        currentStep: snapshot
-                                                                            .data[
-                                                                        index][
-                                                                    'orderStatus'] !=
-                                                                "PENDING"
-                                                            ? snapshot.data[index]
+                                        Container(
+                                          child:
+                                              snapshot.data[index]
+                                                          ['orderMode'] ==
+                                                      "TAKEAWAY"
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: snapshot.data[
+                                                                            index]
                                                                         [
                                                                         'orderStatus'] !=
-                                                                    "ACCEPTED"
-                                                                ? snapshot.data[index]
-                                                                            [
-                                                                            'orderStatus'] !=
-                                                                        "PICKUP"
-                                                                    ? 4
-                                                                    : 3
-                                                                : 2
-                                                            : 1,
-                                                        roundedEdges:
-                                                            Radius.circular(20),
-                                                        size: 13,
-                                                      )
-                                                    : Text(
-                                                        "ORDER CANCELED",
-                                                        style: TextStyle(
-                                                            color: Colors.red,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      )),
-                                            Container(
-                                                child: snapshot.data[index]
-                                                            ['orderStatus'] !=
-                                                        "CANCELED"
-                                                    ? Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: snapshot.data[
-                                                                              index]
-                                                                          [
-                                                                          'orderStatus'] ==
-                                                                      "PENDING"
-                                                                  ? Text(
-                                                                      "PENDING",
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .red,
-                                                                          fontSize:
-                                                                              10,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    )
-                                                                  : Text(
-                                                                      "PENDING",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          fontWeight:
-                                                                              FontWeight.bold))),
-                                                          Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: snapshot.data[
-                                                                              index]
-                                                                          [
-                                                                          'orderStatus'] ==
-                                                                      "ACCEPTED"
-                                                                  ? Text(
-                                                                      "ACCEPTED",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          color: Colors
-                                                                              .red,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    )
-                                                                  : Text(
-                                                                      "ACCEPTED",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          fontWeight:
-                                                                              FontWeight.bold))),
-                                                          Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: snapshot.data[
-                                                                              index]
-                                                                          [
-                                                                          'orderStatus'] ==
-                                                                      "PICKUP"
-                                                                  ? Text(
-                                                                      "PICKUP",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          color: Colors
-                                                                              .red,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    )
-                                                                  : Text(
-                                                                      "PICKUP",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          fontWeight:
-                                                                              FontWeight.bold))),
-                                                          Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: snapshot.data[
-                                                                              index]
-                                                                          [
-                                                                          'orderStatus'] ==
-                                                                      "DELIVERED"
-                                                                  ? Text(
-                                                                      "DELIVERED",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          color: Colors
-                                                                              .green,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    )
-                                                                  : Text(
-                                                                      "DELIVERED",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ))
-                                                        ],
-                                                      )
-                                                    : SizedBox()),
-                                            Container(
-                                                child: snapshot.data[index]
-                                                            ['orderStatus'] !=
-                                                        "CANCELED"
-                                                    ? Container(
-                                                        child: orderyear !=
-                                                                currentyear
-                                                            ? SizedBox()
-                                                            : ordermonth !=
-                                                                    currentmonth
-                                                                ? SizedBox()
-                                                                : orderday !=
-                                                                        currentday
-                                                                    ? SizedBox()
-                                                                    : orderhrs !=
-                                                                            currenthrs
+                                                                    "CANCELED"
+                                                                ? StepProgressIndicator(
+                                                                    totalSteps:
+                                                                        3,
+                                                                    progressDirection:
+                                                                        TextDirection
+                                                                            .ltr,
+                                                                    unselectedColor:
+                                                                        Colors
+                                                                            .grey,
+                                                                    selectedColor:
+                                                                        Colors
+                                                                            .green,
+                                                                    currentStep: snapshot.data[index]['orderStatus'] !=
+                                                                            "PENDING"
+                                                                        ? snapshot.data[index]['orderStatus'] !=
+                                                                                "ACCEPTED"
+                                                                            ? snapshot.data[index]['orderStatus'] != "DELIVERY"
+                                                                                ? 4
+                                                                                : 3
+                                                                            : 2
+                                                                        : 1,
+                                                                    roundedEdges:
+                                                                        Radius.circular(
+                                                                            20),
+                                                                    size: 13,
+                                                                  )
+                                                                : Text(
+                                                                    "ORDER CANCELED",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .red,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  )),
+                                                        Container(
+                                                            child: snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'orderStatus'] !=
+                                                                    "CANCELED"
+                                                                ? Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceEvenly,
+                                                                    children: [
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child: snapshot.data[index]['orderStatus'] == "PENDING"
+                                                                              ? Text(
+                                                                                  "PENDING",
+                                                                                  style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              : Text("PENDING", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child: snapshot.data[index]['orderStatus'] == "ACCEPTED"
+                                                                              ? Text(
+                                                                                  "ACCEPTED",
+                                                                                  style: TextStyle(fontSize: 10, color: Colors.red, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              : Text("ACCEPTED", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                                                                      // Padding(
+                                                                      //     padding:
+                                                                      //         const EdgeInsets.all(8.0),
+                                                                      //     child: snapshot.data[index]['orderStatus'] == "PICKUP"
+                                                                      //         ? Text(
+                                                                      //             "PICKUP",
+                                                                      //             style: TextStyle(fontSize: 10, color: Colors.red, fontWeight: FontWeight.bold),
+                                                                      //           )
+                                                                      //         : Text("PICKUP", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child: snapshot.data[index]['orderStatus'] == "DELIVERED"
+                                                                              ? Text(
+                                                                                  "DELIVERED",
+                                                                                  style: TextStyle(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              : Text(
+                                                                                  "DELIVERED",
+                                                                                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                                                                ))
+                                                                    ],
+                                                                  )
+                                                                : SizedBox()),
+                                                        Container(
+                                                            child: snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'orderStatus'] !=
+                                                                    "CANCELED"
+                                                                ? Container(
+                                                                    child: orderyear !=
+                                                                            currentyear
                                                                         ? SizedBox()
-                                                                        : ordermins ==
-                                                                                currentmins
-                                                                            ? MaterialButton(
-                                                                                child: Text("Cancel"),
-                                                                                color: Colors.red,
-                                                                                textColor: Colors.white,
-                                                                                onPressed: () {
-                                                                                  cancelOrder(snapshot.data[index]);
-                                                                                },
-                                                                              )
-                                                                            : SizedBox())
-                                                    : SizedBox()),
-                                          ],
+                                                                        : ordermonth !=
+                                                                                currentmonth
+                                                                            ? SizedBox()
+                                                                            : orderday != currentday
+                                                                                ? SizedBox()
+                                                                                : orderhrs != currenthrs
+                                                                                    ? SizedBox()
+                                                                                    : ordermins == currentmins
+                                                                                        ? MaterialButton(
+                                                                                            child: Text("Cancel"),
+                                                                                            color: Colors.red,
+                                                                                            textColor: Colors.white,
+                                                                                            onPressed: () {
+                                                                                              cancelOrder(snapshot.data[index]);
+                                                                                            },
+                                                                                          )
+                                                                                        : SizedBox())
+                                                                : SizedBox()),
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'orderStatus'] !=
+                                                                    "CANCELED"
+                                                                ? StepProgressIndicator(
+                                                                    totalSteps:
+                                                                        4,
+                                                                    progressDirection:
+                                                                        TextDirection
+                                                                            .ltr,
+                                                                    unselectedColor:
+                                                                        Colors
+                                                                            .grey,
+                                                                    selectedColor:
+                                                                        Colors
+                                                                            .green,
+                                                                    currentStep: snapshot.data[index]['orderStatus'] !=
+                                                                            "PENDING"
+                                                                        ? snapshot.data[index]['orderStatus'] !=
+                                                                                "ACCEPTED"
+                                                                            ? snapshot.data[index]['orderStatus'] != "PICKUP"
+                                                                                ? 4
+                                                                                : 3
+                                                                            : 2
+                                                                        : 1,
+                                                                    roundedEdges:
+                                                                        Radius.circular(
+                                                                            20),
+                                                                    size: 13,
+                                                                  )
+                                                                : Text(
+                                                                    "ORDER CANCELED",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .red,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  )),
+                                                        Container(
+                                                            child: snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'orderStatus'] !=
+                                                                    "CANCELED"
+                                                                ? Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceEvenly,
+                                                                    children: [
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child: snapshot.data[index]['orderStatus'] == "PENDING"
+                                                                              ? Text(
+                                                                                  "PENDING",
+                                                                                  style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              : Text("PENDING", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child: snapshot.data[index]['orderStatus'] == "ACCEPTED"
+                                                                              ? Text(
+                                                                                  "ACCEPTED",
+                                                                                  style: TextStyle(fontSize: 10, color: Colors.red, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              : Text("ACCEPTED", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child: snapshot.data[index]['orderStatus'] == "PICKUP"
+                                                                              ? Text(
+                                                                                  "PICKUP",
+                                                                                  style: TextStyle(fontSize: 10, color: Colors.red, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              : Text("PICKUP", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                                                                      Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child: snapshot.data[index]['orderStatus'] == "DELIVERED"
+                                                                              ? Text(
+                                                                                  "DELIVERED",
+                                                                                  style: TextStyle(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              : Text(
+                                                                                  "DELIVERED",
+                                                                                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                                                                ))
+                                                                    ],
+                                                                  )
+                                                                : SizedBox()),
+                                                        Container(
+                                                            child: snapshot.data[
+                                                                            index]
+                                                                        [
+                                                                        'orderStatus'] !=
+                                                                    "CANCELED"
+                                                                ? Container(
+                                                                    child: orderyear !=
+                                                                            currentyear
+                                                                        ? SizedBox()
+                                                                        : ordermonth !=
+                                                                                currentmonth
+                                                                            ? SizedBox()
+                                                                            : orderday != currentday
+                                                                                ? SizedBox()
+                                                                                : orderhrs != currenthrs
+                                                                                    ? SizedBox()
+                                                                                    : ordermins == currentmins
+                                                                                        ? MaterialButton(
+                                                                                            child: Text("Cancel"),
+                                                                                            color: Colors.red,
+                                                                                            textColor: Colors.white,
+                                                                                            onPressed: () {
+                                                                                              cancelOrder(snapshot.data[index]);
+                                                                                            },
+                                                                                          )
+                                                                                        : SizedBox())
+                                                                : SizedBox()),
+                                                      ],
+                                                    ),
                                         )
                                       ],
                                     )),

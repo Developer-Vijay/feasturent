@@ -58,7 +58,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
   var sliderOffers;
   int psteroffer;
   fetchposterOffer() async {
-    return offerbannermemoizer.runOnce(() async {
+    return offerslidermemoizer.runOnce(() async {
       var result = await http.get(Uri.parse(
           APP_ROUTES + 'utilities' + '?key=BYFOR' + '&for=posterOffer'));
       sliderOffers = json.decode(result.body)['data'];
@@ -721,43 +721,38 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                       Container(
                                                         child: Row(
                                                           children: [
-                                                            // snapshot
-                                                            //         .data[index]
-                                                            //             ['avgRating']
-                                                            //         .isEmpty
-                                                            //     ? Text(
-                                                            //         "⭐1.0",
-                                                            //         style: TextStyle(
-                                                            //             fontSize:
-                                                            //                 size.height *
-                                                            //                     0.016,
-                                                            //             color: Colors.red,
-                                                            //             fontWeight:
-                                                            //                 FontWeight
-                                                            //                     .bold),
-                                                            //       )
-                                                            // : Container(
-                                                            //     child: Row(
-                                                            //       children: [
-                                                            //         Container(
-                                                            //           child:
-                                                            //               Text("⭐"),
-                                                            //         ),
-                                                            //         Text(
-                                                            //           "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
-                                                            //           style: TextStyle(
-                                                            //               fontSize:
-                                                            //                   size.height *
-                                                            //                       0.016,
-                                                            //               color: Colors
-                                                            //                   .red,
-                                                            //               fontWeight:
-                                                            //                   FontWeight
-                                                            //                       .bold),
-                                                            //         ),
-                                                            //       ],
-                                                            //     ),
-                                                            //   ),
+                                                            snapshot.data[index]
+                                                                        [
+                                                                        'avgRating'] ==
+                                                                    null
+                                                                ? Text(
+                                                                    "⭐1.0",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            size.height *
+                                                                                0.016,
+                                                                        color: Colors
+                                                                            .red,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  )
+                                                                : Container(
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          child:
+                                                                              Text("⭐"),
+                                                                        ),
+                                                                        Text(
+                                                                          "${snapshot.data[index]['avgRating']}",
+                                                                          style: TextStyle(
+                                                                              fontSize: size.height * 0.016,
+                                                                              color: Colors.red,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
                                                             Spacer(),
                                                             couponDetatil ==
                                                                     null
@@ -773,7 +768,7 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                                                 ? snapshot.data[index]
                                                                             [
                                                                             'avgCost'] ==
-                                                                        null
+                                                                        ''
                                                                     ? SizedBox()
                                                                     : Text(
                                                                         "₹ ${snapshot.data[index]['avgCost']} Cost for ${snapshot.data[index]['forPeople']}",
