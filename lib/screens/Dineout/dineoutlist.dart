@@ -14,7 +14,7 @@ class Dineoutlist {
 List<Dineoutlist> dineoutlist = [
   Dineoutlist(
       icon: Image.asset('assets/icons/RESERVE TABLE.png'),
-      title: "Reserve Table",
+      title: "Book a Table",
       subtitle: "",
       phoneNumber: 0,
       number: 3),

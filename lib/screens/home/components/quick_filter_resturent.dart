@@ -295,10 +295,9 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                                             Container(
                                               child: Row(
                                                 children: [
-                                                  snapshot
-                                                          .data[index]
-                                                              ['avgRating']
-                                                          .isEmpty
+                                                  snapshot.data[index]
+                                                              ['avgRating'] ==
+                                                          null
                                                       ? Text(
                                                           "⭐1.0",
                                                           style: TextStyle(
@@ -318,7 +317,7 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                                                                     Text("⭐"),
                                                               ),
                                                               Text(
-                                                                "${snapshot.data[index]['avgRating'][0]['avgRating'].toStringAsFixed(1)}",
+                                                                "${snapshot.data[index]['avgRating'].toStringAsFixed(1)}",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         size.height *
@@ -343,7 +342,7 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                                                   couponDetatil == null
                                                       ? snapshot.data[index]
                                                                   ['avgCost'] ==
-                                                              null
+                                                              ''
                                                           ? SizedBox()
                                                           : Padding(
                                                               padding:

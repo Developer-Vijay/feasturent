@@ -209,7 +209,7 @@ class _ResturentDetailState extends State<ResturentDetail> {
       category = null;
     }
 
-    if (data['avgCost'] != null) {
+    if (data['avgCost'] != '') {
       avg = "${data['avgCost']} Cost for ${data['forPeople']}";
     } else {
       avg = null;
@@ -223,7 +223,7 @@ class _ResturentDetailState extends State<ResturentDetail> {
 
   getItemandNavigateToFavourites(data) async {
     String rating;
-    if (data['avgRating']) {
+    if (data['avgRating'] != null) {
       rating = "${data['avgRating']}";
     }
 

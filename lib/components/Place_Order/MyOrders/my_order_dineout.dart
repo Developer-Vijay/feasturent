@@ -190,7 +190,7 @@ class _MyOrdersDineoutState extends State<MyOrdersDineout> {
                                       padding:
                                           const EdgeInsets.only(right: 10.0),
                                       child: Text(
-                                        "Lucnh for $totalperson",
+                                        "Lunch for $totalperson",
                                         style: textstyle2,
                                       ),
                                     )

@@ -431,7 +431,7 @@ class _AllResturentState extends State<AllResturent> {
                                                     children: [
                                                       snapshot.data[index][
                                                                   'avgRating'] ==
-                                                              0
+                                                              null
                                                           ? Text(
                                                               "⭐1.0",
                                                               style: TextStyle(
@@ -478,7 +478,7 @@ class _AllResturentState extends State<AllResturent> {
                                                           ? snapshot.data[index]
                                                                       [
                                                                       'avgCost'] ==
-                                                                  null
+                                                                  ''
                                                               ? SizedBox()
                                                               : Padding(
                                                                   padding:

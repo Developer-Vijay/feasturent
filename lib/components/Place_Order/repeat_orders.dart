@@ -74,9 +74,16 @@ class _RepeatOrderPageState extends State<RepeatOrderPage> {
                               children: [
                                 Text(
                                   "Your Order",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 Spacer(),
+                                Text(
+                                  "${itemData1['orderMode']}",
+                                  style: TextStyle(color: Colors.black),
+                                )
                               ],
                             ),
                           ),

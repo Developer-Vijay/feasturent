@@ -503,19 +503,6 @@ class _PopularListState extends State<PopularList> {
                   },
                 )),
         Container(
-          margin: EdgeInsets.only(left: 20),
-          child: Text(
-            "Top Brands For You",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: kTextColor,
-                fontSize: size.height * 0.025),
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
             child: FutureBuilder(
           future: this.fetchAllRestaurant(),
           builder: (context, snapshot) {
@@ -529,124 +516,195 @@ class _PopularListState extends State<PopularList> {
               return snapshot.data.length <= 0
                   ? SizedBox()
                   : Container(
-                      height: size.height * 0.14,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: legnth,
-                        itemBuilder: (context, index) {
-                          return snapshot.data[index]['isBrand'] != "1"
-                              ? SizedBox()
-                              : Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 3,
-                                                  color: Colors.blueGrey,
-                                                  spreadRadius: 1)
-                                            ],
-                                          ),
-                                          margin: EdgeInsets.only(
-                                              left: size.width * 0.011),
-                                          height: size.height * 0.08,
-                                          width: size.width * 0.24,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            child: FlatButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => OfferListPage(
-                                                            ratingVendor: snapshot
-                                                                .data[index][
-                                                                    'avgRating']
-                                                                .toDouble(),
-                                                            restaurantDa:
-                                                                snapshot.data[
-                                                                    index])));
-                                              },
-                                              child: ClipOval(
-                                                  child: snapshot.data[index]
-                                                                  ['user']
-                                                              ['profile'] !=
-                                                          null
-                                                      ? CachedNetworkImage(
-                                                          imageUrl: S3_BASE_PATH +
-                                                              snapshot.data[
-                                                                          index]
-                                                                      ['user']
-                                                                  ['profile'],
-                                                          fit: BoxFit.cover,
-                                                          width:
-                                                              size.width * 0.2,
-                                                          height:
-                                                              size.height * 0.2,
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
-                                                          placeholder:
-                                                              (context, url) =>
-                                                                  Image.asset(
-                                                            "assets/images/feasturenttemp.jpeg",
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        )
-                                                      : Image.asset(
-                                                          "assets/images/feasturenttemp.jpeg",
-                                                          fit: BoxFit.cover,
-                                                          width:
-                                                              size.width * 0.2,
-                                                          height:
-                                                              size.height * 0.2,
-                                                        )),
+                      height: size.height * 0.17,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 20),
+                              child: Text(
+                                "Top Brands For You",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: kTextColor,
+                                    fontSize: size.height * 0.025),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              height: size.height * 0.03,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: legnth,
+                                itemBuilder: (context, index) {
+                                  return snapshot.data[index]['isBrand'] != "1"
+                                      ? SizedBox()
+                                      : Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0),
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          blurRadius: 3,
+                                                          color:
+                                                              Colors.blueGrey,
+                                                          spreadRadius: 1)
+                                                    ],
+                                                  ),
+                                                  margin: EdgeInsets.only(
+                                                      left: size.width * 0.011),
+                                                  height: size.height * 0.08,
+                                                  width: size.width * 0.24,
+                                                  child: CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    child: FlatButton(
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) => OfferListPage(
+                                                                    ratingVendor: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                            [
+                                                                            'avgRating']
+                                                                        .toDouble(),
+                                                                    restaurantDa:
+                                                                        snapshot
+                                                                            .data[index])));
+                                                      },
+                                                      child: ClipOval(
+                                                          child: snapshot.data[
+                                                                              index]
+                                                                          [
+                                                                          'user']
+                                                                      [
+                                                                      'profile'] !=
+                                                                  null
+                                                              ? CachedNetworkImage(
+                                                                  imageUrl: S3_BASE_PATH +
+                                                                      snapshot.data[index]
+                                                                              [
+                                                                              'user']
+                                                                          [
+                                                                          'profile'],
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.2,
+                                                                  height:
+                                                                      size.height *
+                                                                          0.2,
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      Image
+                                                                          .asset(
+                                                                    "assets/images/feasturenttemp.jpeg",
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                )
+                                                              : Image.asset(
+                                                                  "assets/images/feasturenttemp.jpeg",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.2,
+                                                                  height:
+                                                                      size.height *
+                                                                          0.2,
+                                                                )),
+                                                    ),
+                                                  )),
                                             ),
-                                          )),
-                                    ),
-                                    SizedBox(
-                                      height: size.height * 0.01,
-                                    ),
-                                    Text(
-                                      capitalize(snapshot.data[index]['name']),
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: size.height * 0.017),
-                                    )
-                                  ],
-                                );
-                        },
+                                            SizedBox(
+                                              height: size.height * 0.01,
+                                            ),
+                                            Text(
+                                              capitalize(
+                                                  snapshot.data[index]['name']),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize:
+                                                      size.height * 0.017),
+                                            )
+                                          ],
+                                        );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
             } else {
               return Container(
-                height: size.height * 0.14,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        top: 8.0,
-                        left: 10,
-                      ),
-                      child: Shimmer.fromColors(
-                        baseColor: Colors.grey[300],
-                        highlightColor: Colors.grey[100],
-                        child: Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.white),
-                          margin: EdgeInsets.only(left: size.width * 0.011),
-                          height: size.height * 0.06,
-                          width: size.width * 0.2,
+                height: size.height * 0.17,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          "Top Brands For You",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: kTextColor,
+                              fontSize: size.height * 0.025),
                         ),
                       ),
-                    );
-                  },
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        height: size.height * 0.03,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                left: 10,
+                              ),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.grey[100],
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white),
+                                  margin:
+                                      EdgeInsets.only(left: size.width * 0.011),
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.2,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               );
             }

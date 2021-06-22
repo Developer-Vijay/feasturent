@@ -153,7 +153,7 @@ class _SearchResturentState extends State<SearchResturent> {
                                                       resultData['restaurant']
                                                                       [i]
                                                                   ['avgCost'] ==
-                                                              null
+                                                              ''
                                                           ? SizedBox()
                                                           : Column(
                                                               children: [
@@ -209,9 +209,9 @@ class _SearchResturentState extends State<SearchResturent> {
                                           Container(
                                             child: Row(
                                               children: [
-                                                resultData['restaurant'][i][
-                                                            'reviewAndRatingAvg']
-                                                        .isEmpty
+                                                resultData['restaurant'][i]
+                                                            ['avgRating'] ==
+                                                        null
                                                     ? Text(
                                                         "⭐1.0",
                                                         style: TextStyle(
@@ -224,7 +224,7 @@ class _SearchResturentState extends State<SearchResturent> {
                                                                     .bold),
                                                       )
                                                     : Text(
-                                                        "⭐${resultData['restaurant'][i]['reviewAndRatingAvg'][0]['avgRating'].toStringAsFixed(1)}",
+                                                        "⭐${resultData['restaurant'][i]['avgRating'].toStringAsFixed(1)}",
                                                         style: TextStyle(
                                                             fontSize:
                                                                 size.height *
