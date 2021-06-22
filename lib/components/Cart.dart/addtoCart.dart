@@ -35,13 +35,13 @@ class _CartScreenState extends State<CartScreen> {
 
   int deliverytime = 0;
   var resturantDataStatus;
-   fetchRestaurantStatus(id) async {
+  fetchRestaurantStatus(id) async {
     print("id is $id");
     print("******************  get resturent API hitting*********************");
     var result = await http.get(Uri.parse(
       APP_ROUTES +
           'getRestaurantInfos' +
-          '?key=BYId&id=$id' +
+          '?key=BYID&id=$id' +
           // id.toString() +
           '&latitude=' +
           latitude.toString() +
@@ -75,8 +75,8 @@ class _CartScreenState extends State<CartScreen> {
             print(
                 "Check menues avaliblity &&&&&&&&&&&&&&&&&&^^^^^^^^^^^^^^^%%%%%%%%%%");
 
-            var fetchData = await http
-                .get(Uri.parse(APP_ROUTES + 'getMenues' + '?key=ALL'));
+            var fetchData = await http.get(
+                Uri.parse(APP_ROUTES + 'getMenues' + '?key=BYVENDORID&id=$id'));
 
             if (mounted) {
               if (fetchData.statusCode == 200) {
@@ -141,8 +141,8 @@ class _CartScreenState extends State<CartScreen> {
                       builder: (context) => PlaceOrder(
                             deliveryTime: deliverytime,
                             data: resturantDataStatus,
-                            restUsername: resturantStatus['data'][0]['user']['login']
-                                ['userName'],
+                            restUsername: resturantStatus['data'][0]['user']
+                                ['login']['userName'],
                           ));
                   if (result) {
                     setState(() {

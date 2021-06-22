@@ -45,7 +45,7 @@ class _OfferListPageState extends State<OfferListPage> {
       fetchData(widget.restID);
     } else {
       setState(() {
-        ratingVendor = widget.ratingVendor;
+        ratingVendor = widget.ratingVendor.toDouble();
       });
       setState(() {
         dataChecker = true;
@@ -61,7 +61,7 @@ class _OfferListPageState extends State<OfferListPage> {
     }
   }
 
-  double ratingVendor;
+  double ratingVendor =1.0;
   int menulistLength;
   bool dataChecker = false;
   bool dataValidator = false;
@@ -78,8 +78,12 @@ class _OfferListPageState extends State<OfferListPage> {
           '&longitude=' +
           longitude.toString(),
     ));
-    var restaurantData = json.decode(result.body)['data'];
-  
+    if(result.statusCode == 200){
+      var restaurantData = json.decode(result.body)['data'];
+    print("this is data");
+    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+    print(restaurantData);
+    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
     if (restaurantData.isEmpty || restaurantData == null) {
       setState(() {
         dataChecker = true;
@@ -87,24 +91,32 @@ class _OfferListPageState extends State<OfferListPage> {
         dataValidator = true;
       });
     } else {
-      setState(() {
+     if(mounted){ setState(() {
         menulistLength = restaurantData[0]['Menus'].length;
 
         infodata = restaurantData[0];
         restaurantDataCopy = restaurantData[0];
-      });
+      });}
 
       // if (restaurantData[0]['avgRating'] != null) {
       //   ratingVendor = restaurantData[0]['avgRating'][0]['avgRating'].toInt();
       // }
-      setState(() {
+     if(mounted){  setState(() {
         dataChecker = true;
-      });
+      });}
 
       calculateDeliveryTime(restaurantDataCopy);
       getList();
       fetchRestaurantStatus();
     }
+    }else{
+     if(mounted){ setState(() {
+        dataChecker = true;
+
+        dataValidator = true;
+      });}
+    }
+    
   }
 
   callingLoader() {
@@ -558,7 +570,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                         Text("Delivery Time")
                                       ],
                                     ),
-                                    restaurantDataCopy['avgCost'] == null
+                                    restaurantDataCopy['avgCost'] == ''
                                         ? Container(
                                             margin: EdgeInsets.only(
                                                 right: size.width * 0.02),

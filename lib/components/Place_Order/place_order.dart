@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:date_time_format/date_time_format.dart';
 import 'dart:convert';
 import 'package:feasturent_costomer_app/components/Cart.dart/AddOnDataBase/addon_dataClass.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/AddOnDataBase/addon_service.dart';
@@ -40,10 +41,16 @@ class PlaceOrder extends StatefulWidget {
 class _PlaceOrderState extends State<PlaceOrder> {
   final services = UserServices();
   final addOnservices = AddOnService();
-
+  bool switchValue = false;
+  TimeOfDay pickedtime = TimeOfDay.now();
   @override
   void initState() {
     super.initState();
+    cleardata();
+    orderSchduleDate = null;
+    orderModeName = "DELIVERY";
+    orderMode[0].isSelected = true;
+    checkdelivery = true;
     offerInfo = "Select a promo code";
     createstorage();
     dataForOffer = widget.data;
@@ -52,12 +59,14 @@ class _PlaceOrderState extends State<PlaceOrder> {
   }
 
   var dataForOffer;
+  DateTime selectedStartDate = DateTime.now();
 
   @override
   void dispose() {
     super.dispose();
   }
 
+  bool checkdelivery = true;
   callingLoader() {
     showDialog(
         barrierDismissible: false,
@@ -1491,6 +1500,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           Text(
                             "Offers",
                             style: TextStyle(
+                                fontSize: size.height * 0.02,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           ),
@@ -1553,6 +1563,182 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                     )
                                   ],
                                 )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      // height: size.height * 0.07,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Order Mode",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: size.height * 0.02,
+                                color: Colors.black),
+                          ),
+                          Row(
+                            children: [
+                              Spacer(),
+                              InputChip(
+                                label: Container(
+                                    width: 65,
+                                    height: 20,
+                                    child: Center(
+                                      child: orderMode[0].isSelected == true
+                                          ? Text(
+                                              orderMode[0].title,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Text(
+                                              orderMode[0].title,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                    )),
+                                selectedColor: Colors.blue,
+                                disabledColor: Colors.grey[200],
+                                elevation: 2,
+                                isEnabled: true,
+                                checkmarkColor: Colors.white,
+                                selected: orderMode[0].isSelected,
+                                showCheckmark: true,
+                                onSelected: (value) {
+                                  cleardata();
+                                  if (orderMode[0].isSelected == true) {
+                                    setState(() {
+                                      checkdelivery = false;
+                                      orderModeName = "DELIVERY";
+                                      paymentMode = "Online Mode";
+
+                                      orderMode[0].isSelected = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      orderSchduleDate = null;
+                                      orderModeName = "DELIVERY";
+                                      checkdelivery = true;
+                                    });
+                                    orderMode[0].isSelected = true;
+                                  }
+                                },
+                              ),
+                              Spacer(),
+                              InputChip(
+                                label: Container(
+                                    width: 65,
+                                    height: 20,
+                                    child: Center(
+                                      child: orderMode[1].isSelected == true
+                                          ? Text(
+                                              orderMode[1].title,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Text(
+                                              orderMode[1].title,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                    )),
+                                selectedColor: Colors.blue,
+                                disabledColor: Colors.grey[200],
+                                elevation: 2,
+                                isEnabled: true,
+                                checkmarkColor: Colors.white,
+                                selected: orderMode[1].isSelected,
+                                showCheckmark: true,
+                                onSelected: (value) {
+                                  cleardata();
+                                  if (orderMode[1].isSelected == true) {
+                                    setState(() {
+                                      orderMode[1].isSelected = false;
+                                    });
+                                  } else {
+                                    _selectStartDate(context);
+                                    setState(() {
+                                      checkdelivery = false;
+                                      orderModeName = "SCHEDULE";
+                                      paymentMode = "Online Mode";
+                                    });
+                                    orderMode[1].isSelected = true;
+                                  }
+                                },
+                              ),
+                              Spacer(),
+                              InputChip(
+                                label: Container(
+                                    width: 65,
+                                    height: 20,
+                                    child: Center(
+                                      child: orderMode[2].isSelected == true
+                                          ? Text(
+                                              orderMode[2].title,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Text(
+                                              orderMode[2].title,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                    )),
+                                selectedColor: Colors.blue,
+                                disabledColor: Colors.grey[200],
+                                elevation: 2,
+                                isEnabled: true,
+                                checkmarkColor: Colors.white,
+                                selected: orderMode[2].isSelected,
+                                showCheckmark: true,
+                                onSelected: (value) {
+                                  cleardata();
+                                  if (orderMode[2].isSelected == true) {
+                                    setState(() {
+                                      orderMode[2].isSelected = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      checkdelivery = false;
+                                      orderModeName = "TAKEAWAY";
+                                      orderSchduleDate = null;
+                                      paymentMode = "Online Mode";
+                                    });
+                                    orderMode[2].isSelected = true;
+                                  }
+                                },
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          orderMode[1].isSelected == false
+                              ? SizedBox()
+                              : InkWell(
+                                  onTap: () {
+                                    print("hello");
+                                    _selectStartDate(context);
+                                  },
+                                  child: Container(
+                                      child: Text(
+                                          "${selectedStartDate.format("\Y-\M\-\d")} ${pickedtime.hour}:${pickedtime.minute}:02",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold)))),
                         ],
                       ),
                     ),
@@ -1693,8 +1879,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 "Pay Using",
                                 style: TextStyle(color: Colors.black),
                               ),
-                              dataForOffer['Setting']['isCod'] == null ||
-                                      dataForOffer['Setting']['isCod'] == true
+                              checkdelivery == false
                                   ? PopupMenuButton(
                                       padding: EdgeInsets.all(10),
                                       icon: Icon(Icons.arrow_drop_down),
@@ -1703,52 +1888,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                           setState(() {
                                             paymentMode = "Online Mode";
                                           });
-                                        } else if (value == 1) {
-                                          setState(() {
-                                            paymentMode = "Cash On Delivery";
-                                          });
-                                        } else if (value == 2) {
-                                          setState(() {
-                                            paymentMode = "Wallet";
-                                          });
-                                        }
-                                      },
-                                      // ignore: non_constant_identifier_names
-                                      itemBuilder: (BuildContext) => [
-                                        PopupMenuItem(
-                                          child: Text(
-                                            "Online Mode",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          value: 0,
-                                        ),
-                                        PopupMenuItem(
-                                          child: Text(
-                                            "Cash On Delivery",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          value: 1,
-                                        ),
-                                        PopupMenuItem(
-                                          child: Text(
-                                            "Wallet",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          value: 2,
-                                        ),
-                                      ],
-                                    )
-                                  : PopupMenuButton(
-                                      padding: EdgeInsets.all(10),
-                                      icon: Icon(Icons.arrow_drop_down),
-                                      onSelected: (value) {
-                                        if (value == 0) {
-                                          setState(() {
-                                            paymentMode = "Online Mode";
-                                          });
                                         } else if (value == 2) {
                                           setState(() {
                                             paymentMode = "Wallet";
@@ -1775,6 +1914,90 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                         ),
                                       ],
                                     )
+                                  : dataForOffer['Setting']['isCod'] == null ||
+                                          dataForOffer['Setting']['isCod'] ==
+                                              true
+                                      ? PopupMenuButton(
+                                          padding: EdgeInsets.all(10),
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          onSelected: (value) {
+                                            if (value == 0) {
+                                              setState(() {
+                                                paymentMode = "Online Mode";
+                                              });
+                                            } else if (value == 1) {
+                                              setState(() {
+                                                paymentMode =
+                                                    "Cash On Delivery";
+                                              });
+                                            } else if (value == 2) {
+                                              setState(() {
+                                                paymentMode = "Wallet";
+                                              });
+                                            }
+                                          },
+                                          // ignore: non_constant_identifier_names
+                                          itemBuilder: (BuildContext) => [
+                                            PopupMenuItem(
+                                              child: Text(
+                                                "Online Mode",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              value: 0,
+                                            ),
+                                            PopupMenuItem(
+                                              child: Text(
+                                                "Cash On Delivery",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              value: 1,
+                                            ),
+                                            PopupMenuItem(
+                                              child: Text(
+                                                "Wallet",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              value: 2,
+                                            ),
+                                          ],
+                                        )
+                                      : PopupMenuButton(
+                                          padding: EdgeInsets.all(10),
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          onSelected: (value) {
+                                            if (value == 0) {
+                                              setState(() {
+                                                paymentMode = "Online Mode";
+                                              });
+                                            } else if (value == 2) {
+                                              setState(() {
+                                                paymentMode = "Wallet";
+                                              });
+                                            }
+                                          },
+                                          // ignore: non_constant_identifier_names
+                                          itemBuilder: (BuildContext) => [
+                                            PopupMenuItem(
+                                              child: Text(
+                                                "Online Mode",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              value: 0,
+                                            ),
+                                            PopupMenuItem(
+                                              child: Text(
+                                                "Wallet",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              value: 2,
+                                            ),
+                                          ],
+                                        )
                             ],
                           ),
                           Text(paymentMode),
@@ -1819,6 +2042,15 @@ class _PlaceOrderState extends State<PlaceOrder> {
         ),
       ),
     );
+  }
+
+  cleardata() {
+    int k = orderMode.length - 1;
+    for (int i = 0; i <= k; i++) {
+      setState(() {
+        orderMode[i].isSelected = false;
+      });
+    }
   }
 
   // ignore: non_constant_identifier_names
@@ -1896,6 +2128,49 @@ step''',
             ],
           ));
     }
+  }
+
+  _selectStartDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedStartDate, // Refer step 1
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(Duration(days: 3)),
+        helpText: "Select Order Date",
+        confirmText: "Confirm");
+    if (picked != null && picked != selectedStartDate) {
+      TimeOfDay pickedtim = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(hour: 14, minute: 00),
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child,
+          );
+        },
+      );
+
+      if (pickedtim != null) {
+        print(pickedtim);
+        setState(() {
+          pickedtime = pickedtim;
+          selectedStartDate = picked;
+          checkdelivery = false;
+          orderModeName = "SCHEDULE";
+          orderSchduleDate =
+              '${selectedStartDate.format("\Y-\m\-\d")} ${pickedtime.hour}:${pickedtime.minute}:02';
+
+          paymentMode = "Online Mode";
+        });
+      } else {
+        orderSchduleDate = null;
+      }
+    }
+    // setState(() {
+    //   selectedStartDate = picked;
+    //   // selectedEndDate = selectedStartDate.add(Duration(days: 5));
+    //   // stockEndDate = selectedStartDate.add(Duration(days: 1));
+    // });
   }
 }
 
@@ -2123,6 +2398,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
+      "orderMode": orderModeName,
+      "scheduleTime": orderSchduleDate,
       "menuId": menuidAndQty,
       "addons": addOnidAndQty,
       "vendorId": "$vendorId1",
@@ -2215,6 +2492,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
+      "orderMode": orderModeName,
+      "scheduleTime": orderSchduleDate,
       "menuId": menuidAndQty,
       "addons": addOnidAndQty,
       "vendorId": "$vendorId1",
@@ -2327,6 +2606,8 @@ class _PlaceOrderCheckState extends State<PlaceOrderCheck> {
     _authorization = prefs.getString('sessionToken');
     _refreshtoken = prefs.getString('refreshToken');
     Map data = {
+      "orderMode": orderModeName,
+      "scheduleTime": orderSchduleDate,
       "menuId": menuidAndQty,
       "addons": addOnidAndQty,
       "vendorId": "$vendorId1",
