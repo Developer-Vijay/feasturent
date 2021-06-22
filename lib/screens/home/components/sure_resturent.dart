@@ -36,9 +36,6 @@ class _SureResturentState extends State<SureResturent> {
 
   var data2;
   fetchAllRestaurant() async {
-    print(latitude);
-    print("@@@@@@@@@@@");
-    print(longitude);
     return allresturentmemoizer.runOnce(() async {
       print(
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
@@ -52,11 +49,8 @@ class _SureResturentState extends State<SureResturent> {
             '&longitude=' +
             longitude.toString(),
       ));
-      print(_authorization);
 
       print("######################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      print(result.body);
-      print(longitude);
 
       if (result.statusCode == 200) {
         setState(() {
@@ -94,7 +88,6 @@ class _SureResturentState extends State<SureResturent> {
             } else if (restaurantData1.length <= 15) {
               listlength1 = restaurantData1.length;
             }
-
             return snapshot.data.length <= 0
                 ? SizedBox()
                 : Container(

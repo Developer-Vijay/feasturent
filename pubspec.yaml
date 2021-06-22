@@ -67,7 +67,10 @@ dependencies:
   step_progress_indicator:   
   connectivity: ^0.4.6+2
   shimmer:
-  flutter_ringtone_player:   
+  flutter_ringtone_player:
+
+
+
 
   
 

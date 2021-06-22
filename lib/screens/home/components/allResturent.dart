@@ -10,7 +10,7 @@ import 'dart:convert';
 import 'discount_card.dart';
 import 'popular.dart';
 import '../../../shimmer_effect.dart';
-
+import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${this.substring(1)}";
@@ -102,7 +102,7 @@ class _AllResturentState extends State<AllResturent> {
   fetchAllRestaurant() async {
     print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     print(" from listview builder  ${DateTime.now()}");
-    return allresturentmemoizer.runOnce(() async {
+    return  allresturentmemoizer.runOnce(() async {
       fetchHomeSliderLength();
       fetchHomebaanerLength();
       print(
@@ -381,17 +381,21 @@ class _AllResturentState extends State<AllResturent> {
                                                       top: size.height * 0.02),
                                                   child: Row(
                                                     children: [
-                                                      Text(
-                                                        capitalize(
-                                                            snapshot.data[index]
-                                                                ['name']),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                size.height *
-                                                                    0.02),
+                                                      Container(
+                                                  width: size.width * 0.5,
+                                                        child: Text(
+                                                          capitalize(
+                                                              snapshot.data[index]
+                                                                  ['name']),
+                                                                  overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              color: Colors.black,
+                                                              fontSize:
+                                                                  size.height *
+                                                                      0.02),
+                                                        ),
                                                       ),
                                                       Spacer(),
                                                       Padding(

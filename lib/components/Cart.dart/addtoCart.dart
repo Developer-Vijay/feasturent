@@ -45,6 +45,7 @@ class _CartScreenState extends State<CartScreen> {
           // id.toString() +
           '&latitude=' +
           latitude.toString() +
+          
           '&longitude=' +
           longitude.toString(),
     ));

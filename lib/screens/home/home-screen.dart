@@ -21,8 +21,8 @@ import 'SearchFiles/test_search.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-
 import 'components/ontap_offer.dart';
+import 'package:async/async.dart';
 
 class HomeScreen extends StatefulWidget {
   final index;
@@ -39,10 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
       tempoaryData = widget.index;
     });
     changePage();
-    takeLocation();
+    // takeLocation();
     getSession();
     // getCurrentLocation();
-    fetchwelcomeBanner();
   }
 
   changePage() async {
@@ -147,12 +146,28 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Coordinates coordinates;
-  String temp1;
-  String locality = '';
-  String area = '';
-  String localArea = '';
-  String state = '';
+  callingLoader() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new AlertDialog(
+                content: Row(
+              children: [
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("Loading"),
+                ),
+              ],
+            )));
+  }
+
+  // Coordinates coordinates;
+  // String temp1;
+  // String locality = '';
+  // String area = '';
+  // String localArea = '';
+  // String state = '';
   Future<void> getCurrentLocation() async {
     try {
       final geopostion = await Geolocator.getCurrentPosition(
@@ -280,6 +295,8 @@ class _HomeScreenState extends State<HomeScreen> {
           });
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
+        fetchwelcomeBanner();
+
         print(_authorization);
         print(_refreshtoken);
 
@@ -415,7 +432,10 @@ class _HomeScreenState extends State<HomeScreen> {
       double lat = detail.result.geometry.location.lat;
       double lng = detail.result.geometry.location.lng;
       coordinates = Coordinates(lat, lng);
-
+  setState(() {
+      latitude=lat;
+      longitude=lng;
+    });
       var address =
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       locality = address.first.featureName;
@@ -434,7 +454,29 @@ class _HomeScreenState extends State<HomeScreen> {
           location = "$locality , $area , $state";
         }
       });
+    
     }
+setState(() {
+  
+});
+      discountmemoizer = AsyncMemoizer();
+      categorymemoizer = AsyncMemoizer();
+      allresturentmemoizer = AsyncMemoizer();
+      popularMenumemoizer = AsyncMemoizer();
+      homeslidermemoizer = AsyncMemoizer();
+      offerbannermemoizer = AsyncMemoizer();
+      offerslidermemoizer = AsyncMemoizer();
+      dineoutbannermemoizer = AsyncMemoizer();
+      popluardineoutmemoizer = AsyncMemoizer();
+      collectionmemoizer = AsyncMemoizer();
+      feturememoizer = AsyncMemoizer();
+      setState(() {});
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          setState(() {
+                      
+                    });
   }
 
   _buildAppBar(_page) {
@@ -470,7 +512,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           // IconButton(
           //   icon: SvgPicture.asset(
-          //     "assets/icons/notification.svg",
+
+          //  "assets/icons/notification.svg",
           //     height: MediaQuery.of(context).size.height * 0.027,
           //   ),
           //   onPressed: () {
@@ -538,21 +581,21 @@ class _HomeScreenState extends State<HomeScreen> {
               index: _page,
               height: sized.height * 0.08,
               items: <Widget>[
-                SvgPicture.asset(
-                  "assets/icons/house.svg",
+                Image.asset(
+                  "assets/icons/home1.png",
                   height: sized.height * 0.035,
                 ),
-                SvgPicture.asset(
-                  "assets/icons/offer_bn_outline.svg",
+                Image.asset(
+                  "assets/icons/offer1.png",
                   height: sized.height * 0.035,
                 ),
-                SvgPicture.asset(
-                  "assets/icons/dineout_bn_outline.svg",
+                Image.asset(
+                  "assets/icons/dineout1.png",
                   height: sized.height * 0.035,
                 ),
-                SvgPicture.asset(
-                  "assets/icons/user.svg",
-                  height: sized.height * 0.03,
+                Image.asset(
+                  "assets/icons/profile1.png",
+                  height: sized.height * 0.035,
                 ),
               ],
               onTap: (index) {
