@@ -10,17 +10,17 @@ import 'components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:async/async.dart';
 
 // Memorizer
-final AsyncMemoizer discountmemoizer = AsyncMemoizer();
-final AsyncMemoizer categorymemoizer = AsyncMemoizer();
-final AsyncMemoizer allresturentmemoizer = AsyncMemoizer();
-final AsyncMemoizer popularMenumemoizer = AsyncMemoizer();
-final AsyncMemoizer homeslidermemoizer = AsyncMemoizer();
-final AsyncMemoizer offerbannermemoizer = AsyncMemoizer();
-final AsyncMemoizer offerslidermemoizer = AsyncMemoizer();
-final AsyncMemoizer dineoutbannermemoizer = AsyncMemoizer();
-final AsyncMemoizer popluardineoutmemoizer = AsyncMemoizer();
-final AsyncMemoizer collectionmemoizer = AsyncMemoizer();
-final AsyncMemoizer feturememoizer = AsyncMemoizer();
+ AsyncMemoizer discountmemoizer = AsyncMemoizer();
+ AsyncMemoizer categorymemoizer = AsyncMemoizer();
+ AsyncMemoizer allresturentmemoizer = AsyncMemoizer();
+ AsyncMemoizer popularMenumemoizer = AsyncMemoizer();
+ AsyncMemoizer homeslidermemoizer = AsyncMemoizer();
+ AsyncMemoizer offerbannermemoizer = AsyncMemoizer();
+ AsyncMemoizer offerslidermemoizer = AsyncMemoizer();
+ AsyncMemoizer dineoutbannermemoizer = AsyncMemoizer();
+ AsyncMemoizer popluardineoutmemoizer = AsyncMemoizer();
+ AsyncMemoizer collectionmemoizer = AsyncMemoizer();
+ AsyncMemoizer feturememoizer = AsyncMemoizer();
 //  final AsyncMemoizer memoizer = AsyncMemoizer();
 
 // capitalize text function

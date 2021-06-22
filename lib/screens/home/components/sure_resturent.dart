@@ -36,9 +36,6 @@ class _SureResturentState extends State<SureResturent> {
 
   var data2;
   fetchAllRestaurant() async {
-    print(latitude);
-    print("@@@@@@@@@@@");
-    print(longitude);
     return allresturentmemoizer.runOnce(() async {
       print(
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get resturents");
@@ -52,11 +49,8 @@ class _SureResturentState extends State<SureResturent> {
             '&longitude=' +
             longitude.toString(),
       ));
-      print(_authorization);
 
       print("######################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      print(result.body);
-      print(longitude);
 
       setState(() {
         restaurantData1 = json.decode(result.body)['data'];
@@ -106,8 +100,6 @@ class _SureResturentState extends State<SureResturent> {
           child: FutureBuilder(
             future: this.fetchAllRestaurant(),
             builder: (context, snapshot) {
-              print('4444444444444444444444444:::::::::::::::::::::');
-              print(snapshot.data);
               if (snapshot.hasData) {
                 if (restaurantData1.length >= 15) {
                   listlength1 = 15;
@@ -160,7 +152,6 @@ class _SureResturentState extends State<SureResturent> {
                             }
 
                             int k = snapshot.data[index]['cuisines'].length;
-                            print(k);
                             var categoryData = '';
                             if (k != 0) {
                               for (int j = 0; j <= k - 1; j++) {
