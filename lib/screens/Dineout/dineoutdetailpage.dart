@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/ShimmerEffects/dineout_effect.dart';
 import 'package:feasturent_costomer_app/components/WishList/WishListDataBase/wishlist_service.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/dineout_about_tab.dart';
 import 'package:feasturent_costomer_app/screens/Dineout/DIneoutTabs/dineout_offer_tab.dart';
@@ -157,9 +158,7 @@ class _DineoutDetailPageState extends State<DineoutDetailPage>
     return SafeArea(
         child: dataChecker == false
             ? Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                body:DineoutEffect()
               )
             : dataValidator == true
                 ? Scaffold(

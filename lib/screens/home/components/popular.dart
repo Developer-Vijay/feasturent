@@ -32,7 +32,14 @@ class _PopularListState extends State<PopularList> {
     print(
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  getpopular menues");
     return popularMenumemoizer.runOnce(() async {
-      var result = await http.get(Uri.parse(APP_ROUTES + 'getPopularMenues'));
+      var result = await http.get(Uri.parse(
+        APP_ROUTES +
+            'getPopularMenues' +
+            '?latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
+      ));
       if (result.statusCode == 200) {
         setState(() {
           popdata = json.decode(result.body)['data'];
@@ -105,261 +112,397 @@ class _PopularListState extends State<PopularList> {
     }
     Size size = MediaQuery.of(context).size;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(
-              top: size.height * 0.01, bottom: size.height * 0.01),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-        ),
-        Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(left: size.width * 0.04),
-              child: Text(
-                "Popular on Feasturent",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: kTextColor,
-                    fontSize: size.height * 0.025),
-              ),
-            ),
-            Spacer(),
-            Container(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  onPressed: () {
-                    // showModalBottomSheet(
-                    //     enableDrag: true,
-                    //     isScrollControlled: true,
-                    //     context: context,
-                    //     builder: (context) => Container(
-                    //         height: size.height * 0.8,
-                    //         child: AddRatingPage(data: data)));
-
-                    if (popdata != null) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ViewAllPopular(
-                                    popularData: popdata,
-                                  )));
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          "View All",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: kPrimaryColor),
-                        ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.zero,
-                          child: Icon(
-                            Icons.arrow_right_rounded,
-                            color: kSecondaryTextColor,
-                          )),
-                    ],
-                  ),
-                ))
-          ],
-        ),
-        Container(
-            height: size.height * 0.14,
             child: FutureBuilder(
-              future: this.fetchPopular(),
-              builder: (context, snap) {
-                if (snap.hasData) {
-                  int legnth;
-                  if (snap.data.length >= 50) {
-                    legnth = 50;
-                  } else {
-                    legnth = snap.data.length;
-                  }
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: legnth,
-                    itemBuilder: (context, index) {
-                      if (snap.data[index] != null) {
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 3,
-                                          color: Colors.blueGrey,
-                                          spreadRadius: 1)
-                                    ],
+          future: this.fetchPopular(),
+          builder: (context, snap) {
+            if (snap.hasData) {
+              int legnth;
+              if (snap.data.length >= 50) {
+                legnth = 50;
+              } else {
+                legnth = snap.data.length;
+              }
+              return snap.data.isEmpty
+                  ? SizedBox()
+                  : Container(
+                      height: size.height * 0.18,
+                      margin: EdgeInsets.only(
+                          top: size.height * 0.01, bottom: size.height * 0.01),
+                      // padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin:
+                                      EdgeInsets.only(left: size.width * 0.04),
+                                  child: Text(
+                                    "Popular on Feasturent",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: kTextColor,
+                                        fontSize: size.height * 0.025),
                                   ),
+                                ),
+                                Spacer(),
+                                Container(
+                                    alignment: Alignment.topRight,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        // showModalBottomSheet(
+                                        //     enableDrag: true,
+                                        //     isScrollControlled: true,
+                                        //     context: context,
+                                        //     builder: (context) => Container(
+                                        //         height: size.height * 0.8,
+                                        //         child: AddRatingPage(data: data)));
+
+                                        if (popdata != null) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ViewAllPopular(
+                                                        popularData: popdata,
+                                                      )));
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              "View All",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: kPrimaryColor),
+                                            ),
+                                          ),
+                                          Container(
+                                              margin: EdgeInsets.zero,
+                                              child: Icon(
+                                                Icons.arrow_right_rounded,
+                                                color: kSecondaryTextColor,
+                                              )),
+                                        ],
+                                      ),
+                                    ))
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 8,
+                            child: Container(
+                              height: size.height * 0.14,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: legnth,
+                                itemBuilder: (context, index) {
+                                  if (snap.data[index] != null) {
+                                    return Column(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 3,
+                                                      color: Colors.blueGrey,
+                                                      spreadRadius: 1)
+                                                ],
+                                              ),
+                                              margin: EdgeInsets.only(
+                                                  left: size.width * 0.011),
+                                              height: size.height * 0.08,
+                                              width: size.width * 0.24,
+                                              child: CircleAvatar(
+                                                backgroundColor: Colors.white,
+                                                child: FlatButton(
+                                                  onPressed: () {
+                                                    var menuD;
+                                                    setState(() {
+                                                      menuD = snap.data[index];
+                                                    });
+                                                    List<ChangeJson> dataList =
+                                                        [];
+                                                    List addonList =
+                                                        menuD['variant'];
+                                                    addonList
+                                                        .addAll(menuD['addon']);
+                                                    print("this is list");
+                                                    List<AddonMenus>
+                                                        createListAddon = [];
+
+                                                    if (addonList.isNotEmpty) {
+                                                      int k = addonList.length;
+                                                      for (int i = 0;
+                                                          i <= k - 1;
+                                                          i++) {
+                                                        createListAddon.add(
+                                                            AddonMenus(
+                                                                addonList[i]
+                                                                    ['id'],
+                                                                menuD['menuId'],
+                                                                addonList[i]
+                                                                    ['type'],
+                                                                addonList[i]
+                                                                    ['title'],
+                                                                addonList[i]
+                                                                    ['amount'],
+                                                                addonList[i]
+                                                                    ['gst'],
+                                                                addonList[i][
+                                                                        'gstAmount']
+                                                                    .toInt()));
+                                                      }
+                                                    }
+                                                    print(
+                                                        "this is without encode list");
+                                                    print(createListAddon);
+
+                                                    print(
+                                                        "this is  encode list");
+                                                    var dataencoded =
+                                                        jsonEncode(
+                                                            createListAddon);
+                                                    print(dataencoded);
+                                                    print(
+                                                        "this is  dencode list");
+                                                    var datadecode =
+                                                        jsonDecode(dataencoded);
+                                                    print(datadecode);
+
+                                                    dataList.add(ChangeJson(
+                                                        menuD['menuId'],
+                                                        menuD['vendorId'],
+                                                        menuD['title'],
+                                                        menuD['description'],
+                                                        menuD['itemPrice'],
+                                                        menuD['gst'],
+                                                        menuD['gstAmount'],
+                                                        menuD['totalPrice'],
+                                                        menuD['deliveryTime'],
+                                                        menuD['isNonVeg'],
+                                                        menuD['isEgg'],
+                                                        menuD['isCombo'],
+                                                        menuD['menuImage1'],
+                                                        menuD['menuImage2'],
+                                                        menuD['menuImage3'],
+                                                        datadecode, []));
+                                                    print(
+                                                        "this is data list open #####");
+                                                    var dataNew =
+                                                        jsonEncode(dataList[0]);
+                                                    var finaldata =
+                                                        jsonDecode(dataNew);
+                                                    print(finaldata);
+                                                    print(
+                                                        "this is data list close #####");
+
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    FoodSlider(
+                                                                      menuData:
+                                                                          finaldata,
+                                                                      menuStatus:
+                                                                          true,
+                                                                      restaurentName:
+                                                                          menuD[
+                                                                              'restaurantName'],
+                                                                      rating:
+                                                                          1.0,
+                                                                      ratinglength:
+                                                                          1,
+                                                                    )));
+                                                  },
+                                                  child: ClipOval(
+                                                      child: snap.data[index][
+                                                                  'menuImage1'] !=
+                                                              null
+                                                          ? CachedNetworkImage(
+                                                              imageUrl: S3_BASE_PATH +
+                                                                  snap.data[
+                                                                          index]
+                                                                      [
+                                                                      'menuImage1'],
+                                                              fit: BoxFit.cover,
+                                                              width:
+                                                                  size.width *
+                                                                      0.2,
+                                                              height:
+                                                                  size.height *
+                                                                      0.2,
+                                                              errorWidget: (context,
+                                                                      url,
+                                                                      error) =>
+                                                                  Icon(Icons
+                                                                      .error),
+                                                              placeholder:
+                                                                  (context,
+                                                                          url) =>
+                                                                      Image
+                                                                          .asset(
+                                                                "assets/images/feasturenttemp.jpeg",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            )
+                                                          : Image.asset(
+                                                              "assets/images/feasturenttemp.jpeg",
+                                                              fit: BoxFit.cover,
+                                                              width:
+                                                                  size.width *
+                                                                      0.2,
+                                                              height:
+                                                                  size.height *
+                                                                      0.2,
+                                                            )),
+                                                ),
+                                              )),
+                                        ),
+                                        SizedBox(
+                                          height: size.height * 0.01,
+                                        ),
+                                        Container(
+                                          width: size.width * 0.2,
+                                          child: Center(
+                                            child: Text(
+                                              capitalize(
+                                                  snap.data[index]['title']),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize:
+                                                      size.height * 0.017),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  } else {
+                                    return SizedBox();
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+            } else {
+              return Container(
+                height: size.height * 0.17,
+                margin: EdgeInsets.only(
+                    top: size.height * 0.01, bottom: size.height * 0.01),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: size.width * 0.04),
+                            child: Text(
+                              "Popular on Feasturent",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: kTextColor,
+                                  fontSize: size.height * 0.025),
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                              alignment: Alignment.topRight,
+                              child: TextButton(
+                                onPressed: () {
+                                  // showModalBottomSheet(
+                                  //     enableDrag: true,
+                                  //     isScrollControlled: true,
+                                  //     context: context,
+                                  //     builder: (context) => Container(
+                                  //         height: size.height * 0.8,
+                                  //         child: AddRatingPage(data: data)));
+
+                                  if (popdata != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewAllPopular(
+                                                  popularData: popdata,
+                                                )));
+                                  }
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        "View All",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: kPrimaryColor),
+                                      ),
+                                    ),
+                                    Container(
+                                        margin: EdgeInsets.zero,
+                                        child: Icon(
+                                          Icons.arrow_right_rounded,
+                                          color: kSecondaryTextColor,
+                                        )),
+                                  ],
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        height: size.height * 0.14,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                left: 10,
+                              ),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.grey[100],
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white),
                                   margin:
                                       EdgeInsets.only(left: size.width * 0.011),
-                                  height: size.height * 0.08,
-                                  width: size.width * 0.24,
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    child: FlatButton(
-                                      onPressed: () {
-                                        var menuD;
-                                        setState(() {
-                                          menuD = snap.data[index];
-                                        });
-                                        List<ChangeJson> dataList = [];
-                                        List addonList = menuD['variant'];
-                                        addonList.addAll(menuD['addon']);
-                                        print("this is list");
-                                        List<AddonMenus> createListAddon = [];
-
-                                        if (addonList.isNotEmpty) {
-                                          int k = addonList.length;
-                                          for (int i = 0; i <= k - 1; i++) {
-                                            createListAddon.add(AddonMenus(
-                                                addonList[i]['id'],
-                                                menuD['menuId'],
-                                                addonList[i]['type'],
-                                                addonList[i]['title'],
-                                                addonList[i]['amount'],
-                                                addonList[i]['gst'],
-                                                addonList[i]['gstAmount']
-                                                    .toInt()));
-                                          }
-                                        }
-                                        print("this is without encode list");
-                                        print(createListAddon);
-
-                                        print("this is  encode list");
-                                        var dataencoded =
-                                            jsonEncode(createListAddon);
-                                        print(dataencoded);
-                                        print("this is  dencode list");
-                                        var datadecode =
-                                            jsonDecode(dataencoded);
-                                        print(datadecode);
-
-                                        dataList.add(ChangeJson(
-                                            menuD['menuId'],
-                                            menuD['vendorId'],
-                                            menuD['title'],
-                                            menuD['description'],
-                                            menuD['itemPrice'],
-                                            menuD['gst'],
-                                            menuD['gstAmount'],
-                                            menuD['totalPrice'],
-                                            menuD['deliveryTime'],
-                                            menuD['isNonVeg'],
-                                            menuD['isEgg'],
-                                            menuD['isCombo'],
-                                            menuD['menuImage1'],
-                                            menuD['menuImage2'],
-                                            menuD['menuImage3'],
-                                            datadecode, []));
-                                        print("this is data list open #####");
-                                        var dataNew = jsonEncode(dataList[0]);
-                                        var finaldata = jsonDecode(dataNew);
-                                        print(finaldata);
-                                        print("this is data list close #####");
-
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FoodSlider(
-                                                      menuData: finaldata,
-                                                      menuStatus: true,
-                                                      restaurentName: menuD[
-                                                          'restaurantName'],
-                                                      rating: 1.0,
-                                                      ratinglength: 1,
-                                                    )));
-                                      },
-                                      child: ClipOval(
-                                          child: snap.data[index]
-                                                      ['menuImage1'] !=
-                                                  null
-                                              ? CachedNetworkImage(
-                                                  imageUrl: S3_BASE_PATH +
-                                                      snap.data[index]
-                                                          ['menuImage1'],
-                                                  fit: BoxFit.cover,
-                                                  width: size.width * 0.2,
-                                                  height: size.height * 0.2,
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                  placeholder: (context, url) =>
-                                                      Image.asset(
-                                                    "assets/images/feasturenttemp.jpeg",
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )
-                                              : Image.asset(
-                                                  "assets/images/feasturenttemp.jpeg",
-                                                  fit: BoxFit.cover,
-                                                  width: size.width * 0.2,
-                                                  height: size.height * 0.2,
-                                                )),
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.01,
-                            ),
-                            Container(
-                              width: size.width * 0.2,
-                              child: Center(
-                                child: Text(
-                                  capitalize(snap.data[index]['title']),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: size.height * 0.017),
+                                  height: size.height * 0.06,
+                                  width: size.width * 0.2,
                                 ),
                               ),
-                            )
-                          ],
-                        );
-                      } else {
-                        return SizedBox();
-                      }
-                    },
-                  );
-                } else {
-                  return Container(
-                    height: size.height * 0.14,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            top: 8.0,
-                            left: 10,
-                          ),
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.grey[100],
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.white),
-                              margin: EdgeInsets.only(left: size.width * 0.011),
-                              height: size.height * 0.06,
-                              width: size.width * 0.2,
-                            ),
-                          ),
-                        );
-                      },
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  );
-                }
-              },
-            )),
+                  ],
+                ),
+              );
+            }
+          },
+        )),
         SizedBox(
           height: size.height * 0.01,
         ),

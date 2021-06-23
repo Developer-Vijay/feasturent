@@ -24,7 +24,7 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
   @override
   void initState() {
     super.initState();
-      getCurrentLocation();
+    getCurrentLocation();
   }
 
   Future<void> getCurrentLocation() async {
@@ -45,7 +45,7 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
       area = temp.first.subLocality;
       localArea = temp.first.subAdminArea;
       state = temp.first.adminArea;
-      setState(()  {
+      setState(() {
         if (locality == null) {
           location = "$area , $state";
         } else if (area == null) {
@@ -55,19 +55,7 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
         } else {
           location = "$locality , $area , $state";
         }
-       
       });
-       final SharedPreferences locationShared =
-            await SharedPreferences.getInstance();
-        locationShared.setString('tempLocation', location);
-    } catch (error) {
-      print("/////////////////////////");
-      print(error);
-      print("/////////////////////////////////////////////////////");
-      Fluttertoast.showToast(msg: "Unable to take your location");
-      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-    }
-    if (coordinates != null) {
       getSession();
 
       try {
@@ -102,17 +90,29 @@ class _SplashScreenAppState extends State<SplashScreenApp> {
           new Timer(new Duration(seconds: 3), () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    _isOnboadingSeen ? HomeScreen()  : OnboardingScreen()));
+                    _isOnboadingSeen ? HomeScreen() : OnboardingScreen()));
           });
         }
 
         previous = connresult;
       });
-    } else {
-      print("???????????????????????????");
+      final SharedPreferences locationShared =
+          await SharedPreferences.getInstance();
+      locationShared.setString('tempLocation', location);
+    } catch (error) {
+      print("/////////////////////////");
+      print(error);
+      print("/////////////////////////////////////////////////////");
       Fluttertoast.showToast(msg: "Unable to take your location");
       SystemChannels.platform.invokeMethod('SystemNavigator.pop');
     }
+    // if (coordinates != null) {
+
+    // } else {
+    //   print("???????????????????????????");
+    //   Fluttertoast.showToast(msg: "Unable to take your location");
+    //   // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    // }
   }
 
   void _showdialog() {

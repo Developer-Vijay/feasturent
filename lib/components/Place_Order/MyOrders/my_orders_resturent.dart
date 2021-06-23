@@ -706,15 +706,6 @@ class _MyOrdersResturentState extends State<MyOrdersResturent> {
                                                                                   style: TextStyle(fontSize: 10, color: Colors.red, fontWeight: FontWeight.bold),
                                                                                 )
                                                                               : Text("ACCEPTED", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
-                                                                      // Padding(
-                                                                      //     padding:
-                                                                      //         const EdgeInsets.all(8.0),
-                                                                      //     child: snapshot.data[index]['orderStatus'] == "PICKUP"
-                                                                      //         ? Text(
-                                                                      //             "PICKUP",
-                                                                      //             style: TextStyle(fontSize: 10, color: Colors.red, fontWeight: FontWeight.bold),
-                                                                      //           )
-                                                                      //         : Text("PICKUP", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
                                                                       Padding(
                                                                           padding:
                                                                               const EdgeInsets.all(8.0),

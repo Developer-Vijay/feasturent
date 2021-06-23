@@ -30,7 +30,15 @@ class _ViewallRestaurantState extends State<ViewallRestaurant> {
         ),
         body: Container(
           child: widget.restData.length == 0
-              ? Text("No Restuarnts Found Near You")
+              ? Center(
+                  child: Container(
+                    child: Image.asset(
+                      "assets/images/norestaurent.png",
+                      height: 200,
+                      width: 300,
+                    ),
+                  ),
+                )
               : ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   itemCount: restaurantData.length,

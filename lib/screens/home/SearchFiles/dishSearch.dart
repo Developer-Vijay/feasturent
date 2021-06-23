@@ -35,7 +35,7 @@ class _DishSearchState extends State<DishSearch> {
                                           ratinglength: 1,
                                           menuStatus: true,
                                           restaurentName: resultData['dish']
-                                              [index]['VendorInfo']['name'],
+                                              [index]['vendorInfo']['name'],
                                           dishID: resultData['dish'][index]
                                               ['id'],
                                         )));
@@ -58,7 +58,7 @@ class _DishSearchState extends State<DishSearch> {
                                   children: [
                                     Container(
                                         width: size.width * 0.95,
-                                        height: size.height * 0.128,
+                                        height: size.height * 0.135,
                                         child: Row(
                                           children: [
                                             Expanded(
@@ -201,6 +201,24 @@ class _DishSearchState extends State<DishSearch> {
                                                                         ),
                                                                       ))
                                                       ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 7,
+                                                  ),
+                                                  Container(
+                                                    width: size.width * 0.3,
+                                                    child: Text(
+                                                      resultData['dish'][index]
+                                                              ['vendorInfo']
+                                                          ['name'],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                          fontSize: 11),
                                                     ),
                                                   ),
                                                   SizedBox(

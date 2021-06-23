@@ -334,9 +334,6 @@ class _HomeScreenState extends State<HomeScreen> {
         userName = null;
 
         prefs.setBool("_isAuthenticate", false);
-
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         print('User not Login');
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -432,10 +429,10 @@ class _HomeScreenState extends State<HomeScreen> {
       double lat = detail.result.geometry.location.lat;
       double lng = detail.result.geometry.location.lng;
       coordinates = Coordinates(lat, lng);
-  setState(() {
-      latitude=lat;
-      longitude=lng;
-    });
+      setState(() {
+        latitude = lat;
+        longitude = lng;
+      });
       var address =
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       locality = address.first.featureName;
@@ -454,29 +451,24 @@ class _HomeScreenState extends State<HomeScreen> {
           location = "$locality , $area , $state";
         }
       });
-    
     }
-setState(() {
-  
-});
-      discountmemoizer = AsyncMemoizer();
-      categorymemoizer = AsyncMemoizer();
-      allresturentmemoizer = AsyncMemoizer();
-      popularMenumemoizer = AsyncMemoizer();
-      homeslidermemoizer = AsyncMemoizer();
-      offerbannermemoizer = AsyncMemoizer();
-      offerslidermemoizer = AsyncMemoizer();
-      dineoutbannermemoizer = AsyncMemoizer();
-      popluardineoutmemoizer = AsyncMemoizer();
-      collectionmemoizer = AsyncMemoizer();
-      feturememoizer = AsyncMemoizer();
-      setState(() {});
+    setState(() {});
+    discountmemoizer = AsyncMemoizer();
+    categorymemoizer = AsyncMemoizer();
+    allresturentmemoizer = AsyncMemoizer();
+    popularMenumemoizer = AsyncMemoizer();
+    homeslidermemoizer = AsyncMemoizer();
+    offerslidermemoizer = AsyncMemoizer();
+    offerslidermemoizer = AsyncMemoizer();
+    dineoutbannermemoizer = AsyncMemoizer();
+    popluardineoutmemoizer = AsyncMemoizer();
+    collectionmemoizer = AsyncMemoizer();
+    feturememoizer = AsyncMemoizer();
+    setState(() {});
 
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
-          setState(() {
-                      
-                    });
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    setState(() {});
   }
 
   _buildAppBar(_page) {

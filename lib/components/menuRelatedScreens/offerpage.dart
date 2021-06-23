@@ -473,12 +473,14 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                     return Container(
                       child: snapshot.data.length <= 0
                           ? Center(
-                              child: Text(
-                              "No Restuarnts Found Near You",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ))
+                              child: Container(
+                                child: Image.asset(
+                                  "assets/images/norestaurent.png",
+                                  height: 200,
+                                  width: 300,
+                                ),
+                              ),
+                            )
                           : ListView.builder(
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               shrinkWrap: true,
@@ -556,8 +558,9 @@ class _OfferPageScreenState extends State<OfferPageScreen> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   OfferListPage(
-                                                      // ratingVendor: snapshot.data[index]
-                                                      //     ['avgRating'],
+                                                      ratingVendor:
+                                                          snapshot.data[index]
+                                                              ['avgRating'],
                                                       restaurantDa: snapshot
                                                           .data[index])));
                                     },

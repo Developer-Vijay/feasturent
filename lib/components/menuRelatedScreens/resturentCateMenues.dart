@@ -215,7 +215,7 @@ class _VendorCategoryPageState extends State<VendorCategoryPage> {
                                   for (int i = 0; i <= k - 1; i++) {
                                     rating = rating +
                                         double.parse(menuData['Menus'][index]
-                                            ['ReviewAndRatings'][i]['id'].toString());
+                                            ['ReviewAndRatings'][i]['rating'].toString());
                                   }
                                   rating = rating / k;
                                   if (rating >= 5) {

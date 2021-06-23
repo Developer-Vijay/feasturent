@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/ShimmerEffects/menu_effect.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/customize_menu.dart';
@@ -65,7 +66,15 @@ class _FoodSliderState extends State<FoodSlider> {
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get menu APi hit 111111111111111^^^^^^^^^^^^*****************!!!!!!!!!!@@@@@@@^^^^^^^^^^112222222222222233333333333388888888888 ");
 
     var result = await http.get(
-      Uri.parse(APP_ROUTES + 'getMenues' + '?key=BYID&id=$id'),
+      Uri.parse(
+        APP_ROUTES +
+            'getMenues' +
+            '?key=BYID&id=$id' +
+            '&latitude=' +
+            latitude.toString() +
+            '&longitude=' +
+            longitude.toString(),
+      ),
     );
     var restaurantData = json.decode(result.body)['data'];
     print("this is data");
@@ -223,15 +232,20 @@ class _FoodSliderState extends State<FoodSlider> {
           child: dataChecker == false
               ? Scaffold(
                   body: Center(
-                    child: CircularProgressIndicator(),
+                    child: MenuEffect(),
                   ),
                 )
               : dataValidator == true
                   ? Scaffold(
                       body: Center(
-                        child: Text("Something went wrong please try later..."),
+                      child: Container(
+                        child: Image.asset(
+                          "assets/images/serverError.png",
+                          height: 200,
+                          width: 300,
+                        ),
                       ),
-                    )
+                    ))
                   : Scaffold(
                       body: Column(
                         children: [
@@ -547,7 +561,8 @@ class _FoodSliderState extends State<FoodSlider> {
                                               // ),
                                               // Spacer(),
                                               Padding(
-                                                padding: const EdgeInsets.only(left: 30),
+                                                padding: const EdgeInsets.only(
+                                                    left: 30),
                                                 child: Container(
                                                   width: size.width * 0.5,
                                                   child: Text(
