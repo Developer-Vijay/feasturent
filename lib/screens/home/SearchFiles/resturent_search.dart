@@ -247,7 +247,13 @@ class _SearchResturentState extends State<SearchResturent> {
                     },
                   )
                 : Center(
-                    child: Text("No resturent available"),
+                    child: Container(
+                      child: Image.asset(
+                        "assets/images/norestaurent.png",
+                        height: 200,
+                        width: 300,
+                      ),
+                    ),
                   )
             : Center(
                 child: Text("Loading...."),

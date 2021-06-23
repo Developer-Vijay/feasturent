@@ -576,6 +576,8 @@ class _WishlistState extends State<Wishlist> {
                                 )),
                           ),
                         );
+                      } else {
+                        return SizedBox();
                       }
                     },
                   ),

@@ -110,7 +110,7 @@ class _DetailResturentState extends State<DetailResturent> {
                                     allowHalfRating: true,
                                     onRated: (value) {},
                                     starCount: 5,
-                                    rating: data['avgRating'],
+                                    rating: double.parse(data['avgRating'].toStringAsFixed(1)),
                                     size: 23.0,
                                     isReadOnly: true,
                                     defaultIconData: Icons.star_border_outlined,

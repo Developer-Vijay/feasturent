@@ -394,8 +394,13 @@ class _QuickFilterResturentState extends State<QuickFilterResturent> {
                       },
                     )
                   : Center(
-                      child:
-                          Text("No resturent available related with this menu"),
+                      child: Container(
+                        child: Image.asset(
+                          "assets/images/norestaurent.png",
+                          height: 200,
+                          width: 300,
+                        ),
+                      ),
                     );
             } else {
               return LoadingListPage();

@@ -24,6 +24,7 @@ class WalletDesign extends StatefulWidget {
 }
 
 var wallet;
+var filterby;
 
 class _WalletDesignState extends State<WalletDesign> {
   @override
@@ -219,7 +220,11 @@ class _WalletDesignState extends State<WalletDesign> {
                                                         height: 25,
                                                         color: Colors.blue[900],
                                                       ),
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filterby = null;
+                                                        });
+                                                      },
                                                     ),
                                                   ),
                                                 ),
@@ -247,7 +252,11 @@ class _WalletDesignState extends State<WalletDesign> {
                                                         height: 25,
                                                         color: Colors.blue[900],
                                                       ),
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filterby = "DEBIT";
+                                                        });
+                                                      },
                                                     ),
                                                   ),
                                                 ),
@@ -275,7 +284,11 @@ class _WalletDesignState extends State<WalletDesign> {
                                                         height: 25,
                                                         color: Colors.blue[900],
                                                       ),
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filterby = "CREDIT";
+                                                        });
+                                                      },
                                                     ),
                                                   ),
                                                 ),
@@ -335,117 +348,383 @@ class _WalletDesignState extends State<WalletDesign> {
                                         data2 = _timed.toLocal();
                                         data2 = DateFormat("HH:mm dd-MM-yyyy")
                                             .format(data2);
-
-                                        return Container(
-                                          color:
-                                              Colors.grey[350].withOpacity(0.5),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height: size.height * 0.01,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left:
-                                                            size.width * 0.044),
-                                                    height: size.height * 0.064,
-                                                    width: size.width * 0.12,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.orange,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12)),
-                                                    child: Icon(
-                                                      Icons.shopping_bag_sharp,
-                                                      color: Colors.white,
-                                                      size: 22,
+                                        if (filterby == null) {
+                                          return Container(
+                                            color: Colors.grey[350]
+                                                .withOpacity(0.5),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: size.height * 0.01,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: size.width *
+                                                              0.044),
+                                                      height:
+                                                          size.height * 0.064,
+                                                      width: size.width * 0.12,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.orange,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12)),
+                                                      child: Icon(
+                                                        Icons
+                                                            .shopping_bag_sharp,
+                                                        color: Colors.white,
+                                                        size: 22,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    width: size.width * 0.78,
-                                                    padding: EdgeInsets.only(
-                                                        left:
-                                                            size.width * 0.044),
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              child: Text(
-                                                                "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionFor']}",
+                                                    Container(
+                                                      width: size.width * 0.78,
+                                                      padding: EdgeInsets.only(
+                                                          left: size.width *
+                                                              0.044),
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                child: Text(
+                                                                  "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionFor']}",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                              Spacer(),
+                                                              Text(
+                                                                "- ₹ ${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionAmount']}",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                            .red[
+                                                                        400],
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        18),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.005,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionType']}",
                                                                 style: TextStyle(
                                                                     fontSize:
-                                                                        15,
+                                                                        10,
                                                                     color: Colors
-                                                                        .black,
+                                                                        .grey,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold),
                                                               ),
-                                                            ),
-                                                            Spacer(),
-                                                            Text(
-                                                              "- ₹ ${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionAmount']}",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .red[400],
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 18),
-                                                            ),
-                                                          ],
+                                                              Spacer(),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            41.0),
+                                                                child: Text(
+                                                                  "$data2",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontSize:
+                                                                          10,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: size.height * 0.03,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else if (filterby == "CREDIT") {
+                                          if (snapshot.data[0]['Payments']
+                                                          [index1]
+                                                      ['PaymentTransactions'][0]
+                                                  ['transactionType'] ==
+                                              "CREDIT") {
+                                            return Container(
+                                              color: Colors.grey[350]
+                                                  .withOpacity(0.5),
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: size.height * 0.01,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: size.width *
+                                                                0.044),
+                                                        height:
+                                                            size.height * 0.064,
+                                                        width:
+                                                            size.width * 0.12,
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.orange,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12)),
+                                                        child: Icon(
+                                                          Icons
+                                                              .shopping_bag_sharp,
+                                                          color: Colors.white,
+                                                          size: 22,
                                                         ),
-                                                        SizedBox(
-                                                          height: size.height *
-                                                              0.005,
-                                                        ),
-                                                        Row(
+                                                      ),
+                                                      Container(
+                                                        width:
+                                                            size.width * 0.78,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left:
+                                                                    size.width *
+                                                                        0.044),
+                                                        child: Column(
                                                           children: [
-                                                            Text(
-                                                              "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionType']}",
-                                                              style: TextStyle(
-                                                                  fontSize: 10,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  child: Text(
+                                                                    "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionFor']}",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                                Spacer(),
+                                                                Text(
+                                                                  "- ₹ ${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionAmount']}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                              .red[
+                                                                          400],
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18),
+                                                                ),
+                                                              ],
                                                             ),
-                                                            Spacer(),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
+                                                            SizedBox(
+                                                              height:
+                                                                  size.height *
+                                                                      0.005,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionType']}",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                Spacer(),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
                                                                           .only(
                                                                       left:
                                                                           41.0),
-                                                              child: Text(
-                                                                "$data2",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                        10,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
+                                                                  child: Text(
+                                                                    "$data2",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontSize:
+                                                                            10,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                )
+                                                              ],
                                                             )
                                                           ],
-                                                        )
-                                                      ],
-                                                    ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: size.height * 0.03,
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(
-                                                height: size.height * 0.03,
+                                            );
+                                          } else {
+                                            return SizedBox();
+                                          }
+                                        } else if (filterby == "DEBIT") {
+                                          if (snapshot.data[0]['Payments']
+                                                          [index1]
+                                                      ['PaymentTransactions'][0]
+                                                  ['transactionType'] ==
+                                              "DEBIT") {
+                                            return Container(
+                                              color: Colors.grey[350]
+                                                  .withOpacity(0.5),
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: size.height * 0.01,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: size.width *
+                                                                0.044),
+                                                        height:
+                                                            size.height * 0.064,
+                                                        width:
+                                                            size.width * 0.12,
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.orange,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12)),
+                                                        child: Icon(
+                                                          Icons
+                                                              .shopping_bag_sharp,
+                                                          color: Colors.white,
+                                                          size: 22,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width:
+                                                            size.width * 0.78,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left:
+                                                                    size.width *
+                                                                        0.044),
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  child: Text(
+                                                                    "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionFor']}",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                                Spacer(),
+                                                                Text(
+                                                                  "- ₹ ${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionAmount']}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                              .red[
+                                                                          400],
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height:
+                                                                  size.height *
+                                                                      0.005,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  "${snapshot.data[0]['Payments'][index1]['PaymentTransactions'][0]['transactionType']}",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                Spacer(),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          41.0),
+                                                                  child: Text(
+                                                                    "$data2",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontSize:
+                                                                            10,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: size.height * 0.03,
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        );
+                                            );
+                                          } else {
+                                            return SizedBox();
+                                          }
+                                        } else {
+                                          return SizedBox();
+                                        }
                                       },
                                     ),
                                   )

@@ -35,7 +35,8 @@ class _CustomizeMenuState extends State<CustomizeMenu> {
       ratingLength = k;
       for (int i = 0; i <= k - 1; i++) {
         rating = rating +
-            double.parse(widget.menuData['ReviewAndRatings'][i]['id'].toString());
+            double.parse(
+                widget.menuData['ReviewAndRatings'][i]['rating'].toString());
       }
       rating = rating / k;
       if (rating >= 5) {

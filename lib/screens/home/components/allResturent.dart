@@ -11,6 +11,7 @@ import 'discount_card.dart';
 import 'popular.dart';
 import '../../../shimmer_effect.dart';
 import 'package:feasturent_costomer_app/screens/home/home-screen.dart';
+
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${this.substring(1)}";
@@ -102,7 +103,7 @@ class _AllResturentState extends State<AllResturent> {
   fetchAllRestaurant() async {
     print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     print(" from listview builder  ${DateTime.now()}");
-    return  allresturentmemoizer.runOnce(() async {
+    return allresturentmemoizer.runOnce(() async {
       fetchHomeSliderLength();
       fetchHomebaanerLength();
       print(
@@ -154,37 +155,41 @@ class _AllResturentState extends State<AllResturent> {
                       fontSize: size.height * 0.025),
                 )),
             Spacer(),
-            Container(
-                child: TextButton(
-                    onPressed: () {
-                      print(restaurantDatafinal1);
-                      if (restaurantDatafinal1 != null) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ViewallRestaurant(
-                                restData: restaurantDatafinal1,
-                              ),
-                            ));
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 15),
-                          child: Text(
-                            "View All",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: kPrimaryColor),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_right_rounded,
-                          color: kSecondaryTextColor,
-                        ),
-                      ],
-                    )))
+            restaurantDatafinal1 == null
+                ? SizedBox()
+                : restaurantDatafinal1.length == 0
+                    ? SizedBox()
+                    : Container(
+                        child: TextButton(
+                            onPressed: () {
+                              print(restaurantDatafinal1);
+                              if (restaurantDatafinal1 != null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewallRestaurant(
+                                        restData: restaurantDatafinal1,
+                                      ),
+                                    ));
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(left: 15),
+                                  child: Text(
+                                    "View All",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: kPrimaryColor),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_right_rounded,
+                                  color: kSecondaryTextColor,
+                                ),
+                              ],
+                            )))
           ],
         ),
         SizedBox(
@@ -211,7 +216,15 @@ class _AllResturentState extends State<AllResturent> {
                     //     :
                     Container(
                   child: snapshot.data.length <= 0
-                      ? Text("No Restaurants Found Near You")
+                      ? Center(
+                          child: Container(
+                            child: Image.asset(
+                              "assets/images/norestaurent.png",
+                              height: 200,
+                              width: 300,
+                            ),
+                          ),
+                        )
                       : ListView.builder(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           shrinkWrap: true,
@@ -382,16 +395,19 @@ class _AllResturentState extends State<AllResturent> {
                                                   child: Row(
                                                     children: [
                                                       Container(
-                                                  width: size.width * 0.5,
+                                                        width: size.width * 0.5,
                                                         child: Text(
-                                                          capitalize(
-                                                              snapshot.data[index]
-                                                                  ['name']),
-                                                                  overflow: TextOverflow.ellipsis,
+                                                          capitalize(snapshot
+                                                                  .data[index]
+                                                              ['name']),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style: TextStyle(
                                                               fontWeight:
-                                                                  FontWeight.bold,
-                                                              color: Colors.black,
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
                                                               fontSize:
                                                                   size.height *
                                                                       0.02),
