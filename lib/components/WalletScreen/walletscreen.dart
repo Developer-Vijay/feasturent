@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:feasturent_costomer_app/ShimmerEffects/offer_restaurant_effect.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/foodlistclass.dart';
 import 'package:feasturent_costomer_app/components/auth/login/login.dart';
 import 'package:feasturent_costomer_app/constants.dart';
@@ -731,6 +732,7 @@ class _WalletDesignState extends State<WalletDesign> {
                                 ],
                               );
                             } else {
+                              
                               return Container(
                                 margin: EdgeInsets.only(left: 5, top: 20),
                                 child: Shimmer.fromColors(

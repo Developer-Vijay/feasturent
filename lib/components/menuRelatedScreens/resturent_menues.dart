@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:feasturent_costomer_app/ShimmerEffects/offer_restaurant_effect.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
@@ -45,7 +46,7 @@ class _OfferListPageState extends State<OfferListPage> {
       fetchData(widget.restID);
     } else {
       setState(() {
-        ratingVendor = widget.ratingVendor.toDouble();
+        ratingVendor = widget.ratingVendor;
       });
       setState(() {
         dataChecker = true;
@@ -287,9 +288,7 @@ class _OfferListPageState extends State<OfferListPage> {
     return SafeArea(
       child: dataChecker == false
           ? Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
+              body:OfferResatuarantEffect()
             )
           : dataValidator == true
               ? Scaffold(
@@ -348,6 +347,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                           child: ListView.builder(
                                             itemCount: restaurantDataCopy[
                                                     'VendorCategories']
+           
                                                 .length,
                                             itemBuilder: (context, index) {
                                               return InkWell(
@@ -581,7 +581,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                         Text("Delivery Time")
                                       ],
                                     ),
-                                    restaurantDataCopy['avgCost'] == ''
+                                    restaurantDataCopy['avgCost'] == null
                                         ? Container(
                                             margin: EdgeInsets.only(
                                                 right: size.width * 0.02),
@@ -3793,6 +3793,7 @@ class _OfferListPageState extends State<OfferListPage> {
                           ],
                         ),
                       ),
+                      ////////////////
                       baritemCount == 0
                           ? SizedBox()
                           : Expanded(

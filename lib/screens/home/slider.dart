@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feasturent_costomer_app/ShimmerEffects/menu_effect.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
 import 'package:feasturent_costomer_app/components/menuRelatedScreens/customize_menu.dart';
@@ -231,7 +232,7 @@ class _FoodSliderState extends State<FoodSlider> {
           child: dataChecker == false
               ? Scaffold(
                   body: Center(
-                    child: CircularProgressIndicator(),
+                    child: MenuEffect(),
                   ),
                 )
               : dataValidator == true

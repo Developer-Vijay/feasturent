@@ -21,7 +21,7 @@ AsyncMemoizer popluardineoutmemoizer = AsyncMemoizer();
 AsyncMemoizer collectionmemoizer = AsyncMemoizer();
 AsyncMemoizer feturememoizer = AsyncMemoizer();
 AsyncMemoizer bestoffermemoizer = AsyncMemoizer();
-
+AsyncMemoizer offerbannermemoizer = AsyncMemoizer();
 // capitalize text function
 String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
