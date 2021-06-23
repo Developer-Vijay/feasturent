@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:feasturent_costomer_app/ShimmerEffects/offer_restaurant_effect.dart';
 import 'package:feasturent_costomer_app/components/Bottomsheet/offerBottomsheet.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/addtoCart.dart';
@@ -45,7 +46,7 @@ class _OfferListPageState extends State<OfferListPage> {
       fetchData(widget.restID);
     } else {
       setState(() {
-        ratingVendor = widget.ratingVendor.toDouble();
+        ratingVendor = widget.ratingVendor;
       });
       setState(() {
         dataChecker = true;
@@ -61,7 +62,7 @@ class _OfferListPageState extends State<OfferListPage> {
     }
   }
 
-  double ratingVendor =1.0;
+  double ratingVendor;
   int menulistLength;
   bool dataChecker = false;
   bool dataValidator = false;
@@ -78,12 +79,8 @@ class _OfferListPageState extends State<OfferListPage> {
           '&longitude=' +
           longitude.toString(),
     ));
-    if(result.statusCode == 200){
-      var restaurantData = json.decode(result.body)['data'];
-    print("this is data");
-    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
-    print(restaurantData);
-    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+    var restaurantData = json.decode(result.body)['data'];
+  
     if (restaurantData.isEmpty || restaurantData == null) {
       setState(() {
         dataChecker = true;
@@ -91,32 +88,24 @@ class _OfferListPageState extends State<OfferListPage> {
         dataValidator = true;
       });
     } else {
-     if(mounted){ setState(() {
+      setState(() {
         menulistLength = restaurantData[0]['Menus'].length;
 
         infodata = restaurantData[0];
         restaurantDataCopy = restaurantData[0];
-      });}
+      });
 
       // if (restaurantData[0]['avgRating'] != null) {
       //   ratingVendor = restaurantData[0]['avgRating'][0]['avgRating'].toInt();
       // }
-     if(mounted){  setState(() {
+      setState(() {
         dataChecker = true;
-      });}
+      });
 
       calculateDeliveryTime(restaurantDataCopy);
       getList();
       fetchRestaurantStatus();
     }
-    }else{
-     if(mounted){ setState(() {
-        dataChecker = true;
-
-        dataValidator = true;
-      });}
-    }
-    
   }
 
   callingLoader() {
@@ -282,9 +271,7 @@ class _OfferListPageState extends State<OfferListPage> {
     return SafeArea(
       child: dataChecker == false
           ? Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
+              body:OfferResatuarantEffect()
             )
           : dataValidator == true
               ? Scaffold(
@@ -337,6 +324,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                           child: ListView.builder(
                                             itemCount: restaurantDataCopy[
                                                     'VendorCategories']
+           
                                                 .length,
                                             itemBuilder: (context, index) {
                                               return InkWell(
@@ -570,7 +558,7 @@ class _OfferListPageState extends State<OfferListPage> {
                                         Text("Delivery Time")
                                       ],
                                     ),
-                                    restaurantDataCopy['avgCost'] == ''
+                                    restaurantDataCopy['avgCost'] == null
                                         ? Container(
                                             margin: EdgeInsets.only(
                                                 right: size.width * 0.02),
@@ -3753,6 +3741,7 @@ class _OfferListPageState extends State<OfferListPage> {
                           ],
                         ),
                       ),
+                      ////////////////
                       baritemCount == 0
                           ? SizedBox()
                           : Expanded(
@@ -4571,195 +4560,4 @@ class _OfferListPageState extends State<OfferListPage> {
     ]);
   }
 
-  // filterData(rating, tpye, index, ratingLength, size) {
-  //   // print(restaurantDataCopy['Menus'][index]['title']);
-  //   return InkWell(
-  //     onTap: () async {
-  //       var menuD;
-  //       var name;
-  //       setState(() {
-  //         menuD = restaurantDataCopy['Menus'][index];
-  //         name = restaurantDataCopy['name'];
-  //       });
-  //       final result = await Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (context) => FoodSlider(
-  //                     menuData: menuD,
-  //                     menuStatus: status,
-  //                     restaurentName: name,
-  //                     rating: rating,
-  //                     ratinglength: ratingLength,
-  //                   )));
-  //       if (result) {
-  //         setState(() {});
-  //         getList();
-  //       }
-  //     },
-  //     child: Padding(
-  //       padding: const EdgeInsets.only(bottom: 14),
-  //       child: Container(
-  //           decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(10),
-  //               color: status == true ? Colors.white : Colors.blue[50],
-  //               boxShadow: [
-  //                 BoxShadow(
-  //                     blurRadius: 2,
-  //                     color: Colors.blue[50],
-  //                     offset: Offset(1, 3),
-  //                     spreadRadius: 2)
-  //               ]),
-  //           margin: EdgeInsets.only(
-  //             left: size.width * 0.02,
-  //             right: size.width * 0.02,
-  //           ),
-  //           height: size.height * 0.14,
-  //           child: checkdata.contains(
-  //                   restaurantDataCopy['Menus'][index]['id'].toString())
-  //               ? Dismissible(
-  //                   direction: checkdata.contains(
-  //                           restaurantDataCopy['Menus'][index]['id'].toString())
-  //                       ? DismissDirection.endToStart
-  //                       : DismissDirection.horizontal,
-  //                   // ignore: missing_return
-  //                   confirmDismiss:
-  //                       // ignore: missing_return
-  //                       (direction) async {
-  //                     if (direction == DismissDirection.endToStart) {
-  //                       final bool res = await showDialog(
-  //                           context: context,
-  //                           builder: (BuildContext context) {
-  //                             return AlertDialog(
-  //                               content: Text(
-  //                                   "Are you sure you want to delete ${restaurantDataCopy['Menus'][index]['title']}?"),
-  //                               actions: <Widget>[
-  //                                 TextButton(
-  //                                   child: Text(
-  //                                     "Cancel",
-  //                                     style: TextStyle(color: Colors.black),
-  //                                   ),
-  //                                   onPressed: () {
-  //                                     Navigator.pop(context);
-  //                                   },
-  //                                 ),
-  //                                 TextButton(
-  //                                   child: Text(
-  //                                     "Delete",
-  //                                     style: TextStyle(color: Colors.red),
-  //                                   ),
-  //                                   onPressed: () async {
-  //                                     callingLoader();
-                                    
-  //                                     await services
-  //                                         .data(restaurantDataCopy['Menus']
-  //                                             [index]['id'])
-  //                                         .then((value) => fun(value));
-
-  //                                     final SharedPreferences cart =
-  //                                         await SharedPreferences.getInstance();
-  //                                     int totalprice =
-  //                                         cart.getInt('TotalPrice');
-  //                                     int gsttotal = cart.getInt('TotalGst');
-  //                                     int totalcount =
-  //                                         cart.getInt('TotalCount');
-  //                                     int vendorId = cart.getInt('VendorId');
-
-  //                                     if (checkdata.isNotEmpty &&
-  //                                         checkdata.contains(
-  //                                             restaurantDataCopy['Menus'][index]
-  //                                                     ['id']
-  //                                                 .toString())) {
-  //                                       if (data1[0]['itemCount'] ==
-  //                                           totalcount) {
-  //                                         setState(() {
-  //                                           snackBarData =
-  //                                               "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-  //                                           totalcount = totalcount -
-  //                                               data1[0]['itemCount'];
-  //                                           gsttotal = gsttotal -
-  //                                               (data1[0]['itemCount'] *
-  //                                                   data1[0]['gst']);
-  //                                           totalprice = totalprice -
-  //                                               (data1[0]['itemCount'] *
-  //                                                   data1[0]['itemPrice']);
-  //                                           vendorId = 0;
-  //                                           cart.setInt('VendorId', vendorId);
-  //                                           cart.setInt(
-  //                                               'TotalPrice', totalprice);
-  //                                           cart.setInt('TotalGst', gsttotal);
-  //                                           cart.setInt(
-  //                                               'TotalCount', totalcount);
-  //                                           checkdata.remove(data1[0]
-  //                                                   ['menuItemId']
-  //                                               .toString());
-  //                                           cart.setStringList(
-  //                                               'addedtocart', checkdata);
-  //                                           removeAddOnWithMenu(
-  //                                               data1[0]['addons']);
-
-  //                                           services.deleteUser(
-  //                                               data1[0]['menuItemId']);
-  //                                           getList();
-  //                                         });
-  //                                       } else {
-  //                                         setState(() {
-  //                                           snackBarData =
-  //                                               "${restaurantDataCopy['Menus'][index]['title']} is remove from cart";
-  //                                           totalcount = totalcount -
-  //                                               data1[0]['itemCount'];
-  //                                           gsttotal = gsttotal -
-  //                                               (data1[0]['itemCount'] *
-  //                                                   data1[0]['gst']);
-  //                                           totalprice = totalprice -
-  //                                               (data1[0]['itemCount'] *
-  //                                                   data1[0]['itemPrice']);
-
-  //                                           cart.setInt(
-  //                                               'TotalPrice', totalprice);
-  //                                           cart.setInt('TotalGst', gsttotal);
-  //                                           cart.setInt(
-  //                                               'TotalCount', totalcount);
-  //                                           checkdata.remove(data1[0]
-  //                                                   ['menuItemId']
-  //                                               .toString());
-  //                                           cart.setStringList(
-  //                                               'addedtocart', checkdata);
-  //                                           removeAddOnWithMenu(
-  //                                               data1[0]['addons']);
-  //                                           services.deleteUser(
-  //                                               data1[0]['menuItemId']);
-  //                                           getList();
-  //                                         });
-  //                                       }
-  //                                     } else {
-  //                                       setState(() {
-  //                                         snackBarData =
-  //                                             "${restaurantDataCopy['Menus'][index]['title']} is already remove from cart";
-  //                                       });
-  //                                     }
-  //                                     Navigator.pop(context);
-  //                                     Navigator.pop(context);
-  //                                   },
-  //                                 ),
-  //                               ],
-  //                             );
-  //                           });
-  //                       return res;
-  //                     }
-  //                   },
-  //                   key: ValueKey(index),
-  //                   background: Container(
-  //                     color: Colors.red,
-  //                     padding: EdgeInsets.only(right: 10),
-  //                     alignment: Alignment.centerRight,
-  //                     child: Icon(
-  //                       Icons.delete,
-  //                       color: Colors.white,
-  //                     ),
-  //                   ),
-  //                   child: menuDesign(index, size, rating, tpye))
-  //               : menuDesign(index, size, rating, tpye)),
-  //     ),
-  //   );
-  // }
 }
