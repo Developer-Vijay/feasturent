@@ -498,3 +498,12 @@ class AddonMenus {
         'gstAmount': gstAmount
       };
 }
+
+class ScheduleTimeSelection{
+
+  var time;
+  var isSelected;
+  var isSelected1;
+  
+  ScheduleTimeSelection({this.time,this.isSelected,this.isSelected1});
+}

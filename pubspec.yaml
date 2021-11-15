@@ -68,7 +68,8 @@ dependencies:
   connectivity: ^0.4.6+2
   shimmer:
   flutter_ringtone_player:
-  time_picker_widget:   
+  time_picker_widget:
+  flutter_datetime_picker:      
 
 
 

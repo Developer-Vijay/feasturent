@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:date_time_format/date_time_format.dart';
 import 'dart:convert';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
 import 'package:feasturent_costomer_app/components/Cart.dart/AddOnDataBase/addon_dataClass.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/AddOnDataBase/addon_service.dart';
 import 'package:feasturent_costomer_app/components/Cart.dart/CartDataBase/cart_service.dart';
@@ -19,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
 import '../../main.dart';
 import 'offer_bottom_Sheet.dart';
+import 'package:intl/intl.dart';
 
 var offerInfo = "Select a promo code";
 
@@ -42,10 +45,72 @@ class _PlaceOrderState extends State<PlaceOrder> {
   final services = UserServices();
   final addOnservices = AddOnService();
   bool switchValue = false;
-  TimeOfDay pickedtime = TimeOfDay.now();
+  // TimeOfDay pickedtime = TimeOfDay.now();
+  var starttiming;
+  TimeOfDay finalstartTime;
+  TimeOfDay finalEndTime;
+  DateTime starttimedate;
+  DateTime endtimedates;
+  var endTime;
+  int orderhrs;
+  int ordermins;
+  int endhrs;
+  int endmins;
+  int strthrs;
+  List<ScheduleTimeSelection> time = [];
   @override
   void initState() {
     super.initState();
+
+    if (widget.data['Setting'] == null) {
+      setState(() {
+        starttiming = 24;
+        endTime = 24;
+        orderhrs = 24;
+        ordermins = 24;
+        endhrs = 24;
+        endmins = 00;
+      });
+    } else if (widget.data['Setting']['storeTimeStart'] != null &&
+        widget.data['Setting']['storeTimeEnd'] != null) {
+      setState(() {
+        starttimedate =
+            DateFormat("H:m").parse(widget.data['Setting']['storeTimeStart']);
+        endtimedates =
+            DateFormat("H:m").parse(widget.data['Setting']['storeTimeEnd']);
+        print(starttimedate);
+        endhrs = int.parse(endtimedates.format('H' 'm'));
+        endmins = int.parse(endtimedates.format('m'));
+        orderhrs = int.parse(starttimedate.format('H''m'));
+        ordermins = int.parse(starttimedate.format('m'));
+
+        for (int i = orderhrs; i <= endhrs; i++) {
+          print(i);
+          setState(() {
+                                time.add(ScheduleTimeSelection(time: i,isSelected1: false,isSelected: true));
+
+                    });
+          print(i);
+        }
+        print(time);
+        print("////////////////////");
+        print(orderhrs);
+        print(endhrs);
+
+        print("////////////////////");
+      });
+    } else {
+      setState(() {
+        starttiming = 24;
+        endTime = 24;
+        orderhrs = 24;
+        ordermins = 24;
+        endhrs = 24;
+        endmins = 00;
+      });
+    }
+    print("????????????????????????????????????????????????/");
+
     cleardata();
     orderSchduleDate = null;
     orderModeName = "DELIVERY";
@@ -1735,7 +1800,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   },
                                   child: Container(
                                       child: Text(
-                                          "${selectedStartDate.format("\Y-\M\-\d")} ${pickedtime.hour}:${pickedtime.minute}:02",
+                                          "${selectedStartDate.format("\Y-\M\-\d")} ${selectedStartDate.hour}:${selectedStartDate.minute}:02",
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold)))),
@@ -1755,7 +1820,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 flex: 3,
                                 child: Text(
                                   "₹${totalprice1 - gsttotal1}.0",
-                                  textDirection: TextDirection.rtl,
                                 )),
                           ],
                         ),
@@ -1770,7 +1834,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 flex: 3,
                                 child: Text(
                                   "₹$discount -",
-                                  textDirection: TextDirection.rtl,
                                 )),
                           ],
                         ),
@@ -1785,7 +1848,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 flex: 3,
                                 child: Text(
                                   "₹$gsttotal1.0",
-                                  textDirection: TextDirection.rtl,
                                 )),
                           ],
                         ),
@@ -1800,7 +1862,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 flex: 3,
                                 child: Text(
                                   "₹$donateAmount.0",
-                                  textDirection: TextDirection.rtl,
                                 )),
                           ],
                         ),
@@ -1827,7 +1888,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                       fontSize: size.height * 0.0273),
-                                  textDirection: TextDirection.rtl,
                                 )),
                           ],
                         ),
@@ -2138,39 +2198,96 @@ step''',
         lastDate: DateTime.now().add(Duration(days: 3)),
         helpText: "Select Order Date",
         confirmText: "Confirm");
-    if (picked != null && picked != selectedStartDate) {
-      TimeOfDay pickedtim = await showTimePicker(
+
+    showModalBottomSheet(
         context: context,
-        initialTime: TimeOfDay(hour: 14, minute: 00),
-        builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child,
+        builder: (context) {
+          return Container(
+            child: Column(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Select the Time",
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                GridView.builder(
+                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 2.4,
+                        crossAxisSpacing: 0,
+                        mainAxisSpacing: 0),
+                    shrinkWrap: true,
+                    itemCount: time.length,
+                    itemBuilder: (context, index) {
+                      return InputChip(
+                        label: Container(
+                            width: 65,
+                            height: 20,
+                            child: Center(
+                              child:
+                               time[index].isSelected== true
+                                  ? Text(
+                                      time[index].time,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      time[index].time,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                            )),
+                        selectedColor: Colors.blue,
+                        disabledColor: Colors.grey[200],
+                        elevation: 2,
+                        checkmarkColor: Colors.white,
+                        isEnabled: true,
+                        selected: time[index].isSelected,
+                        showCheckmark: true,
+                        onSelected: (value) {
+                          cleardata();
+                          if (time[index].isSelected == true) {
+                            print("i think");
+                            setState(() {
+                              time[index].isSelected = false;
+                              time = null;
+                            });
+                          } 
+                          else {
+                            // timeChecker(selectedDate.format('m'),
+                            //     selectedDate.format('d'), lunchlist, index);
+
+                            print("i dont think");
+                          }
+                        },
+                      );
+                    },
+                  ),
+              ],
+            ),
           );
-        },
-      );
-
-      if (pickedtim != null) {
-        print(pickedtim);
-        setState(() {
-          pickedtime = pickedtim;
-          selectedStartDate = picked;
-          checkdelivery = false;
-          orderModeName = "SCHEDULE";
-          orderSchduleDate =
-              '${selectedStartDate.format("\Y-\m\-\d")} ${pickedtime.hour}:${pickedtime.minute}:02';
-
-          paymentMode = "Online Mode";
         });
-      } else {
-        orderSchduleDate = null;
-      }
-    }
-    // setState(() {
-    //   selectedStartDate = picked;
-    //   // selectedEndDate = selectedStartDate.add(Duration(days: 5));
-    //   // stockEndDate = selectedStartDate.add(Duration(days: 1));
-    // });
+
+    // DatePicker.showTimePicker(context, showTitleActions: true,
+
+    //     onChanged: (date) {
+    //   print('change $date in time zone ' +
+    //       date.timeZoneOffset.inHours.toString());
+    // }, onConfirm: (date) {
+    //   setState(() {
+    //     selectedStartDate = date;
+    //   });
+    //   print('confirm $date');
+    // },
+
+    // currentTime: DateTime.now());
   }
 }
 
